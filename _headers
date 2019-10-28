@@ -1,0 +1,7 @@
+## A path:
+/*
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
+  Expires: Wed, 1 jan 2020 01:00:00 GMT
+  Content-Security-Policy: script-src 'self' https://apis.google.com *.cloudfront.net; base-uri 'self';
