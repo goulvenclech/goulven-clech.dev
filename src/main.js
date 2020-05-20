@@ -1,4 +1,5 @@
 // Tailwind
+import './assets/global.css';
 import 'tailwindcss/tailwind.css';
 
 // Fonts

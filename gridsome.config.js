@@ -18,6 +18,11 @@ module.exports = {
             config
                 .plugin('BundleAnalyzerPlugin')
                 .use(BundleAnalyzerPlugin, [{ analyzerMode: 'static', openAnalyzer: false }]);
+            config.module
+                .rule('postcss-loader')
+                .test(/.css$/)
+                .use(['tailwindcss', 'autoprefixer'])
+                .loader('postcss-loader');
         }
     },
     css: {
