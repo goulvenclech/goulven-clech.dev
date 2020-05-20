@@ -1,6 +1,6 @@
 <template>
     <header class="max-w-content mx-auto">
-        <h1 class="text-2xl inline-block l font-body font-extrabold">
+        <h1 class="text-xl sm:text-2xl inline-block l font-body font-extrabold">
             <a href="/" class="border-0 text-font hover:text-font">
                 Goulven CLEC'H
             </a>
@@ -19,7 +19,13 @@
         line-height: 55px;
 
         & li {
-            @apply inline-block ml-3;
+            @apply inline-block ml-2;
+        }
+
+        @screen sm {
+            & li {
+                @apply ml-3;
+            }
         }
     }
 </style>
