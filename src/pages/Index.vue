@@ -8,8 +8,18 @@
                     :key="work.weight"
                     :to="work.node.path"
             >
-                <div
-                    :class="['bg-' + work.node.color, 'w-full', 'h-featuredClass', 'my-4', 'rounded-lg', 'test']"
+                <div v-if="work.node.color === 'primary'"
+                     class="bg-primary w-full h-featuredClass my-4 rounded-lg hotspot"
+                >
+                    <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
+                </div>
+                <div v-else-if="work.node.color === 'secondary'"
+                     class="bg-secondary w-full h-featuredClass my-4 rounded-lg hotspot"
+                >
+                    <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
+                </div>
+                <div v-else-if="work.node.color === 'area'"
+                     class="bg-area w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
                     <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
                 </div>
@@ -37,7 +47,7 @@
         transition: 0.2s ease-in-out;
     }
 
-    .test:hover .illu {
+    .hotspot:hover .illu {
         top: 1rem;
         height: 18rem;
         width: 735px;
