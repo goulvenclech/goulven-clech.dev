@@ -5,7 +5,7 @@
                 Goulven CLEC'H
             </a>
         </h1>
-        <ul class="inline-block float-right font-body">
+        <ul class="text-xs sm:text-base inline-block float-right font-body">
             <li><a href="/resume">Resume</a></li>
             <li><a href="/">Works</a></li>
             <li><a href="https://github.com/GoulvenC" target="_blank">Github</a></li>

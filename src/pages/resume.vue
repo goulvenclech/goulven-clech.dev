@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <main class="max-w-content mx-auto">
-            <h2 class="text-font my-40">
+            <h2 class="text-font my-24 sm:my-40">
                 I'm a 22 yo web developer & designer
             </h2>
             <div class="content px-24">

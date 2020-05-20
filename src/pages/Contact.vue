@@ -1,7 +1,7 @@
 <template>
     <layout>
         <main class="max-w-content mx-auto">
-            <h2 class="py-40">
+            <h2 class="my-24 sm:my-40">
                 Contact me
             </h2>
             <form method="post"

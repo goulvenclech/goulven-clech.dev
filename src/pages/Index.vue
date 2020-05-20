@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <main class="max-w-content mx-auto">
-            <h2 class="text-font my-40">
+            <h2 class="text-font my-24 sm:my-40">
                 I'm making magic with <Skills />
             </h2>
             <g-link v-for="work in $page.works.edges"

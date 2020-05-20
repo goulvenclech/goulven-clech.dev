@@ -3,7 +3,7 @@
         <main class="max-w-content mx-auto min-h-full">
             <!-- hero -->
             <div class="flex flex-wrap overflow-hidden">
-                <h2 class="text-font py-40 flex-auto">
+                <h2 class="text-font my-24 sm:my-40 flex-auto">
                     {{ $page.work.title }}
                 </h2>
                 <g-image :src="$page.work.image"
