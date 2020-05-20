@@ -4,8 +4,8 @@
 
 I'm Goulven CLEC'H, web developer based in Toulouse, I specialize in Front-End development and the Javascript ecosystem. Self-taught and autonomous, I adapt easily and am currently looking for a job.
 
-You can contact me at this email address: contact@siteweb-toulouse.com
-And see my portfolio at the address: siteweb-toulouse.com
+You can contact me at this email address: goulvennev@protonmail.com
+And see my portfolio at the address: goulven-clech.dev
 
 ## About my portfolio
 

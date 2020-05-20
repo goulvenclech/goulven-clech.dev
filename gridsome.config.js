@@ -12,6 +12,7 @@ if (process.env.NODE_ENV === 'production') postcssPlugins.push(purgecss());
 
 module.exports = {
     siteName: 'Goulven CLEC\'H - Web developer & designer',
+    siteUrl: 'https://goulven-clech.dev',
     chainWebpack: (config) => {
         if (process.env.NODE_ENV !== 'production') {
             config
