@@ -2,7 +2,9 @@
     <div class="p-4">
         <Header />
         <transition name="slide" appear>
-            <slot></slot>
+            <main>
+                <slot></slot>
+            </main>
         </transition>
     </div>
 </template>

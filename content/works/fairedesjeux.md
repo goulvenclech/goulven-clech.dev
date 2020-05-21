@@ -14,4 +14,4 @@ VueJS is used here for the various interactive elements (client side) and to gen
 
 ![Image d'une page de cours](./fairedesjeux-2.png)
 
-The key elements of the design are a dark theme by default, and a strong emphasis on the participative aspect of the site (links to modify a page, medal indicating the quality of training, etc.). On the technical side, this is a PWA which is therefore extremely fast, can be viewed offline, has a lazy-load system and meets modern web standards. We also used Tailwind and SASS (css frameworks), FontAwesome API, Remark and PrismJS.
+The key elements of the design are a dark theme by default, and a strong emphasis on the participative aspect of the site (links to modify a page, medal indicating the quality of the course, etc.). On the technical side, this is a PWA which is therefore extremely fast, can be viewed offline, has a lazy-load system and meets modern web standards. We also used Tailwind and SASS (css frameworks), FontAwesome API, Remark and PrismJS.

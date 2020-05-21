@@ -1,6 +1,6 @@
 <template>
     <Layout>
-        <main class="max-w-content mx-auto min-h-full">
+        <div class="max-w-content mx-auto min-h-full">
             <!-- hero -->
             <div class="flex flex-wrap overflow-hidden">
                 <h2 class="text-font my-24 sm:my-40 flex-auto">
@@ -26,7 +26,7 @@
                 <div v-else class="flex ">
                     <div class="m-2 text-center text-font border-none font-bold hover:text-font">
                         <div class="bg-area rounded-lg w-64 inline-block text-center px-4 py-3 duration-200">
-                            Work in progress
+                            Still in development
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <div>
                 </div>
             </div>
-        </main>
+        </div>
     </Layout>
 </template>
 

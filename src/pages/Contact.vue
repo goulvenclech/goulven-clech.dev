@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <main class="max-w-content mx-auto">
+        <div class="max-w-content mx-auto">
             <h2 class="my-24 sm:my-40">
                 Contact me
             </h2>
@@ -29,7 +29,7 @@
                     </div>
                 </a>
             </form>
-        </main>
+        </div>
     </layout>
 </template>
 

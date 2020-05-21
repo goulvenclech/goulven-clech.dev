@@ -1,6 +1,6 @@
 <template>
     <Layout>
-        <main class="max-w-content mx-auto">
+        <div class="max-w-content mx-auto">
             <h2 class="text-font my-24 sm:my-40">
                 I'm making magic with <Skills />
             </h2>
@@ -24,7 +24,7 @@
                     <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
                 </div>
             </g-link>
-        </main>
+        </div>
     </Layout>
 </template>
 
