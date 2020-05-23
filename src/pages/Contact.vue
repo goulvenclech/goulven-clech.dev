@@ -1,7 +1,7 @@
 <template>
     <layout>
         <div class="max-w-content mx-auto">
-            <h2 class="my-24 sm:my-40">
+            <h2 class="my-24 sm:my-32">
                 Contact me
             </h2>
             <form method="post"
@@ -23,6 +23,7 @@
                 </div>
                 <a
                     class="flex justify-center m-4 text-center text-font border-none font-bold hover:text-font"
+                    type="submit"
                 >
                     <div class="bg-area hover:bg-primary rounded-lg w-40 inline-block text-center px-4 py-3 duration-200">
                         Send <font-awesome :icon="['fas', 'paper-plane']" />

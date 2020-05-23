@@ -1,12 +1,12 @@
 <template>
     <Layout>
         <div class="max-w-content mx-auto">
-            <h2 class="text-font my-24 sm:my-40">
+            <h2 class="text-font my-24 sm:my-32">
                 I'm a 22 yo web developer & designer
             </h2>
             <div class="content max-w-post mx-auto">
                 <p>Self-taught, based in Toulouse, France. I love to design and develop websites that are easy to navigate, fun to look at and blasting fast!</p>
-                <p>I specialize myself in the Javascript ecosystem, and am particularly interested in VueJS and his frameworks and PWA generators, like Nuxt and Gridsome. I am familiar with Git, webpack, NPM and a lot of organization tools (Github Projects, Trello, etc). I adapt easily to different work environments and I'm constantly looking for new challenges!</p>
+                <p>I specialize myself in the Javascript ecosystem, and I'm particularly interested in VueJS and his frameworks and PWA generators, like Nuxt and Gridsome. I am familiar with Git, webpack, NPM and a lot of organization tools (Github Projects, Trello, etc). I adapt easily to different work environments and I'm constantly looking for new challenges!</p>
                 <h3>My experiences</h3>
                 <ul>
                     <li><p>-> <strong>Co-founder of Game Dev Alliance, 2018 - present</strong>: One of the largest communities of amateur game developers in France. Creation of several websites (<a href="/work/fairedesjeux">here</a>, <a href="/work/gamedevalliance">here</a> and <a href="/work/gamedevalliance-next">here</a>), management of a wiki website (<a href="https://wiki.gamedevalliance.fr">this one</a>) and a Youtube channel ( <a href="https://www.youtube.com/user/FoxFiesta40">Subscribe !</a> ).</p></li>

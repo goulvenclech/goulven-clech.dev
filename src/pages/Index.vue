@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="max-w-content mx-auto">
-            <h2 class="text-font my-24 sm:my-40">
+            <h2 class="text-font my-24 sm:my-32">
                 I'm making magic with <Skills />
             </h2>
             <g-link v-for="work in $page.works.edges"
@@ -11,17 +11,26 @@
                 <div v-if="work.node.color === 'primary'"
                      class="bg-primary w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
-                    <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
+                    <g-image :src="work.node.image"
+                             :alt="work.node.title"
+                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                    />
                 </div>
                 <div v-else-if="work.node.color === 'secondary'"
                      class="bg-secondary w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
-                    <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
+                    <g-image :src="work.node.image"
+                             :alt="work.node.title"
+                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                    />
                 </div>
                 <div v-else-if="work.node.color === 'area'"
                      class="bg-area w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
-                    <g-image :src="work.node.image" class="object-top object-cover w-700 mx-auto illu relative rounded-lg" />
+                    <g-image :src="work.node.image"
+                             :alt="work.node.title"
+                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                    />
                 </div>
             </g-link>
         </div>
@@ -60,6 +69,7 @@ query {
     works: allWork(sortBy: "weight", order: ASC) {
         edges {
             node {
+                title
                 color
                 image
                 path
