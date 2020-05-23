@@ -11,7 +11,8 @@ module.exports = {
     siteName: 'Goulven CLEC\'H - Portfolio',
     siteDescription: "I'm a 22 yo web developer and designer, based in Toulouse, France.",
     siteUrl: 'https://goulven-clech.dev',
-    titleTemplate: '<siteName>',
+    icon: './src/assets/favicon.png',
+    titleTemplate: "Goulven CLEC'H - Portfolio",
     chainWebpack: (config) => {
         if (process.env.NODE_ENV !== 'production') {
             config
