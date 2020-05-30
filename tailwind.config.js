@@ -124,6 +124,21 @@ module.exports = {
                     letterSpacing: config('theme.letterSpacing.title'),
                     marginTop: '1rem',
                     marginBottom: '1rem',
+                    display: 'inline-block',
+                    position: 'relative',
+
+                    '&:before': {
+                        content: 'no-open-quote',
+                        borderBottomWidth: '7px',
+                        borderBottomColor: config('theme.textColor.primary'),
+                        borderBottomStyle: 'solid',
+                        position: 'absolute',
+                        width: '45%',
+                        left: '0%',
+                        bottom: '1px',
+                        zIndex: '-1',
+                        display: 'inline-block',
+                    },
                 },
 
                 h3: {

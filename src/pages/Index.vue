@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <div class="max-w-content mx-auto">
-            <h2 class="text-font my-24 sm:my-32">
+            <h2 class=" maintitle my-24 sm:my-32">
                 I'm making magic with <Skills />
             </h2>
             <g-link v-for="work in $page.works.edges"
@@ -48,6 +48,10 @@
 </script>
 
 <style lang="postcss">
+    .maintitle::before {
+        border: none;
+    }
+
     .illu {
         top: 4rem;
         height: 15rem;
