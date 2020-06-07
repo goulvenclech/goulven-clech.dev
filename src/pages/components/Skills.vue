@@ -29,29 +29,29 @@
 
 <style Lang="scss" scoped>
     .rotate-enter-active {
-      transition: color 1s, opacity 1s, transform 1s ease-in-out;
-      transform: translateY(10px);
-      opacity: 0;
+        transition: color 1s, opacity 1s, transform 1s ease-in-out;
+        transform: translateY(10px);
+        opacity: 0;
     }
 
     .rotate-leave-active {
-      transition: opacity .6s, transform 1s ease-in-out;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 100%;
+        transition: opacity 0.6s, transform 1s ease-in-out;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
     }
 
     .rotate-enter-to {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
     }
 
     .rotate-leave-to {
-      transform: translateY(-10px);
-      opacity: 0;
+        transform: translateY(-10px);
+        opacity: 0;
     }
 </style>
 

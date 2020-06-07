@@ -14,12 +14,13 @@
     </header>
 </template>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
     header {
         line-height: 55px;
 
         & li {
             @apply inline-block ml-2;
+            line-height: 55px;
         }
 
         @screen sm {

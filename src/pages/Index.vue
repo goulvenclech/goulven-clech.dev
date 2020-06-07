@@ -63,7 +63,7 @@
     .hotspot:hover .illu {
         top: 1rem;
         height: 18rem;
-        width: 735px;
+        width: 75%;
         transition: 0.2s ease-in-out;
     }
 </style>

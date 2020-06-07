@@ -20,12 +20,6 @@ module.exports = {
                 'font-3': '#9496a8',
                 primary: '#ff6363',
                 secondary: '#ffbd69',
-                remi: '#00978c',
-            },
-
-            letterSpacing: {
-                logo: '0.075em',
-                title: '-0.03em',
             },
 
             lineHeight: {
@@ -40,6 +34,7 @@ module.exports = {
             height: {
                 featuredClass: '19rem',
                 gameEngineClass: '18.5rem',
+                150: '15rem',
                 200: '20rem',
             },
 
@@ -48,6 +43,7 @@ module.exports = {
             },
 
             width: {
+                150: '15rem',
                 400: '40rem',
                 700: '70%',
                 900: '90%',
@@ -113,6 +109,8 @@ module.exports = {
                     maxWidth: '100%',
                     marginLeft: 'auto',
                     marginRight: 'auto',
+                    marginTop: '1rem',
+                    marginBottom: '1rem',
                 },
 
                 h2: {
@@ -142,7 +140,7 @@ module.exports = {
                 },
 
                 h3: {
-                    color: config('theme.textColor.primary'),
+                    color: config('theme.textColor.font'),
                     fontFamily: config('theme.fontFamily.title'),
                     fontSize: config('theme.fontSize.3xl'),
                     fontWeight: '700',
@@ -168,8 +166,6 @@ module.exports = {
                 ul: {
                     color: config('theme.textColor.font'),
                     lineHeight: config('theme.lineHeight.normal'),
-                    marginTop: '1rem',
-                    marginBottom: '1rem',
                 },
 
                 table: {
@@ -202,6 +198,7 @@ module.exports = {
                     margin: '1rem',
                     textAlign: 'top',
                 },
+
             });
             addComponents({
                 '.smooth': {
