@@ -5,8 +5,8 @@
                 <h2 class="text-font my-24 sm:my-32 flex-auto">
                     FrontEnd application developer
                 </h2>
-                <g-image src="../assets/profilepicture.png"
-                         class="flex"
+                <img src="../assets/profilepicture.png"
+                     class="flex profile"
                 />
             </div>
             <div class="content max-w-post mx-auto">
@@ -28,7 +28,7 @@
 </template>
 
 <style lang="postcss">
-    img {
+    .profile {
         @apply object-top object-cover w-150 h-150 rounded-lg my-4;
     }
     .content {
