@@ -7,6 +7,7 @@
             <form method="post"
                   name="contact"
                   data-netify="true"
+                  data-netlify-honeypot="bot-field"
                   class="content max-w-form mx-auto text-font leading-normal"
             >
                 <div class="my-4">
@@ -34,11 +35,19 @@
     </layout>
 </template>
 
-<style lang="postcss" scoped>
-    input, textarea {
+<style lang="postcss">
+    input {
         @apply w-full my-2 p-2 rounded-lg bg-area leading-relaxed outline-none border-2 border-solid border-transparent;
 
-        &:focus {
+        & :focus {
+            @apply border-primary;
+        }
+    }
+
+    textarea {
+        @apply w-full my-2 p-2 rounded-lg bg-area leading-relaxed outline-none border-2 border-solid border-transparent;
+
+        & :focus {
             @apply border-primary;
         }
     }

@@ -168,6 +168,11 @@ module.exports = {
                     lineHeight: config('theme.lineHeight.normal'),
                 },
 
+                ol: {
+                    color: config('theme.textColor.font'),
+                    lineHeight: config('theme.lineHeight.normal'),
+                },
+
                 table: {
                     color: config('theme.textColor.font'),
                     fontFamily: config('theme.fontFamily.body'),
