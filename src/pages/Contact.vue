@@ -4,17 +4,13 @@
             <h2 class="my-24 sm:my-32">
                 Contact me
             </h2>
-            <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-                    <input type="text" name="name" />
-                    <input type="radio" name="user_name" />
-                    <textarea name="user_message"></textarea>
-            </form>
             <form method="post"
                 name="contact"
                 data-netify="true"
                 data-netlify-honeypot="bot-field"
                 class="content max-w-form mx-auto text-font leading-normal"
             >
+                <p>Le formulaire de contact est temporairement indisponible, contactez moi par <a href="https://www.linkedin.com/in/goulvenc/">LinkedIN</a> !</p>
                 <div class="my-4">
                     <label for="name">Name</label>
                     <input id="name" type="text" name="user_name" />
