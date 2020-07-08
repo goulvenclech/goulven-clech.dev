@@ -5,5 +5,3 @@ node_modules/
 dist/
 src/.temp
 .cache/
-.eslintrc.js
-stylelint.config.js

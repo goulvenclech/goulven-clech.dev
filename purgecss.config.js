@@ -20,6 +20,7 @@ module.exports = {
         'g-image',
         'g-image--lazy',
         'g-image--loaded',
+        'transition'
     ],
     whitelistPatterns: [/^fa-/, /^svg-inline--fa/],
     extractors: [

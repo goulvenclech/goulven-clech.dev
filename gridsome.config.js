@@ -9,7 +9,7 @@ const postcssPlugins = [
 
 module.exports = {
     siteName: 'Goulven CLEC\'H - Portfolio',
-    siteDescription: "I'm a 22 yo web developer and designer, based in Toulouse, France.",
+    siteDescription: "I'm a 22 yo web developer, based in Toulouse, France.",
     siteUrl: 'https://goulven-clech.dev',
     icon: './src/assets/favicon.png',
     titleTemplate: "Goulven CLEC'H - Portfolio",

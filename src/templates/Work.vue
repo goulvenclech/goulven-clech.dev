@@ -46,19 +46,19 @@
 
 <style lang="postcss">
     img {
-        @apply object-top object-cover w-400 h-200 rounded-lg my-4;
+        @apply object-top object-cover w-400 h-200 rounded-lg my-6;
     }
 </style>
 
 <page-query>
-query ($id: ID!) {
-    work(id: $id) {
-        title
-        slug
-        image
-        content
-        website
-        source
+    query ($id: ID!) {
+        work(id: $id) {
+            title
+            slug
+            image
+            content
+            website
+            source
+        }
     }
-}
 </page-query>
