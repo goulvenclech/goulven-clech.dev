@@ -12,14 +12,15 @@ module.exports = {
         },
         extend: {
             colors: {
-                body: '#202040',
-                area: '#543864',
-                'area-2': '#293340',
+                body: '#1C1E26',
+                area: '#232530',
+                'area-2': '#16161C',
                 font: '#ebebeb',
                 'font-2': '#B9B9B9',
                 'font-3': '#9496a8',
-                primary: '#ff6363',
-                secondary: '#ffbd69',
+                primary: '#E95678',
+                secondary: '#F09383',
+                active: '#25B2BC',
             },
 
             lineHeight: {
@@ -34,6 +35,7 @@ module.exports = {
             height: {
                 featuredClass: '19rem',
                 gameEngineClass: '18.5rem',
+                75: '10rem',
                 150: '15rem',
                 200: '20rem',
             },
@@ -53,7 +55,7 @@ module.exports = {
             maxWidth: {
                 form: '500px',
                 post: '700px',
-                content: '1000px',
+                content: '800px',
                 900: '90%',
                 1000: '100vw',
             },
@@ -86,7 +88,7 @@ module.exports = {
                 p: {
                     color: config('theme.textColor.font'),
                     fontFamily: config('theme.fontFamily.body'),
-                    fontSize: config('theme.fontSize.xl'),
+                    fontSize: config('theme.fontSize.base'),
                     lineHeight: '1.5',
                     marginTop: '1rem',
                     marginBottom: '1rem',
@@ -116,33 +118,18 @@ module.exports = {
                 h2: {
                     color: config('theme.textColor.font'),
                     fontFamily: config('theme.fontFamily.title'),
-                    fontSize: config('theme.fontSize.4xl'),
+                    fontSize: config('theme.fontSize.2xl'),
                     fontWeight: '700',
                     lineHeight: '1.25',
                     letterSpacing: config('theme.letterSpacing.title'),
                     marginTop: '1rem',
                     marginBottom: '1rem',
-                    display: 'inline-block',
-                    position: 'relative',
-
-                    '&:before': {
-                        content: 'no-open-quote',
-                        borderBottomWidth: '7px',
-                        borderBottomColor: config('theme.textColor.primary'),
-                        borderBottomStyle: 'solid',
-                        position: 'absolute',
-                        width: '45%',
-                        left: '0%',
-                        bottom: '1px',
-                        zIndex: '-1',
-                        display: 'inline-block',
-                    },
                 },
 
                 h3: {
                     color: config('theme.textColor.font'),
                     fontFamily: config('theme.fontFamily.title'),
-                    fontSize: config('theme.fontSize.3xl'),
+                    fontSize: config('theme.fontSize.xl'),
                     fontWeight: '700',
                     lineHeight: '1.5',
                     letterSpacing: config('theme.letterSpacing.title'),
