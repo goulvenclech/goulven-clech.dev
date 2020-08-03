@@ -1,28 +1,69 @@
 <template>
     <Layout>
-        <div class="max-w-content mx-auto">
-            <div class="w-full flex flex-wrap overflow-hidden">
-                <h2 class="text-font my-24 sm:my-32 flex-auto">
-                    FrontEnd application developer
-                </h2>
+        <!-- Présentation -->
+        <div class="bg-area-2 w-full">
+            <div class="max-w-content mx-auto p-2">
+                <h2>A propos de moi</h2>
                 <img src="../assets/profilepicture.png"
-                     class="flex profile"
+                     width="160"
+                     class="ml-3 mr-0 mt-0 mb-3 rounded-lg float-right"
                 />
+                <div class="">
+                    <p>
+                        Je m'appelle Goulven CLEC'H, j'ai 22 ans et suis Toulousain. Actuellement en formation chez
+                        OpenClassrooms comme Développeur d'application Front End, je suis à la recherche d'une
+                        alternance en contrat pro (4 jours par semaine en entreprise, 1 jour en formation).
+                    </p>
+                    <p>
+                        Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue une des plus grosses
+                        communautés de créateurs de jeux vidéos en France. Mais je me passionne également pour les
+                        vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
+                    </p>
+                </div>
             </div>
-            <div class="content max-w-post mx-auto">
-                <p>22 years old, based in Toulouse, France. I specialize myself in the JavaScript ecosystem and the VueJS and React frameworks. I'm used to working with Git, Webpack, NPM and many organizational tools (Github Project, Trello, Lint, etc.).</p>
-                <p>Currently in training "application developer" (RNCP27099) at OpenClassrooms, I am looking for a work-study contract (4 days in business, 1 day in training per week) for 24 months.</p>
-                <h3>My experiences</h3>
-                <ul class="skills list-disc list-inside leading-normal text-xl font-body">
-                    <li><strong>Apprentice at Openclassroom, 2020 - present</strong>:<br /> Skills taught as part of the "<a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">Application Developer - FrontEnd</a>" training: JavaScript, Jquery, UML, Wordpress, BootStrap, API Rest, Git, GitHub, mock-up integration, technology watch, specification compliance, interfaces creation...</li>
-                    <li><strong>Co-founder of Game Dev Alliance, 2018 - present</strong>:<br /> One of the largest communities of amateur game developers in France. Creation of several websites (<a href="/work/fairedesjeux">here</a>, <a href="/work/gamedevalliance">here</a> and <a href="/work/gamedevalliance-next">here</a>), management of a <a href="https://wiki.gamedevalliance.fr">wiki website</a> and a <a href="https://www.youtube.com/user/FoxFiesta40">Youtube channel</a>. VueJS (Gridsome) and Git (Github) training.</li>
-                    <li><strong>Freelance Web Developer, 2018 - 2020</strong>:<br /> Creation of several static websites (like <a href="https://fil-agape.org/">this one</a>). And training in modern web technologies.</li>
-                    <li><strong>Administrative assistant for Oxbridge Academics Programs, July 2019</strong>:<br /> Management of the <a href="https://oxbridgeacademicprograms.wordpress.com/">program blog</a>, as well as various administrative tasks.</li>
-                    <li><strong>Other experiences</strong>:<br /> Three years of sociology studies. 8 months in a health prevention association. Several months of various jobs. Technological baccalaureate (STI2D).</li>
-                </ul>
-                <h3>My hobbies</h3>
-                <p>I am very interested in the technologies of the future (SvelteJS, Crystal, Rust) and the OpenSource community (Linux user since high school). I am also passionate about clothing, cooking, science fiction... Finally, I love making little video games on my square time, passion that I share on <a href="https://gamedevalliance.fr">Game Dev Alliance</a> !</p>
-            </div>
+        </div>
+        <!-- Mon CV -->
+        <div class="max-w-content mx-auto p-2">
+            <h2>Mes expériences</h2>
+            <ul class="skills list-disc list-inside leading-normal text-base font-body">
+                <li>
+                    <strong>Etudiant chez OpenClassrooms, 2020 - présent</strong>:<br />
+                    Compétences enseignées durant la formation "
+                    <a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">
+                        Développeur d'application - Front End
+                    </a>
+                    " : JavaScript, Jquery, UML, Wordpress, BootStrap, API Rest, Git, GitHub, mock-up integration,
+                    veille technologique, création d'interface...
+                </li>
+                <li>
+                    <strong>Co-fondateur de Game Dev Alliance, 2018 - présent</strong>:<br />
+                    Une des plus grosses communautés de créateurs de jeux vidéos en France. Création de
+                    plusieurs sites web (<a href="/work/fairedesjeux">Ici</a>,
+                    <a href="/work/gamedevalliance"> là</a> et <a href="/work/gamedevalliance-next">là</a>),
+                    modération d'un <a href="https://wiki.gamedevalliance.fr">wiki</a> et d'une
+                    <a href="https://www.youtube.com/user/FoxFiesta40">chaîne Youtube</a> (pour laquelle j'écrit aussi).
+                    Formation à VueJS (Gridsome) et à Git (Github).
+                </li>
+                <li>
+                    <strong>Développeur Web en Freelance, 2018 - 2020</strong>:<br />
+                    Création de plusieurs sites statiques (comme <a href="https://fil-agape.org/">celui-ci</a>).
+                    Et formation aux technologies Web.
+                </li>
+                <li>
+                    <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019</strong>:<br />
+                    Gestion du <a href="https://oxbridgeacademicprograms.wordpress.com/">blog Wordpress</a>, ainsi
+                    que différentes tâches administratives. Anglais profesionnel.
+                </li>
+                <li>
+                    <strong>Autres expériences</strong>:<br /> Trois ans d'études en sociologie.
+                    8 mois dans une association de prévention senté. Plusieurs petits boulots. Bac technologique (STI2D).
+                </li>
+            </ul>
+        </div>
+        <!-- Ma présentation vidéo -->
+        <div class="max-w-content mx-auto p-2">
+            <h2>Présentation vidéo</h2>
+            <p>En cours de réalisation...</p>
         </div>
     </Layout>
 </template>

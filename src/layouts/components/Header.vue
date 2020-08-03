@@ -1,31 +1,30 @@
 <template>
-    <header class="max-w-content mx-auto">
-        <h1 class="text-xl sm:text-2xl inline-block l font-body font-extrabold">
+    <header class="max-w-content mx-auto px-2">
+        <h1 class="text-base md:text-lg inline-block l font-body font-extrabold">
             <a href="/" class="border-0 text-font hover:text-font">
                 Goulven CLEC'H
             </a>
         </h1>
-        <ul class="text-xs sm:text-base inline-block float-right font-body">
-            <li><a href="/resume">Resume</a></li>
-            <li><a href="/">Works</a></li>
+        <ul class="text-base inline-block float-right font-body">
+            <li><a href="/resume">A propos</a></li>
+            <li><a href="/folio">Portfolio</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="https://github.com/GoulvenC" target="_blank">Github</a></li>
-            <li><a href="/contact">Contact</a></li>
         </ul>
     </header>
 </template>
 
 <style lang="postcss">
     header {
-        line-height: 55px;
+        line-height: 50px;
 
         & li {
-            @apply inline-block ml-2;
-            line-height: 55px;
-        }
+            @apply inline-block ml-4;
 
-        @screen sm {
-            & li {
-                @apply ml-3;
+            line-height: 50px;
+
+            & a {
+                @apply border-none;
             }
         }
     }
