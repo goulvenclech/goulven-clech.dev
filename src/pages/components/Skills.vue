@@ -1,28 +1,31 @@
 <template>
     <transition-group name="rotate" class="intro__keywords inline-block relative">
-        <div v-show="currentText == 0" key="0" class="text-green-600">
+        <div v-show="currentText == 0" key="0" class="text-font">
+            FrontEnd
+        </div>
+        <div v-show="currentText == 1" key="1" class="text-green-600">
             VueJS
         </div>
-        <div v-show="currentText == 1" key="1" class="text-red-600">
-            HTML5
+        <div v-show="currentText == 2" key="2" class="text-red-600">
+            HTML/CSS
         </div>
-        <div v-show="currentText == 2" key="2" class="text-yellow-500">
+        <div v-show="currentText == 3" key="3" class="text-yellow-500">
             Javascript
         </div>
-        <div v-show="currentText == 3" key="3" class="text-purple-600">
+        <div v-show="currentText == 4" key="4" class="text-purple-600">
             SASS
         </div>
-        <div v-show="currentText == 4" key="4" class="text-teal-500">
+        <div v-show="currentText == 5" key="5" class="text-teal-500">
             Tailwind
         </div>
-        <div v-show="currentText == 5" key="5" class="text-gray-600">
+        <div v-show="currentText == 6" key="6" class="text-gray-600">
             Git
         </div>
-        <div v-show="currentText == 6" key="6" class="text-pink-600">
+        <div v-show="currentText == 7" key="7" class="text-pink-600">
             GraphQL
         </div>
-        <div v-show="currentText == 7" key="7" class="text-orange-700">
-            coffee
+        <div v-show="currentText == 8" key="8" class="text-orange-700">
+            Wordpress
         </div>
     </transition-group>
 </template>

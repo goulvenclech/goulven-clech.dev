@@ -20,7 +20,9 @@ module.exports = {
         'g-image',
         'g-image--lazy',
         'g-image--loaded',
-        'transition'
+        'transition',
+        'slide-enter-active',
+        'slide-enter',
     ],
     whitelistPatterns: [/^fa-/, /^svg-inline--fa/],
     extractors: [

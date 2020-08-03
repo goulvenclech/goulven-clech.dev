@@ -34,8 +34,6 @@ module.exports = {
 
             height: {
                 featuredClass: '19rem',
-                gameEngineClass: '18.5rem',
-                75: '10rem',
                 150: '15rem',
                 200: '20rem',
             },

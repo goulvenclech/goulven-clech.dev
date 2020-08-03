@@ -5,16 +5,21 @@
             <div class="max-w-content mx-auto p-2">
                 <h2>Développeur <Skills /></h2>
                 <img src="../assets/profilepicture.png"
-                     class="w-75 h-75 ml-3 mr-0 mt-0 mb-3 rounded-lg float-right"
+                     width="160"
+                     class="ml-3 mr-0 mt-0 mb-3 rounded-lg float-right"
                 />
                 <div class="">
                     <p>
-                        Goulven CLEC'H, 22 ans et Toulousain. Actuellement en formation chez OpenClassrooms comme Dévéloppeur d'application Front END, je suis à la recherche d'une alternance en contrat pro (4 jours par semaine en entreprise, 1 jour en formation).
+                        Je m'appelle Goulven CLEC'H, j'ai 22 ans et suis Toulousain. Actuellement en formation chez
+                        OpenClassrooms comme Développeur d'application Front End, je suis à la recherche d'une
+                        alternance en contrat pro (4 jours par semaine en entreprise, 1 jour en formation).
                     </p>
                     <p>
-                        Sur ce Github, vous pourrez également suivre mon travail avec Game Dev Alliance, une des plus grosses communautés de créateurs de jeux vidéos amateurs en France, que j'ai co-fondé avec des amis. Vous pouvez nous retrouver sur le site officiel, le wiki, la chaîne Youtube et notre serveur Discord !
+                        Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue une des plus grosses
+                        communautés de créateurs de jeux vidéos en France. Mais je me passionne également pour les
+                        vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
                     </p>
-                    <p><a>En savoir plus</a></p>
+                    <p><a href="/resume">En savoir plus</a></p>
                 </div>
             </div>
         </div>
@@ -52,6 +57,7 @@
             </g-link>
         </div>
         <!-- Blog -->
+        <!--
         <div class="bg-area-2 w-full">
             <div class="max-w-content mx-auto p-2">
                 <h2>Mes derniers articles</h2>
@@ -95,6 +101,7 @@
                 </div>
             </div>
         </div>
+        -->
     </Layout>
 </template>
 
