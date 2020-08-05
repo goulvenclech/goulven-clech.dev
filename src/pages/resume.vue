@@ -41,7 +41,7 @@
                     plusieurs sites web (<a href="/work/fairedesjeux">Ici</a>,
                     <a href="/work/gamedevalliance"> là</a> et <a href="/work/gamedevalliance-next">là</a>),
                     modération d'un <a href="https://wiki.gamedevalliance.fr">wiki</a> et d'une
-                    <a href="https://www.youtube.com/user/FoxFiesta40">chaîne Youtube</a> (pour laquelle j'écrit aussi).
+                    <a href="https://www.youtube.com/user/FoxFiesta40">chaîne Youtube</a> (pour laquelle j'écris aussi).
                     Formation à VueJS (Gridsome) et à Git (Github).
                 </li>
                 <li>
@@ -52,11 +52,11 @@
                 <li>
                     <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019</strong>:<br />
                     Gestion du <a href="https://oxbridgeacademicprograms.wordpress.com/">blog Wordpress</a>, ainsi
-                    que différentes tâches administratives. Anglais profesionnel.
+                    que différentes tâches administratives. Anglais professionnel.
                 </li>
                 <li>
                     <strong>Autres expériences</strong>:<br /> Trois ans d'études en sociologie.
-                    8 mois dans une association de prévention senté. Plusieurs petits boulots. Bac technologique (STI2D).
+                    8 mois dans une association de prévention santé. Plusieurs petits boulots. Bac technologique (STI2D).
                 </li>
             </ul>
         </div>
