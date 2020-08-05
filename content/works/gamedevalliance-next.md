@@ -8,8 +8,6 @@ image: "./gamedevalliance-next.png"
 weight: 3
 ---
 
-The site that will soon replace our [placeholder website](/work/gamedevalliance), it will be a site of articles and news about the development of independent video games. The design was made with Figma and Krita. It will be a static PWA created with Gridsome (a VueJS website generator) and hosted on Github.
+Ce site remplacera bientôt notre [landing page](/work/gamedevalliance), il s'agira d'un site d'articles et de news autour du développement de jeux vidéo amateur. J'ai réalisé le design avec Figma et Krita, et nous sommes actuellement de produire le site avec Gridsome, un framework VueJS. Nous avons également utilisé Tailwind, PostCSS, Font Awesome, Remark et PrismJS.
 
-VueJS is used here for the various interactive elements (client side) and to generate web pages from Markdown files, which are very easy to use by any contributor.
-
-The key elements of the design are a dark theme by default. On the technical side, this is a PWA which is therefore extremely fast, can be viewed offline, has a lazy-load system and meets modern web standards. We also used Tailwind and SASS (css frameworks), FontAwesome API, Remark and PrismJS.
+Il s'agit d'une application web progressive, qui peut être consultée hors ligne et répond aux standards modernes fixés par Google. Enfin, en limitant le javascript exécuté coté client et en utilisant du lazi-load, nous assurons une navigation rapide et fluide pour nos utilisateurs.
