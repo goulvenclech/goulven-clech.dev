@@ -12,7 +12,7 @@ module.exports = {
     siteDescription: "I'm a 22 yo web developer, based in Toulouse, France.",
     siteUrl: 'https://goulven-clech.dev',
     icon: './src/assets/favicon.png',
-    titleTemplate: "Goulven CLEC'H - Portfolio",
+    titleTemplate: "Goulven CLEC'H",
     chainWebpack: (config) => {
         if (process.env.NODE_ENV !== 'production') {
             config
@@ -27,18 +27,32 @@ module.exports = {
             },
         },
     },
-    templates: {
-        Work: '/work/:slug',
-    },
-
     plugins: [
+        /* Je vais chercher les fichiers markdowns pour créer les différents posts */
         {
-        // Create posts from markdown files
             use: '@gridsome/source-filesystem',
             options: {
                 typeName: 'Work',
                 path: 'content/works/*.md',
             },
         },
+        {
+            use: '@gridsome/source-filesystem',
+            options: {
+                typeName: 'Article',
+                path: 'content/blog/*.md',
+            },
+        },
     ],
+    templates: {
+        /* J'attribue un path URL et un template Vue différent en fonction du type de post */
+        Work: [{
+            path: '/work/:slug',
+            component: './src/templates/Work.vue',
+        }],
+        Article: [{
+            path: '/blog/:slug',
+            component: './src/templates/Article.vue',
+        }],
+    },
 };

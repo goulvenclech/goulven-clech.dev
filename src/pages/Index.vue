@@ -3,6 +3,7 @@
         <!-- Présentation -->
         <div class="bg-area-2 w-full">
             <div class="max-w-content mx-auto p-2">
+                <!-- Ici, j'importe l'animation avec mes compétences depuis un composant -->
                 <h2>Développeur <Skills /></h2>
                 <img src="../assets/profilepicture.png"
                      width="160"
@@ -16,7 +17,7 @@
                     </p>
                     <p>
                         Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue une des plus grosses
-                        communautés de créateurs de jeux vidéos en France. Mais je me passionne également pour les
+                        communautés de créateurs de jeux vidéo en France. Mais je me passionne également pour les
                         vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
                     </p>
                     <p><a href="/resume">En savoir plus</a></p>
@@ -30,6 +31,9 @@
                     :key="work.weight"
                     :to="work.node.path"
             >
+                <!-- Il faut que je pense à réduire ce bloc de code en important directement la valeur
+                     de la couleur du fond mais en évitant qu'elle soit purge par purgecss en ajoutant
+                     toutes les variantes possibles dans la whitelist du fichier de config  -->
                 <div v-if="work.node.color === 'primary'"
                      class="bg-primary w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
@@ -57,51 +61,31 @@
             </g-link>
         </div>
         <!-- Blog -->
-        <!--
-        <div class="bg-area-2 w-full">
+        <div class="bg-area-2 w-full invisible">
             <div class="max-w-content mx-auto p-2">
                 <h2>Mes derniers articles</h2>
                 <div class="flex flex-wrap -mx-2">
-                    <div class="w-1/2 px-2">
+                    <div v-for="article in $page.articles.edges"
+                         :key="article.date"
+                         class="w-1/2 px-2"
+                    >
                         <div class="h-150 bg-primary rounded-lg">
                         </div>
                         <h3 class="mt-4">
-                            Ceci est un test
+                            {{ article.node.title }}
                         </h3>
                         <p>
-                            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...
-                            </br>
-                            <a>Lire la suite.</a>
+                            {{ article.node.description }}
                         </p>
-                    </div>
-                    <div class="w-1/2 px-2">
-                        <div class="h-150 bg-secondary rounded-lg">
-                        </div>
-                        <h3 class="mt-4">
-                            Ceci est un test
-                        </h3>
                         <p>
-                            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...
-                            </br>
-                            <a>Lire la suite.</a>
-                        </p>
-                    </div>
-                    <div class="w-1/2 px-2">
-                        <div class="h-150 bg-active rounded-lg">
-                        </div>
-                        <h3 class="mt-4">
-                            Ceci est un test
-                        </h3>
-                        <p>
-                            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...
-                            </br>
-                            <a>Lire la suite.</a>
+                            <g-link :to="article.node.path">
+                                Lire la suite.
+                            </g-link>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        -->
     </Layout>
 </template>
 
@@ -146,6 +130,18 @@ query {
                 image
                 path
                 weight
+            }
+        }
+    }
+    articles: allArticle(sortBy: "date", order: DESC) {
+        edges {
+            node {
+                title
+                slug
+                date
+                description
+                content
+                path
             }
         }
     }
