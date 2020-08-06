@@ -1,17 +1,20 @@
 <template>
     <Layout>
-        <article class="">
+        <article>
             <!-- hero -->
             <div class="bg-area-2 w-full">
                 <div class="max-w-content mx-auto p-2">
                     <h2>{{ $page.work.title }}</h2>
                 </div>
             </div>
-            <g-image :src="$page.work.image"
-                     alt="Image de la page d'accueil du site"
-            />
+            <div class="content max-w-post mx-auto px-2">
+                <g-image :src="$page.work.image"
+                         class="max-w-full mb-0"
+                         alt="Image de couverture"
+                />
+            </div>
             <!-- content -->
-            <div class="content max-w-post mx-auto" v-html="$page.work.content"></div>
+            <div class="content max-w-post mx-auto p-2" v-html="$page.work.content"></div>
             <!-- boutons -->
             <div class="flex flex-wrap justify-center">
                 <div v-if="$page.work.website" class="flex">

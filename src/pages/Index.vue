@@ -39,7 +39,7 @@
                 >
                     <g-image :src="work.node.image"
                              :alt="work.node.title"
-                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                             class="object-top object-cover w-700 mx-auto illu relative"
                     />
                 </div>
                 <div v-else-if="work.node.color === 'secondary'"
@@ -47,7 +47,7 @@
                 >
                     <g-image :src="work.node.image"
                              :alt="work.node.title"
-                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                             class="object-top object-cover w-700 mx-auto illu relative"
                     />
                 </div>
                 <div v-else-if="work.node.color === 'area'"
@@ -55,22 +55,25 @@
                 >
                     <g-image :src="work.node.image"
                              :alt="work.node.title"
-                             class="object-top object-cover w-700 mx-auto illu relative rounded-lg"
+                             class="object-top object-cover w-700 mx-auto illu relative"
                     />
                 </div>
             </g-link>
         </div>
         <!-- Blog -->
-        <div class="bg-area-2 w-full invisible">
+        <div class="bg-area-2 w-full">
             <div class="max-w-content mx-auto p-2">
                 <h2>Mes derniers articles</h2>
                 <div class="flex flex-wrap -mx-2">
                     <div v-for="article in $page.articles.edges"
                          :key="article.date"
-                         class="w-1/2 px-2"
+                         class="w-full sm:w-1/2 px-2"
                     >
-                        <div class="h-150 bg-primary rounded-lg">
-                        </div>
+                        <g-image
+                            :src="article.node.image"
+                            class="h-150 object-cover"
+                            alt="Image de couverture"
+                        />
                         <h3 class="mt-4">
                             {{ article.node.title }}
                         </h3>
@@ -137,10 +140,9 @@ query {
         edges {
             node {
                 title
-                slug
                 date
                 description
-                content
+                image
                 path
             }
         }

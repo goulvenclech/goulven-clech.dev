@@ -111,6 +111,7 @@ module.exports = {
                     marginRight: 'auto',
                     marginTop: '1rem',
                     marginBottom: '1rem',
+                    borderRadius: '0.5rem',
                 },
 
                 h2: {
