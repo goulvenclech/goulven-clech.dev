@@ -15,13 +15,19 @@
                      :key="article.date"
                      class="w-full sm:w-1/2 px-2"
                 >
-                    <g-image
-                        :src="article.node.image"
-                        class="h-150 object-cover"
-                        alt="Image de couverture"
-                    />
+                    <g-link :to="article.node.path">
+                        <g-image
+                            :src="article.node.image"
+                            class="h-150 mt-0 object-cover opacity-100 hover:opacity-50 duration-300"
+                            alt="Image de couverture"
+                        />
+                    </g-link>
                     <h3 class="mt-4">
-                        {{ article.node.title }}
+                        <g-link :to="article.node.path"
+                                class="text-font border-none hover:text-font"
+                        >
+                            {{ article.node.title }}
+                        </g-link>
                     </h3>
                     <p>
                         {{ article.node.description }}
