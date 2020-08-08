@@ -1,16 +1,11 @@
-# Welcome to my portfolio
+# 👋👋👋
 
-## About me
+Je m'appelle Goulven CLEC'H, j'ai 22 ans et suis Toulousain. Actuellement en formation chez OpenClassrooms comme Développeur d'application Front End, je suis à la recherche d'une alternance en contrat pro (4 jours par semaine en entreprise, 1 jour en formation).
 
-I'm a Goulven CLEC'H, a 22 yo web developer & designer, self-taught, based in Toulouse, France. I love to design and develop websites that are easy to navigate, fun to look at and blasting fast!
+Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue une des plus grosses communautés de créateurs de jeux vidéos en France. Mais je me passionne également pour les vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
 
-I specialize myself in the Javascript ecosystem, and I'm particularly interested in VueJS and his frameworks and PWA generators, like Nuxt and Gridsome. I am familiar with Git, webpack, NPM and a lot of organization tools (Github Projects, Trello, etc). I adapt easily to different work environments and I'm constantly looking for new challenges!
+## A propos de mon site
 
-You can contact me at this email address: goulvennev@protonmail.com
-And see my portfolio at the address: goulven-clech.dev
-
-## About my portfolio
-
-This site is powered by Gridsome, a VueJS site generator, and hosted by Netlify. I also used Tailwind and FontAwesome. Feel free to take inspiration on the code or take some bits for your own website :)
+Mon site pro est propulsé par Gridsome, un framework VueJS, et hébergé par Netlify en JamStack. J'utilise également Tailwind et FontAwesome. N'hésitez pas à vous inspirez du code pour vos propres sites :)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/47c88a8f-9844-4b91-919a-2b452842d55e/deploy-status)](https://app.netlify.com/sites/siteweb-toulouse/deploys)
