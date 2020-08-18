@@ -6,7 +6,7 @@ description: "Nouveau design et système de blog... Je vous raconte la refonte d
 image: "./20-08-creationdemonsite.png"
 ---
 
-Actuellement à la recherche d'une alternance comme développeur Front End en contrat de professionnalisation, j'ai décidé de refaire mon site professionnel et notamment de suivre un conseil que l'on m'a plusieurs fois donné : ajouter un blog ! 
+Actuellement à la recherche d'une alternance comme développeur Front End en contrat de professionnalisation, j'ai décidé de refaire mon site professionnel et notamment de suivre un conseil que l'on m'a plusieurs fois donné : ajouter un blog !
 
 Premièrement, il m'a fallut choisir la technologie que j'utiliserais, ce qui fut plutôt rapide car la dernière version de mon site était faite avec [Gridsome](https://gridsome.org/) et que ce Framework VueJS correspond toujours à mes besoins. Il m'a permis de développer rapidement une application web progressive, complètement statique, de construire les pages "Folios" et "Articles de blog" à partir de fichier Markdown et de templates VueJS, le tout avec de bonnes performances et toutes les dépendances NodeJS dont j'avais besoin. Le Framework est cependant loin d'être parfait, nous l'utilisons actuellement avec [Erika](https://github.com/Princesseuh) pour développer [FaireDesJeux.fr](https://goulven-clech.dev/work/fairedesjeux/) et nous commencons à en voir clairement les limites, mais cela sera doute l'objet d'un autre article !
 
@@ -16,7 +16,7 @@ Deuxièmement, j'ai dû réaliser le design. Pour cela je suis parti de mon desi
 
 ![Ancien design](./20-08-creationdemonsite1.png)
 
-J'ai donc redesigné le site rapidement sur Krita et Figma, avant de commencer à le développer en utilisant notamment Tailwind et PostCSS pour gagner du temps. Tout de suite, réduire la taille des polices et retirer les gros espaces vides à donner un aspect plus professionnel au site, j'ai simplement utilisé plusieurs couleurs de fond pour mieux distinguer les sections. 
+J'ai donc redesigné le site rapidement sur Krita et Figma, avant de commencer à le développer en utilisant notamment Tailwind et PostCSS pour gagner du temps. Tout de suite, réduire la taille des polices et retirer les gros espaces vides à donner un aspect plus professionnel au site, j'ai simplement utilisé plusieurs couleurs de fond pour mieux distinguer les sections.
 
 Pour les couleurs, je me suis directement inspiré de [Horizon](https://horizontheme.netlify.app/), un thème VS Code que j'apprécie énormément et sur lequel j'ai basé le thème de mon OS (vous pouvez trouver [mes Dotfiles](https://github.com/GoulvenC/dotfiles) ici). Ainsi, mon site porte les mêmes couleurs que mon environnement de travail, ce qui me permet de vraiment me sentir chez-moi !
 

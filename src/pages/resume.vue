@@ -19,6 +19,9 @@
                         communautés de créateurs de jeux vidéos en France. Mais je me passionne également pour les
                         vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
                     </p>
+                    <p>
+                        Retrouvez moi sur <a href="https://github.com/GoulvenC">GitHub</a> et <a href="https://www.linkedin.com/in/goulvenc/">LinkedIn</a>.
+                    </p>
                 </div>
             </div>
         </div>
