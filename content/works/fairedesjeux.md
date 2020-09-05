@@ -1,8 +1,8 @@
 ---
 title: "FaireDesJeux.fr"
 slug: "fairedesjeux"
-website: ""
-source: ""
+website: "https://fairedesjeux.fr"
+source: "https://github.com/gamedevalliance/fairedesjeux.fr"
 color: "primary"
 image: "./fairedesjeux.png"
 weight: 1
