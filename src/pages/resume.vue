@@ -25,48 +25,50 @@
                 </div>
             </div>
         </div>
-        <!-- Mon CV -->
+        <!-- Mon Mes expériences -->
         <div class="max-w-content mx-auto p-2">
             <h2>Mes expériences</h2>
-            <ul class="skills list-disc list-inside leading-normal text-base font-body">
-                <li>
-                    <strong>Etudiant chez OpenClassrooms, 2020 - présent</strong>:<br />
-                    Compétences enseignées durant la formation "
-                    <a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">
-                        Développeur d'application - Front End
-                    </a>
-                    " : JavaScript, Jquery, UML, Wordpress, BootStrap, API Rest, Git, GitHub, mock-up integration,
-                    veille technologique, création d'interface...
-                </li>
-                <li>
-                    <strong>Co-fondateur de Game Dev Alliance, 2018 - présent</strong>:<br />
-                    Une des plus grosses communautés de créateurs de jeux vidéos en France. Création de
-                    plusieurs sites web (<a href="/work/fairedesjeux">Ici</a>,
-                    <a href="/work/gamedevalliance"> là</a> et <a href="/work/gamedevalliance-next">là</a>),
-                    modération d'un <a href="https://wiki.gamedevalliance.fr">wiki</a> et d'une
-                    <a href="https://www.youtube.com/user/FoxFiesta40">chaîne Youtube</a> (pour laquelle j'écris aussi).
-                    Formation à VueJS (Gridsome) et à Git (Github).
-                </li>
-                <li>
-                    <strong>Développeur Web en Freelance, 2018 - 2020</strong>:<br />
-                    Création de plusieurs sites statiques (comme <a href="https://fil-agape.org/">celui-ci</a>).
-                    Et formation aux technologies Web.
-                </li>
-                <li>
-                    <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019</strong>:<br />
-                    Gestion du <a href="https://oxbridgeacademicprograms.wordpress.com/">blog Wordpress</a>, ainsi
-                    que différentes tâches administratives. Anglais professionnel.
-                </li>
-                <li>
-                    <strong>Autres expériences</strong>:<br /> Trois ans d'études en sociologie.
-                    8 mois dans une association de prévention santé. Plusieurs petits boulots. Bac technologique (STI2D).
-                </li>
-            </ul>
+            <p>
+                <strong>Etudiant chez OpenClassrooms, 2020 - présent</strong>:<br />
+                Compétences enseignées durant la formation "
+                <a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">
+                    Développeur d'application - Front End
+                </a>
+                " : JavaScript, jQuery, UML, WordPress, Bootstrap, API REST, Git, GitHub, mock-up integration,
+                veille technologique, création d'interface...
+            </p>
+            <p>
+                <strong>Co-fondateur de Game Dev Alliance, 2018 - présent</strong>:<br />
+                Une des plus grosses communautés de créateurs de jeux vidéos en France. Création de
+                plusieurs sites web (<a href="/work/fairedesjeux">Ici</a>,
+                <a href="/work/gamedevalliance"> là</a> et <a href="/work/gamedevalliance-next">là</a>),
+                modération d'un <a href="https://wiki.gamedevalliance.fr">wiki</a> et d'une
+                <a href="https://www.youtube.com/user/FoxFiesta40">chaîne YouTube</a> (pour laquelle j'écris aussi).
+                Formation à VueJS (Gridsome) et à Git (GitHub).
+            </p>
+            <p>
+                <strong>Développeur Web en Freelance, 2018 - 2020</strong>:<br />
+                Création de plusieurs sites statiques (comme <a href="https://fil-agape.org/">celui-ci</a>).
+                Et formation aux technologies Web.
+            </p>
+            <p>
+                <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019</strong>:<br />
+                Gestion du <a href="https://oxbridgeacademicprograms.wordpress.com/">blog WordPress</a>, ainsi
+                que différentes tâches administratives. Anglais professionnel.
+            </p>
+            <p>
+                <strong>Autres expériences</strong>:<br /> Trois ans d'études en sociologie.
+                8 mois dans une association de prévention santé. Plusieurs petits boulots. Bac technologique (STI2D).
+            </p>
         </div>
-        <!-- Ma présentation vidéo -->
+        <!-- Mon CV -->
         <div class="max-w-content mx-auto p-2">
-            <h2>Présentation vidéo</h2>
-            <p>En cours de réalisation...</p>
+            <h2>Mon CV</h2>
+            <p>
+                <a href="/CV-CLECH-2020.pdf">
+                    Télécharger en PDF
+                </a>
+            </p>
         </div>
     </Layout>
 </template>

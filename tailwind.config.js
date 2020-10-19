@@ -6,9 +6,9 @@ module.exports = {
     ],
     theme: {
         fontFamily: {
-            display: ['Source Sans Pro'],
-            body: ['Source Sans Pro'],
-            title: ['Source Sans Pro'],
+            display: ['Source Code Pro'],
+            body: ['Be Vietnam'],
+            title: ['Inter'],
         },
         extend: {
             colors: {

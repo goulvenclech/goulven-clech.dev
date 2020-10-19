@@ -3,9 +3,8 @@ import 'tailwindcss/tailwind.css';
 
 // Fonts
 import 'typeface-source-code-pro';
-import 'typeface-source-sans-pro';
-import 'typeface-muli';
-
+import 'typeface-inter';
+import 'typeface-be-vietnam';
 
 // Font-Awesome
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
