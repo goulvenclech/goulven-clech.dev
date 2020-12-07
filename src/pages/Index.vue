@@ -11,14 +11,14 @@
                 />
                 <div class="">
                     <p>
-                        Je m'appelle Goulven CLEC'H, j'ai 22 ans et suis Toulousain. Actuellement en formation chez
-                        OpenClassrooms comme Développeur d'application Front End, je suis à la recherche d'une
-                        alternance en contrat pro (4 jours par semaine en entreprise, 1 jour en formation).
+                        Je m'appelle Goulven CLEC'H, 23 ans et toulousain, je travaille actuellement comme développeur
+                        full stack chez <a href="https://encheres-immo.com/">Enchères-Immo</a> en alternance avec
+                        <a href="https://openclassrooms.com/fr/paths/314-developpeur-front-end">OpenClassrooms</a>.
                     </p>
                     <p>
-                        Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue une des plus grosses
-                        communautés de créateurs de jeux vidéo en France. Mais je me passionne également pour les
-                        vêtements (notamment vintage), la cuisine végétarienne et les enjeux écologiques.
+                        Avec des amis, j’ai co-fondé l’association Game Dev Alliance, devenue l'une des plus grosses
+                        communautés de créateurs de jeux vidéos en France. Mais je suis également passionné par les
+                        fringues vintages, la cuisine végétarienne et les enjeux écologiques.
                     </p>
                     <p><a href="/resume">En savoir plus</a></p>
                 </div>
