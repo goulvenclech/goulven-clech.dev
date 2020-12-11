@@ -20,7 +20,7 @@ module.exports = {
                 'font-3': '#9496a8',
                 primary: '#E95678',
                 secondary: '#F09383',
-                active: '#25B2BC',
+                tertiary: '#25B2BC',
             },
 
             lineHeight: {
@@ -95,14 +95,19 @@ module.exports = {
                 a: {
                     color: config('theme.textColor.primary'),
                     textDecoration: 'none',
-                    borderStyle: 'solid',
-                    borderBottomWidth: '1px',
-                    borderColor: config('theme.textColor.primary'),
+                    boxShadow: 'inset 0 -2px 0 -1px #E95678',
+                    transition: '.15s ease-in-out',
+                    fontWeight: '500',
 
                     '&:hover': {
-                        color: config('theme.textColor.secondary'),
-                        borderColor: config('theme.textColor.secondary'),
+                        color: config('theme.textColor.font'),
+                        boxShadow: 'inset 0 -20px 0 -1px #E95678',
                     },
+                },
+
+                strong: {
+                    color: config('theme.textColor.secondary'),
+                    fontWeight: '800',
                 },
 
                 img: {

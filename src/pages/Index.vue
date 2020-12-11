@@ -51,7 +51,7 @@
                     />
                 </div>
                 <div v-else-if="work.node.color === 'area'"
-                     class="bg-active w-full h-featuredClass my-4 rounded-lg hotspot"
+                     class="bg-tertiary w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
                     <g-image :src="work.node.image"
                              :alt="work.node.title"
@@ -78,7 +78,7 @@
                         </g-link>
                         <h3 class="mt-4">
                             <g-link :to="article.node.path"
-                                    class="text-font border-none hover:text-font"
+                                    class="text-font shadow-none hover:shadow-none hover:text-font"
                             >
                                 {{ article.node.title }}
                             </g-link>

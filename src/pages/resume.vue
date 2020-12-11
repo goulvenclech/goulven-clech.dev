@@ -24,8 +24,6 @@
                         <a href="https://twitter.com/GoulvenClech">Twitter</a> et
                         <a href="https://www.linkedin.com/in/goulvenc/">LinkedIn</a>.
                     </p>
-                    </a>
-                    </p></a>
                 </div>
             </div>
         </div>
@@ -33,7 +31,7 @@
         <div class="max-w-content mx-auto p-2">
             <h2>Mes expériences</h2>
             <p>
-                <strong>Etudiant chez OpenClassrooms, 2020 - présent</strong>:<br />
+                <strong>Etudiant chez OpenClassrooms, 2020 - présent :</strong><br />
                 Compétences enseignées durant la formation "
                 <a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">
                     Développeur d'application - Front End
@@ -42,7 +40,7 @@
                 veille technologique, création d'interface...
             </p>
             <p>
-                <strong>Co-fondateur de Game Dev Alliance, 2018 - présent</strong>:<br />
+                <strong>Co-fondateur de Game Dev Alliance, 2018 - présent :</strong><br />
                 Une des plus grosses communautés de créateurs de jeux vidéos en France. Création de
                 plusieurs sites web (<a href="/work/fairedesjeux">Ici</a>,
                 <a href="/work/gamedevalliance"> là</a> et <a href="/work/gamedevalliance-next">là</a>),
@@ -51,17 +49,17 @@
                 Formation à VueJS (Gridsome) et à Git (GitHub).
             </p>
             <p>
-                <strong>Développeur Web en Freelance, 2018 - 2020</strong>:<br />
+                <strong>Développeur Web en Freelance, 2018 - 2020 :</strong><br />
                 Création de plusieurs sites statiques (comme <a href="https://fil-agape.org/">celui-ci</a>).
                 Et formation aux technologies Web.
             </p>
             <p>
-                <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019</strong>:<br />
+                <strong>Assistant administratif pour Oxbridge Academics Programs, juillet 2019 :</strong><br />
                 Gestion du <a href="https://oxbridgeacademicprograms.wordpress.com/">blog WordPress</a>, ainsi
                 que différentes tâches administratives. Anglais professionnel.
             </p>
             <p>
-                <strong>Autres expériences</strong>:<br /> Trois ans d'études en sociologie.
+                <strong>Autres expériences :</strong><br /> Trois ans d'études en sociologie.
                 8 mois dans une association de prévention santé. Plusieurs petits boulots. Bac technologique (STI2D).
             </p>
         </div>

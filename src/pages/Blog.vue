@@ -24,7 +24,7 @@
                     </g-link>
                     <h3 class="mt-4">
                         <g-link :to="article.node.path"
-                                class="text-font border-none hover:text-font"
+                                class="text-font shadow-none hover:shadow-none hover:text-font"
                         >
                             {{ article.node.title }}
                         </g-link>

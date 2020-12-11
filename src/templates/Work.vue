@@ -19,7 +19,7 @@
             <div class="flex flex-wrap justify-center">
                 <div v-if="$page.work.website" class="flex">
                     <a :href="$page.work.website"
-                       class="m-2 text-center text-font border-none font-bold hover:text-font"
+                       class="m-2 text-center text-font shadow-none font-bold hover:text-font hover:shadow-none"
                     >
                         <div class="bg-area hover:bg-primary rounded-lg w-64 inline-block text-center px-4 py-3 duration-200">
                             Visiter le site
@@ -35,7 +35,7 @@
                 </div>
                 <div v-if="$page.work.source" class="flex">
                     <a :href="$page.work.source"
-                       class="m-2 text-center text-font border-none font-bold hover:text-font"
+                       class="m-2 text-center text-font shadow-none font-bold hover:text-font hover:shadow-none"
                     >
                         <div class="bg-body hover:bg-primary rounded-lg w-64 inline-block text-center px-4 py-3 duration-200">
                             Voir le code source <font-awesome :icon="['fab', 'github']" />

@@ -32,7 +32,7 @@
                     />
                 </div>
                 <div v-else-if="work.node.color === 'area'"
-                     class="bg-active w-full h-featuredClass my-4 rounded-lg hotspot"
+                     class="bg-tertiary w-full h-featuredClass my-4 rounded-lg hotspot"
                 >
                     <g-image :src="work.node.image"
                              :alt="work.node.title"

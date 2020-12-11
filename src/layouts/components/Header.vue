@@ -1,7 +1,7 @@
 <template>
     <header class="max-w-content mx-auto px-2">
-        <h1 class="text-base md:text-lg inline-block l font-body font-extrabold">
-            <a href="/" class="border-0 text-font hover:text-font">
+        <h1 class="text-base md:text-lg inline-block l font-body ">
+            <a href="/" class="font-extrabold shadow-none text-font hover:text-font hover:shadow-none">
                 Goulven CLEC'H
             </a>
         </h1>
