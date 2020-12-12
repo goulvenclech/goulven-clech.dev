@@ -31,7 +31,12 @@
         <div class="max-w-content mx-auto p-2">
             <h2>Mes expériences</h2>
             <p>
-                <strong>Etudiant chez OpenClassrooms, 2020 - présent :</strong><br />
+                <strong>Dev full stack chez Enchères Immo, décembre 2020 - présent :</strong><br />
+                Plateforme d'enchères immobilières interactives. Formation à la programmation fonctionnelle,
+                sur une stack moderne : Elixir / Phoenix Liveview / Surface / Tailwind CSS & UI.
+            </p>
+            <p>
+                <strong>Etudiant chez OpenClassrooms, juin 2020 - présent :</strong><br />
                 Compétences enseignées durant la formation "
                 <a href="https://openclassrooms.com/fr/paths/60-developpeur-dapplication-frontend">
                     Développeur d'application - Front End
