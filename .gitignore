@@ -1,7 +1,0 @@
-*.exe
-resources/
-public/
-node_modules/
-dist/
-src/.temp
-.cache/
