@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goulven CLEC'H</title>
-    
-    <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" async></script>
 </head>
 <body>
     <main>
@@ -30,6 +29,76 @@
         </select>
     </aside>
 </body>
+<style>
+    /* Base style */
+    @font-face {
+        font-family: "Cascadia Code";
+        src: url("/CascadiaMono-Regular.woff2");
+        font-weight: normal;
+    }
+    @font-face {
+        font-family: "Cascadia Code";
+        src: url("/CascadiaMono-Bold.woff2");
+        font-weight: bold;
+    }
+    :root{
+        --bg: #1C1E26;
+        --bg2: ;
+        --font: #FDF0ED;
+        --font2: #E95678;
+        --font3: #FAB795;
+        --font4: #59E3E3;
+        font-family: 'Cascadia Code';
+    }
+    body {
+        background-color: var(--bg);
+    }
+    main {
+        padding: 5rem;
+        max-width: 45rem;
+    }
+    @media screen and (max-width: 900px) {
+        main {
+            padding: 1rem;
+        }
+    }
+    /* Text style */
+    h1, h2, p, li {
+        color: var(--font);
+    }
+    a {
+        color: var(--font2);
+    }
+    a:hover {
+        color: var(--font3); 
+    }
+    a::after {
+        content: "\f360";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 0.75rem;
+        padding-left: 0.2rem;
+        color: inherit;
+        display: inline-block;
+    }
+    .a--mail::after {
+        content: "\f0e0";
+    }
+    strong {
+        color: var(--font4);
+        font-weight: bold;
+    }
+    /* Components*/
+    li {
+        list-style: url(/angle-double-right-solid.svg);
+        margin-bottom: 1rem;
+    }
+    aside {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+    }
+</style>
 <script>
     // Translations
     const langs = {
@@ -200,74 +269,4 @@
         document.querySelector("main").innerHTML = langs[event.target.value];
     });
 </script>
-<style>
-    /* Base style */
-    @font-face {
-        font-family: "Cascadia Code";
-        src: url("/CascadiaMono-Regular.woff2");
-        font-weight: normal;
-    }
-    @font-face {
-        font-family: "Cascadia Code";
-        src: url("/CascadiaMono-Bold.woff2");
-        font-weight: bold;
-    }
-    :root{
-        --bg: #1C1E26;
-        --bg2: ;
-        --font: #FDF0ED;
-        --font2: #E95678;
-        --font3: #FAB795;
-        --font4: #59E3E3;
-        font-family: 'Cascadia Code';
-    }
-    body {
-        background-color: var(--bg);
-    }
-    main {
-        padding: 5rem;
-        max-width: 45rem;
-    }
-    @media screen and (max-width: 900px) {
-        main {
-            padding: 1rem;
-        }
-    }
-    /* Text style */
-    h1, h2, p, li {
-        color: var(--font);
-    }
-    a {
-        color: var(--font2);
-    }
-    a:hover {
-        color: var(--font3); 
-    }
-    a::after {
-        content: "\f360";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        font-size: 0.75rem;
-        padding-left: 0.2rem;
-        color: inherit;
-        display: inline-block;
-    }
-    .a--mail::after {
-        content: "\f0e0";
-    }
-    strong {
-        color: var(--font4);
-        font-weight: bold;
-    }
-    /* Components*/
-    li {
-        list-style: url(/angle-double-right-solid.svg);
-        margin-bottom: 1rem;
-    }
-    aside {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-    }
-</style>
 </html>
