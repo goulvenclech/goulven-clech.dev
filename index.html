@@ -16,7 +16,7 @@
         </noscript>
     </main>
     <aside>
-        <select class="lang_selector">
+        <select class="lang_selector" aria-label="lang selector">
             <option value="EN">
                 English 🇬🇧
             </option>
@@ -42,7 +42,7 @@
         font-weight: bold;
     }
     :root{
-        --bg: #1C1E26;
+        --bg: #16161C;
         --bg2: ;
         --font: #FDF0ED;
         --font2: #E95678;
@@ -54,8 +54,11 @@
         background-color: var(--bg);
     }
     main {
-        padding: 5rem;
-        max-width: 45rem;
+        padding: 1rem;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10vh;
+        max-width: 40rem;
     }
     @media screen and (max-width: 900px) {
         main {
@@ -65,9 +68,11 @@
     /* Text style */
     h1, h2, p, li {
         color: var(--font);
+        font-size: 1rem;
+        line-height: 1.5rem;
     }
     h1, h2 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     a {
         color: var(--font2);
@@ -109,12 +114,15 @@
     /* Components*/
     li {
         list-style: url(/angle-double-right-solid.svg);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     aside {
         position: fixed;
         bottom: 2rem;
         right: 2rem;
+    }
+    select {
+        height: 2rem;
     }
 </style>
 <script>
@@ -129,7 +137,8 @@
             </h1>
             <p>
                 A full stack web developer based in Toulouse, France. 
-                Interested in functionnal programming, VueJS and Linux.
+                Interested in functionnal programming, type systems 
+                and reliability / maintainability issues.
             </p>
             <p>
                 Currently working on :
@@ -157,7 +166,7 @@
             </ul>
             <p>
                 I'm not really on social networks, but you can send me an 
-                <a href="mailto:goulven.clech@protonmail.com" class="a--mail">mail</a>
+                <a href="mailto:goulven.clech@protonmail.com" class="a--mail">email</a>
                 or check my 
                 <a href="https://github.com/GoulvenC">Github profile</a>.
             </p>
@@ -177,7 +186,8 @@
             </h1>
             <p>
                 Développeur full stack vivant à Toulouse, en France.
-                Intéressé par la programmation fonctionelle, Vue JS et Linux.
+                Intéressé par la programmation fonctionelle, les systèmes 
+                de types et les questions de fiabilité / maintenabilité.
             </p>
             <p>
                 Je travaille actuellement sur :
@@ -224,7 +234,8 @@
             </h1>
             <p>
                 Plena staka programisto loĝenta en Tuluzo, en Francio.
-                Interesiĝas pri funkcia programado, Vue JS kaj Linukso.
+                Interesiĝas pri funkcia programado, tipaj sistemoj kaj 
+                fidindeco / daŭrigebleco problemoj.
             </p>
             <p>
                 Mi nuntempe laboras pri:
@@ -238,11 +249,11 @@
                 </li>
                 <li>
                     <strong>Game Dev Alliance</strong> :
-                    Asocio de videoludaj programistoj faranti
+                    Asocio de videoludaj programistoj farantaj
                     <a href="https://www.youtube.com/channel/UCCjlo6Ihet_T3X6bKLJzPsA">
-                        filmetojn Youtube</a>, verki
+                        filmetojn Youtube</a>, verkaj
                     <a href="https://fairedesjeux.fr/">partoprena lernilojn</a>
-                    kaj moderigi
+                    kaj moderigaj
                     <a href="https://discord.gg/RrBppaj">Discord servilon</a>
                 </li>
                 <li>
