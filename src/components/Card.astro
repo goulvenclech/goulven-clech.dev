@@ -1,0 +1,24 @@
+---
+export interface Props {
+  article: any
+}
+
+const { article } = Astro.props
+---
+
+<a href={`blog/${article.slug}`} class="rounded-xl px-4 py-3 hover:bg-body2-light">
+  <article>
+    <h3 class="pb-2 text-xl font-bold">
+      {article.data.title}
+    </h3>
+    <div>
+      <i class="fa-solid fa-calendar-day pr-1"></i>
+      {article.data.date.toDateString()}
+      <i class="fa-solid fa-tags pl-3"></i>
+      {article.data.tags.join(", ")}
+    </div>
+    <p class="mt-3 text-ellipsis py-0 line-clamp-3">
+      {article.data.abstract}
+    </p>
+  </article>
+</a>

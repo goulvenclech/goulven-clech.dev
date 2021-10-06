@@ -1,0 +1,13 @@
+---
+export interface Props {
+  to: string
+}
+
+const { to } = Astro.props
+---
+
+<a href={to}>
+  <button class="align-middle text-xl font-bold hover:text-primary-light">
+    <slot />
+  </button>
+</a>

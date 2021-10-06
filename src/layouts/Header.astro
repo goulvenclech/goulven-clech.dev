@@ -1,0 +1,23 @@
+---
+import HeaderButton from "./header/HeaderButton.astro"
+---
+
+<header class="py-2">
+  <nav class="flex place-content-end gap-6">
+    <HeaderButton to="/blog">
+      <i class="fa-solid fa-newspaper"></i>
+    </HeaderButton>
+
+    <HeaderButton to="/tags">
+      <i class="fa-solid fa-tags"></i>
+    </HeaderButton>
+
+    <HeaderButton to="/search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </HeaderButton>
+
+    <HeaderButton to="/">
+      <i class="fa-solid fa-moon"></i>
+    </HeaderButton>
+  </nav>
+</header>

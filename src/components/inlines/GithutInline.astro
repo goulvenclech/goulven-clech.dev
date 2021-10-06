@@ -1,0 +1,24 @@
+---
+export interface Props {
+  user: string
+}
+
+const { user } = Astro.props
+
+const userData: any = await fetch(`https://api.github.com/user/${user}`, {
+  headers: new Headers({
+    Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
+  }),
+}).then((response) => response.json())
+
+const userName = await userData.name
+const avatar_url = await userData.avatar_url
+const userUrl = await userData.html_url
+---
+
+<a
+  href={userUrl}
+  class="font-bold underline decoration-dashed decoration-2 underline-offset-2 hover:text-primary-light"
+>
+  <img src={avatar_url} class="mr-2 inline-block h-6 w-6 rounded-full shadow" />{userName}</a
+>
