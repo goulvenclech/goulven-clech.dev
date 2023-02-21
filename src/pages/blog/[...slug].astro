@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content"
+import Hero from "../../components/Hero.astro"
+import TagInline from "../../components/inlines/TagInline.astro"
 import Layout from "../../layouts/Layout.astro"
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
@@ -15,6 +17,13 @@ const { Content } = await entry.render()
 ---
 
 <Layout title={entry.data.title}>
-  <h1>{entry.data.title}</h1>
+  <Hero title={entry.data.title} parents={["home", "blog"]}>
+    <ul class="flex gap-4">
+      {entry.data.tags.map((tag: string) => <TagInline to="">{tag}</TagInline>)}
+    </ul>
+  </Hero>
+  <img src="/cover-min_17Utiv.avif" class="mb-10 rounded-lg object-cover" />
+  <p>{entry.data.abstract}</p>
   <Content />
+  <p class="mb-14">- published {entry.data.date.toDateString()}</p>
 </Layout>

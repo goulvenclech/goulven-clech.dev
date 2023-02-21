@@ -1,0 +1,34 @@
+---
+export interface Props {
+  parents: Array<Parent>
+}
+
+export type Parent = "home" | "blog"
+
+const { parents } = Astro.props
+
+/*
+  For each parents of this page, should display a button for navigate back.
+  Home button should be a simple icon of a house.
+*/
+---
+
+<ul class="flex items-center gap-2 py-2 text-sm font-bold">
+  {
+    parents.map((parent) => (
+      <>
+        {parent == "home" && (
+          <a href="/">
+            <i class="fa-solid fa-house" />
+          </a>
+        )}
+        {parent == "blog" && (
+          <a href="/blog">
+            <i class="fa-solid fa-newspaper text-base" />
+          </a>
+        )}
+        <i class="fa-solid fa-chevron-right" />
+      </>
+    ))
+  }
+</ul>

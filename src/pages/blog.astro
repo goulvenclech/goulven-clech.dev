@@ -1,0 +1,27 @@
+---
+// import components
+import Hero from "../components/Hero.astro"
+import Layout from "../layouts/Layout.astro"
+import Card from "../components/Card.astro"
+
+// Page title use in Hero & Metadata
+const pageTitle = "All Articles"
+
+// Page's parents
+import type { Parent } from "../components/Parents.astro"
+const parents: Array<Parent> = ["home"]
+
+// Import all blog articles
+import { getCollection } from "astro:content"
+const allBlogEntries = await getCollection("blog", ({ data }) => {
+  return data.draft !== true
+})
+---
+
+<Layout title={pageTitle}>
+  <Hero title={pageTitle} parents={parents}>
+    <ul class="flex flex-col gap-3">
+      {allBlogEntries.map((blogEntry) => <Card article={blogEntry} />)}
+    </ul>
+  </Hero>
+</Layout>

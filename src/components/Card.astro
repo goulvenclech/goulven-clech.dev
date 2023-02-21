@@ -6,7 +6,7 @@ export interface Props {
 const { article } = Astro.props
 ---
 
-<a href={`blog/${article.slug}`} class="rounded-xl px-4 py-3 hover:bg-body2-light">
+<a href={`/blog/${article.slug}`} class="rounded-xl px-4 py-3 hover:bg-body2-light">
   <article>
     <h3 class="pb-2 text-xl font-bold">
       {article.data.title}

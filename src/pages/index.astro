@@ -1,21 +1,29 @@
 ---
+// import components
 import Hero from "../components/Hero.astro"
 import GithutInline from "../components/inlines/GithutInline.astro"
 import LinkInline from "../components/inlines/LinkInline.astro"
 import TagInline from "../components/inlines/TagInline.astro"
 import Section from "../components/Section.astro"
 import Layout from "../layouts/Layout.astro"
-
-// Import blog articles
-import { getCollection } from "astro:content"
 import Card from "../components/Card.astro"
+
+// Page title use in Hero & Metadata
+const pageTitle = "Hello 👋"
+
+// Page's parents
+import type { Parent } from "../components/Parents.astro"
+const parents: Array<Parent> = []
+
+// Import the three last blog articles, except drafts
+import { getCollection } from "astro:content"
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true
 })
 ---
 
-<Layout title="Hello 👋">
-  <Hero title="Hello 👋">
+<Layout title={pageTitle}>
+  <Hero title={pageTitle} parents={parents}>
     <p>I'm <GithutInline user="35667800" />, a web developer based in Toulouse, France.</p>
     <p>
       Interested in functional programming, types systems, and maintainability issues; I'm currently

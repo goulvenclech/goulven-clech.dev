@@ -1,0 +1,31 @@
+---
+// import components
+import Hero from "../components/Hero.astro"
+import Layout from "../layouts/Layout.astro"
+import TagInline from "../components/inlines/TagInline.astro"
+
+// Page title use in Hero & Metadata
+const pageTitle = "All tags"
+
+// Page's parents
+import type { Parent } from "../components/Parents.astro"
+const parents: Array<Parent> = ["home"]
+
+// Import all tags
+/* TO DO */
+---
+
+<Layout title={pageTitle}>
+  <Hero title={pageTitle} parents={parents}>
+    <ul class="my-3 flex gap-6">
+      <TagInline to="/tags?coffee">Programming</TagInline>
+      <TagInline to="/tags?coffee">Coffee</TagInline>
+    </ul>
+    <ul class="mt-6 flex gap-6">
+      <TagInline to="/tags?coffee">Web dev</TagInline>
+      <TagInline to="/tags?coffee">Astro</TagInline>
+      <TagInline to="/tags?coffee">TypeScript</TagInline>
+      <TagInline to="/tags?coffee">Toulouse</TagInline>
+    </ul>
+  </Hero>
+</Layout>
