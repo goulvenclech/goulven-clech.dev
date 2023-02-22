@@ -1,44 +1,55 @@
 ---
 /**
- * Button to change the color theme, and all dark mode related logic.
+ * A simple button to change the colors theme, and all dark mode related logic.
  * See dark mode by Tailwind CSS -> https://tailwindcss.com/docs/dark-mode
  */
 ---
 
-<button id="darkMode" class="align-middle text-xl font-bold hover:text-primary">
-  <i class="fa-solid fa-moon"></i>
-</button>
+<button id="darkMode" class="align-middle text-xl font-bold hover:text-primary"></button>
 
 <script>
+  const button = document.getElementById("darkMode")
   /**
-   * Check if the user has already specified that he wants to use dark mode; otherwise,
-   * check if it is his browser preference. Then apply or remove the class "dark" used
-   * by Tailwind CSS (see link before)
+   * Apply Dark mode function, used on page load and on button click.
+   * Use localStorage to remember the user choice about the colors theme.
+   * Then apply or remove the class "dark" used by Tailwind CSS (see link before)
+   * Also change the button inner HTML to correct icon (🌞 or 🌚)
+   * @param {boolean} isDark - Are we using dark mode?
    */
-  const applyDarkMode = () => {
-    if (
-      localStorage.theme == "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      // Bravo Six, going dark...
+  const applyDarkMode = (isDark: boolean) => {
+    if (isDark) {
+      localStorage.useDarkMode = JSON.stringify(true)
       document.documentElement.classList.add("dark")
+      if (button) {
+        button.innerHTML = `<i class="fa-solid fa-sun"></i>`
+      }
     } else {
+      localStorage.useDarkMode = JSON.stringify(false)
       document.documentElement.classList.remove("dark")
+      if (button) {
+        button.innerHTML = `<i class="fa-solid fa-moon"></i>`
+      }
     }
   }
-  // On page load
-  applyDarkMode()
-  // On button click
-  const button = document.getElementById("darkMode")
+  /**
+   * On page load, check if the user has already specified that he wants to use dark mode;
+   * otherwise, check if it is his browser preference. Then apply it.
+   */
+  if (
+    localStorage.useDarkMode == "true" ||
+    (!("useDarkMode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    // Bravo Six, going dark...
+    applyDarkMode(true)
+  } else {
+    applyDarkMode(false)
+  }
+  /**
+   * On button click, it should change "useDarkMode" to its opposite and apply it.
+   */
   if (button) {
     button.addEventListener("click", function () {
-      if (localStorage.theme == "light") {
-        localStorage.theme = "dark"
-        applyDarkMode()
-      } else {
-        localStorage.theme = "light"
-        applyDarkMode()
-      }
+      applyDarkMode(!JSON.parse(localStorage.useDarkMode))
     })
   }
 </script>
