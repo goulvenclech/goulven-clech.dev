@@ -1,6 +1,10 @@
 ---
 import Parents, { Parent } from "./Parents.astro"
-
+/**
+ * Used to display the main page title, and the parents nav bar.
+ * @param {string} title - What is this page about?
+ * @param {Array<Parent>} parents - What are this page parents?
+ */
 export interface Props {
   title: string
   parents: Array<Parent>
@@ -10,11 +14,11 @@ const { title, parents } = Astro.props
 ---
 
 <section class="py-14">
-  <ul>
+  <nav>
     <Parents parents={parents} />
     <h1 class="pb-3 text-5xl font-bold leading-normal">
       {title}
     </h1>
     <slot />
-  </ul>
+  </nav>
 </section>

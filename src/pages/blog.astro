@@ -1,8 +1,10 @@
 ---
-// import components
 import Hero from "../components/Hero.astro"
 import Layout from "../layouts/Layout.astro"
 import Card from "../components/Card.astro"
+/**
+ * A page with all our articles.
+ */
 
 // Page title use in Hero & Metadata
 const pageTitle = "All Articles"
@@ -12,6 +14,7 @@ import type { Parent } from "../components/Parents.astro"
 const parents: Array<Parent> = ["home"]
 
 // Import all blog articles
+// See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
 import { getCollection } from "astro:content"
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true

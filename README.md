@@ -13,6 +13,10 @@ Live at [goulven-clech.dev](https://goulven-clech.dev), hosted by [Netlify](http
 ├── src/
 │   ├── components/
 │   │   └── Card.astro
+│   ├── content/
+│   │   └── article_slug/
+│   │       └── index.mdx
+│   │       └── static.img
 │   ├── layouts/
 │   │   └── Layout.astro
 │   └── pages/
@@ -20,9 +24,11 @@ Live at [goulven-clech.dev](https://goulven-clech.dev), hosted by [Netlify](http
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`pages/` contains every page of this blog as `.astro` files.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+`content/` contains every article (and their images), as `.mdx` files.
+
+`layouts/` and `components/` contains every web component as `.astro`` files.
 
 Any static assets, like images, can be placed in the `public/` directory.
 

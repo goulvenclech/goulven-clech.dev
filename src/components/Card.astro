@@ -1,6 +1,10 @@
 ---
+/**
+ * Used to present an article as a card, also a link to that article.
+ * @param {any} article - What an exciting article we want to show?
+ */
 export interface Props {
-  article: any
+  article: any // TO DO: should be better typed
 }
 
 const { article } = Astro.props
@@ -8,7 +12,7 @@ const { article } = Astro.props
 
 <a
   href={`/blog/${article.slug}`}
-  class="dark:hover:bg-highlight-dark hover:bg-highlight-light rounded-xl px-4 py-3"
+  class="rounded-xl px-4 py-3 hover:bg-highlight-light dark:hover:bg-highlight-dark"
 >
   <article>
     <h3 class="pb-2 text-xl font-bold">

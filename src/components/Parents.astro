@@ -1,27 +1,30 @@
 ---
+/**
+ * A nav bar allowing fast navigation to this page's parents.
+ * @param {Array<Parent>} parents - What are this page parents?
+ */
 export interface Props {
   parents: Array<Parent>
 }
 
+// TO DO: should this really be there ? 🤔
 export type Parent = "home" | "blog"
 
 const { parents } = Astro.props
-
-/*
-  For each parents of this page, should display a button for navigate back.
-  Home button should be a simple icon of a house.
-*/
 ---
 
 <ul class="flex items-center gap-2 py-2 text-sm font-bold">
   {
     parents.map((parent) => (
       <>
-        {parent == "home" && (
-          <a href="/" class="hover:text-primary">
-            <i class="fa-solid fa-house" />
-          </a>
-        )}
+        {
+          // As always, we use cute icons to represents pages
+          parent == "home" && (
+            <a href="/" class="hover:text-primary">
+              <i class="fa-solid fa-house" />
+            </a>
+          )
+        }
         {parent == "blog" && (
           <a href="/blog" class="hover:text-primary">
             <i class="fa-solid fa-newspaper text-base" />

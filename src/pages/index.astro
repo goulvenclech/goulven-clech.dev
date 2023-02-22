@@ -1,5 +1,4 @@
 ---
-// import components
 import Hero from "../components/Hero.astro"
 import GithutInline from "../components/inlines/GithutInline.astro"
 import LinkInline from "../components/inlines/LinkInline.astro"
@@ -7,6 +6,11 @@ import TagInline from "../components/inlines/TagInline.astro"
 import Section from "../components/Section.astro"
 import Layout from "../layouts/Layout.astro"
 import Card from "../components/Card.astro"
+/**
+ * Home page of our blog, so we have to make a good first impression !
+ * Contains a presentation of myself (I love talking about myself) and the blog,
+ * then display the last articles & some tags you could be interessed in.
+ */
 
 // Page title use in Hero & Metadata
 const pageTitle = "Hello 👋"
@@ -16,6 +20,7 @@ import type { Parent } from "../components/Parents.astro"
 const parents: Array<Parent> = []
 
 // Import the three last blog articles, except drafts
+// See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
 import { getCollection } from "astro:content"
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true
