@@ -5,11 +5,11 @@ import DarkMode from "./DarkMode.astro"
  */
 
 //used by header links, kind of bored to do a component just for that...
-const cssClasses = "align-middle text-xl font-bold hover:text-primary"
+const cssClasses = "align-middle text-lg md:text-xl font-bold hover:text-primary px-3"
 ---
 
 <header class="py-2">
-  <nav class="flex place-content-end gap-6">
+  <nav class="flex place-content-end">
     <a href="/blog" class={cssClasses}>
       <i class="fa-solid fa-newspaper"></i>
     </a>

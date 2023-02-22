@@ -1,4 +1,6 @@
 ---
+import { getCollection } from "astro:content"
+import type { Parent } from "../components/Parents.astro"
 import Hero from "../components/Hero.astro"
 import Layout from "../layouts/Layout.astro"
 import Card from "../components/Card.astro"
@@ -10,12 +12,10 @@ import Card from "../components/Card.astro"
 const pageTitle = "All Articles"
 
 // Page's parents
-import type { Parent } from "../components/Parents.astro"
 const parents: Array<Parent> = ["home"]
 
 // Import all blog articles
 // See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
-import { getCollection } from "astro:content"
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true
 })

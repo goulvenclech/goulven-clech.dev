@@ -3,7 +3,7 @@
  * A link to a specific tag of our blog, with a cool icon
  * @param {string} to - What tag are we going to?
  */
-export interface Props {
+interface Props {
   to: string
 }
 
@@ -12,7 +12,7 @@ const { to } = Astro.props
 
 <a
   href={to}
-  class="font-bold underline decoration-dashed decoration-2 underline-offset-2 hover:text-primary"
+  class="whitespace-nowrap font-bold underline decoration-dashed decoration-2 underline-offset-3 hover:text-primary"
 >
   <i class="fa-solid fa-tag pr-1"></i><slot /></a
 >

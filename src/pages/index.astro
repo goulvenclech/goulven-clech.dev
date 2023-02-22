@@ -1,4 +1,6 @@
 ---
+import { getCollection } from "astro:content"
+import type { Parent } from "../components/Parents.astro"
 import Hero from "../components/Hero.astro"
 import GithutInline from "../components/inlines/GithutInline.astro"
 import LinkInline from "../components/inlines/LinkInline.astro"
@@ -16,12 +18,11 @@ import Card from "../components/Card.astro"
 const pageTitle = "Hello 👋"
 
 // Page's parents
-import type { Parent } from "../components/Parents.astro"
+
 const parents: Array<Parent> = []
 
 // Import the three last blog articles, except drafts
 // See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
-import { getCollection } from "astro:content"
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true
 })
@@ -47,11 +48,11 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
     </ul>
   </Section>
   <Section title="Tags">
-    <ul class="my-3 flex gap-6">
+    <ul class="my-3 flex flex-wrap gap-6">
       <TagInline to="/tags?coffee">Programming</TagInline>
       <TagInline to="/tags?coffee">Coffee</TagInline>
     </ul>
-    <ul class="mt-6 flex gap-6">
+    <ul class="mt-6 flex flex-wrap gap-6">
       <TagInline to="/tags?coffee">Web dev</TagInline>
       <TagInline to="/tags?coffee">Astro</TagInline>
       <TagInline to="/tags?coffee">TypeScript</TagInline>

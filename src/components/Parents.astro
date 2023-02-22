@@ -1,32 +1,31 @@
 ---
+// TO DO: should this really be there ? 🤔
+export type Parent = "home" | "blog"
 /**
  * A nav bar allowing fast navigation to this page's parents.
  * @param {Array<Parent>} parents - What are this page parents?
  */
-export interface Props {
+interface Props {
   parents: Array<Parent>
 }
-
-// TO DO: should this really be there ? 🤔
-export type Parent = "home" | "blog"
 
 const { parents } = Astro.props
 ---
 
-<ul class="flex items-center gap-2 py-2 text-sm font-bold">
+<ul class="flex items-center py-2 text-sm font-bold">
   {
     parents.map((parent) => (
       <>
         {
           // As always, we use cute icons to represents pages
           parent == "home" && (
-            <a href="/" class="hover:text-primary">
+            <a href="/" class="hover:text-primary px-2">
               <i class="fa-solid fa-house" />
             </a>
           )
         }
         {parent == "blog" && (
-          <a href="/blog" class="hover:text-primary">
+          <a href="/blog" class="hover:text-primary px-2">
             <i class="fa-solid fa-newspaper text-base" />
           </a>
         )}

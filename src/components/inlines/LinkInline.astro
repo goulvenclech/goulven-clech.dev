@@ -3,7 +3,7 @@
  * Used to standardize our external hyperlinks across the blog
  * @param {string} to - Where are we going? (external)
  */
-export interface Props {
+interface Props {
   to: string
 }
 
@@ -12,6 +12,6 @@ const { to } = Astro.props
 
 <a
   href={to}
-  class="font-bold underline decoration-dashed decoration-2 underline-offset-2 hover:text-primary"
+  class="whitespace-nowrap font-bold underline decoration-dashed decoration-2 underline-offset-3 hover:text-primary"
   ><slot /><i class="fa-solid fa-square-up-right pl-1 text-xs"></i></a
 >
