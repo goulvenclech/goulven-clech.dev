@@ -1,0 +1,61 @@
+---
+import Hero from "../components/Hero.astro"
+import GithutInline from "../components/inlines/GithutInline.astro"
+import LinkInline from "../components/inlines/LinkInline.astro"
+import TagInline from "../components/inlines/TagInline.astro"
+import Section from "../components/Section.astro"
+import Layout from "../layouts/Layout.astro"
+import Card from "../components/Card.astro"
+/**
+ * Home page of our blog, so we have to make a good first impression !
+ * Contains a presentation of myself (I love talking about myself) and the blog,
+ * then display the last articles & some tags you could be interessed in.
+ */
+
+// Page title use in Hero & Metadata
+const pageTitle = "Hello 👋"
+
+// Page's parents
+import type { Parent } from "../components/Parents.astro"
+const parents: Array<Parent> = []
+
+// Import the three last blog articles, except drafts
+// See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
+import { getCollection } from "astro:content"
+const allBlogEntries = await getCollection("blog", ({ data }) => {
+  return data.draft !== true
+})
+---
+
+<Layout title={pageTitle}>
+  <Hero title={pageTitle} parents={parents}>
+    <p>I'm <GithutInline user="35667800" />, a web developer based in Toulouse, France.</p>
+    <p>
+      Interested in functional programming, types systems, and maintainability issues; I'm currently
+      working for <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, a real
+      estate auction platform, powered by Elixir & Erlang.
+    </p>
+    <p>
+      On my blog, I would mainly talk about <TagInline to="/tags?coffee">Programming</TagInline>,
+      but also about my different passions like
+      <TagInline to="/tags?coffee">Coffee</TagInline>...
+    </p>
+  </Hero>
+  <Section title="Last articles">
+    <ul class="flex flex-col gap-3">
+      {allBlogEntries.map((blogEntry) => <Card article={blogEntry} />)}
+    </ul>
+  </Section>
+  <Section title="Tags">
+    <ul class="my-3 flex gap-6">
+      <TagInline to="/tags?coffee">Programming</TagInline>
+      <TagInline to="/tags?coffee">Coffee</TagInline>
+    </ul>
+    <ul class="mt-6 flex gap-6">
+      <TagInline to="/tags?coffee">Web dev</TagInline>
+      <TagInline to="/tags?coffee">Astro</TagInline>
+      <TagInline to="/tags?coffee">TypeScript</TagInline>
+      <TagInline to="/tags?coffee">Toulouse</TagInline>
+    </ul>
+  </Section>
+</Layout>

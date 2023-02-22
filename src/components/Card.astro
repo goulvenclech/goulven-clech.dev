@@ -1,0 +1,31 @@
+---
+/**
+ * Used to present an article as a card, also a link to that article.
+ * @param {any} article - What an exciting article we want to show?
+ */
+export interface Props {
+  article: any // TO DO: should be better typed
+}
+
+const { article } = Astro.props
+---
+
+<a
+  href={`/blog/${article.slug}`}
+  class="rounded-xl px-4 py-3 hover:bg-highlight-light dark:hover:bg-highlight-dark"
+>
+  <article>
+    <h3 class="pb-2 text-xl font-bold">
+      {article.data.title}
+    </h3>
+    <div>
+      <i class="fa-solid fa-calendar-day pr-1"></i>
+      {article.data.date.toDateString()}
+      <i class="fa-solid fa-tags pl-3"></i>
+      {article.data.tags.join(", ")}
+    </div>
+    <p class="mt-3 text-ellipsis py-0 line-clamp-3">
+      {article.data.abstract}
+    </p>
+  </article>
+</a>

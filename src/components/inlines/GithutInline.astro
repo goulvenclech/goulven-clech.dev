@@ -1,0 +1,34 @@
+---
+/**
+ * Take a Github User ID, and render a link to this user account, with their avatar and name.
+ * @param {string} user - What is the user's GitHub ID?
+ */
+export interface Props {
+  user: string
+}
+
+const { user } = Astro.props
+
+/**
+ * Await fetch function, to the public GitHub Api, using our fine grained GitHub personal
+ * token stored in ~/.env (secret file)
+ * See -> https://docs.github.com/en/rest/overview/other-authentication-methods#via-personal-access-tokens
+ * TO DO : handle errors !
+ */
+const userData: any = await fetch(`https://api.github.com/user/${user}`, {
+  headers: new Headers({
+    Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
+  }),
+}).then((response) => response.json())
+
+// Got what what we needed 💰 See response format ->
+// https://docs.github.com/en/rest/users/users#get-a-user
+const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userData
+---
+
+<a
+  href={userUrl}
+  class="font-bold underline decoration-dashed decoration-2 underline-offset-2 hover:text-primary"
+>
+  <img src={avatarUrl} class="mr-2 inline-block h-6 w-6 rounded-full shadow" />{userName}</a
+>

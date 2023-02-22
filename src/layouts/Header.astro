@@ -1,0 +1,27 @@
+---
+import DarkMode from "./DarkMode.astro"
+/**
+ * Simple header, with a nav to our mains pages & dark mode button.
+ */
+
+//used by header links, kind of bored to do a component just for that...
+const cssClasses = "align-middle text-xl font-bold hover:text-primary"
+---
+
+<header class="py-2">
+  <nav class="flex place-content-end gap-6">
+    <a href="/blog" class={cssClasses}>
+      <i class="fa-solid fa-newspaper"></i>
+    </a>
+
+    <a href="/tags" class={cssClasses}>
+      <i class="fa-solid fa-tags"></i>
+    </a>
+
+    <a href="/search" class={cssClasses}>
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </a>
+
+    <DarkMode />
+  </nav>
+</header>

@@ -1,0 +1,44 @@
+---
+/**
+ * Button to change the color theme, and all dark mode related logic.
+ * See dark mode by Tailwind CSS -> https://tailwindcss.com/docs/dark-mode
+ */
+---
+
+<button id="darkMode" class="align-middle text-xl font-bold hover:text-primary">
+  <i class="fa-solid fa-moon"></i>
+</button>
+
+<script>
+  /**
+   * Check if the user has already specified that he wants to use dark mode; otherwise,
+   * check if it is his browser preference. Then apply or remove the class "dark" used
+   * by Tailwind CSS (see link before)
+   */
+  const applyDarkMode = () => {
+    if (
+      localStorage.theme == "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      // Bravo Six, going dark...
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+  }
+  // On page load
+  applyDarkMode()
+  // On button click
+  const button = document.getElementById("darkMode")
+  if (button) {
+    button.addEventListener("click", function () {
+      if (localStorage.theme == "light") {
+        localStorage.theme = "dark"
+        applyDarkMode()
+      } else {
+        localStorage.theme = "light"
+        applyDarkMode()
+      }
+    })
+  }
+</script>

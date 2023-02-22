@@ -1,0 +1,25 @@
+---
+import BaseLayout from "./BaseLayout.astro"
+import Footer from "./Footer.astro"
+import Header from "./Header.astro"
+/**
+ * Simple layout for all our mains pages.
+ * Roughly, wrap our content into a container with the header & footer 🤷‍♂️
+ * @param {string} title - What is this page about?
+ */
+export interface Props {
+  title: string
+}
+
+const { title } = Astro.props
+---
+
+<BaseLayout title={title}>
+  <div class="mx-auto max-w-screen-md px-2">
+    <Header />
+    <main class="py-8">
+      <slot />
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>
