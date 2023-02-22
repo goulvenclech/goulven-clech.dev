@@ -1,0 +1,35 @@
+---
+---
+
+<button id="darkMode" class="align-middle text-xl font-bold hover:text-primary">
+  <i class="fa-solid fa-moon"></i>
+</button>
+
+<script>
+  // Dark mode by Tailwind CSS -> https://tailwindcss.com/docs/dark-mode
+  const applyDarkMode = () => {
+    if (
+      localStorage.theme == "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+  }
+  // On page load
+  applyDarkMode()
+  // On button click
+  const button = document.getElementById("darkMode")
+  if (button) {
+    button.addEventListener("click", function () {
+      if (localStorage.theme == "light") {
+        localStorage.theme = "dark"
+        applyDarkMode()
+      } else {
+        localStorage.theme = "light"
+        applyDarkMode()
+      }
+    })
+  }
+</script>

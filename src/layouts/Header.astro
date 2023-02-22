@@ -1,4 +1,5 @@
 ---
+import DarkMode from "./DarkMode.astro"
 import HeaderButton from "./header/HeaderButton.astro"
 ---
 
@@ -16,8 +17,6 @@ import HeaderButton from "./header/HeaderButton.astro"
       <i class="fa-solid fa-magnifying-glass"></i>
     </HeaderButton>
 
-    <HeaderButton to="/">
-      <i class="fa-solid fa-moon"></i>
-    </HeaderButton>
+    <DarkMode />
   </nav>
 </header>

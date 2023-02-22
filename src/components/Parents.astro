@@ -18,12 +18,12 @@ const { parents } = Astro.props
     parents.map((parent) => (
       <>
         {parent == "home" && (
-          <a href="/">
+          <a href="/" class="hover:text-primary">
             <i class="fa-solid fa-house" />
           </a>
         )}
         {parent == "blog" && (
-          <a href="/blog">
+          <a href="/blog" class="hover:text-primary">
             <i class="fa-solid fa-newspaper text-base" />
           </a>
         )}
