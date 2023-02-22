@@ -1,6 +1,4 @@
 ---
-// style dependancies
-import "../main.css"
 import "@fontsource/cascadia-code"
 /**
  * Base of our html. Mainly html head & some global styles.
@@ -19,8 +17,13 @@ const { title } = Astro.props
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="author" content="Goulven Clec'h" />
+    <meta
+      name="description"
+      content="I'm Goulven Clec'h, a web developer based in Toulouse, France. Welcome to my personal blog!"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer></script>
     <title>{title} | Goulven Clec'h</title>
   </head>
   <body
@@ -31,6 +34,9 @@ const { title } = Astro.props
 </html>
 <style is:global>
   html {
-    font-family: cascadia code;
+    @apply font-mono;
+  }
+  p {
+    @apply py-3 leading-normal;
   }
 </style>

@@ -24,7 +24,13 @@ const { Content } = await entry.render()
 <Layout title={entry.data.title}>
   <Hero title={entry.data.title} parents={["home", "blog"]}>
     <ul class="flex gap-4">
-      {entry.data.tags.map((tag: string) => <TagInline to="">{tag}</TagInline>)}
+      {
+        entry.data.tags.map((tag: string) => (
+          <li>
+            <TagInline to="">{tag}</TagInline>
+          </li>
+        ))
+      }
     </ul>
   </Hero>
   <img src="/cover-min_17Utiv.avif" class="mb-10 rounded-lg object-cover" />

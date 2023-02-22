@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme")
 module.exports = {
   // See -> https://tailwindcss.com/docs/dark-mode
   darkMode: "class",
@@ -35,6 +36,12 @@ module.exports = {
        */
       textUnderlineOffset: {
         3: "3px",
+      },
+      /**
+       * I want to use cascadia, tailwind take care of provinding mono fallbacks
+       */
+      fontFamily: {
+        mono: ["cascadia code", ...defaultTheme.fontFamily.mono],
       },
     },
   },

@@ -43,20 +43,20 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
     </p>
   </Hero>
   <Section title="Last articles">
-    <ul class="flex flex-col gap-3">
+    <div class="flex flex-col gap-3">
       {allBlogEntries.map((blogEntry) => <Card article={blogEntry} />)}
-    </ul>
+    </div>
   </Section>
   <Section title="Tags">
     <ul class="my-3 flex flex-wrap gap-6">
-      <TagInline to="/tags?coffee">Programming</TagInline>
-      <TagInline to="/tags?coffee">Coffee</TagInline>
+      <li><TagInline to="/tags?coffee">Programming</TagInline></li>
+      <li><TagInline to="/tags?coffee">Coffee</TagInline></li>
     </ul>
     <ul class="mt-6 flex flex-wrap gap-6">
-      <TagInline to="/tags?coffee">Web dev</TagInline>
-      <TagInline to="/tags?coffee">Astro</TagInline>
-      <TagInline to="/tags?coffee">TypeScript</TagInline>
-      <TagInline to="/tags?coffee">Toulouse</TagInline>
+      <li><TagInline to="/tags?coffee">Web dev</TagInline></li>
+      <li><TagInline to="/tags?coffee">Astro</TagInline></li>
+      <li><TagInline to="/tags?coffee">TypeScript</TagInline></li>
+      <li><TagInline to="/tags?coffee">Toulouse</TagInline></li>
     </ul>
   </Section>
 </Layout>
