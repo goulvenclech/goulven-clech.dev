@@ -19,13 +19,13 @@ const { parents } = Astro.props
         {
           // As always, we use cute icons to represents pages
           parent == "home" && (
-            <a href="/" class="hover:text-primary px-2">
+            <a href="/" title="Return to the homepage" class="hover:text-primary px-2">
               <i class="fa-solid fa-house" />
             </a>
           )
         }
         {parent == "blog" && (
-          <a href="/blog" class="hover:text-primary px-2">
+          <a href="/blog" title="Return to all articles" class="hover:text-primary px-2">
             <i class="fa-solid fa-newspaper text-base" />
           </a>
         )}
