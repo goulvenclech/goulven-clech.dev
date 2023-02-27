@@ -3,9 +3,32 @@ title: "Igniting a blog with Astro 2.0"
 slug: "a-blog-with-astro"
 date: 2023-02-20
 tags: ["Programming", "Web dev", "Astro", "TypeScript"]
-abstract: "Port-salut squirty cheese bavarian bergkase. Roquefort edam cheese slices feta monterey jack dolcelatte monterey jack everyone loves. Squirty cheese cut the cheese edam red leicester blue castello when the cheese comes out everybody's happy camembert de normandie cheeseburger. Cut the cheese mozzarella cheese triangles fromage frais caerphilly everyone loves stinking bishop queso. Halloumi caerphilly hard cheese smelly cheese."
+abstract: "After almost two years of procrastinating, I finally launched a blog. In this first article, I share my thoughts on Astro: THE best SSG available, especially if you are new to web development..."
+draft: true
 ---
 
-Fromage cheese strings melted cheese. St. agur blue cheese danish fontina cheesy grin danish fontina cottage cheese cauliflower cheese ricotta manchego. Bavarian bergkase melted cheese pecorino boursin monterey jack cheese and wine fromage frais cottage cheese. Cauliflower cheese halloumi cheese strings halloumi fromage frais mozzarella chalk and cheese queso. Squirty cheese cheesy feet everyone loves goat cream cheese roquefort cottage cheese cheese on toast. Stilton when the cheese comes out everybody's happy goat.
+import LinkInline from "$components/inlines/LinkInline.astro"
+import GithubInline from "$components/inlines/GithubInline.astro"
+import { Code } from "astro/components"
 
-Macaroni cheese pepper jack gouda. Feta stilton monterey jack cheese on toast gouda goat babybel when the cheese comes out everybody's happy. Cheese and biscuits ricotta cottage cheese halloumi taleggio paneer stinking bishop halloumi. Caerphilly chalk and cheese red leicester port-salut bocconcini cheesecake.
+After almost two years of procrastinating, I finally launched this blog.
+
+Besides illegitimacy and lack of time, the main reason not to launch earlier was that all the <LinkInline to="https://en.wikipedia.org/wiki/Static_site_generator">Static Site Generators</LinkInline> I had used so far weren't fun...
+
+But that was before my friend <GithubInline user="3019731" /> introduced me to <LinkInline to="https://astro.build/">Astro</LinkInline>, THE best SSG available, especially if you are new to web development. Let me explain why in this first article, and share a few tips I learned along the way.
+
+## What was I looking for?
+
+I won't go through every SSG that has failed me, but let's divide them into large families:
+
+- The famous "blasting fast" SSGs. Whose massive JS frameworks prevent reaching correct performances or being decently reliable.
+- The "traditional" SSGs. Whose are often either hermetic or poorly integrated into the NodeJS ecosystem (cutting off access to many valuable libraries for web development).
+- The "niche" SSGs. Which are made with fantastic and modern languages but whose poor documentation and nascent ecosystem will drain my time.
+
+To summarize, I was looking for an SSG that is: well integrated into the NodeJS ecosystem but ships minimum JS in production; well designed and documented to allow quick learning; and finally, both statically typed and with world-class IDE integration for my development comfort.
+
+Finally, this new SSG should fit my blog AND be a strong candidate for my more ambitious projects. Like <LinkInline to="https://fairedesjeux.fr//">FaireDesJeux</LinkInline>'s refactor, a collaborative website to learn how to create video games, run by <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>.
+
+So you guessed it, I finally found a stack approaching these objectives: <LinkInline to="https://www.typescriptlang.org/">TypeScript</LinkInline> and <LinkInline to="https://astro.build/">Astro</LinkInline>. So let's dive into it!
+
+## Why climb into Astro's rocket?

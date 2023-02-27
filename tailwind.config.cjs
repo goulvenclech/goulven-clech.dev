@@ -45,7 +45,7 @@ module.exports = {
       },
     },
   },
-  // Mainly used for src/components/Card.astro
+  // Mainly used for $components/Card.astro
   // see ->  https://github.com/tailwindlabs/tailwindcss-line-clamp
   plugins: [require("@tailwindcss/line-clamp")],
 }

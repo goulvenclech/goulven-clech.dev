@@ -24,8 +24,8 @@ const { article } = Astro.props
       <i class="fa-solid fa-tags ml-3 w-3.5 md:w-4"></i>
       {article.data.tags.join(", ")}
     </div>
-    <p class="mt-3 text-ellipsis py-0 line-clamp-3">
+    <span class="mt-3 text-ellipsis py-0 line-clamp-3">
       {article.data.abstract}
-    </p>
+    </span>
   </article>
 </a>

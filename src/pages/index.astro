@@ -1,13 +1,13 @@
 ---
 import { getCollection } from "astro:content"
-import type { Parent } from "../components/Parents.astro"
-import Hero from "../components/Hero.astro"
-import GithutInline from "../components/inlines/GithutInline.astro"
-import LinkInline from "../components/inlines/LinkInline.astro"
-import TagInline from "../components/inlines/TagInline.astro"
-import Section from "../components/Section.astro"
-import Layout from "../layouts/Layout.astro"
-import Card from "../components/Card.astro"
+import type { Parent } from "$components/Parents.astro"
+import Hero from "$components/Hero.astro"
+import GithubInline from "$components/inlines/GithubInline.astro"
+import LinkInline from "$components/inlines/LinkInline.astro"
+import TagInline from "$components/inlines/TagInline.astro"
+import Section from "$components/Section.astro"
+import Layout from "$layouts/Layout.astro"
+import Card from "$components/Card.astro"
 /**
  * Home page of our blog, so we have to make a good first impression !
  * Contains a presentation of myself (I love talking about myself) and the blog,
@@ -30,7 +30,7 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
 
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={parents}>
-    <p>I'm <GithutInline user="35667800" />, a web developer based in Toulouse, France.</p>
+    <p>I'm <GithubInline user="35667800" />, a web developer based in Toulouse, France.</p>
     <p>
       Interested in functional programming, types systems, and maintainability issues; I'm currently
       working for <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, a real
