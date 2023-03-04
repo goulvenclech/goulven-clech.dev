@@ -1,6 +1,6 @@
 ---
 // TO DO: should this really be there ? 🤔
-export type Parent = "home" | "blog"
+export type Parent = "home" | "blog" | "tags"
 /**
  * A nav bar allowing fast navigation to this page's parents.
  * @param {Array<Parent>} parents - What are this page parents?
@@ -30,6 +30,14 @@ const { parents } = Astro.props
           <li>
             <a href="/blog" title="Return to all articles" class="hover:text-primary px-2">
               <i class="fa-solid fa-newspaper text-base" />
+            </a>
+          </li>
+        )}
+
+        {parent == "tags" && (
+          <li>
+            <a href="/tags" title="Return to all articles" class="hover:text-primary px-2">
+              <i class="fa-solid fa-tags text-base" />
             </a>
           </li>
         )}

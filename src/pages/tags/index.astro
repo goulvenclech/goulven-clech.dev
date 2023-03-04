@@ -1,33 +1,35 @@
 ---
+import { getCollection } from "astro:content"
 import type { Parent } from "$components/Parents.astro"
 import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import TagInline from "$components/inlines/TagInline.astro"
+import Tag from "./[...tag].astro"
 /**
  * A page with all tags used in our articles.
  */
+const blogEntries = await getCollection("blog", ({ data }) => {
+  return data.draft !== true
+})
+/* get all tags */
+const allTags: Set<string> = new Set()
+blogEntries.forEach((entry) => {
+  entry.data.tags.forEach((tag) => {
+    allTags.add(tag.toLowerCase())
+  })
+})
 
 // Page title use in Hero & Metadata
 const pageTitle = "All tags"
 
 // Page's parents
 const parents: Array<Parent> = ["home"]
-
-// Import all tags
-/* TO DO */
 ---
 
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={parents}>
     <ul class="my-3 flex flex-wrap gap-6">
-      <li><TagInline to="/tags?coffee">Programming</TagInline></li>
-      <li><TagInline to="/tags?coffee">Coffee</TagInline></li>
-    </ul>
-    <ul class="mt-6 flex flex-wrap gap-6">
-      <li><TagInline to="/tags?coffee">Web dev</TagInline></li>
-      <li><TagInline to="/tags?coffee">Astro</TagInline></li>
-      <li><TagInline to="/tags?coffee">TypeScript</TagInline></li>
-      <li><TagInline to="/tags?coffee">Toulouse</TagInline></li>
+      {[...allTags].map((tag) => <TagInline tag={tag} />)}
     </ul>
   </Hero>
 </Layout>

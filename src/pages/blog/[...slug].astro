@@ -13,7 +13,9 @@ import { formatDate } from "src/utils"
 // but can be a little tricky to understand. Read doc first ->
 // https://docs.astro.build/en/guides/content-collections
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog")
+  const blogEntries = await getCollection("blog", ({ data }) => {
+    return data.draft !== true
+  })
   return blogEntries.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -29,7 +31,7 @@ const { Content } = await entry.render()
       {
         entry.data.tags.map((tag: string) => (
           <li>
-            <TagInline to="">{tag}</TagInline>
+            <TagInline tag={tag} />
           </li>
         ))
       }

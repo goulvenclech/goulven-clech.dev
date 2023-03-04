@@ -21,7 +21,7 @@ const pageTitle = "Hello 👋"
 
 const parents: Array<Parent> = []
 
-// Import the three last blog articles, except drafts
+// Import blog articles, except drafts
 // See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
 const allBlogEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true
@@ -30,33 +30,43 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
 
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={parents}>
-    <p>I'm <GithubInline user="35667800" />, a web developer based in Toulouse, France.</p>
+    <p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
     <p>
-      Interested in functional programming, types systems, and maintainability issues; I'm currently
-      working for <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, a real
-      estate auction platform, powered by Elixir & Erlang.
+      Interested in <TagInline tag="web development" />,
+      <TagInline tag="functional programming" />, and
+      <TagInline tag="types systems" />; I'm currently working for
+      <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, a real estate auction
+      platform, powered by Elixir & Erlang.
     </p>
     <p>
-      On my blog, I would mainly talk about <TagInline to="/tags?coffee">Programming</TagInline>,
-      but also about my different passions like
-      <TagInline to="/tags?coffee">Coffee</TagInline>...
+      With two friends, I co-founded
+      <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>, a French-speaking
+      association about independent & amateur
+      <TagInline tag="game development" />. We run a
+      <LinkInline to="https://www.youtube.com/c/GameDevAlliance">Youtube channel</LinkInline>, a
+      collaborative <LinkInline to="https://fairedesjeux.fr/">tutorial website</LinkInline>, and a
+      <LinkInline to="https://discord.com/invite/RrBppaj">Discord server</LinkInline>.
+    </p>
+    <p>
+      Also, I'll sometimes chat about
+      <TagInline tag="coffee" />..
     </p>
   </Hero>
   <Section title="Last articles">
-    <div class="flex flex-col gap-3">
-      {allBlogEntries.map((blogEntry) => <Card article={blogEntry} />)}
+    <div class="flex flex-col gap-6">
+      {
+        /* keep only the three last articles */
+        allBlogEntries
+          .sort((a, b) => b.data.date.getDate() - a.data.date.getDate())
+          .slice(0, 3)
+          .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
+      }
     </div>
   </Section>
-  <Section title="Tags">
+  <Section title="Mains tags">
     <ul class="my-3 flex flex-wrap gap-6">
-      <li><TagInline to="/tags?coffee">Programming</TagInline></li>
-      <li><TagInline to="/tags?coffee">Coffee</TagInline></li>
-    </ul>
-    <ul class="mt-6 flex flex-wrap gap-6">
-      <li><TagInline to="/tags?coffee">Web dev</TagInline></li>
-      <li><TagInline to="/tags?coffee">Astro</TagInline></li>
-      <li><TagInline to="/tags?coffee">TypeScript</TagInline></li>
-      <li><TagInline to="/tags?coffee">Toulouse</TagInline></li>
+      <li><TagInline tag="web development" /></li>
+      <li><TagInline tag="coffee" /></li>
     </ul>
   </Section>
 </Layout>

@@ -1,18 +1,18 @@
 ---
 /**
  * A link to a specific tag of our blog, with a cool icon
- * @param {string} to - What tag are we going to?
+ * @param {string} tag - What tag are we going to?
  */
 interface Props {
-  to: string
+  tag: string
 }
 
-const { to } = Astro.props
+const { tag } = Astro.props
 ---
 
 <a
-  href={to}
-  class="whitespace-nowrap font-bold underline decoration-dashed decoration-2 underline-offset-3 hover:text-primary"
+  href={`/tags/${tag}`}
+  class="whitespace-nowrap capitalize underline decoration-dashed decoration-2 underline-offset-3 hover:text-primary"
 >
-  <i class="fa-solid fa-tag mr-1 w-3.5 md:w-4"></i><slot /></a
+  <i class="fa-solid fa-tag mr-1 text-xs"></i>{tag}</a
 >
