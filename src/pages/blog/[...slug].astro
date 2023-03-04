@@ -1,8 +1,10 @@
 ---
+import { Image } from "astro:assets"
 import { getCollection } from "astro:content"
 import Hero from "$components/Hero.astro"
 import TagInline from "$components/inlines/TagInline.astro"
 import Layout from "$layouts/Layout.astro"
+import { formatDate } from "src/utils"
 /**
  * Article page, display frontmatter informations & the content.
  */
@@ -33,9 +35,15 @@ const { Content } = await entry.render()
       }
     </ul>
   </Hero>
-  <img src="/cover-min_17Utiv.avif" class="mb-16 rounded-lg object-cover" />
+  <Image
+    src={entry.data.image}
+    width="1080"
+    height="1080"
+    class="mb-16 rounded-lg object-cover"
+    alt="Cover"
+  />
   <Content />
-  <p class="mb-16">- published {entry.data.date.toDateString()}</p>
+  <p class="mb-16">- published {formatDate(entry.data.date)}</p>
 </Layout>
 <style is:global>
   h2 {

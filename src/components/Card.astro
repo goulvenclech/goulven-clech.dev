@@ -1,26 +1,37 @@
 ---
+import { Image } from "astro:assets"
+import { formatDate } from "src/utils"
 /**
  * Used to present an article as a card, also a link to that article.
  * @param {any} article - What an exciting article we want to show?
+ * @param {number} index - What's the index of this card?
  */
 interface Props {
   article: any // TO DO: should be better typed
+  index: number // Used to alternate which side the cover is displayed on
 }
 
-const { article } = Astro.props
+const { article, index } = Astro.props
 ---
 
 <a
   href={`/blog/${article.slug}`}
-  class="rounded-xl px-4 py-3 hover:bg-highlight-light dark:hover:bg-highlight-dark"
+  class="grid grid-cols-4 overflow-hidden rounded-xl hover:bg-highlight-light dark:hover:bg-highlight-dark"
 >
-  <article>
+  <Image
+    src={article.data.image}
+    width={500}
+    height={500}
+    alt=""
+    class:list={["h-full w-full object-cover", { "order-2": index % 2 == 1 }]}
+  />
+  <article class="col-span-3 mx-6 my-5">
     <h3 class="pb-2 text-lg font-bold md:text-xl">
       {article.data.title}
     </h3>
-    <div>
+    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
       <i class="fa-solid fa-calendar-day w-3.5 md:w-4"></i>
-      {article.data.date.toDateString()}
+      {formatDate(article.data.date)}
       <i class="fa-solid fa-tags ml-3 w-3.5 md:w-4"></i>
       {article.data.tags.join(", ")}
     </div>

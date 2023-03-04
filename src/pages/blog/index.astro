@@ -24,7 +24,11 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={parents}>
     <div class="flex flex-col gap-3">
-      {allBlogEntries.map((blogEntry) => <Card article={blogEntry} />)}
+      {
+        allBlogEntries
+          .sort((a, b) => b.data.date.getDate() - a.data.date.getDate())
+          .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
+      }
     </div>
   </Hero>
 </Layout>

@@ -1,6 +1,5 @@
 ---
-import { generateImage } from "astro-eleventy-img"
-import Image from "@11ty/eleventy-img"
+import { Image } from "astro:assets"
 /**
  * Take a Github User ID, and render a link to this user account, with their avatar and name.
  * @param {string} user - What is the user's GitHub ID?
@@ -26,27 +25,13 @@ const userData: any = await fetch(`https://api.github.com/user/${user}`, {
 // Got what what we needed 💰 See response format ->
 // https://docs.github.com/en/rest/users/users#get-a-user
 const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userData
-/**
- *
- */
-const image = await generateImage(avatarUrl, {
-  widths: [48],
-  formats: ["avif", "webp", "png"],
-})
-const imageAttributes = {
-  alt: `GitHub profile picture of ${userName}`,
-  class: "inline mr-2 h-6 w-6 rounded-full shadow",
-  sizes: "50",
-  loading: "lazy",
-  decoding: "async",
-  onload: `this.style.backgroundImage='none'`,
-}
-const html = Image.generateHTML(image, imageAttributes)
 ---
 
 <a
   href={userUrl}
   class="items-center whitespace-nowrap font-bold underline decoration-dashed decoration-2 underline-offset-3 hover:text-primary"
 >
-  <Fragment set:html={html} />{userName}</a
+  <Image src={avatarUrl} width={25} height={25} alt="..." class="rounded-full inline mr-2" />{
+    userName
+  }</a
 >
