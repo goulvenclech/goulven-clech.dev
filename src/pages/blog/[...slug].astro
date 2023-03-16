@@ -27,7 +27,7 @@ const { Content } = await entry.render()
 
 <Layout title={entry.data.title}>
   <Hero title={entry.data.title} parents={["home", "blog"]}>
-    <ul class="flex gap-4">
+    <ul class="flex flex-wrap gap-4">
       {
         entry.data.tags.map((tag: string) => (
           <li>
@@ -39,9 +39,9 @@ const { Content } = await entry.render()
   </Hero>
   <Image
     src={entry.data.image}
-    width="1080"
-    height="1080"
-    class="mb-16 rounded-lg object-cover"
+    width="1500"
+    height="850"
+    class="mb-16 w-full rounded-lg object-cover aspect-video"
     alt="Cover"
   />
   <Content />

@@ -6,7 +6,6 @@ dist/
 
 # generated assets
 public/assets/images
-src/assets/
 
 # dependencies
 node_modules/
