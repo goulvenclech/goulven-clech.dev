@@ -1,8 +1,8 @@
 ---
-import { Image } from "astro:assets"
 import { getCollection } from "astro:content"
 import Hero from "$components/Hero.astro"
 import TagInline from "$components/inlines/TagInline.astro"
+import FigImage from "$components/FigImage.astro"
 import Layout from "$layouts/Layout.astro"
 import { formatDate } from "src/utils"
 /**
@@ -37,12 +37,12 @@ const { Content } = await entry.render()
       }
     </ul>
   </Hero>
-  <Image
+  <FigImage
     src={entry.data.image}
-    width="1500"
-    height="850"
-    class="mb-16 w-full rounded-lg object-cover aspect-video"
-    alt="Cover"
+    width={1500}
+    height={850}
+    alt={entry.data.image_alt}
+    caption={entry.data.image_caption}
   />
   <Content />
   <p class="mb-16">- published {formatDate(entry.data.date)}</p>

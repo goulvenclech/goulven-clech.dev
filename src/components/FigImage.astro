@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets"
+
+/**
+ * Wrap an Astro image in a html figure with caption.
+ * @param {string} src -
+ * @param {string} alt -
+ * @param {number} width -
+ * @param {number} height -
+ * @param {string} caption -
+ */
+interface Props {
+  src: string
+  alt: string
+  width: number
+  height: number
+  caption: string
+}
+
+const { src, alt, width, height, caption } = Astro.props
+---
+
+<figure>
+  <Image
+    src={src}
+    width={width}
+    height={height}
+    class="w-full rounded-lg object-cover aspect-video"
+    alt={alt}
+  />
+  <figcaption class="mb-16 mt-2 text-center text-sm italic">
+    {caption}
+  </figcaption>
+</figure>

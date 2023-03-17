@@ -9,6 +9,7 @@ const blogCollection = defineCollection({
     abstract: z.string(),
     image: image(),
     image_alt: z.string(),
+    image_caption: z.string(),
     draft: z.boolean().default(false),
   }),
 })
