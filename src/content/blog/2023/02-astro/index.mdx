@@ -11,6 +11,7 @@ abstract: "After almost two years of procrastinating, I finally launched a blog.
 
 import LinkInline from "$components/inlines/LinkInline.astro"
 import GithubInline from "$components/inlines/GithubInline.astro"
+import FigCode from "$components/figures/FigCode.astro"
 import { Code } from "astro/components"
 import { Image } from "astro:assets"
 import Image0 from "./image0.png"
@@ -63,16 +64,14 @@ This means, first, an easy-to-understand SSG for all web developers: all you nee
 
 You will write your templates with JSX, a syntax popularised by React, blending HTML with JS. Above the template, you can do your imports and functions in plain JS (or TypeScript, but we'll talk about that later); or even use your favorite libraries, which you can simply install via NPM.
 
-<div class="mb-6 overflow-hidden rounded-lg">
-  <Code
-    code={`  <div>
+<FigCode
+  code={`  <div>
     <h1>Un titre</h1>
     <p>Voici du texte.</p>
-  </div>
-`}
-    lang="html"
-  />
-</div>
+  </div>`}
+  lang="html"
+  caption="test"
+/>
 
 But what is the difference with other javascript SSGs? Astro will not ship your code into a huge JavaScript application, but only generate simple HTML pages. Astro produces no client-side JS, reducing page weight and ensuring good performance by default.
 

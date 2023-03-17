@@ -1,0 +1,55 @@
+---
+import { Code } from "astro/components"
+
+/**
+ * Wrap an Astro Code in a html figure with caption.
+ * @param {string} code - What's the code to display?
+ * @param {string} lang - In what language the code is written?
+ * @param {string} caption - What caption should we put next?
+ */
+interface Props {
+  code: string
+  lang: any
+  caption: string
+}
+
+const { code, lang, caption } = Astro.props
+---
+
+<figure>
+  <div class="overflow-hidden rounded-lg bg-highlight-light py-3 dark:bg-highlight-dark">
+    <Code code={code} lang={lang} theme="css-variables" />
+  </div>
+  <figcaption class="mb-6 mt-2 text-center text-sm italic">
+    {caption}
+  </figcaption>
+</figure>
+
+<style is:global>
+  html.dark {
+    --astro-code-color-text: #fdf0ed;
+    --astro-code-color-background: #2e303e;
+    --astro-code-token-constant: #ec6a88;
+    --astro-code-token-string: #ec6a88;
+    --astro-code-token-comment: #ec6a88;
+    --astro-code-token-keyword: #ec6a88;
+    --astro-code-token-parameter: #ec6a88;
+    --astro-code-token-function: #ec6a88;
+    --astro-code-token-string-expression: #ec6a88;
+    --astro-code-token-punctuation: #ec6a88;
+    --astro-code-token-link: #ec6a88;
+  }
+  html {
+    --astro-code-color-text: #1c1e26;
+    --astro-code-color-background: #fadad1;
+    --astro-code-token-constant: #ec6a88;
+    --astro-code-token-string: #ec6a88;
+    --astro-code-token-comment: #ec6a88;
+    --astro-code-token-keyword: #ec6a88;
+    --astro-code-token-parameter: #ec6a88;
+    --astro-code-token-function: #ec6a88;
+    --astro-code-token-string-expression: #ec6a88;
+    --astro-code-token-punctuation: #ec6a88;
+    --astro-code-token-link: #ec6a88;
+  }
+</style>
