@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "$layouts/Layout.astro"
+import Hero from "$components/Hero.astro"
+import type { Parent } from "$components/Parents.astro"
+
+/**
+ * Work in progress
+ */
+
+// Page title use in Hero & Metadata
+const pageTitle = "Search"
+
+// Page's parents
+const parents: Array<Parent> = ["home"]
+
+// get all blogEntries
+const blogEntries = await getCollection("blog", ({ data }) => {
+  return data.draft !== true
+})
+---
+
+<Layout title={pageTitle}>
+  <Hero title={pageTitle} parents={["home", "blog"]}>
+    <input
+      id="search"
+      class="mb-16 w-full rounded-lg bg-highlight-light px-3 py-2 dark:bg-highlight-dark"
+      placeholder="Type some keywords..."
+      type="text"
+    />
+    <div id="io" class="flex flex-col gap-6"></div>
+  </Hero>
+</Layout>
+<script define:vars={{ blogEntries }}>
+  const input = document.getElementById("search")
+  const io = document.getElementById("io")
+  const applyInput = (input) => {
+    const searchKeywords = input.toLowerCase().split(" ")
+    if (searchKeywords.length > 0) {
+      results = blogEntries.filter((entry) =>
+        searchKeywords.every(
+          (keyword) =>
+            entry.data.title.toLowerCase().includes(keyword) ||
+            entry.data.abstract.toLowerCase().includes(keyword) ||
+            entry.data.tags.some((tag) => tag.toLowerCase().includes(keyword))
+        )
+      )
+    } else {
+      results = blogEntries
+    }
+    console.log(results)
+    results.forEach((result) => {
+      const p = document.createElement("p")
+      p.textContent = result.data.title
+      io.appendChild(p)
+    })
+  }
+  applyInput("")
+  input.addEventListener("input", (event) => {
+    io.innerHTML = ""
+    if (event.target) {
+      const element = event.currentTarget
+      applyInput(element.value)
+    }
+  })
+</script>
