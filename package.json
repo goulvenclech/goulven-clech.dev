@@ -15,7 +15,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@fontsource/cascadia-code": "^4.2.1"
+    "@fontsource/cascadia-code": "^4.2.1",
+    "@vercel/analytics": "^0.1.11"
   },
   "devDependencies": {
     "@astrojs/mdx": "^0.17.0",

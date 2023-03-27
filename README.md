@@ -2,7 +2,7 @@
 
 My personnal blog, made with [Astro](https://docs.astro.build), [TypeScript](https://www.typescriptlang.org/) & [Tailwind CSS](https://tailwindcss.com/).
 
-Live at [goulven-clech.dev](https://goulven-clech.dev), hosted by [Netlify](https://www.netlify.com/).
+Live at [goulven-clech.dev](https://goulven-clech.dev), hosted by [Vercel](https://vercel.com/).
 
 ## Project Structure
 
