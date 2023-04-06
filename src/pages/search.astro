@@ -21,7 +21,7 @@ const blogEntries = await getCollection("blog", ({ data }) => {
 ---
 
 <Layout title={pageTitle}>
-  <Hero title={pageTitle} parents={["home", "blog"]}>
+  <Hero title={pageTitle} parents={parents}>
     <input
       id="search"
       class="mb-16 w-full rounded-lg bg-highlight-light px-3 py-2 dark:bg-highlight-dark"
