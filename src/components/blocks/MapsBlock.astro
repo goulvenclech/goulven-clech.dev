@@ -1,0 +1,77 @@
+---
+import Block from "./Block.astro"
+
+/**
+ * Used to present a Google Maps Place as a card, also a link to that place.
+ * @param {any} id - What's this exciting place's id?
+ */
+interface Props {
+  id: string
+}
+
+const { id } = Astro.props
+
+/**
+ * Await fetch function, to the Google Maps Api, using our Maps token stored in ~/.env (secret file)
+ * TO DO : handle errors !
+ */
+const userData: any = await fetch(
+  `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${
+    import.meta.env.MAPS_TOKEN
+  }`,
+  {}
+).then((response) => response.json())
+
+// Got what what we needed 💰 See response format ->
+// https://developers.google.com/maps/documentation/places/web-service/details
+const { result: place } = await userData
+
+/**
+ * From an array of opened days numbers, return a string with closed days.
+ */
+function getClosedDays(openedDays: Array<number>): string {
+  let daysNumbers = [0, 1, 2, 3, 4, 5, 6]
+
+  let closedDays = daysNumbers
+    .filter((dayNumber) => !openedDays.includes(dayNumber))
+    .map((x) => dayOfWeekAsString(x))
+    .join(", ")
+
+  return `Closed on ${closedDays}.`
+}
+
+/**
+ * Converts a day number to a string.
+ *
+ * @param {Number} dayIndex
+ * @return {String} Returns day as string
+ */
+function dayOfWeekAsString(dayIndex: number): string {
+  return (
+    ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayIndex] || ""
+  )
+}
+---
+
+<Block
+  image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=320
+    &photo_reference=${place.photos[0].photo_reference}&key=${import.meta.env.MAPS_TOKEN}`}
+  to={place.url}
+>
+  <h3 class="pb-2 font-bold">{place.name}</h3>
+  <ul class="flex flex-col gap-2">
+    <li>
+      <i class="fas fa-map-marker-alt"></i>
+      {place.vicinity}
+    </li>
+    <li>
+      <i class="fas fa-calendar-day"></i>
+      {getClosedDays(place.current_opening_hours.periods.map((period: any) => period.open.day))}
+    </li>
+    <li>
+      {[...Array(Math.round(place.rating))].map(() => <i class="fas fa-star" />)} ({
+        place.user_ratings_total
+      } reviews)
+    </li>
+  </ul>
+</Block>

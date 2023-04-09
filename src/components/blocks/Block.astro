@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets"
+/**
+ * Used to present an something as a card, also a link to that something.
+ */
+interface Props {
+  image: string
+  to: string
+}
+
+const { image, to } = Astro.props
+---
+
+<a
+  href={to}
+  class="mb-6 grid grid-cols-4 overflow-hidden rounded-xl hover:bg-highlight-light dark:hover:bg-highlight-dark"
+>
+  <div class="sm:max-h-40">
+    <Image src={image} width={500} height={500} alt="" class="h-full w-full object-cover" />
+  </div>
+  <article class="col-span-3 mx-6 my-5">
+    <slot />
+  </article>
+</a>
