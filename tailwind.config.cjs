@@ -4,7 +4,7 @@ module.exports = {
   // See -> https://tailwindcss.com/docs/dark-mode
   darkMode: "class",
   // See -> https://docs.astro.build/en/guides/integrations-guide/tailwind/
-  content: ["./src/**/*.{astro,mdx,ts,tsx}"],
+  content: ["./src/**/*.{astro,mdx,ts,js,tsx}"],
   theme: {
     /**
      * Blog custom colors 🎨

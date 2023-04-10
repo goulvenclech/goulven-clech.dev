@@ -3,9 +3,12 @@ import { getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import Hero from "$components/Hero.astro"
 import type { Parent } from "$components/Parents.astro"
+import { formatDate } from "src/utils"
 
 /**
- * Work in progress
+ * A page where users can search any articles. Only made with Astro and vanilla JS.
+ * I probably could have done this much easier using React or an already made library...
+ * But would I have had as much fun? 🤷
  */
 
 // Page title use in Hero & Metadata
@@ -15,9 +18,15 @@ const pageTitle = "Search"
 const parents: Array<Parent> = ["home"]
 
 // get all blogEntries
-const blogEntries = await getCollection("blog", ({ data }) => {
+const blogEntriesRaw = await getCollection("blog", ({ data }) => {
   return data.draft !== true
 })
+
+// can't use formatDate/1 in a script inline, so here we go 🧙
+const blogEntries = blogEntriesRaw.map(({ slug, data: { date, ...rest } }) => ({
+  slug,
+  data: { date: formatDate(date), ...rest },
+}))
 ---
 
 <Layout title={pageTitle}>
@@ -28,15 +37,38 @@ const blogEntries = await getCollection("blog", ({ data }) => {
       placeholder="Type some keywords..."
       type="text"
     />
-    <div id="io" class="flex flex-col gap-6"></div>
+    <div id="output" class="flex flex-col gap-6"></div>
   </Hero>
 </Layout>
+<script>
+  /* Can't import & use "define:vars" cause script inline gnagna
+    see here -> https://docs.astro.build/en/reference/directives-reference/#definevars */
+  import { SearchCard } from "../components/SearchCard.js"
+  /**
+   * Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
+   * This SearchCard will be used to display search's results, see ->
+   * src/components/SearchCard.js
+   */
+  customElements.define("search-card", SearchCard)
+</script>
 <script define:vars={{ blogEntries }}>
+  /**
+   * Okay, here we go 🧙
+   */
+  // get the HTML elements on which we will interact
   const input = document.getElementById("search")
-  const io = document.getElementById("io")
+  const output = document.getElementById("output")
+  /**
+   * Function called at each search, returns the list of articles corresponding
+   * to the keywords provided in input.
+   * @param {string} input - What's the search input?
+   * @return {Array<blogEntry>} - Articles returned by the search
+   */
   const applyInput = (input) => {
     const searchKeywords = input.toLowerCase().split(" ")
     if (searchKeywords.length > 0) {
+      // Filter block entries based on their title, abstract & tags
+      // should match every keywords provided by search input !
       results = blogEntries.filter((entry) =>
         searchKeywords.every(
           (keyword) =>
@@ -46,21 +78,28 @@ const blogEntries = await getCollection("blog", ({ data }) => {
         )
       )
     } else {
+      // if no keywords, return every blog entries
       results = blogEntries
     }
-    console.log(results)
     results.forEach((result) => {
-      const p = document.createElement("p")
-      p.textContent = result.data.title
-      io.appendChild(p)
+      // For every result, insert a SearchCard in the output
+      output.insertAdjacentHTML(
+        "beforeend",
+        `<search-card title="${result.data.title}" slug="${result.slug}" 
+        date="${result.data.date}" tags="${result.data.tags.join(", ")}" 
+        abstract="${result.data.abstract}" ></search-card>`
+      )
     })
   }
+  // On the first page load, initialize the output with an empty search.
   applyInput("")
+  // add an event listener on input, to call applyInput/2 at each search
   input.addEventListener("input", (event) => {
-    io.innerHTML = ""
+    output.innerHTML = ""
     if (event.target) {
       const element = event.currentTarget
       applyInput(element.value)
     }
   })
+  // that should do it 🧙
 </script>
