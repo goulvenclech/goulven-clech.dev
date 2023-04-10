@@ -1,0 +1,46 @@
+---
+import Block from "./Block.astro"
+
+/**
+ * Used to present a book as a card, also a link to Google Shopping that book.
+ * @param {string} isbn - What's this exciting book's ISBN?
+ */
+interface Props {
+  isbn: string
+}
+
+const { isbn } = Astro.props
+
+/**
+ * Await fetch function, to the Open Book Api
+ * TO DO : handle errors !
+ */
+const userData: any = await fetch(
+  `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
+  {}
+).then((response) => response.json())
+
+// Got what what we needed 💰 See response format ->
+// https://openlibrary.org/dev/docs/api/books
+const result = await userData
+
+const book = result[`ISBN:${isbn}`]
+---
+
+<Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
+  <h3 class="pb-2 font-bold">{book.details.title}</h3>
+  <ul class="flex flex-col gap-2">
+    <li>
+      <i class="fa-solid fa-user"></i>
+      {book.details.authors.map((author: any) => author.name).join(" & ")}
+    </li>
+    <li>
+      <i class="fa-solid fa-building"></i>
+      {book.details.publishers.join(" & ")} ({new Date(book.details.publish_date).getFullYear()})
+    </li>
+    <li>
+      <i class="fa-solid fa-book-open"></i>
+      ISBN: {book.details.isbn_13}
+    </li>
+  </ul>
+</Block>
