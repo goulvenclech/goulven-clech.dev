@@ -41,7 +41,7 @@ module.exports = {
        * I want to use cascadia, tailwind take care of provinding mono fallbacks
        */
       fontFamily: {
-        mono: ["cascadia code", ...defaultTheme.fontFamily.mono],
+        sans: ["Iosevka Aile", ...defaultTheme.fontFamily.mono],
       },
     },
   },

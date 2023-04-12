@@ -1,6 +1,6 @@
 {
   "name": "goulven-clech.dev",
-  "description": "My personnal blog.",
+  "description": "My personnal blog, made with Astro, TypeScript & Tailwind CSS.",
   "private": true,
   "version": "0.0.3",
   "repository": {
@@ -15,7 +15,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@fontsource/cascadia-code": "^4.2.1",
     "@vercel/analytics": "^0.1.11"
   },
   "devDependencies": {

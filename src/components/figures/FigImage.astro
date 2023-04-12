@@ -16,7 +16,7 @@ interface Props {
 const { src, alt, caption } = Astro.props
 ---
 
-<figure>
+<figure class="my-12">
   <Image
     src={src}
     width="1500"
@@ -24,7 +24,7 @@ const { src, alt, caption } = Astro.props
     class="aspect-video w-full rounded-lg object-cover"
     alt={alt}
   />
-  <figcaption class="mb-6 mt-2 text-center text-sm italic">
+  <figcaption class="mt-2 text-center text-sm italic">
     {caption}
   </figcaption>
 </figure>

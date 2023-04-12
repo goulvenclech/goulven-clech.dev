@@ -22,7 +22,7 @@ export class SearchCard extends HTMLElement {
     template.innerHTML = `<a
             href="/blog/${this.slug}"
           >
-          <article class="block overflow-hidden rounded-xl hover:bg-highlight-light dark:hover:bg-highlight-dark px-6 py-5">
+          <article class="block overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark px-6 py-5">
             <h3 class="pb-2 text-lg font-bold md:text-xl">
               ${this.title}
             </h3>

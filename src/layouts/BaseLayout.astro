@@ -1,5 +1,4 @@
 ---
-import "@fontsource/cascadia-code"
 import { inject } from "@vercel/analytics"
 /**
  * Base of our html. Mainly html head & some global styles.
@@ -36,16 +35,42 @@ inject()
     <title>{title} | Goulven Clec'h</title>
   </head>
   <body
-    class="text bg-body-light text-sm text-base-light dark:bg-body-dark dark:text-base-dark md:text-base"
+    class="text bg-body-light font-sans text-[15px] text-base-light dark:bg-body-dark dark:text-base-dark md:text-[17px]"
   >
     <slot />
   </body>
 </html>
 <style is:global>
-  html {
-    @apply font-mono;
-  }
   p {
     @apply mb-6 leading-[1.75];
+  }
+  /* Iosevka Etoile font */
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-italic.woff2") format("woff2");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-bold.woff2") format("woff2");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-bolditalic.woff2") format("woff2");
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
   }
 </style>
