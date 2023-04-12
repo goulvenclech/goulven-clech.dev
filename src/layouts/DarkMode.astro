@@ -10,7 +10,7 @@
   title="Toggle dark mode"
   class="w-11 px-3 align-middle text-lg font-bold hover:text-primary md:text-xl"></button>
 
-<script>
+<script is:inline>
   const button = document.getElementById("darkMode")
   /**
    * Apply Dark mode function, used on page load and on button click.
@@ -19,7 +19,7 @@
    * Also change the button inner HTML to correct icon (🌞 or 🌚)
    * @param {boolean} isDark - Are we using dark mode?
    */
-  const applyDarkMode = (isDark: boolean) => {
+  const applyDarkMode = (isDark) => {
     if (isDark) {
       localStorage.useDarkMode = JSON.stringify(true)
       document.documentElement.classList.add("dark")
