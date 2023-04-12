@@ -7,9 +7,15 @@ import { inject } from "@vercel/analytics"
  */
 interface Props {
   title: string
+  description?: string
+  img?: string
 }
 
-const { title } = Astro.props
+const {
+  title,
+  img,
+  description = "I'm Goulven Clec'h, a web developer based in Toulouse, France. Welcome to my personal blog!",
+} = Astro.props
 
 // Vercel analytics
 inject()
@@ -22,10 +28,8 @@ inject()
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content="Goulven Clec'h" />
-    <meta
-      name="description"
-      content="I'm Goulven Clec'h, a web developer based in Toulouse, France. Welcome to my personal blog!"
-    />
+    <meta name="description" content={description} />
+    {img && <meta property="og:image" content={img} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer></script>
     <script defer src="/_vercel/insights/script.js"></script>
