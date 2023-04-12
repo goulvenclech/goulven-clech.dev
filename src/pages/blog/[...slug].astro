@@ -37,19 +37,19 @@ const { Content } = await entry.render()
       }
     </ul>
   </Hero>
-  <FigImage
-    src={entry.data.image}
-    width={1500}
-    height={850}
-    alt={entry.data.image_alt}
-    caption={entry.data.image_caption}
-  />
+  <div class="mb-16">
+    <FigImage
+      src={entry.data.image}
+      alt={entry.data.image_alt}
+      caption={entry.data.image_caption}
+    />
+  </div>
   <Content />
   <p class="mb-16">- published {formatDate(entry.data.date)}</p>
 </Layout>
 <style is:global>
   h2 {
-    @apply mt-12 mb-6 text-2xl font-bold md:text-3xl;
+    @apply mb-6 mt-12 text-2xl font-bold md:text-3xl;
   }
   p + ul {
     @apply list-outside list-disc pl-6;
