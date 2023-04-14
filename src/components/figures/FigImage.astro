@@ -1,28 +1,79 @@
 ---
-import { Image } from "astro:assets"
-
+import { getConfiguredImageService, getImage } from "astro:assets"
+import type { LocalImageServiceWithPlaceholder } from "../../imageService"
+import type { HTMLAttributes } from "astro/types"
+import type { ImageMetadata } from "astro"
+/**
+ * ⚠️ Warning for beginners ⚠️
+ * What you're about to read here is an overly complicated and far-fetched way of
+ * displaying images with Astro. Mainly to gain performance and to display a
+ * placeholder during image loading.
+ * You should rather use the default utils for images :
+ * -> https://docs.astro.build/en/guides/images/
+ */
 /**
  * Wrap an Astro image in a html figure with caption.
- * @param {string} src - Where is the source image?
+ * @param {ImageMetadata} src - Where is the source image?
  * @param {string} alt - How do you describe the image?
  * @param {string} caption - What caption should we put next?
+ * @param {string} width - What caption should we put next?
+ * @param {string} height - What caption should we put next?
  */
-interface Props {
-  src: string
+export interface Props extends Omit<HTMLAttributes<"img">, "src"> {
+  src: ImageMetadata
   alt: string
   caption: string
+  width?: number
+  height?: number
 }
 
-const { src, alt, caption } = Astro.props
+/**
+ * Get an optimized image with Astro's getImage()
+ */
+const originalFormat = await getImage({
+  src: Astro.props.src,
+  width: Astro.props.width,
+  height: Astro.props.height,
+  format: Astro.props.src.format,
+})
+// Build different sources with optimized formats to cover most users
+const formats = ["avif", "webp"]
+const sources: Record<string, Awaited<ReturnType<typeof getImage>>> = {}
+for (let format of formats) {
+  sources[format] = await getImage({
+    src: Astro.props.src,
+    width: Astro.props.width,
+    height: Astro.props.height,
+    format: format,
+  })
+}
+// Use our custom imageService to build a placeholder, while our image is loading
+const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
+const placeholderURL = await imageService.generatePlaceholder(
+  Astro.props.src.src,
+  Astro.props.src.width,
+  Astro.props.src.height
+)
+
+// default height & width if not defined
+const { src, height = 1500, width = 840, caption, ...passedAttributes } = Astro.props
+const { imageWidth, imageHeight, ...attributes } = originalFormat.attributes
 ---
 
 <figure class="my-12">
-  <Image
-    src={src}
-    width="1500"
-    height="850"
+  {
+    Object.values(sources).map((source) => (
+      <source srcset={source.src} type={"image/" + source.options.format} />
+    ))
+  }
+  <img
+    src={originalFormat.src}
     class="aspect-video w-full rounded-lg object-cover"
-    alt={alt}
+    style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
+    {/* Remove the placeholder after img's load, in case the image have transparency */}
+    onload="this.removeAttribute('style');"
+    {...passedAttributes}
+    {...attributes}
   />
   <figcaption class="mt-2 text-center text-sm italic">
     {caption}

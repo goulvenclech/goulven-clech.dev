@@ -15,12 +15,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@vercel/analytics": "^0.1.11"
+    "@vercel/analytics": "^0.1.11",
+    "sharp": "^0.31.3"
   },
   "devDependencies": {
     "@astrojs/mdx": "^0.19.0",
     "@astrojs/tailwind": "^3.1.1",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "@types/sharp": "^0.31.1",
     "astro": "^2.3.0",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.7",

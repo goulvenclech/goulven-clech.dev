@@ -5,6 +5,7 @@
     "paths": {
       "$components/*": ["src/components/*"],
       "$layouts/*": ["src/layouts/*"]
-    }
+    },
+    "types": ["vite/client"]
   }
 }

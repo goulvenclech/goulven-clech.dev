@@ -11,4 +11,7 @@ export default defineConfig({
   integrations: [tailwind(), mdx()],
   markdown: { shikiConfig: { theme: "css-variables" } },
   experimental: { assets: true },
+  image: {
+    service: "./src/imageService.ts",
+  },
 })
