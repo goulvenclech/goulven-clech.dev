@@ -23,7 +23,7 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
 
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={parents}>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-6">
       {
         allBlogEntries
           .sort((a, b) => b.data.date.getDate() - a.data.date.getDate())
