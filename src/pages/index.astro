@@ -57,7 +57,7 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
       {
         /* keep only the three last articles */
         allBlogEntries
-          .sort((a, b) => b.data.date.getDate() - a.data.date.getDate())
+          .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
           .slice(0, 3)
           .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
       }

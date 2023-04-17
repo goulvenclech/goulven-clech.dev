@@ -47,7 +47,7 @@ const parents: Array<Parent> = ["home", "tags"]
     <div class="flex flex-col gap-3">
       {
         entries
-          .sort((a, b) => b.data.date.getDate() - a.data.date.getDate())
+          .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
           .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
       }
     </div>
