@@ -18,46 +18,33 @@ import Image1 from "./image1.png"
 
 > [WORK IN PROGRESS]
 
-After almost two years of procrastinating, I finally launched this blog.
+After almost two years of procrastinating, I finally launched a blog.
 
-Besides illegitimacy and lack of time, the main reason not to launch earlier was that all the <LinkInline to="https://en.wikipedia.org/wiki/Static_site_generator">Static Site Generators</LinkInline> I had used so far weren't fun...
+Besides illegitimacy and lack of time, the main reason not to launch earlier was that I needed a blogging technology that amused me... Until my friend <GithubInline user="3019731" /> introduced me to <LinkInline to="https://astro.build/">Astro</LinkInline>, THE best Static Site Generator right now.
 
-But that was before my friend <GithubInline user="3019731" /> introduced me to <LinkInline to="https://astro.build/">Astro</LinkInline>, THE best SSG available, especially if you are new to web development. Let me explain why in this first article, and share a few tips I learned along the way.
+Let me explain what sets Astro apart, especially if you're new to web development, and how it helped me launch my blog 🚀
 
 ## What's a Static Site Generator?
 
-Well, the name is self-explanatory:
+Before seeing how Astro works, you need to understand two concepts:
 
-- "Site Generator" means software that takes templates of what your web pages should look like and flat-text files of your content, then generate all the web pages you need from those inputs.
-- "Static Site" suggests a website that will not change depending on the user. It won't need a web server to handle user inputs & generate pages on the fly, but will serve plain HTML files created and stored earlier.
+Firstly, a "<LinkInline to="https://en.wikipedia.org/wiki/Static_web_page">Static Site</LinkInline>" consists of HTML pages delivered to the browser exactly as they are stored, unlike a "dynamic" site where a server will generate HTML pages based on user requests.
 
-Since the genesis of SSG with <LinkInline to="https://en.wikipedia.org/">Wikipedia</LinkInline> and <LinkInline to="https://jekyllrb.com/">Jekyll</LinkInline>, those softwares have become particularly popular for blogging. All you have to do is write your articles in a text file, save your blog template with the content on <LinkInline to="https://en.wikipedia.org/">GitHub</LinkInline> or <LinkInline to="https://en.wikipedia.org/">GitLab</LinkInline>, and use a free <LinkInline to="https://en.wikipedia.org/wiki/Content_delivery_network">Content Delivery Network</LinkInline> (rather than renting a server) to host your blog.
+Therefore a static site allows us to do without a server, which can be expensive and unreliable, and use a <LinkInline to="https://en.wikipedia.org/wiki/Content_delivery_network">Content Delivery Network</LinkInline>. <LinkInline to="https://vercel.com/">Vercel</LinkInline> or <LinkInline to="https://www.netlify.com/">Netlify</LinkInline>, for example, are free solutions to host your static blogs.
 
-This concept is extremely simple and practical; unfortunately, due to a generally "nerdy" experience, these softwares are mainly used by developers' blogs. The general public prefers <LinkInline to="https://wordpress.com/">WordPress</LinkInline>, yet more expensive, less reliable, and less efficient.
+Secondly, a "<LinkInline to="https://en.wikipedia.org/wiki/Static_site_generator">Site Generator</LinkInline>" takes, on the one hand, a template describing the appearance of your site and, on the other hand, text files representing the content. With those two entries, the software generates all your website's pages.
 
-<Image
-  src={Image1}
-  width="1500"
-  height="850"
-  class="object-fit mb-6 aspect-video w-full rounded-lg"
-  alt="Cover"
-/>
+For developers, it's not just a time saver but allows content to be stored in simple text files rather than a database. The files are then editable in a simple code editor, easily exported, and can be stored with the rest of the code.
 
-## What was I looking for?
+Since the genesis of SSGs with <LinkInline to="https://en.wikipedia.org/">Wikipedia</LinkInline> and <LinkInline to="https://jekyllrb.com/">Jekyll</LinkInline>, those softwares have become popular among techs like us. However, the general experience is still "nerdy" and requires not being scared by a code editor or command lines... Explaining the general public's preference for <LinkInline to="https://wordpress.com/">WordPress</LinkInline>, yet more expensive and less reliable.
 
-I won't go through every SSG that has failed me, but let's divide them into large families:
+And even for a developer like me, the experience offered by most SSGs can be frustrating. I won't go through every failed attempt, but let's divide them into large families:
 
-- The famous "blasting fast" SSGs. Whose massive JS frameworks prevent reaching correct performances or being decently reliable.
 - The "traditional" SSGs. Whose are often either hermetic or poorly integrated into the NodeJS ecosystem (cutting off access to many valuable libraries for web development).
+- The "modern" SSGs. build on top of huge JS frameworks, preventing correct performances or being decently reliable.
 - The "niche" SSGs. Which are made with fantastic and modern languages but whose poor documentation and nascent ecosystem will drain my time.
 
-To summarize, I was looking for an SSG that is: well integrated into the NodeJS ecosystem but ships minimum JS in production; well designed and documented to allow quick learning; and finally, both statically typed and with world-class IDE integration for my development comfort.
-
-Finally, this new SSG should fit my blog AND be a strong candidate for my more ambitious projects. Like <LinkInline to="https://fairedesjeux.fr//">FaireDesJeux</LinkInline>'s refactor, a collaborative website to learn how to create video games, run by <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>.
-
-So you guessed it, I finally found a stack approaching these objectives: <LinkInline to="https://www.typescriptlang.org/">TypeScript</LinkInline> and <LinkInline to="https://astro.build/">Astro</LinkInline>. So let's dive into it!
-
-## Why climb into Astro's rocket?
+## Why Astro stand out?
 
 Astro's proposal is simple but appealing: offering a JavaScript SSG that does not ship any JS by default.
 
