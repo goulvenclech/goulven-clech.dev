@@ -23,7 +23,7 @@
     "@astrojs/tailwind": "^3.1.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/sharp": "^0.31.1",
-    "astro": "^2.3.0",
+    "astro": "^2.3.4",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.7",
     "tailwindcss": "^3.3.1"

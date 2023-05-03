@@ -70,7 +70,6 @@ const { imageWidth, imageHeight, ...attributes } = originalFormat.attributes
     src={originalFormat.src}
     class="aspect-video w-full rounded-lg object-cover"
     style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
-    {/* Remove the placeholder after img's load, in case the image have transparency */}
     onload="this.removeAttribute('style');"
     {...passedAttributes}
     {...attributes}
