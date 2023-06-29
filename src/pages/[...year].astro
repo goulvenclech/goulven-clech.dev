@@ -4,10 +4,10 @@ import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
 /**
- * A page with all tags used in our articles.
+ * For each year where we published, display the related blog entries.
  */
 export async function getStaticPaths() {
-  /* get all articles */
+  /* get all blog entries */
   const blogEntries = await getCollection("blog", ({ data }) => {
     return data.draft !== true
   })
@@ -16,14 +16,14 @@ export async function getStaticPaths() {
   blogEntries.forEach((entry) => {
     allYears.add(entry.data.date.getFullYear())
   })
-  // pair each year with all its articles
+  // pair each year with all its blog entries
   const yearsWithEntries = Object.fromEntries(
     [...allYears].map((year) => {
       const relatedEntries = blogEntries.filter((entry) => entry.data.date.getFullYear() === year)
       return [year, relatedEntries]
     })
   )
-  // Now return all static path and related articles
+  // Now return all static path and related blog entries
   return Object.entries(yearsWithEntries).map(([year, relatedEntries]) => ({
     params: { year: year },
     props: { year: year, entries: relatedEntries },
@@ -38,7 +38,7 @@ const pageTitle = `Published in ${year}`
 
 <Layout title={pageTitle}>
   <Hero title={pageTitle} parents={["home"]}>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-6">
       {
         entries
           .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())

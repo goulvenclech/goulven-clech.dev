@@ -4,10 +4,10 @@ import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
 /**
- * A page with all tags used in our articles.
+ * For each tag we published, display the related blog entries.
  */
 export async function getStaticPaths() {
-  /* get all articles */
+  /* get all blog entries */
   const blogEntries = await getCollection("blog", ({ data }) => {
     return data.draft !== true
   })
@@ -18,14 +18,14 @@ export async function getStaticPaths() {
       allTags.add(tag.toLowerCase())
     })
   })
-  // pair each tag with all its articles
+  // pair each tag with all its blog entries
   const tagsWithEntries = Object.fromEntries(
     [...allTags].map((tag) => {
       const relatedEntries = blogEntries.filter((entry) => entry.data.tags.includes(tag))
       return [tag, relatedEntries]
     })
   )
-  // Now return all static path and related articles
+  // Now return all static path and related blog entries
   return Object.entries(tagsWithEntries).map(([tag, relatedEntries]) => ({
     params: { tag: `tag-${tag}` },
     props: { tag: tag, entries: relatedEntries },

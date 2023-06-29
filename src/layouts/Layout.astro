@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro"
 import Footer from "./Footer.astro"
-import Header from "./Header.astro"
 /**
  * Simple layout for all our mains pages.
  * Roughly, wrap our content into a container with the header & footer 🤷‍♂️
@@ -18,7 +17,6 @@ const { title, description, img } = Astro.props
 
 <BaseLayout title={title} description={description} img={img}>
   <div class="mx-auto max-w-screen-md px-3">
-    <Header />
     <main class="py-8">
       <slot />
     </main>
