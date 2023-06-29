@@ -1,6 +1,6 @@
 ---
-// TO DO: should this really be there ? 🤔
-export type Parent = "home" | "blog" | "tags"
+// TODO: Now that the pages "tags" & "articles" are gone, should I do that differently ? 🤔
+export type Parent = "home"
 /**
  * A nav bar allowing fast navigation to this page's parents.
  * @param {Array<Parent>} parents - What are this page parents?
@@ -26,21 +26,6 @@ const { parents } = Astro.props
             </li>
           )
         }
-        {parent == "blog" && (
-          <li>
-            <a href="/blog" title="Return to all articles" class="hover:text-primary px-2">
-              <i class="fa-solid fa-newspaper text-base" />
-            </a>
-          </li>
-        )}
-
-        {parent == "tags" && (
-          <li>
-            <a href="/tags" title="Return to all articles" class="hover:text-primary px-2">
-              <i class="fa-solid fa-tags text-base" />
-            </a>
-          </li>
-        )}
         <i class="fa-solid fa-chevron-right" />
       </>
     ))

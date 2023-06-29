@@ -1,6 +1,5 @@
 ---
 import { CollectionEntry, getCollection } from "astro:content"
-import type { Parent } from "$components/Parents.astro"
 import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
@@ -12,38 +11,33 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("blog", ({ data }) => {
     return data.draft !== true
   })
-  /* get all tags */
-  const allTags: Set<string> = new Set()
+  /* get all years */
+  const allYears: Set<number> = new Set()
   blogEntries.forEach((entry) => {
-    entry.data.tags.forEach((tag) => {
-      allTags.add(tag.toLowerCase())
-    })
+    allYears.add(entry.data.date.getFullYear())
   })
-  // pair each tag with all its articles
-  const tagsWithEntries = Object.fromEntries(
-    [...allTags].map((tag) => {
-      const relatedEntries = blogEntries.filter((entry) => entry.data.tags.includes(tag))
-      return [tag, relatedEntries]
+  // pair each year with all its articles
+  const yearsWithEntries = Object.fromEntries(
+    [...allYears].map((year) => {
+      const relatedEntries = blogEntries.filter((entry) => entry.data.date.getFullYear() === year)
+      return [year, relatedEntries]
     })
   )
   // Now return all static path and related articles
-  return Object.entries(tagsWithEntries).map(([tag, relatedEntries]) => ({
-    params: { tag: tag },
-    props: { tag: tag, entries: relatedEntries },
+  return Object.entries(yearsWithEntries).map(([year, relatedEntries]) => ({
+    params: { year: year },
+    props: { year: year, entries: relatedEntries },
   }))
 }
-const tag = Astro.props.tag
+const year = Astro.props.year
 const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
 
 // Page title use in Hero & Metadata
-const pageTitle = `Tagged ${tag}`
-
-// Page's parents
-const parents: Array<Parent> = ["home", "tags"]
+const pageTitle = `Published in ${year}`
 ---
 
 <Layout title={pageTitle}>
-  <Hero title={pageTitle} parents={parents}>
+  <Hero title={pageTitle} parents={["home"]}>
     <div class="flex flex-col gap-3">
       {
         entries

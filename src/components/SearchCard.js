@@ -20,7 +20,7 @@ export class SearchCard extends HTMLElement {
   connectedCallback() {
     const template = document.createElement("template")
     template.innerHTML = `<a
-            href="/blog/${this.slug}"
+            href="/${this.slug}"
           >
           <article class="block overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark px-6 py-5">
             <h3 class="pb-2 text-lg font-bold md:text-xl">

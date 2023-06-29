@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import Hero from "$components/Hero.astro"
-import type { Parent } from "$components/Parents.astro"
 import { formatDate } from "src/utils"
 
 /**
@@ -13,9 +12,6 @@ import { formatDate } from "src/utils"
 
 // Page title use in Hero & Metadata
 const pageTitle = "Search"
-
-// Page's parents
-const parents: Array<Parent> = ["home"]
 
 // get all blogEntries
 const blogEntriesRaw = await getCollection("blog", ({ data }) => {
@@ -30,7 +26,7 @@ const blogEntries = blogEntriesRaw.map(({ slug, data: { date, ...rest } }) => ({
 ---
 
 <Layout title={pageTitle}>
-  <Hero title={pageTitle} parents={parents}>
+  <Hero title={pageTitle} parents={["home"]}>
     <input
       id="search"
       class="mb-16 w-full rounded-lg bg-highlight-light px-3 py-2 dark:bg-highlight-dark"

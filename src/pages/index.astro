@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content"
-import type { Parent } from "$components/Parents.astro"
 import Hero from "$components/Hero.astro"
 import GithubInline from "$components/inlines/GithubInline.astro"
 import LinkInline from "$components/inlines/LinkInline.astro"
@@ -17,10 +16,6 @@ import Card from "$components/Card.astro"
 // Page title use in Hero & Metadata
 const pageTitle = "Hello 👋"
 
-// Page's parents
-
-const parents: Array<Parent> = []
-
 // Import blog articles, except drafts
 // See -> https://docs.astro.build/en/guides/content-collections/#querying-collections
 const allBlogEntries = await getCollection("blog", ({ data }) => {
@@ -29,30 +24,18 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
 ---
 
 <Layout title={pageTitle}>
-  <Hero title={pageTitle} parents={parents}>
+  <Hero title={pageTitle} parents={[]}>
     <p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
     <p>
-      Interested in <TagInline tag="web development" />,
-      <TagInline tag="functional programming" />, and
-      <TagInline tag="types systems" />; I'm currently working for
-      <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, a real estate auction
-      platform powered by Elixir & Erlang.
+      Currently, I'm working for the auction platform
+      <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, and I'm the co-founder
+      of <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>.
     </p>
     <p>
-      With two friends, I co-founded
-      <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>, a French-speaking
-      association about independent & amateur
-      <TagInline tag="game development" />. We run a
-      <LinkInline to="https://www.youtube.com/c/GameDevAlliance">Youtube channel</LinkInline>, a
-      collaborative <LinkInline to="https://fairedesjeux.fr/">tutorial website</LinkInline>, and a
-      <LinkInline to="https://discord.com/invite/RrBppaj">Discord server</LinkInline>.
-    </p>
-    <p>
-      Also, I'll sometimes chat about
-      <TagInline tag="coffee" />..
+      Here, I chat about <TagInline tag="web development" />, <TagInline tag="coffee" />...
     </p>
   </Hero>
-  <Section title="Last articles">
+  <Section title="My articles">
     <div class="flex flex-col gap-6">
       {
         /* keep only the three last articles */
@@ -62,11 +45,5 @@ const allBlogEntries = await getCollection("blog", ({ data }) => {
           .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
       }
     </div>
-  </Section>
-  <Section title="Mains tags">
-    <ul class="flex flex-wrap gap-6">
-      <li><TagInline tag="web development" /></li>
-      <li><TagInline tag="coffee" /></li>
-    </ul>
   </Section>
 </Layout>
