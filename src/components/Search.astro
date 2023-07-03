@@ -13,12 +13,15 @@ const blogEntriesRaw = await getCollection("blog", ({ data }) => {
   return data.draft !== true
 })
 
+// Sort blog entries by date, then format date to be displayed properly.
 // Since we can't use formatDate/1 in a script inline, and I want to display the date properly
 // on my article cards, I have to map over all blogEntries and format myself. So here we go 🧙
-const blogEntries = blogEntriesRaw.map(({ slug, data: { date, ...rest } }) => ({
-  slug,
-  data: { date: formatDate(date), ...rest },
-}))
+const blogEntries = blogEntriesRaw
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .map(({ slug, data: { date, ...rest } }) => ({
+    slug,
+    data: { date: formatDate(date), ...rest },
+  }))
 ---
 
 <>
