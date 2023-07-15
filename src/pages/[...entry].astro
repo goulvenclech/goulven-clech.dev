@@ -36,6 +36,12 @@ const { Content } = await entry.render()
   <p class="mb-16">- published {formatDate(entry.data.date)}</p>
 </Layout>
 <style is:global>
+  .frame.is-terminal .header {
+    display: none;
+  }
+  .expressive-code {
+    @apply mb-6;
+  }
   h2 {
     @apply mb-6 mt-16 text-2xl font-bold md:text-3xl;
   }
