@@ -6,6 +6,6 @@
       "$components/*": ["src/components/*"],
       "$layouts/*": ["src/layouts/*"]
     },
-    "types": ["vite/client"]
-  }
+  },
+  "exclude": ["vite/**/*", "node_modules/**/*"]
 }

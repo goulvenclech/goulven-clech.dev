@@ -1,5 +1,4 @@
 ---
-import { inject } from "@vercel/analytics"
 /**
  * Base of our html. Mainly html head & some global styles.
  * @param {string} title - What is this page about?
@@ -15,9 +14,6 @@ const {
   img,
   description = "I'm Goulven Clec'h, a web developer based in Toulouse, France. Welcome to my personal blog!",
 } = Astro.props
-
-// Vercel analytics
-inject()
 ---
 
 <!DOCTYPE html>

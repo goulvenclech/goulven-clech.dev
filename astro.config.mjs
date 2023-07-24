@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config"
+import { inject } from "@vercel/analytics"
 import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
 import { astroExpressiveCode } from "astro-expressive-code"
-import expressiveCode from "astro-expressive-code"
 
 //  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -17,6 +17,9 @@ const astroExpressiveCodeOptions = {
     },
   },
 }
+
+// Vercel analytics
+inject()
 
 // https://astro.build/config
 export default defineConfig({
