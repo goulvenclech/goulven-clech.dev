@@ -1,11 +1,11 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "$components/*": ["src/components/*"],
-      "$layouts/*": ["src/layouts/*"]
-    },
-  },
-  "exclude": ["vite/**/*", "node_modules/**/*"]
+	"extends": "astro/tsconfigs/strict",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"$components/*": ["src/components/*"],
+			"$layouts/*": ["src/layouts/*"]
+		}
+	},
+	"exclude": ["node_modules", "**/node_modules/*", ".vscode", "dist"]
 }

@@ -16,10 +16,40 @@ const { title, description, img } = Astro.props
 ---
 
 <BaseLayout title={title} description={description} img={img}>
-  <div class="mx-auto max-w-screen-md px-3">
-    <main class="py-8">
+  <main
+    class="bg-body-light font-sans text-[17px] text-base-light dark:bg-body-dark dark:text-base-dark"
+  >
+    <div class="mx-auto max-w-screen-sm py-8">
       <slot />
-    </main>
-    <Footer />
-  </div>
+    </div>
+  </main>
+  <Footer />
 </BaseLayout>
+
+<style is:global>
+  p {
+    @apply mb-6 px-3 text-base sm:px-6 md:px-9;
+  }
+  /* Iosevka Etoile font */
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-italic.woff2") format("woff2");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Iosevka Aile";
+    src: url("/fonts/iosevka-aile-bold.woff2") format("woff2");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>

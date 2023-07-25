@@ -15,16 +15,20 @@ const { id } = Astro.props
  * Await fetch function, to the Google Maps Api, using our Maps token stored in ~/.env (secret file)
  * TO DO : handle errors !
  */
-const userData: any = await fetch(
+const placeData: any = await fetch(
   `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${
     import.meta.env.MAPS_TOKEN
   }`,
   {}
-).then((response) => response.json())
+)
+  .then((response) => response.json())
+  .catch((error) => {
+    console.error(`Error with place ${id}:`, error)
+  })
 
 // Got what what we needed 💰 See response format ->
 // https://developers.google.com/maps/documentation/places/web-service/details
-const { result: place } = await userData
+const { result: place } = await placeData
 
 /**
  * From an array of opened days numbers, return a string with closed days.
@@ -54,8 +58,9 @@ function dayOfWeekAsString(dayIndex: number): string {
 ---
 
 <Block
-  image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=320
-    &photo_reference=${place.photos[0].photo_reference}&key=${import.meta.env.MAPS_TOKEN}`}
+  image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=320&photo_reference=${
+    place.photos[0].photo_reference
+  }&key=${import.meta.env.MAPS_TOKEN}`}
   to={place.url}
 >
   <h3 class="pb-2 font-bold">{place.name}</h3>

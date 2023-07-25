@@ -13,18 +13,18 @@ module.exports = {
     colors: {
       // Document default body color
       body: {
-        light: "#FDF0ED",
+        light: "#FFFCFB",
         dark: "#1C1E26",
       },
       // Alt body color, for example when a div is hovered
       highlight: {
-        light: "#FADAD1",
+        light: "#fce9e4",
         dark: "#2E303E",
       },
       // Mainly used by text and icons
       base: {
         light: "#1C1E26",
-        dark: "#FDF0ED",
+        dark: "#FFFCFB",
       },
       // Mainly used when hovering buttons or links
       primary: "#EC6A88",
