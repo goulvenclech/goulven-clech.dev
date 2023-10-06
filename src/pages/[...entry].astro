@@ -32,7 +32,9 @@ const { Content } = await entry.render()
     <p>{entry.data.abstract}</p>
   </Hero>
   <FigImage src={entry.data.image} alt={entry.data.image_alt} caption={entry.data.image_caption} />
-  <Content />
+  <div class="prose prose-slate">
+    <Content />
+  </div>
   <p class="mb-16">- published {formatDate(entry.data.date)}</p>
 </Layout>
 <style is:global>
@@ -40,15 +42,6 @@ const { Content } = await entry.render()
     display: none;
   }
   .expressive-code {
-    @apply mb-6;
-  }
-  h2 {
-    @apply mb-6 mt-16 px-3 text-2xl font-bold sm:px-6 md:px-9 md:text-3xl;
-  }
-  p + ul {
-    @apply list-outside list-disc pl-6;
-  }
-  p + ul > li {
     @apply mb-6;
   }
 </style>

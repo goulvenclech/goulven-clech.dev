@@ -15,16 +15,21 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@vercel/analytics": "^1.0.1",
-    "sharp": "^0.32.4",
-    "shiki": "^0.14.3"
+    "@astrojs/check": "^0.2.0",
+    "@fontsource/work-sans": "^5.0.8",
+    "@tailwindcss/typography": "^0.5.10",
+    "@vercel/analytics": "^1.0.2",
+    "sharp": "^0.32.6",
+    "shiki": "^0.14.4",
+    "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^0.19.7",
-    "@astrojs/tailwind": "^4.0.0",
+    "@astrojs/mdx": "^1.1.0",
+    "@astrojs/tailwind": "^5.0.0",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "astro": "^2.9.2",
-    "astro-expressive-code": "^0.19.0",
+    "@types/node": "^20.8.0",
+    "astro": "^3.2.1",
+    "astro-expressive-code": "^0.19.2",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "tailwindcss": "^3.3.3"
   }

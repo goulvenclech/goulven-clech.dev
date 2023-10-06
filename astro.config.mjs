@@ -3,6 +3,7 @@ import { inject } from "@vercel/analytics"
 import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
 import { astroExpressiveCode } from "astro-expressive-code"
+import '@fontsource/work-sans'
 
 //  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -28,9 +29,6 @@ export default defineConfig({
     shikiConfig: {
       theme: "css-variables",
     },
-  },
-  experimental: {
-    assets: true,
   },
   image: {
     service: {

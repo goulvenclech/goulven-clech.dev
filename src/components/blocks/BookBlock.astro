@@ -31,11 +31,11 @@ const book = result[`ISBN:${isbn}`]
   <h3 class="pb-2 font-bold">{book.details.title}</h3>
   <ul class="flex flex-col gap-2">
     <li>
-      <i class="fa-solid fa-user"></i>
+      <i class="fa-solid fa-user pr-2"></i>
       {book.details.authors.map((author: any) => author.name).join(" & ")}
     </li>
     <li>
-      <i class="fa-solid fa-building"></i>
+      <i class="fa-solid fa-building pr-2"></i>
       {book.details.publishers.join(" & ")} ({new Date(book.details.publish_date).getFullYear()})
     </li>
     <li>

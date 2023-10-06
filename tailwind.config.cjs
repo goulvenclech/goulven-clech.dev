@@ -1,10 +1,14 @@
-/** @type {import('tailwindcss').Config} */
 const defaultTheme = require("tailwindcss/defaultTheme")
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   // See -> https://tailwindcss.com/docs/dark-mode
   darkMode: "class",
   // See -> https://docs.astro.build/en/guides/integrations-guide/tailwind/
   content: ["./src/**/*.{astro,mdx,ts,js,tsx}"],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
   theme: {
     /**
      * Blog custom colors 🎨
@@ -41,11 +45,8 @@ module.exports = {
        * I want to use cascadia, tailwind take care of provinding mono fallbacks
        */
       fontFamily: {
-        sans: ["Iosevka Aile", ...defaultTheme.fontFamily.mono],
+        sans: ["Work Sans", ...defaultTheme.fontFamily.mono],
       },
     },
-  },
-  // Mainly used for $components/Card.astro
-  // see ->  https://github.com/tailwindlabs/tailwindcss-line-clamp
-  plugins: [require("@tailwindcss/line-clamp")],
+  }
 }
