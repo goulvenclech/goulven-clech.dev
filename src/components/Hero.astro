@@ -1,22 +1,26 @@
 ---
-import Parents, { type Parent } from "./Parents.astro"
 /**
- * Used to display the main page title, and the parents nav bar.
+ * Used to display the main page title, and the go home button.
  * @param {string} title - What is this page about?
- * @param {Array<Parent>} parents - What are this page parents?
+ * @param {boolean} isHome - Is this the home page?
  */
 interface Props {
   title: string
-  parents: Array<Parent>
+  isHome: boolean
 }
 
-const { title, parents } = Astro.props
+const { title, isHome } = Astro.props
 ---
 
-<section class="my-20">
+<section class="my-12 md:mt-24">
   <nav>
-    <Parents parents={parents} />
-    <h1 class="pb-6 pt-2 text-3xl font-bold leading-tight md:text-4xl md:leading-tight">
+    {!isHome && (
+      <a href="/" class="block pb-6 font-bold hover:text-primary">
+        <i class="fas fa-arrow-left"></i>
+        Home
+      </a>
+    )}
+    <h1 class="pb-6 text-3xl font-bold leading-tight md:text-4xl md:leading-tight">
       {title}
     </h1>
     <slot />

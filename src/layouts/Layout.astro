@@ -17,12 +17,10 @@ const { title, description, img } = Astro.props
 ---
 
 <BaseLayout title={title} description={description} img={img}>
-  <main>
-    <div class="mx-auto max-w-screen-sm">
+  <main class="mx-auto max-w-screen-sm px-4 md:px-0">
       <slot />
-    </div>
+      <Footer />
   </main>
-  <Footer />
 </BaseLayout>
 
 <style is:global>

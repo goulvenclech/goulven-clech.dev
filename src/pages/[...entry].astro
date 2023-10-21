@@ -28,14 +28,14 @@ const { Content } = await entry.render()
 ---
 
 <Layout title={entry.data.title} description={entry.data.abstract} img={entry.data.image}>
-  <Hero title={entry.data.title} parents={["home"]}>
+  <Hero title={entry.data.title} isHome={false}>
     <p>{entry.data.abstract}</p>
   </Hero>
   <FigImage src={entry.data.image} alt={entry.data.image_alt} caption={entry.data.image_caption} />
-  <div class="prose prose-slate">
+  <div class="prose prose-slate dark:prose-invert">
     <Content />
   </div>
-  <p class="mb-16">- published {formatDate(entry.data.date)}</p>
+  <p class="mt-6 mb-16">- published {formatDate(entry.data.date)}</p>
 </Layout>
 <style is:global>
   .frame.is-terminal .header {
