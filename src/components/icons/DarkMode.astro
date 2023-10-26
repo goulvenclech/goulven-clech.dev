@@ -8,51 +8,51 @@
 <button
   id="darkMode"
   title="Toggle dark mode on or off"
-  class="ml-auto font-bold hover:text-primary"></button>
+  class="ml-auto font-bold hover:text-primary dark:hover:text-primary"></button>
 
 <script is:inline>
-  const button = document.getElementById("darkMode")
-  /**
-   * Apply Dark mode function, used on page load and on button click.
-   * Use localStorage to remember the user choice about the colors theme.
-   * Then apply or remove the class "dark" used by Tailwind CSS (see link before)
-   * Also change the button inner HTML to correct icon (🌞 or 🌚)
-   * @param {boolean} isDark - Are we using dark mode?
-   */
-  const applyDarkMode = (isDark) => {
-    if (isDark) {
-      localStorage.useDarkMode = JSON.stringify(true)
-      document.documentElement.classList.add("dark")
-      if (button) {
-        button.innerHTML = `<i class="fa-solid fa-sun"></i>`
-      }
-    } else {
-      localStorage.useDarkMode = JSON.stringify(false)
-      document.documentElement.classList.remove("dark")
-      if (button) {
-        button.innerHTML = `<i class="fa-solid fa-moon"></i>`
-      }
+const button = document.getElementById("darkMode")
+/**
+ * Apply Dark mode function, used on page load and on button click.
+ * Use localStorage to remember the user choice about the colors theme.
+ * Then apply or remove the class "dark" used by Tailwind CSS (see link before)
+ * Also change the button inner HTML to correct icon (🌞 or 🌚)
+ * @param {boolean} isDark - Are we using dark mode?
+ */
+const applyDarkMode = (isDark) => {
+  if (isDark) {
+    localStorage.useDarkMode = JSON.stringify(true)
+    document.documentElement.classList.add("dark")
+    if (button) {
+      button.innerHTML = `<i class="fa-solid fa-sun"></i>`
+    }
+  } else {
+    localStorage.useDarkMode = JSON.stringify(false)
+    document.documentElement.classList.remove("dark")
+    if (button) {
+      button.innerHTML = `<i class="fa-solid fa-moon"></i>`
     }
   }
-  /**
-   * On page load, check if the user has already specified that he wants to use dark mode;
-   * otherwise, check if it is his browser preference. Then apply it.
-   */
-  if (
-    localStorage.useDarkMode == "true" ||
-    (!("useDarkMode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    // Bravo Six, going dark...
-    applyDarkMode(true)
-  } else {
-    applyDarkMode(false)
-  }
-  /**
-   * On button click, it should change "useDarkMode" to its opposite and apply it.
-   */
-  if (button) {
-    button.addEventListener("click", function () {
-      applyDarkMode(!JSON.parse(localStorage.useDarkMode))
-    })
-  }
+}
+/**
+ * On page load, check if the user has already specified that he wants to use dark mode;
+ * otherwise, check if it is his browser preference. Then apply it.
+ */
+if (
+  localStorage.useDarkMode == "true" ||
+  (!("useDarkMode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+) {
+  // Bravo Six, going dark...
+  applyDarkMode(true)
+} else {
+  applyDarkMode(false)
+}
+/**
+ * On button click, it should change "useDarkMode" to its opposite and apply it.
+ */
+if (button) {
+  button.addEventListener("click", function () {
+    applyDarkMode(!JSON.parse(localStorage.useDarkMode))
+  })
+}
 </script>

@@ -22,31 +22,33 @@ module.exports = {
       },
       // Alt body color, for example when a div is hovered
       highlight: {
-        light: "#fce9e4",
+        light: "#FEE7DC",
         dark: "#2E303E",
       },
       // Mainly used by text and icons
       base: {
-        light: "#1C1E26",
-        dark: "#FFFCFB",
+        white: "#FFFCFB",
+        light: "#334155",
+        dark: "#DDE2F0",
+        black: "#1C1E26"
       },
       // Mainly used when hovering buttons or links
       primary: "#EC6A88",
     },
     extend: {
-      /**
-       * Cause Tailwind just offer 2 & 4 for some reason 🤷‍♂️
-       * See -> https://tailwindcss.com/docs/text-underline-offset
-       */
-      textUnderlineOffset: {
-        3: "3px",
-      },
-      /**
-       * I want to use cascadia, tailwind take care of provinding mono fallbacks
-       */
       fontFamily: {
         sans: ["Work Sans", ...defaultTheme.fontFamily.mono],
       },
+      typography: ({ theme }) => ({
+        slate: {
+          css: {
+            '--tw-prose-body': theme('colors.base[light]'),
+            '--tw-prose-headings': theme('colors.base[black]'),
+            '--tw-prose-invert-body': theme('colors.base[dark]'),
+            '--tw-prose-invert-headings': theme('colors.base[white]'),
+          },
+        },
+      }),
     },
   }
 }

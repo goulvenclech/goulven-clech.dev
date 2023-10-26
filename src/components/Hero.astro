@@ -14,13 +14,16 @@ const { title, isHome } = Astro.props
 
 <section class="my-12 md:mt-24">
   <nav>
+    
     {!isHome && (
-      <a href="/" class="block pb-6 font-bold hover:text-primary">
+      <div class="pb-6">
+      <a href="/" class="font-bold hover:text-primary dark:hover:text-primary">
         <i class="fas fa-arrow-left"></i>
         Home
       </a>
+      </div>
     )}
-    <h1 class="pb-6 text-3xl font-bold leading-tight md:text-4xl md:leading-tight">
+    <h1 class="text-base-black dark:text-base-white pb-6 text-3xl font-bold leading-tight md:text-4xl md:leading-tight">
       {title}
     </h1>
     <slot />

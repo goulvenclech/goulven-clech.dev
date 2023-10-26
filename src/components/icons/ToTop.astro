@@ -7,18 +7,18 @@
 <button
   id="toTop"
   title="Go to top"
-  class="flex font-bold hover:text-primary">
+  class="flex font-bold hover:text-primary dark:hover:text-primary">
   <i class="fas fa-arrow-up" />
   <span class="text-base ml-1">Back to top</span>
 </button>
 
 <script is:inline>
-  const toTopButton = document.getElementById("toTop")
-  /* On click, scroll smoothly to the top of the page */
-  toTopButton.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    })
+const toTopButton = document.getElementById("toTop")
+/* On click, scroll smoothly to the top of the page */
+toTopButton.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   })
+})
 </script>

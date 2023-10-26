@@ -41,6 +41,8 @@ function getClosedDays(openedDays: Array<number>): string {
     .map((x) => dayOfWeekAsString(x))
     .join(", ")
 
+  if (closedDays === "") return "Open everyday."
+
   return `Closed on ${closedDays}.`
 }
 
@@ -63,9 +65,9 @@ function dayOfWeekAsString(dayIndex: number): string {
   }&key=${import.meta.env.MAPS_TOKEN}`}
   to={place.url}
 >
-  <h3 class="pb-2 font-bold">{place.name}</h3>
+  <h3 class="pb-1 font-bold text-ellipsis line-clamp-2 sm:line-clamp-1 leading-8">{place.name}</h3>
   <ul class="flex flex-col gap-2">
-    <li>
+    <li class="text-ellipsis line-clamp-2 sm:line-clamp-1">
       <i class="fas fa-map-marker-alt pr-2"></i>
       {place.vicinity}
     </li>

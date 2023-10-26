@@ -26,7 +26,7 @@ const { article, index } = Astro.props
     class:list={["h-full w-full object-cover", { "order-2": index % 2 == 1 }]}
   />
   <article class="col-span-3 mx-6 my-5">
-    <h3 class="pb-2 text-lg font-bold md:text-xl">
+    <h3 class="text-base-black dark:text-base-white pb-2 text-lg font-bold md:text-xl">
       {article.data.title}
     </h3>
     <div class="overflow-hidden text-ellipsis whitespace-nowrap">

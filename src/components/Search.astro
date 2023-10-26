@@ -27,7 +27,7 @@ const blogEntries = blogEntriesRaw
 <>
   <input
     id="search"
-    class="mb-6 w-full rounded-lg bg-highlight-light px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-highlight-dark"
+    class="mb-6 w-full rounded-lg bg-highlight-light placeholder:text-base-light/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-highlight-dark dark:placeholder:text-base-dark/50"
     placeholder="Search by keywords..."
     type="text"
   />
@@ -46,57 +46,57 @@ const blogEntries = blogEntriesRaw
   customElements.define("search-card", Card)
 </script>
 <script define:vars={{ blogEntries }}>
-  /**
-   * Okay, here we go 🧙
-   */
-  // get the HTML elements on which we will interact
-  const input = document.getElementById("search")
-  const output = document.getElementById("output")
-  /**
-   * Function called at each search, returns the list of blog entries corresponding
-   * to the keywords provided in input.
-   * @param {string} input - What's the search input?
-   * @return {Array<blogEntry>} - Articles returned by the search
-   */
-  const applyInput = (input) => {
-    const searchKeywords = input.toLowerCase().split(" ")
-    if (searchKeywords.length > 0) {
-      // Filter block entries based on their title, abstract & tags
-      // should match every keywords provided by search input !
-      results = blogEntries.filter((entry) =>
-        searchKeywords.every(
-          (keyword) =>
-            entry.data.title.toLowerCase().includes(keyword) ||
-            entry.data.abstract.toLowerCase().includes(keyword) ||
-            entry.data.tags.some((tag) => tag.toLowerCase().includes(keyword))
-        )
+/**
+ * Okay, here we go 🧙
+ */
+// get the HTML elements on which we will interact
+const input = document.getElementById("search")
+const output = document.getElementById("output")
+/**
+ * Function called at each search, returns the list of blog entries corresponding
+ * to the keywords provided in input.
+ * @param {string} input - What's the search input?
+ * @return {Array<blogEntry>} - Articles returned by the search
+ */
+const applyInput = (input) => {
+  const searchKeywords = input.toLowerCase().split(" ")
+  if (searchKeywords.length > 0) {
+    // Filter block entries based on their title, abstract & tags
+    // should match every keywords provided by search input !
+    results = blogEntries.filter((entry) =>
+      searchKeywords.every(
+        (keyword) =>
+          entry.data.title.toLowerCase().includes(keyword) ||
+          entry.data.abstract.toLowerCase().includes(keyword) ||
+          entry.data.tags.some((tag) => tag.toLowerCase().includes(keyword))
       )
-    } else {
-      // if no keywords, return every blog entries
-      results = blogEntries
-    }
-    results.forEach((result, index) => {
-      // For every result, insert a SearchCard in the output
-      output.insertAdjacentHTML(
-        "beforeend",
-        `<search-card title="${result.data.title}" slug="${result.slug}" 
+    )
+  } else {
+    // if no keywords, return every blog entries
+    results = blogEntries
+  }
+  results.forEach((result, index) => {
+    // For every result, insert a SearchCard in the output
+    output.insertAdjacentHTML(
+      "beforeend",
+      `<search-card title="${result.data.title}" slug="${result.slug}" 
         date="${result.data.date}" tags="${result.data.tags.join(", ")}" 
         abstract="${result.data.abstract}" index=${index}
         image="${result.data.image.src}" 
         imageAlt="${result.data.image_alt}"></search-card>`
-      )
-    })
-  }
-  // On the first page load, initialize the output with an empty search to
-  // display every blog entries by default.
-  applyInput("")
-  // add an event listener on input, to call applyInput/2 at each search
-  input.addEventListener("input", (event) => {
-    output.innerHTML = ""
-    if (event.target) {
-      const element = event.currentTarget
-      applyInput(element.value)
-    }
+    )
   })
-  // that should do it 🧙
+}
+// On the first page load, initialize the output with an empty search to
+// display every blog entries by default.
+applyInput("")
+// add an event listener on input, to call applyInput/2 at each search
+input.addEventListener("input", (event) => {
+  output.innerHTML = ""
+  if (event.target) {
+    const element = event.currentTarget
+    applyInput(element.value)
+  }
+})
+// that should do it 🧙
 </script>
