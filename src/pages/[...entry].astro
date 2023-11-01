@@ -27,7 +27,7 @@ const { entry } = Astro.props
 const { Content } = await entry.render()
 ---
 
-<Layout title={entry.data.title} description={entry.data.abstract} img={entry.data.image}>
+<Layout title={entry.data.title} description={entry.data.abstract} img={entry.data.image.src}>
   <Hero title={entry.data.title} isHome={false}>
     <p>{entry.data.abstract}</p>
   </Hero>
@@ -42,6 +42,6 @@ const { Content } = await entry.render()
     display: none;
   }
   .expressive-code {
-    @apply mb-6;
+    @apply my-12;
   }
 </style>

@@ -1,8 +1,12 @@
 ---
-import { getConfiguredImageService, getImage } from "astro:assets"
-import type { LocalImageServiceWithPlaceholder } from "../../imageService"
+import type { ImageMetadata, ImageOutputFormat } from "astro"
 import type { HTMLAttributes } from "astro/types"
-import type { ImageMetadata } from "astro"
+import {
+  Picture as AstroPicture,
+  getConfiguredImageService,
+  type LocalImageProps,
+} from "astro:assets"
+import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
  * ⚠️ Warning for beginners ⚠️
  * What you're about to read here is an overly complicated and far-fetched way of
@@ -10,44 +14,25 @@ import type { ImageMetadata } from "astro"
  * placeholder during image loading.
  * You should rather use the default utils for images :
  * -> https://docs.astro.build/en/guides/images/
+ * If you want to understand this component, you'll need to look at :
+ * -> src/imageService.ts
  */
 /**
  * Wrap an Astro image in a html figure with caption.
- * @param {ImageMetadata} src - Where is the source image?
- * @param {string} alt - How do you describe the image?
- * @param {string} caption - What caption should we put next?
- * @param {string} width - What caption should we put next?
- * @param {string} height - What caption should we put next?
+ * @param src - Where is the source image?
+ * @param caption - What caption should we put next?
+ * @param formats - Which formats should we use?
+ * @param fallbackFormat - Which format should we use as fallback?
+ * @param pictureAttributes - Which attributes should we pass to the picture element?
  */
-export interface Props extends Omit<HTMLAttributes<"img">, "src"> {
+type Props = Omit<LocalImageProps, "src"> & {
   src: ImageMetadata
-  alt: string
   caption: string
-  width?: number
-  height?: number
+  formats?: ImageOutputFormat[]
+  fallbackFormat?: ImageOutputFormat | undefined
+  pictureAttributes?: HTMLAttributes<"picture"> | undefined
 }
 
-/**
- * Get an optimized image with Astro's getImage()
- */
-const originalFormat = await getImage({
-  src: Astro.props.src,
-  width: Astro.props.width,
-  height: Astro.props.height,
-  format: Astro.props.src.format,
-})
-// Build different sources with optimized formats to cover most users
-const formats = ["avif", "webp"]
-const sources: Record<string, Awaited<ReturnType<typeof getImage>>> = {}
-for (let format of formats) {
-  sources[format] = await getImage({
-    src: Astro.props.src,
-    width: Astro.props.width,
-    height: Astro.props.height,
-    format: format,
-  })
-}
-// Use our custom imageService to build a placeholder, while our image is loading
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
 const placeholderURL = await imageService.generatePlaceholder(
   Astro.props.src.src,
@@ -55,24 +40,19 @@ const placeholderURL = await imageService.generatePlaceholder(
   Astro.props.src.height
 )
 
-// default height & width if not defined
-const { src, height = 1500, width = 840, caption, ...passedAttributes } = Astro.props
-const { imageWidth, imageHeight, ...attributes } = originalFormat.attributes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const { forceHeight, caption, ...props } = Astro.props as any
 ---
 
 <figure class="not-prose my-12">
-  {
-    Object.values(sources).map((source) => (
-      <source srcset={source.src} type={"image/" + source.options.format} />
-    ))
-  }
-  <img
-    src={originalFormat.src}
-    class="w-full h-auto rounded-lg object-cover"
+  <AstroPicture
+    {...props}
+    width={Astro.props.src.width / 2}
+    densities={Astro.props.densities ?? [1.5, 2]}
+    formats={Astro.props.formats ?? ["webp"]}
+    class="rounded-lg overflow-hidden w-full"
     style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
-    onload="this.removeAttribute('style');"
-    {...passedAttributes}
-    {...attributes}
+    onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
   />
   <figcaption class="mt-2 text-center text-sm italic">
     {caption}

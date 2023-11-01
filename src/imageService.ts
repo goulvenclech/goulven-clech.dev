@@ -9,6 +9,8 @@ import sharp from "sharp"
  * placeholder during image loading.
  * You should rather use the default utils for images :
  * -> https://docs.astro.build/en/guides/images/
+ * This service is used at :
+ * -> src/components/figures/FigImage.astro
  */
 /**
  * A custom LocalImageService based on Sharp, fully retrieved from my friend Erika's blog
