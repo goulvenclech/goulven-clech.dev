@@ -11,15 +11,16 @@ interface Props {
   title: string
   description?: string
   img?: string
+  icon?: string
 }
 
-const { title, description, img } = Astro.props
+const { title, description, img, icon } = Astro.props
 ---
 
-<BaseLayout title={title} description={description} img={img}>
+<BaseLayout title={title} description={description} img={img} icon={icon}>
   <main class="mx-auto max-w-screen-sm px-4 md:px-0">
-      <slot />
-      <Footer />
+    <slot />
+    <Footer />
   </main>
 </BaseLayout>
 

@@ -27,7 +27,12 @@ const { entry } = Astro.props
 const { Content } = await entry.render()
 ---
 
-<Layout title={entry.data.title} description={entry.data.abstract} img={entry.data.image.src}>
+<Layout
+  title={entry.data.title}
+  icon={entry.data.icon}
+  description={entry.data.abstract}
+  img={entry.data.image.src}
+>
   <Hero title={entry.data.title} isHome={false}>
     <p>{entry.data.abstract}</p>
   </Hero>

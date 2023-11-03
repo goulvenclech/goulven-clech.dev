@@ -11,6 +11,7 @@ const blogCollection = defineCollection({
       image: image(),
       image_alt: z.string(),
       image_caption: z.string(),
+      icon: z.string().default("📝"),
       draft: z.boolean().default(false),
     }),
 })

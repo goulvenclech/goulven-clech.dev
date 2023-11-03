@@ -38,7 +38,7 @@ const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
 const pageTitle = `Tagged ${tag}`
 ---
 
-<Layout title={pageTitle}>
+<Layout title={pageTitle} icon="🏷️">
   <Hero title={pageTitle} isHome={false}>
     <div class="flex flex-col gap-3">
       {

@@ -4,7 +4,7 @@ import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
 /**
- * Create a page for each year where we published, display the 
+ * Create a page for each year where we published, display the
  * related blog entries.
  */
 export async function getStaticPaths() {
@@ -37,7 +37,7 @@ const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
 const pageTitle = `Published in ${year}`
 ---
 
-<Layout title={pageTitle}>
+<Layout title={pageTitle} icon="📅">
   <Hero title={pageTitle} isHome={false}>
     <div class="flex flex-col gap-6">
       {
