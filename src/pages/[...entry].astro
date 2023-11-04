@@ -37,7 +37,7 @@ const { Content } = await entry.render()
     <p>{entry.data.abstract}</p>
   </Hero>
   <FigImage src={entry.data.image} alt={entry.data.image_alt} caption={entry.data.image_caption} />
-  <div class="prose prose-slate dark:prose-invert">
+  <div class="prose prose-slate dark:prose-invert prose-sm sm:prose-base">
     <Content />
   </div>
   <p class="mt-6 mb-24">- published {formatDate(entry.data.date)}</p>

@@ -60,7 +60,7 @@ function dayOfWeekAsString(dayIndex: number): string {
 ---
 
 <Block
-  image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=320&photo_reference=${
+  image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=500&photo_reference=${
     place.photos[0].photo_reference
   }&key=${import.meta.env.MAPS_TOKEN}`}
   to={place.url}

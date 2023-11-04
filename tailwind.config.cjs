@@ -1,4 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme")
+const plugin = require("tailwindcss/plugin")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,7 +8,13 @@ module.exports = {
   // See -> https://docs.astro.build/en/guides/integrations-guide/tailwind/
   content: ["./src/**/*.{astro,mdx,ts,js,tsx}"],
   plugins: [
-    require('@tailwindcss/typography'),
+    require("@tailwindcss/typography"),
+    plugin(function ({ addBase, theme }) {
+      addBase({
+        p: { marginBottom: theme("spacing.6") },
+        ".prose > ul > li": { marginBottom: theme("spacing.6") },
+      })
+    }),
   ],
   theme: {
     /**
@@ -30,7 +37,7 @@ module.exports = {
         white: "#FFFCFB",
         light: "#334155",
         dark: "#DDE2F0",
-        black: "#1C1E26"
+        black: "#1C1E26",
       },
       // Mainly used when hovering buttons or links
       primary: "#EC6A88",
@@ -42,13 +49,13 @@ module.exports = {
       typography: ({ theme }) => ({
         slate: {
           css: {
-            '--tw-prose-body': theme('colors.base[light]'),
-            '--tw-prose-headings': theme('colors.base[black]'),
-            '--tw-prose-invert-body': theme('colors.base[dark]'),
-            '--tw-prose-invert-headings': theme('colors.base[white]'),
+            "--tw-prose-body": theme("colors.base[light]"),
+            "--tw-prose-headings": theme("colors.base[black]"),
+            "--tw-prose-invert-body": theme("colors.base[dark]"),
+            "--tw-prose-invert-headings": theme("colors.base[white]"),
           },
         },
       }),
     },
-  }
+  },
 }

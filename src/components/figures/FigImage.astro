@@ -54,7 +54,7 @@ const { forceHeight, caption, ...props } = Astro.props as any
     style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
     onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
   />
-  <figcaption class="mt-2 text-center text-sm italic">
+  <figcaption class="m-2 text-center text-xs sm:text-sm italic">
     {caption}
   </figcaption>
 </figure>

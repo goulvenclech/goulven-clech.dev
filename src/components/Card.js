@@ -29,18 +29,18 @@ export class Card extends HTMLElement {
     template.innerHTML = `
       <a href="/${
         this.slug
-      }" class="grid grid-cols-4 overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark">
-        <img class="h-full w-full object-cover ${this.getOrder(this.index)}" src="${
-      this.image
-    }" alt={} />
-        <article class="col-span-3 mx-6 my-5">
-          <h3 class="text-base-black dark:text-base-white pb-2 text-lg font-bold md:text-xl">
+      }" class="flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark">
+        <img class="h-[100px] sm:h-auto w-auto sm:w-[150px] shrink-0 object-cover ${this.getOrder(
+          this.index
+        )}" src="${this.image}" alt={} />
+        <article class="mx-6 my-5 min-w-0">
+          <h3 class="text-base-black dark:text-base-white pb-2 font-bold text-lg sm:text-xl">
             ${this.title}
           </h3>
           <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-            <i class="fa-solid fa-calendar-day w-3.5 md:w-4"></i>
+            <i class="fa-solid fa-calendar-day w-3.5 sm:w-4"></i>
             ${this.date}
-            <i class="fa-solid fa-tags ml-3 w-3.5 md:w-4"></i>
+            <i class="fa-solid fa-tags ml-3 w-3.5 sm:w-4"></i>
             ${this.tags}
           </div>
           <span class="mt-3 text-ellipsis py-0 line-clamp-3">
@@ -60,7 +60,7 @@ export class Card extends HTMLElement {
    */
   getOrder(index) {
     if (index % 2 == 1) {
-      return "order-2"
+      return "sm:order-2"
     } else {
       return ""
     }
