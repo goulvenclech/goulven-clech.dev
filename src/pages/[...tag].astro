@@ -9,7 +9,10 @@ import Card from "$components/Card.astro"
 export async function getStaticPaths() {
   /* get all blog entries */
   const blogEntries = await getCollection("blog", ({ data }) => {
-    return data.draft !== true
+    // filter out draft articles if we're in production
+    if (process.env.PROD) return data.draft !== true
+    // else return every articles
+    return true
   })
   /* get all tags */
   const allTags: Set<string> = new Set()

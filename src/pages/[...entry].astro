@@ -14,7 +14,10 @@ import { formatDate } from "src/utils"
 // https://docs.astro.build/en/guides/content-collections
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog", ({ data }) => {
-    return data.draft !== true
+    // filter out draft articles if we're in production
+    if (process.env.PROD) return data.draft !== true
+    // else return every articles
+    return true
   })
 
   return blogEntries.map((entry) => ({
