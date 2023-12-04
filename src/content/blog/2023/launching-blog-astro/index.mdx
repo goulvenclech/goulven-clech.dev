@@ -67,7 +67,7 @@ And even for us, the experience offered by most SSGs can be frustrating. I won't
 
 Astro's proposal is simple and unique: offering a JS SSG that does not ship any JS by default.
 
-This means, first, an easy-to-understand SSG for all web developers. All you need is to understand HTML/CSS, the JS basics, and how to install a software with NPM... So the ABC of web development.
+This means, first, an easy-to-understand SSG for all web developers. All you need is to understand HTML/CSS, the JS basics, and how to install a package with NPM... So the ABC of web development.
 
 <FigImage
   src={Image1}
@@ -77,12 +77,13 @@ This means, first, an easy-to-understand SSG for all web developers. All you nee
 
 You can already write your first templates with JSX, a syntax popularised by React blending HTML with JS. Add your style with basics CSS stylesheets. Write your content in Markdown, a simple syntax for text formatting. And that's it, your Astro blog is ready to be shipped!
 
-Astro won't burden the rocket with a huge JS application, it only generate simple HTML pages. So no client-side JS by default, reducing page weight and ensuring good performance.
+Astro won't ship your content into a huge JS application, but only generate simple HTML pages. So no client-side JS by default, reducing page weight and ensuring cosmic performance.
 
 <FigImage
   src={Image0}
   alt="Astro lightouse average score 98, Gatsby 68, Next.JS 63, Wordpress 58"
-  caption="Based on lightouse real-world performance data"
+  caption="Based on lightouse real-world performance data."
+  source="https://astro.build/blog/2023-web-framework-performance-report/"
 />
 
 However, Astro is fully integrated into the JS ecosystem. If you need any JS logic or use any NPM library, you can do it above the template and it will be executed at build time. And if you need client-side JS, you can simply add a `<script>` tag to your template that will be injected into the page.
@@ -94,20 +95,21 @@ example of a Astro component with build time logic, client side JS,
 a React component, and JSX templating.
 ```
 
-I think I summed up the spirit of Astro pretty well. On the one hand, it is an SSG that aims for simplicity: which uses known languages, a simple syntax, and generates simple HTML pages... And on the other hand, an SSG open to the galaxy: you can use all your NPM libraries, ship client-side JS, and even integrate other JS frameworks...
+I think I summed up the spirit of Astro pretty well. On the one hand, it is an SSG that aims for simplicity: which uses known languages, a simple syntax, and generates simple HTML pages... And on the other hand, an SSG open on the JS galaxy: you can use all your NPM libraries, ship client-side script, and even integrate other frameworks...
 
 ## How Astro help beginners
 
-Let's swift the obvious answer: Yes, Astro has a stellar CLI, a comprehensive documentation, and a great <LinkInline to="https://docs.astro.build/en/tutorial/0-introduction/">tutorial for your first blog</LinkInline>. And yes, as <GithubInline user="3019731" /> said on her blog, don't underestimate the power of Astro's <LinkInline to="https://erika.florist/articles/dontunderestimateeditorintegration">good editor tooling!</LinkInline>
+Let's swift the obvious answer: Yes, Astro has a stellar CLI, a comprehensive documentation, and a great <LinkInline to="https://docs.astro.build/en/tutorial/0-introduction/">tutorial for your first blog</LinkInline>. And yes, as <GithubInline user="3019731" /> said on her blog, you should not underestimate the power of Astro's <LinkInline to="https://erika.florist/articles/dontunderestimateeditorintegration">good editor tooling!</LinkInline>
 
 But, on a deeper level, I think that two fundamental aspects of Astro's philosophy makes it the perfect launchpad:
 
-First, unlike traditional web development, you don't have to understand all the best practices to make a decent site. Astro's default options are set intelligently, will raise warnings when you forget important things, and will ensure good performance through their simplicity. Getting started is easy, and you will be able to understand and modify those settings at your own pace.
+First, unlike traditional web development, you don't have to understand all the best practices to make a decent site: Astro's default options are set intelligently, will raise warnings when you forget important things, and will ensure good performance through their simplicity. Getting started is easy, and you will be able to understand and modify those settings at your own pace.
 
 <FigImage
   src={ImageAstroImages}
   alt="Astro lightouse average score 98, Gatsby 68, Next.JS 63, Wordpress 58"
-  caption="An excellent example is Images where, by default, Astro optimizes your image, uses a modern format, includes the loading and decoding attributes, and pushes you to fill the alt attribute (for accessibility) and dimensions (to avoid Cumulative Layout Shift)."
+  caption="An example with Images where Astro optimizes your image by default, using a modern format, including the loading and decoding attributes, and pushing you to fill the alt attribute (for accessibility) and dimensions (to avoid Cumulative Layout Shift)."
+  source="https://docs.astro.build/en/guides/images/"
 />
 
 Second, unlike hefty JS frameworks, you will not immediately be thrown between a shadow DOM and a SPA router, chaotically wrestling with black magic before understanding the basics... Being a web developer should be mainly learning CSS/HTML/JS/DOM APIs—which Astro does not dramatically alter! 

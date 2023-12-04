@@ -6,6 +6,7 @@ import {
   getConfiguredImageService,
   type LocalImageProps,
 } from "astro:assets"
+import LinkInline from "$components/inlines/LinkInline.astro"
 import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
  * ⚠️ Warning for beginners ⚠️
@@ -21,6 +22,7 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
  * Wrap an Astro image in a html figure with caption.
  * @param src - Where is the source image?
  * @param caption - What caption should we put next?
+ * @param source - Where does the image come from?
  * @param formats - Which formats should we use?
  * @param fallbackFormat - Which format should we use as fallback?
  * @param pictureAttributes - Which attributes should we pass to the picture element?
@@ -28,6 +30,7 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 type Props = Omit<LocalImageProps, "src"> & {
   src: ImageMetadata
   caption: string
+  source?: string
   formats?: ImageOutputFormat[]
   fallbackFormat?: ImageOutputFormat | undefined
   pictureAttributes?: HTMLAttributes<"picture"> | undefined
@@ -41,7 +44,7 @@ const placeholderURL = await imageService.generatePlaceholder(
 )
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const { forceHeight, caption, ...props } = Astro.props as any
+const { caption, source, ...props } = Astro.props as any
 ---
 
 <figure class="not-prose my-12">
@@ -56,5 +59,6 @@ const { forceHeight, caption, ...props } = Astro.props as any
   />
   <figcaption class="my-2 mx-4 text-center text-xs sm:text-sm italic">
     {caption}
+    {source && <LinkInline to={source}> Source</LinkInline>}
   </figcaption>
 </figure>
