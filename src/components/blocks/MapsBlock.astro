@@ -1,4 +1,6 @@
 ---
+// @ts-ignore - Please EleventyFetch type your shit 🙏
+import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
 
 /**
@@ -15,16 +17,15 @@ const { id } = Astro.props
  * Await fetch function, to the Google Maps Api, using our Maps token stored in ~/.env (secret file)
  * TO DO : handle errors !
  */
-const placeData: any = await fetch(
+const placeData: any = EleventyFetch(
   `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${
     import.meta.env.MAPS_TOKEN
   }`,
-  {}
+  {
+    duration: "1d",
+    type: "json",
+  }
 )
-  .then((response) => response.json())
-  .catch((error) => {
-    console.error(`Error with place ${id}:`, error)
-  })
 
 // Got what what we needed 💰 See response format ->
 // https://developers.google.com/maps/documentation/places/web-service/details
@@ -65,9 +66,9 @@ function dayOfWeekAsString(dayIndex: number): string {
   }&key=${import.meta.env.MAPS_TOKEN}`}
   to={place.url}
 >
-  <h3 class="pb-1 font-bold text-ellipsis line-clamp-2 sm:line-clamp-1 leading-8">{place.name}</h3>
+  <h3 class="line-clamp-2 text-ellipsis pb-1 font-bold leading-8 sm:line-clamp-1">{place.name}</h3>
   <ul class="flex flex-col gap-2">
-    <li class="text-ellipsis line-clamp-2 sm:line-clamp-1">
+    <li class="line-clamp-2 text-ellipsis sm:line-clamp-1">
       <i class="fas fa-map-marker-alt pr-2"></i>
       {place.vicinity}
     </li>

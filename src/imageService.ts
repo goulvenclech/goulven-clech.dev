@@ -57,7 +57,7 @@ const service: LocalImageServiceWithPlaceholder = {
     // HACK: It'd be nice to be able to get a Buffer out from an ESM import or `getImage`, wonder how we could do that..
     const originalFileBuffer = import.meta.env.PROD
       ? readFileSync("./dist/" + src)
-      : await fetch(new URL(src, import.meta.env.SITE))
+      : await fetch(new URL(src, "http://localhost:4321/"))
           .then((response) => response.arrayBuffer())
           .then((buffer) => Buffer.from(buffer))
 
