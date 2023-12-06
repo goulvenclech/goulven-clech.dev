@@ -1,4 +1,6 @@
 ---
+// @ts-ignore - Please EleventyFetch type your shit 🙏
+import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
 
 /**
@@ -15,10 +17,13 @@ const { isbn } = Astro.props
  * Await fetch function, to the Open Book Api
  * TO DO : handle errors !
  */
-const userData: any = await fetch(
+const userData: any = EleventyFetch(
   `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
-  {}
-).then((response) => response.json())
+  {
+    duration: "1d",
+    type: "json",
+  }
+)
 
 // Got what what we needed 💰 See response format ->
 // https://openlibrary.org/dev/docs/api/books
@@ -28,7 +33,9 @@ const book = result[`ISBN:${isbn}`]
 ---
 
 <Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
-  <h3 class="pb-1 font-bold text-ellipsis line-clamp-2 sm:line-clamp-1 leading-8">{book.details.title}</h3>
+  <h3 class="line-clamp-2 text-ellipsis pb-1 font-bold leading-8 sm:line-clamp-1">
+    {book.details.title}
+  </h3>
   <ul class="flex flex-col gap-2">
     <li>
       <i class="fa-solid fa-user pr-2"></i>
@@ -40,7 +47,7 @@ const book = result[`ISBN:${isbn}`]
     </li>
     <li>
       <i class="fa-solid fa-book-open"></i>
-      ISBN: {book.details.isbn_13}
+       ISBN: {book.details.isbn_13}
     </li>
   </ul>
 </Block>

@@ -1,18 +1,21 @@
 ---
-import DarkMode from "../components/icons/DarkMode.astro"
-import ToTop from "../components/icons/ToTop.astro"
+import DarkMode from "$components/icons/DarkMode.astro"
+import ToTop from "$components/icons/ToTop.astro"
 /**
  * Simple footer. Mainly used to give some credits to Cesar.
  */
 ---
 
-<footer class="text-base-black dark:text-base-white flex items-center mb-12 gap-6">
+<footer class="mb-12 flex items-center gap-6 text-base-black dark:text-base-white">
   <ToTop />
   <DarkMode />
   <a class="hover:text-primary dark:hover:text-primary" href="https://github.com/goulvenclech/">
     <i class="fab fa-github"></i>
   </a>
-  <a class="hover:text-primary dark:hover:text-primary" href="https://www.linkedin.com/in/goulvenclech//">
+  <a
+    class="hover:text-primary dark:hover:text-primary"
+    href="https://www.linkedin.com/in/goulvenclech//"
+  >
     <i class="fab fa-linkedin"></i>
   </a>
 </footer>

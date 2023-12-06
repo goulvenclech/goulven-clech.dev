@@ -1,4 +1,6 @@
 ---
+// @ts-ignore - Please EleventyFetch type your shit 🙏
+import EleventyFetch from "@11ty/eleventy-fetch"
 import { Image } from "astro:assets"
 /**
  * Take a Github User ID, and render a link to this user account, with their avatar and name.
@@ -14,24 +16,36 @@ const { user } = Astro.props
  * Await fetch function, to the public GitHub Api, using our fine grained GitHub personal
  * token stored in ~/.env (secret file)
  * See -> https://docs.github.com/en/rest/overview/other-authentication-methods#via-personal-access-tokens
- * TO DO : handle errors !
  */
-const userData: any = await fetch(`https://api.github.com/user/${user}`, {
-  headers: new Headers({
+const userData: any = EleventyFetch(`https://api.github.com/user/${user}`, {
+  duration: "1d",
+  type: "json",
+  headers: {
     Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
-  }),
-}).then((response) => response.json())
+  },
+})
 
 // Got what what we needed 💰 See response format ->
 // https://docs.github.com/en/rest/users/users#get-a-user
 const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userData
 ---
 
-<a
-  href={userUrl}
-  class="whitespace-nowrap font-bold not-prose text-base-black dark:text-base-white hover:text-primary dark:hover:text-primary"
->
-  <Image src={avatarUrl} width={24} height={24} alt="..." class="rounded-full inline mr-1 not-prose" />{
-    userName
-  }</a
->
+{
+  userName ? (
+    <a
+      href={userUrl}
+      class="not-prose whitespace-nowrap font-bold text-base-black hover:text-primary dark:text-base-white dark:hover:text-primary"
+    >
+      <Image
+        src={avatarUrl}
+        width={24}
+        height={24}
+        alt="..."
+        class="not-prose mr-1 inline rounded-full"
+      />
+      {userName}
+    </a>
+  ) : (
+    <span class="not-prose font-bold text-base-black">Error</span>
+  )
+}

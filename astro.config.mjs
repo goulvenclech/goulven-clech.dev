@@ -8,14 +8,14 @@ import "@fontsource/work-sans"
 //  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const astroExpressiveCodeOptions = {
+  themes: ["github-dark"],
+  useDarkModeMediaQuery: false,
   styleOverrides: {
-    borderRadius: "0.5rem",
-    codeBackground: "#2E303E",
-  },
-  frames: {
-    styleOverrides: {
+    frames: {
       terminalBackground: "#2E303E",
     },
+    borderRadius: "0.5rem",
+    codeBackground: "#2E303E",
   },
 }
 
@@ -24,12 +24,8 @@ inject()
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://goulven-clech.dev",
   integrations: [tailwind(), astroExpressiveCode(astroExpressiveCodeOptions), mdx()],
-  markdown: {
-    shikiConfig: {
-      theme: "css-variables",
-    },
-  },
   image: {
     service: {
       entrypoint: "./src/imageService.ts",

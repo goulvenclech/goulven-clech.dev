@@ -1,11 +1,5 @@
 ---
-import type { ImageMetadata, ImageOutputFormat } from "astro"
-import type { HTMLAttributes } from "astro/types"
-import {
-  Picture as AstroPicture,
-  getConfiguredImageService,
-  type LocalImageProps,
-} from "astro:assets"
+import { Picture as AstroPicture, getConfiguredImageService } from "astro:assets"
 import LinkInline from "$components/inlines/LinkInline.astro"
 import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
@@ -18,24 +12,6 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
  * If you want to understand this component, you'll need to look at :
  * -> src/imageService.ts
  */
-/**
- * Wrap an Astro image in a html figure with caption.
- * @param src - Where is the source image?
- * @param caption - What caption should we put next?
- * @param source - Where does the image come from?
- * @param formats - Which formats should we use?
- * @param fallbackFormat - Which format should we use as fallback?
- * @param pictureAttributes - Which attributes should we pass to the picture element?
- */
-type Props = Omit<LocalImageProps, "src"> & {
-  src: ImageMetadata
-  caption: string
-  source?: string
-  formats?: ImageOutputFormat[]
-  fallbackFormat?: ImageOutputFormat | undefined
-  pictureAttributes?: HTMLAttributes<"picture"> | undefined
-}
-
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
 const placeholderURL = await imageService.generatePlaceholder(
   Astro.props.src.src,
@@ -53,11 +29,11 @@ const { caption, source, ...props } = Astro.props as any
     width={Astro.props.src.width / 2}
     densities={Astro.props.densities ?? [1.5, 2]}
     formats={Astro.props.formats ?? ["webp"]}
-    class="rounded-lg overflow-hidden w-full"
+    class="w-full overflow-hidden rounded-lg"
     style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
     onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
   />
-  <figcaption class="my-2 mx-4 text-center text-xs sm:text-sm italic">
+  <figcaption class="mx-4 my-2 text-center text-xs italic sm:text-sm">
     {caption}
     {source && <LinkInline to={source}> Source</LinkInline>}
   </figcaption>
