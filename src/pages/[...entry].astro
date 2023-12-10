@@ -36,7 +36,7 @@ const { Content } = await entry.render()
   description={entry.data.abstract}
   img={entry.data.image.src}
 >
-  <Hero title={entry.data.title} isHome={false}>
+  <Hero title={entry.data.title}>
     <p>{entry.data.abstract}</p>
   </Hero>
   <FigImage src={entry.data.image} alt={entry.data.image_alt} caption={entry.data.image_caption} />

@@ -6,12 +6,15 @@ import ToTop from "$components/icons/ToTop.astro"
  */
 ---
 
-<footer class="mb-12 flex items-center gap-6 text-base-black dark:text-base-white">
+<footer class="mb-24 flex items-center gap-6 text-base-black dark:text-base-white">
   <ToTop />
   <DarkMode />
+  <a class="hover:text-primary dark:hover:text-primary" href="/about" title="See legal notice">
+    <i class="fa-solid fa-circle-info"></i>
+  </a>
   <a
     class="hover:text-primary dark:hover:text-primary"
-    href="https://github.com/goulvenclech/"
+    href="https://github.com/goulvenclech/goulven-clech.dev/"
     title="See source code"
   >
     <i class="fab fa-github"></i>
