@@ -34,21 +34,26 @@ const { result: place } = await placeData
 /**
  * From an array of opened days numbers, return a string with closed days.
  */
-function getClosedDays(openedDays: Array<number>): string {
-  let daysNumbers = [0, 1, 2, 3, 4, 5, 6]
-
-  let closedDays = daysNumbers
+function getClosedDays(periods: any): string {
+  // Every day of the week is represented by a number from 0 to 6, Sunday being 0.
+  // Get the opened days numbers from the API response.
+  let openedDays = periods.map((period: any) => period.open.day)
+  // By default, all days are closed...
+  let closedDays = [0, 1, 2, 3, 4, 5, 6]
+    // ...then we filters out the ones that are opened.
     .filter((dayNumber) => !openedDays.includes(dayNumber))
+    // ...and we convert the remaining numbers to strings.
     .map((x) => dayOfWeekAsString(x))
+    // ...and we join them with a comma to form the final string.
     .join(", ")
-
+  // If no days are closed, we return a string saying the place is open everyday.
   if (closedDays === "") return "Open everyday."
-
+  // Else return the final string.
   return `Closed on ${closedDays}.`
 }
 
 /**
- * Converts a day number to a string.
+ * Converts a day number (see above) to a string.
  *
  * @param {Number} dayIndex
  * @return {String} Returns day as string
@@ -74,7 +79,11 @@ function dayOfWeekAsString(dayIndex: number): string {
     </li>
     <li>
       <i class="fas fa-calendar-day pr-2"></i>
-      {getClosedDays(place.current_opening_hours.periods.map((period: any) => period.open.day))}
+      {
+        place.opening_hours && place.opening_hours.periods
+          ? getClosedDays(place.opening_hours.periods)
+          : "Error while fetching opening hours."
+      }
     </li>
     <li>
       {[...Array(Math.round(place.rating))].map(() => <i class="fas fa-star" />)} ({
