@@ -39,7 +39,12 @@ const { Content } = await entry.render()
   <Hero title={entry.data.title}>
     <p>{entry.data.abstract}</p>
   </Hero>
-  <FigImage src={entry.data.image} alt={entry.data.image_alt} caption={entry.data.image_caption} />
+  <FigImage
+    src={entry.data.image}
+    alt={entry.data.image_alt}
+    caption={entry.data.image_caption}
+    source={entry.data.image_source}
+  />
   <div class="prose prose-sm prose-slate dark:prose-invert sm:prose-base">
     <Content />
   </div>

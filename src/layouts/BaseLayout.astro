@@ -16,7 +16,7 @@ interface Props {
 const {
   title,
   img,
-  description = "I'm Goulven Clec'h, a web developer based in Toulouse, France. Welcome to my personal blog!",
+  description = "I'm a software developer based in Toulouse, France. Welcome to my personal blog!",
   icon = "👋",
 } = Astro.props
 ---
@@ -29,7 +29,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content="Goulven Clec'h" />
     <meta name="description" content={description} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content=`${title} | Goulven Clec'h` />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     {img && <meta property="og:image" content={img} />}
