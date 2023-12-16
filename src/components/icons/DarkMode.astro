@@ -1,58 +1,84 @@
 ---
 /**
- * A simple button to change the colors theme, and all dark mode related logic.
+ * DarkMode button and script logic. This button toggles between dark, light and system
+ * theme and saves the choice in localStorage. It also changes the button icon to
+ * reflect the current theme. An inline script is used to init it at page load.
+ * See inline script -> src/layouts/BaseLayout.astro
  * See dark mode by Tailwind CSS -> https://tailwindcss.com/docs/dark-mode
  */
 ---
 
-<button
-  id="darkMode"
-  title="Toggle dark mode on or off"
-  class="ml-auto font-bold hover:text-primary dark:hover:text-primary"></button>
+<button id="darkMode" class="ml-auto font-bold hover:text-primary dark:hover:text-primary"></button>
 
-<script is:inline>
-const button = document.getElementById("darkMode")
-/**
- * Apply Dark mode function, used on page load and on button click.
- * Use localStorage to remember the user choice about the colors theme.
- * Then apply or remove the class "dark" used by Tailwind CSS (see link before)
- * Also change the button inner HTML to correct icon (🌞 or 🌚)
- * @param {boolean} isDark - Are we using dark mode?
- */
-const applyDarkMode = (isDark) => {
-  if (isDark) {
-    localStorage.useDarkMode = JSON.stringify(true)
-    document.documentElement.classList.add("dark")
-    if (button) {
-      button.innerHTML = `<i class="fa-solid fa-sun"></i>`
-    }
-  } else {
-    localStorage.useDarkMode = JSON.stringify(false)
-    document.documentElement.classList.remove("dark")
-    if (button) {
-      button.innerHTML = `<i class="fa-solid fa-moon"></i>`
+<script>
+  // Get the button element above
+  const button = document.getElementById("darkMode")
+  // And add an event listener to it
+  button?.addEventListener("click", () => {
+    // Get the current theme from localStorage
+    const theme = localStorage.theme
+    // And change it to the next one
+    changeTheme(theme)
+  })
+
+  // Theme can be "dark" or "light" or the browser preference ("system")
+  // "Dark" is the default theme if no preference is set
+  type Theme = "dark" | "light" | "system"
+
+  /**
+   * On click, change the theme to the next one (system -> light -> dark -> system)
+   * Save the choice in localStorage and change the button icon to reflect the current theme.
+   * Then apply the theme to the document.
+   * @param the - What's the current theme?
+   */
+  const changeTheme = (theme: Theme) => {
+    switch (theme) {
+      case "system":
+        localStorage.theme = "light"
+        if (button) changeIcon("light", button)
+        document.documentElement.classList.remove("dark")
+        break
+      case "light":
+        localStorage.theme = "dark"
+        if (button) changeIcon("dark", button)
+        document.documentElement.classList.add("dark")
+        break
+      case "dark":
+        localStorage.theme = "system"
+        if (button) changeIcon("system", button)
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.classList.add("dark")
+        } else {
+          document.documentElement.classList.remove("dark")
+        }
+        break
+      // Should never happen, but just in case fallback to dark
+      default:
+        localStorage.theme = "light"
+        if (button) changeIcon("light", button)
+        document.documentElement.classList.remove("dark")
+        break
     }
   }
-}
-/**
- * On page load, check if the user has already specified that he wants to use dark mode;
- * otherwise, check if it is his browser preference. Then apply it.
- */
-if (
-  localStorage.useDarkMode == "true" ||
-  (!("useDarkMode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-) {
-  // Bravo Six, going dark...
-  applyDarkMode(true)
-} else {
-  applyDarkMode(false)
-}
-/**
- * On button click, it should change "useDarkMode" to its opposite and apply it.
- */
-if (button) {
-  button.addEventListener("click", function () {
-    applyDarkMode(!JSON.parse(localStorage.useDarkMode))
-  })
-}
+  /**
+   * Change the button icon to reflect the current theme
+   * @param theme - What's the theme to reflect?
+   */
+  const changeIcon = (theme: Theme, button: HTMLElement) => {
+    switch (theme) {
+      case "light":
+        button.innerHTML = `<i title="Toggle dark mode" class="fa-solid fa-sun"></i>`
+        break
+      case "system":
+        button.innerHTML = `<i title="Toggle light mode" class="fa-solid fa-laptop"></i>`
+        break
+      // Apply for case "dark" or undefined, fallback to dark
+      default:
+        button.innerHTML = `<i title="Toggle dark mode" class="fa-solid fa-moon"></i>`
+        break
+    }
+  }
+
+  // At page load, init the button icon to reflect the current theme
+  if (button) changeIcon(localStorage.theme, button)
 </script>

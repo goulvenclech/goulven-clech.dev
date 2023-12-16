@@ -8,8 +8,8 @@ import { getCollection } from "astro:content"
 export async function GET(context: any) {
   // get all blogEntries
   const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-    // filter out draft articles
-    return data.draft !== true
+    // filter out draft articles if we're in production
+    if (process.env.PROD) return data.draft !== true
     // else return every articles
     return true
   })

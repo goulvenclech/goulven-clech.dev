@@ -1,6 +1,6 @@
 ---
 /**
- * Base of our html. Mainly html headers.
+ * Base of our html. Mainly html headers and dark mode inline script.
  * @param {string} title - What is this page about?
  * @param {string} description - What is this page about? (but longer)
  * @param {string} img - What is the image to use for social media?
@@ -44,6 +44,38 @@ const {
   <body
     class="bg-body-light font-sans text-sm text-base-light dark:bg-body-dark dark:text-base-dark sm:text-base"
   >
+    <!-- Dark Mode Script -->
+    <script is:inline>
+      /**
+       * This script is inlined and put at the top of the body to avoid a flicker of light mode.
+       * It initializes the dark mode based on the local storage or the system preference.
+       * After page load, the dark mode is handled by the DarkMode component
+       * See there -> src/components/icons/DarkMode.astro
+       */
+      // Get theme from local storage and/or browser media queries (system).
+      const theme = localStorage.getItem("theme")
+      const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+      // If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
+      if (theme === "dark" || (theme === "system" && isSystemDark))
+        document.documentElement.classList.add("dark")
+      // If local theme is "light" or "system" and system is light -> remove dark mode.
+      if (theme === "light" || (theme === "system" && !isSystemDark))
+        document.documentElement.classList.remove("dark")
+      // If local theme is not set, look at the system preference and initialize the local storage.
+      if (!theme) {
+        if (isSystemDark == false) {
+          localStorage.setItem("theme", "light")
+          document.documentElement.classList.remove("dark")
+        } else {
+          // By default, if local theme is not set and system is dark or not set
+          // we are going dark 🥷🥷🥷
+          localStorage.setItem("theme", "dark")
+          document.documentElement.classList.add("dark")
+        }
+      }
+    </script>
+    <!-- Body content -->
     <slot />
   </body>
 </html>
