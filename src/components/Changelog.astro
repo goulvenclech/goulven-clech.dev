@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content"
+import ChangelogCard from "./ChangelogCard.astro"
+
+/**
+ * This file is used to generate the changelog section in $pages/about.astro
+ * An historic of every articles, pages, features and content changes made to this blog.
+ * Use the blog and changelog collections to generate a list of entries, sorted by date.
+ * It's a bit hacky, but it works.
+ */
+
+// get all blogEntries
+const blogEntriesRaw = await getCollection("blog", ({ data }) => {
+  // filter out draft articles if we're in production
+  if (process.env.PROD) return data.draft !== true
+  // else return every articles
+  return true
+})
+
+// get all others changelog entries
+const changelogEntriesRaw = await getCollection("changelog")
+
+// Merge both collections into changelogEntries
+export interface ChangelogEntry {
+  type: string
+  date: Date
+  url?: string
+  url_caption?: string
+  name: string
+  description: string
+}
+const changelogEntries: ChangelogEntry[] = [
+  ...blogEntriesRaw.map((entry) => ({
+    type: "blog",
+    date: entry.data.date,
+    url: "/" + entry.slug,
+    url_caption: "Read more",
+    name: entry.data.title,
+    description: entry.data.abstract,
+  })),
+  ...changelogEntriesRaw.map((entry) => ({
+    type: entry.data.type,
+    date: new Date(entry.data.date),
+    url: entry.data.url || undefined,
+    url_caption: entry.data.url_caption,
+    name: entry.data.name,
+    description: entry.data.description,
+  })),
+]
+
+// Sort by date, and reduce into array of years, each containing an array of months, each containing an array of entries
+const changelogEntriesSorted = changelogEntries.reduce(
+  (acc, entry) => {
+    // if the year doesn't exist, create an array for it
+    const year = entry.date.getFullYear()
+    if (!acc[year]) acc[year] = []
+    // if the month doesn't exist, create an array for it
+    const month = entry.date.getMonth()
+    if (!acc[year][month]) acc[year][month] = []
+    // push the entry into the correct array
+    acc[year][month].push(entry)
+    return acc
+  },
+  {} as Record<number, Record<number, ChangelogEntry[]>>
+)
+---
+
+<div>
+  {
+    // Record is not iterable, so we have to convert it to an array
+    Object.entries(changelogEntriesSorted)
+      // sort by year from most recent to oldest
+      .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
+      // map each year to a div containing the months
+      .map(([year, months]) => (
+        <div>
+          <h3 class="text-b mb-6 mt-9 font-bold text-base-black dark:text-base-white">{year}</h3>
+          <ul class="mb-6 ml-6">
+            {
+              // Record is not iterable, so we have to convert it to an array
+              Object.entries(months)
+                // sort by month from most recent to oldest
+                .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
+                // map each month to a ul containing the changelog entries
+                .map(([month, entries]) => (
+                  <li>
+                    <h4 class="mb-5 font-bold text-base-black dark:text-base-white">
+                      {new Date(0, Number(month)).toLocaleString("default", { month: "long" })}
+                    </h4>
+                    <ul class="ml-6">
+                      {entries
+                        // sort by date from most recent to oldest
+                        .sort((entryA, entryB) => entryB.date.getTime() - entryA.date.getTime())
+                        .map((entry) => (
+                          <ChangelogCard entry={entry} />
+                        ))}
+                    </ul>
+                  </li>
+                ))
+            }
+          </ul>
+        </div>
+      ))
+  }
+</div>

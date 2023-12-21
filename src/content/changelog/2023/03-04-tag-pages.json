@@ -1,0 +1,8 @@
+{
+  "type": "page",
+  "date": "2023-03-04",
+  "name": "Tag pages",
+  "url": "/tag-coffee",
+  "url_caption": "See an example",
+  "description": "for a given tag, retreive every blog entries tagged."
+}
