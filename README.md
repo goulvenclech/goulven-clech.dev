@@ -21,7 +21,7 @@ At its heart, this project looks like any blog made with Astro, you can start by
 ```
 /
 ├── public/
-│   └── favicon.svg
+│   └── fonts.ttf
 │
 ├── src/
 │   ├── components/
