@@ -18,11 +18,11 @@ const blogCollection = defineCollection({
     }),
 })
 const changelogCollection = defineCollection({
-  type: "data",
+  type: "content",
   schema: () =>
     z.object({
       type: z.string(),
-      date: z.string(),
+      date: z.date(),
       url: z.string().optional(),
       url_caption: z.string().default("Read more"),
       name: z.string(),

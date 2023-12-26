@@ -11,6 +11,7 @@ interface Props {
 }
 
 const { entry } = Astro.props
+const { Content } = await (entry.render?.() ?? { Content: null })
 ---
 
 <li class="my-6 flex flex-row gap-2">
@@ -24,6 +25,8 @@ const { entry } = Astro.props
         <i class="fa-solid fa-file" />
       ) : entry.type == "content" ? (
         <i class="fa-solid fa-pencil" />
+      ) : entry.type == "memory" ? (
+        <i class="fa-solid fa-monument" />
       ) : (
         <i class="fa-solid fa-rocket" />
       )
@@ -33,5 +36,6 @@ const { entry } = Astro.props
     <span class="font-bold">{entry.name}:</span>
     {entry.description}
     {entry.url && <LinkInline to={entry.url}>{entry.url_caption}</LinkInline>}
+    {Content && <Content />}
   </div>
 </li>

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content"
 import ChangelogCard from "./ChangelogCard.astro"
+import FigImage from "./figures/FigImage.astro"
+import oldWebsiteImage from "src/content/changelog/2023/old_website.png"
 
 /**
  * This file is used to generate the changelog section in $pages/about.astro
@@ -28,6 +30,7 @@ export interface ChangelogEntry {
   url_caption?: string
   name: string
   description: string
+  render?(): any
 }
 const changelogEntries: ChangelogEntry[] = [
   ...blogEntriesRaw.map((entry) => ({
@@ -45,6 +48,9 @@ const changelogEntries: ChangelogEntry[] = [
     url_caption: entry.data.url_caption,
     name: entry.data.name,
     description: entry.data.description,
+    render(): any {
+      return entry.render()
+    },
   })),
 ]
 
@@ -102,4 +108,23 @@ const changelogEntriesSorted = changelogEntries.reduce(
         </div>
       ))
   }
+  {/* I should find a cleaner way to do this */}
+  <div>
+    <h3 class="text-b mb-6 mt-9 font-bold text-base-black dark:text-base-white">2020</h3>
+    <div class="mb-6 ml-6">
+      <ChangelogCard
+        entry={{
+          type: "memory",
+          date: new Date(2019),
+          name: "My old website",
+          description: "a simple HTML/CSS page presenting myself, with a language selector in JS.",
+          url: "https://github.com/goulvenclech/goulven-clech.dev/blob/09f69e58a120875301c0a434823484348ae8b7be/index.html",
+          url_caption: "View source code",
+        }}
+      />
+      <div class="-my-8 ml-8">
+        <FigImage src={oldWebsiteImage} alt="Screenshot of my old website" />
+      </div>
+    </div>
+  </div>
 </div>
