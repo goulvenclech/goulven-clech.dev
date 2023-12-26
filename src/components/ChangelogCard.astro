@@ -1,0 +1,41 @@
+---
+import LinkInline from "./inlines/LinkInline.astro"
+import { type ChangelogEntry } from "./Changelog.astro"
+
+/**
+ * A Changelog Entry to be displayed in src/components/ChangelogCard.astro
+ * @param entry - What's the changelog entry ?
+ */
+interface Props {
+  entry: ChangelogEntry
+}
+
+const { entry } = Astro.props
+const { Content } = await (entry.render?.() ?? { Content: null })
+---
+
+<li class="my-6 flex flex-row gap-2">
+  <div class="w-6 shrink-0 grow-0 text-center">
+    {
+      entry.type == "blog" ? (
+        <i class="fa-solid fa-newspaper" />
+      ) : entry.type == "feature" ? (
+        <i class="fa-solid fa-star" />
+      ) : entry.type == "page" ? (
+        <i class="fa-solid fa-file" />
+      ) : entry.type == "content" ? (
+        <i class="fa-solid fa-pencil" />
+      ) : entry.type == "memory" ? (
+        <i class="fa-solid fa-monument" />
+      ) : (
+        <i class="fa-solid fa-rocket" />
+      )
+    }
+  </div>
+  <div class="grow">
+    <span class="font-bold">{entry.name}:</span>
+    {entry.description}
+    {entry.url && <LinkInline to={entry.url}>{entry.url_caption}</LinkInline>}
+    {Content && <Content />}
+  </div>
+</li>
