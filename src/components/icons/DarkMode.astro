@@ -8,17 +8,20 @@
  */
 ---
 
-<button id="darkMode" class="ml-auto font-bold hover:text-primary dark:hover:text-primary"></button>
+<button name="darkMode" class="ml-auto font-bold hover:text-primary dark:hover:text-primary"
+></button>
 
 <script>
-  // Get the button element above
-  const button = document.getElementById("darkMode")
-  // And add an event listener to it
-  button?.addEventListener("click", () => {
-    // Get the current theme from localStorage
-    const theme = localStorage.theme
-    // And change it to the next one
-    changeTheme(theme)
+  // Get the button element above (can be multiple)
+  const buttons = document.getElementsByName("darkMode")
+  // And add an event listener to it (if it/they exist)
+  buttons?.forEach((button) => {
+    button.addEventListener("click", () => {
+      // Get the current theme from localStorage
+      const theme = localStorage.theme
+      // And change it to the next one
+      changeTheme(theme)
+    })
   })
 
   // Theme can be "dark" or "light" or the browser preference ("system")
@@ -35,17 +38,17 @@
     switch (theme) {
       case "system":
         localStorage.theme = "light"
-        if (button) changeIcon("light", button)
+        if (buttons) changeIcon("light", buttons)
         document.documentElement.classList.remove("dark")
         break
       case "light":
         localStorage.theme = "dark"
-        if (button) changeIcon("dark", button)
+        if (buttons) changeIcon("dark", buttons)
         document.documentElement.classList.add("dark")
         break
       case "dark":
         localStorage.theme = "system"
-        if (button) changeIcon("system", button)
+        if (buttons) changeIcon("system", buttons)
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
           document.documentElement.classList.add("dark")
         } else {
@@ -55,7 +58,7 @@
       // Should never happen, but just in case fallback to dark
       default:
         localStorage.theme = "light"
-        if (button) changeIcon("light", button)
+        if (buttons) changeIcon("light", buttons)
         document.documentElement.classList.remove("dark")
         break
     }
@@ -64,21 +67,27 @@
    * Change the button icon to reflect the current theme
    * @param theme - What's the theme to reflect?
    */
-  const changeIcon = (theme: Theme, button: HTMLElement) => {
+  const changeIcon = (theme: Theme, buttons: NodeListOf<HTMLElement>) => {
     switch (theme) {
       case "light":
-        button.innerHTML = `<i title="Toggle dark mode" class="fa-solid fa-sun"></i>`
+        buttons.forEach((button) => {
+          button.innerHTML = `<i title="Click for dark mode" class="fa-solid fa-sun"></i>`
+        })
         break
       case "system":
-        button.innerHTML = `<i title="Toggle light mode" class="fa-solid fa-laptop"></i>`
+        buttons.forEach((button) => {
+          button.innerHTML = `<i title="Click for light mode" class="fa-solid fa-laptop"></i>`
+        })
         break
       // Apply for case "dark" or undefined, fallback to dark
       default:
-        button.innerHTML = `<i title="Toggle dark mode" class="fa-solid fa-moon"></i>`
+        buttons.forEach((button) => {
+          button.innerHTML = `<i title="Click for system mode" class="fa-solid fa-moon"></i>`
+        })
         break
     }
   }
 
   // At page load, init the button icon to reflect the current theme
-  if (button) changeIcon(localStorage.theme, button)
+  if (buttons) changeIcon(localStorage.theme, buttons)
 </script>
