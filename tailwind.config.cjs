@@ -20,6 +20,7 @@ module.exports = {
     /**
      * Blog custom colors 🎨
      * See -> https://tailwindcss.com/docs/customizing-colors
+     * use dark or light version depending on the theme
      */
     colors: {
       // Document default body color
@@ -29,17 +30,21 @@ module.exports = {
       },
       // Alt body color, for example when a div is hovered
       highlight: {
-        light: "#FEE7DC",
+        light: "#FFEDE6",
         dark: "#2E303E",
       },
       // Mainly used by text and icons
       base: {
-        white: "#FFFCFB",
         light: "#334155",
         dark: "#DDE2F0",
-        black: "#1C1E26",
+      },
+      // Mainly used by titles
+      accent: {
+        light: "#1C1E26",
+        dark: "#FFFCFB",
       },
       // Mainly used when hovering buttons or links
+      // stay the same in light and dark mode
       primary: "#EC6A88",
     },
     extend: {

@@ -34,7 +34,7 @@ export class Card extends HTMLElement {
           this.index
         )}" src="${this.image}" alt={} />
         <article class="mx-6 my-5 min-w-0">
-          <h3 class="text-base-black dark:text-base-white pb-2 font-bold text-lg sm:text-xl">
+          <h3 class="text-accent-light dark:text-accent-dark pb-2 font-bold text-lg sm:text-xl">
             ${this.title}
           </h3>
           <div class="overflow-hidden text-ellipsis whitespace-nowrap">

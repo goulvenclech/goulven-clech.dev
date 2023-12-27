@@ -13,12 +13,12 @@ const { image, to } = Astro.props
 
 <a
   href={to}
-  class="not-prose my-12 flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark"
+  class="not-prose my-12 flex flex-col overflow-hidden rounded-lg hover:bg-highlight-light sm:flex-row dark:hover:bg-highlight-dark"
 >
-  <div class="h-[150px] sm:h-auto sm:max-h-44 w-auto sm:w-[150px] shrink-0">
-    <Image src={image} width={500} height={500} alt="" class="w-full h-full object-cover" />
+  <div class="h-[150px] w-auto shrink-0 sm:h-auto sm:max-h-44 sm:w-[150px]">
+    <Image src={image} width={500} height={500} alt="" class="h-full w-full object-cover" />
   </div>
-  <article class="mx-6 my-5 min-w-0 text-base-black dark:text-base-white">
+  <article class="dark:text-accent-dark text-accent-light mx-6 my-5 min-w-0">
     <slot />
   </article>
 </a>
