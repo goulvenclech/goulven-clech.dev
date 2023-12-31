@@ -29,12 +29,12 @@ export class Card extends HTMLElement {
     template.innerHTML = `
       <a href="/${
         this.slug
-      }" class="flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-highlight-light dark:hover:bg-highlight-dark">
-        <img class="h-[100px] sm:h-auto w-auto sm:w-[150px] shrink-0 object-cover ${this.getOrder(
+      }" class="flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-alt-light dark:hover:bg-alt-dark">
+        <img class="h-[150px] w-auto shrink-0 sm:h-auto sm:max-h-48 sm:w-[150px] object-cover ${this.getOrder(
           this.index
         )}" src="${this.image}" alt={} />
         <article class="mx-6 my-5 min-w-0">
-          <h3 class="text-accent-light dark:text-accent-dark pb-2 font-bold text-lg sm:text-xl">
+          <h3 class="text-font-light dark:text-font-dark pb-2 font-bold">
             ${this.title}
           </h3>
           <div class="overflow-hidden text-ellipsis whitespace-nowrap">

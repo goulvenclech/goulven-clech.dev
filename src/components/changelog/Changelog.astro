@@ -80,7 +80,7 @@ const changelogEntriesSorted = changelogEntries.reduce(
       // map each year to a div containing the months
       .map(([year, months]) => (
         <div>
-          <h3 class="text-b dark:text-accent-dark text-accent-light mb-6 mt-9 font-bold">{year}</h3>
+          <h3 class="text-b text-font-light dark:text-font-dark mb-6 mt-9 font-bold">{year}</h3>
           <ul class="mb-6 ml-6">
             {
               // Record is not iterable, so we have to convert it to an array
@@ -90,7 +90,7 @@ const changelogEntriesSorted = changelogEntries.reduce(
                 // map each month to a ul containing the changelog entries
                 .map(([month, entries]) => (
                   <li>
-                    <h4 class="dark:text-accent-dark text-accent-light mb-5 font-bold">
+                    <h4 class="text-font-light dark:text-font-dark mb-5 font-bold">
                       {new Date(0, Number(month)).toLocaleString("default", { month: "long" })}
                     </h4>
                     <ul class="ml-6">
@@ -110,7 +110,7 @@ const changelogEntriesSorted = changelogEntries.reduce(
   }
   {/* I should find a cleaner way to do this */}
   <div>
-    <h3 class="text-b dark:text-accent-dark text-accent-light mb-6 mt-9 font-bold">2020</h3>
+    <h3 class="text-b text-font-light dark:text-font-dark mb-6 mt-9 font-bold">2020</h3>
     <div class="mb-6 ml-6">
       <ChangelogCard
         entry={{

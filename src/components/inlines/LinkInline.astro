@@ -12,6 +12,8 @@ const { to } = Astro.props
 
 <a
   href={to}
-  class="not-prose dark:text-accent-dark text-accent-light whitespace-nowrap font-bold hover:text-primary dark:hover:text-primary"
-  ><slot /><i class="fa-solid fa-square-up-right ml-1 w-[10.5px] text-[0.6rem]"></i></a
+  class="not-prose text-font-light dark:text-font-dark whitespace-nowrap underline underline-offset-[3px] hover:text-primary dark:hover:text-primary"
+  ><slot />{
+    to.startsWith("http") && <i class="fa-solid fa-square-up-right ml-1 w-[10.5px] text-[0.6rem]" />
+  }</a
 >

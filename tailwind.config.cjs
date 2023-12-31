@@ -1,66 +1,62 @@
 const defaultTheme = require("tailwindcss/defaultTheme")
-const plugin = require("tailwindcss/plugin")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // See -> https://tailwindcss.com/docs/dark-mode
   darkMode: "class",
   // See -> https://docs.astro.build/en/guides/integrations-guide/tailwind/
-  content: ["./src/**/*.{astro,mdx,ts,js,tsx}"],
-  plugins: [
-    require("@tailwindcss/typography"),
-    plugin(function ({ addBase, theme }) {
-      addBase({
-        p: { marginBottom: theme("spacing.6") },
-        ".prose > ul > li": { marginBottom: theme("spacing.6") },
-      })
-    }),
-  ],
+  content: ["./src/**/*.{astro,mdx,ts,js}"],
   theme: {
     /**
+     * Blog custom sizes 📏
+     * Our base size is 18px (1.125rem) and we use a 1.5 ratio
+     * I try to limit the number of sizes as possible
+     * See -> https://tailwindcss.com/docs/font-size#customizing-your-theme
+     */
+    fontSize: {
+      sm: "14px", // 0.875rem
+      base: "18px", // 1.125rem
+      lg: "24px", // 1.5rem
+      xl: "32px", // 2.25rem
+    },
+    /**
      * Blog custom colors 🎨
+     * I try to limit the number of colors as possible
+     * Inspired by -> https://horizontheme.netlify.app/
      * See -> https://tailwindcss.com/docs/customizing-colors
      * use dark or light version depending on the theme
      */
     colors: {
-      // Document default body color
+      // Document default for background
       body: {
         light: "#FFFCFB",
         dark: "#1C1E26",
       },
-      // Alt body color, for example when a div is hovered
-      highlight: {
-        light: "#FFEDE6",
-        dark: "#2E303E",
-      },
-      // Mainly used by text and icons
-      base: {
-        light: "#334155",
-        dark: "#DDE2F0",
-      },
-      // Mainly used by titles
-      accent: {
+      // Same as body but inverted for text
+      font: {
         light: "#1C1E26",
         dark: "#FFFCFB",
+      },
+      // Alt body color for background, used for hover
+      alt: {
+        light: "#FFEDE6",
+        dark: "#2E303E",
       },
       // Mainly used when hovering buttons or links
       // stay the same in light and dark mode
       primary: "#EC6A88",
     },
+    fontWeight: {
+      // limit the number of font weights as possible
+      normal: "400",
+      bold: "600",
+    },
     extend: {
       fontFamily: {
-        sans: ["Work Sans", ...defaultTheme.fontFamily.mono],
+        // I like Source Serif 4, it's a serif font but not too serious
+        // Also, it's has small caps, witch is nice.
+        sans: ['"Source Serif 4 Variable"', '"Source Serif 4"', ...defaultTheme.fontFamily.serif],
       },
-      typography: ({ theme }) => ({
-        slate: {
-          css: {
-            "--tw-prose-body": theme("colors.base[light]"),
-            "--tw-prose-headings": theme("colors.base[black]"),
-            "--tw-prose-invert-body": theme("colors.base[dark]"),
-            "--tw-prose-invert-headings": theme("colors.base[white]"),
-          },
-        },
-      }),
     },
   },
 }

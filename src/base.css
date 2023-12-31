@@ -1,0 +1,39 @@
+/*
+  This file is used as base styling. Because I don't like using TailwindCSS plugins
+  (See -> https://tailwindcss.com/docs/adding-custom-styles#writing-plugins )
+  nor Astro's global style balise (See -> https://docs.astro.build/guides/styling#global-styles )
+
+  Unlike my friend Aurélien ( https://aureliendossantos.com/website ) I'm not interested in
+  diverse page styles nor conserving old page styles. I prefer a unique and unified style 
+  which will evolve with me, and will force me to change the shape of the old pages.
+  I think this is the best way to make the different components of a page recognizable 
+  (like a link or a title) and to ensure the continued evolution of accessibility.s
+
+  This file contain extensive use of TailwindCSS's @apply directive.
+  (See -> https://tailwindcss.com/docs/functions-and-directives#apply )
+
+  Specific styling for each component is done in the component's file. Using TailwindCSS.
+  (Example -> src/components/icons/ToTop.astro )
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
+@layer base {
+  body {
+    @apply text-font-light dark:text-font-dark bg-body-light font-sans text-sm sm:text-base dark:bg-body-dark;
+  }
+
+  p {
+    @apply mb-6 text-sm sm:text-base;
+  }
+
+  h1 {
+    @apply text-font-light dark:text-font-dark mb-6 text-lg font-bold leading-none sm:text-xl;
+  }
+
+  h2 {
+    @apply text-font-light dark:text-font-dark mb-6 text-base font-bold leading-none sm:text-lg;
+  }
+}
