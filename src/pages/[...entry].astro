@@ -3,7 +3,7 @@ import { getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import { formatDate } from "src/utils"
 import LinkInline from "$components/inlines/LinkInline.astro"
-import HeadOfContent from "$components/HeadOfContent.astro"
+import TableOfContent from "$components/TableOfContent.astro"
 import FigImage from "$components/figures/FigImage.astro"
 /**
  * Create a page for each blog entries, display frontmatter
@@ -47,7 +47,7 @@ const { Content, headings } = await entry.render()
   </section>
   {
     entry.data.heading == "toc" ? (
-      <HeadOfContent headings={headings} />
+      <TableOfContent headings={headings} />
     ) : entry.data.heading == "image" ? (
       <FigImage
         src={entry.data.image}
@@ -57,7 +57,9 @@ const { Content, headings } = await entry.render()
       />
     ) : null
   }
-  <Content />
+  <section id="entry">
+    <Content />
+  </section>
 </Layout>
 <style is:global>
   .frame.is-terminal .header {

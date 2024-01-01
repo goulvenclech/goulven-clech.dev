@@ -7,7 +7,7 @@
   diverse page styles nor conserving old page styles. I prefer a unique and unified style 
   which will evolve with me, and will force me to change the shape of the old pages.
   I think this is the best way to make the different components of a page recognizable 
-  (like a link or a title) and to ensure the continued evolution of accessibility.s
+  (like a link or a title) and to ensure the continued evolution of accessibility.
 
   This file contain extensive use of TailwindCSS's @apply directive.
   (See -> https://tailwindcss.com/docs/functions-and-directives#apply )
@@ -48,6 +48,15 @@
 
   h3 {
     @apply text-sm sm:text-base;
+  }
+
+  /*
+    ENTRIES ONLY TYPOGRAPHY
+  */
+  /* If an entry start with a title (so it appear in the TOC) 
+    hide it for a better reading flow */
+  #entry h2:first-child {
+    @apply invisible m-0 h-0;
   }
 
   /*
