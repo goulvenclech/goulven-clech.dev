@@ -1,9 +1,7 @@
 ---
-import Hero from "$components/Hero.astro"
 import GithubInline from "$components/inlines/GithubInline.astro"
 import LinkInline from "$components/inlines/LinkInline.astro"
 import TagInline from "$components/inlines/TagInline.astro"
-import Section from "$components/Section.astro"
 import Layout from "$layouts/Layout.astro"
 import Search from "$components/Search.astro"
 /**
@@ -17,7 +15,8 @@ const pageTitle = "Hello"
 ---
 
 <Layout title={pageTitle}>
-  <Hero title="Hello 👋" isHome={true}>
+  <section>
+    <h1>Hello 👋</h1>
     <p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
     <p>
       Currently, I'm working for the auction platform
@@ -27,8 +26,9 @@ const pageTitle = "Hello"
     <p>
       Here, I chat about <TagInline tag="web development" />, <TagInline tag="coffee" />...
     </p>
-  </Hero>
-  <Section title="Last entries">
+  </section>
+  <section>
+    <h2>Last Entries</h2>
     <Search />
-  </Section>
+  </section>
 </Layout>

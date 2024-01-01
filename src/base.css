@@ -26,14 +26,42 @@
   }
 
   p {
-    @apply mb-6 text-sm sm:text-base;
+    @apply mb-6 text-sm leading-relaxed sm:text-base;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply text-font-light dark:text-font-dark mb-6 font-bold leading-none;
   }
 
   h1 {
-    @apply text-font-light dark:text-font-dark mb-6 text-lg font-bold leading-none sm:text-xl;
+    @apply mt-12 text-lg sm:text-xl;
   }
 
   h2 {
-    @apply text-font-light dark:text-font-dark mb-6 text-base font-bold leading-none sm:text-lg;
+    @apply mt-12 text-base sm:text-lg;
+  }
+
+  h3 {
+    @apply text-sm sm:text-base;
+  }
+
+  section {
+    @apply my-12 sm:my-24;
+  }
+
+  ol li {
+    @apply ml-4 list-none p-0;
+  }
+
+  ol li::marker {
+    content: counter(list-item) "\a0\a0";
+  }
+
+  @media screen(sm) {
+    ol li {
+      @apply ml-0;
+    }
   }
 }

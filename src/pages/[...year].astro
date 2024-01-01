@@ -1,6 +1,5 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content"
-import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
 /**
@@ -41,7 +40,8 @@ const pageTitle = `Published in ${year}`
 ---
 
 <Layout title={pageTitle} icon="📅">
-  <Hero title={pageTitle}>
+  <section>
+    <h1>{pageTitle}</h1>
     <div class="flex flex-col gap-6">
       {
         entries
@@ -49,5 +49,5 @@ const pageTitle = `Published in ${year}`
           .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
       }
     </div>
-  </Hero>
+  </section>
 </Layout>

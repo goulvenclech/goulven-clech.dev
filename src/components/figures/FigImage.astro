@@ -23,7 +23,7 @@ const placeholderURL = await imageService.generatePlaceholder(
 const { caption, source, ...props } = Astro.props as any
 ---
 
-<figure class="not-prose my-12">
+<figure class="not-prose my-6">
   <AstroPicture
     {...props}
     width={Astro.props.src.width / 2}

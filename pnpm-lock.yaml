@@ -20,9 +20,6 @@ dependencies:
   '@fontsource/source-serif-4':
     specifier: ^5.0.16
     version: 5.0.16
-  '@fontsource/work-sans':
-    specifier: ^5.0.16
-    version: 5.0.16
   '@tailwindcss/typography':
     specifier: ^0.5.10
     version: 0.5.10(tailwindcss@3.4.0)
@@ -746,10 +743,6 @@ packages:
 
   /@fontsource/source-serif-4@5.0.16:
     resolution: {integrity: sha512-PpwBrV5qK6ACN1bxsvKNYPvCdHuq4t5kTS5APYO7CclmKgI8G83kkxRlhYk6HYVZM9zDBOJdPjK48MvSsgydRg==}
-    dev: false
-
-  /@fontsource/work-sans@5.0.16:
-    resolution: {integrity: sha512-NSWgUQC7MIV4ujGTZ5qxHwEZ5ttOVtY3OhVa3ESj+rB+BiN5XVxEwkUEoJ4mnWTYB3ibwn45S/V7TgjDuG21kg==}
     dev: false
 
   /@img/sharp-darwin-arm64@0.33.1:

@@ -1,5 +1,4 @@
 ---
-import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 /**
  * This will build to a 404.html page. Most deploy services will find and use it.
@@ -7,7 +6,8 @@ import Layout from "$layouts/Layout.astro"
 ---
 
 <Layout title="Oops" icon="🤷‍♂️">
-  <Hero title="404 Error">
-    Oops! The page you are looking for doesn't exist or has been deleted.
-  </Hero>
+  <section>
+    <h1>404 Error</h1>
+    <p>Oops! The page you are looking for doesn't exist or has been deleted.</p>
+  </section>
 </Layout>

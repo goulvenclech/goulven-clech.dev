@@ -1,9 +1,7 @@
 ---
-import Hero from "$components/Hero.astro"
 import Layout from "$layouts/Layout.astro"
 import GithubInline from "$components/inlines/GithubInline.astro"
 import LinkInline from "$components/inlines/LinkInline.astro"
-import Section from "$components/Section.astro"
 import Changelog from "$components/changelog/Changelog.astro"
 
 /**
@@ -14,8 +12,12 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 ---
 
 <Layout title={pageTitle} icon="📜">
-  <Hero title={pageTitle}>Everything you need to know about this blog, and more.</Hero>
-  <Section title="Legal notice">
+  <section>
+    <h1>{pageTitle}</h1>
+    <p>Everything you need to know about this blog, and more.</p>
+  </section>
+  <section>
+    <h2>Legal notice</h2>
     <p>
       <bold class="font-bold">Published by:</bold>
       <GithubInline user="35667800" />, domiciled in Toulouse, France. Contact me by
@@ -46,13 +48,14 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
        Some articles may cite text, images or resources from external sources. Their original
       licenses apply, and I indicate the authors if known.
     </p>
-  </Section>
-  <Section title="Changelog">
+  </section>
+  <section>
+    <h2>Changelog</h2>
     <p>
       An historic of every articles, pages, features and content changes made to this blog. For a
       more technical changelog, go to
       <LinkInline to={githubReleaseLink}>GitHub releases</LinkInline>.
       <Changelog />
     </p>
-  </Section>
+  </section>
 </Layout>

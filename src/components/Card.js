@@ -34,13 +34,13 @@ export class Card extends HTMLElement {
           this.index
         )}" src="${this.image}" alt={} />
         <article class="mx-6 my-5 min-w-0">
-          <h3 class="text-font-light dark:text-font-dark pb-2 font-bold">
+          <h3 class="mb-3">
             ${this.title}
           </h3>
           <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-            <i class="fa-solid fa-calendar-day w-3.5 sm:w-4"></i>
+            <i class="fa-solid fa-calendar-day w-3.5 sm:w-4 mr-1"></i>
             ${this.date}
-            <i class="fa-solid fa-tags ml-3 w-3.5 sm:w-4"></i>
+            <i class="fa-solid fa-tags ml-3 w-3.5 sm:w-4 mr-1"></i>
             ${this.tags}
           </div>
           <span class="mt-3 text-ellipsis py-0 line-clamp-3">
