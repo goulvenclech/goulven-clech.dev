@@ -25,6 +25,9 @@
     @apply text-font-light dark:text-font-dark bg-body-light font-sans text-sm sm:text-base dark:bg-body-dark;
   }
 
+  /*
+    TYPOGRAPHY
+  */
   p {
     @apply mb-6 text-sm leading-relaxed sm:text-base;
   }
@@ -47,10 +50,16 @@
     @apply text-sm sm:text-base;
   }
 
+  /*
+    BASE COMPONENTS
+  */
   section {
     @apply my-12 sm:my-24;
   }
 
+  /*
+    LISTS
+  */
   ol li {
     @apply ml-4 list-none p-0;
   }
