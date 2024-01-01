@@ -1,0 +1,12 @@
+---
+/**
+ * TMP - Used to generate a h3 headings before blocks in MDX files
+ * Probably should find a better way to do this 🤔
+ * @param props
+ */
+const props = Astro.props
+---
+
+<h3 {...props} class="invisible m-0 -mb-6 h-0">
+  <slot />
+</h3>

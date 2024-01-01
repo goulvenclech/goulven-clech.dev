@@ -54,7 +54,7 @@
     BASE COMPONENTS
   */
   section {
-    @apply my-12 sm:my-24;
+    @apply sm:my-18 my-12;
   }
 
   /*
@@ -64,8 +64,17 @@
     @apply ml-4 list-none p-0;
   }
 
+  /* 
+    Used "list-non" above to remove the default list style.
+    Then we add our own style using the ::marker pseudo-element.
+
+    counters() is used to support nested lists.
+    (See -> https://developer.mozilla.org/en-US/docs/Web/CSS/counters )
+    "\a0\a0" is used to add a double space between the marker and the list item.
+    (instead of the default dot and single space)
+  */
   ol li::marker {
-    content: counter(list-item) "\a0\a0";
+    content: counters(list-item, ".") "\a0\a0";
   }
 
   @media screen(sm) {

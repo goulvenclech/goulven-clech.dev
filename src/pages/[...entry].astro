@@ -3,6 +3,8 @@ import { getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import { formatDate } from "src/utils"
 import LinkInline from "$components/inlines/LinkInline.astro"
+import HeadOfContent from "$components/HeadOfContent.astro"
+import FigImage from "$components/figures/FigImage.astro"
 /**
  * Create a page for each blog entries, display frontmatter
  * informations & the content.
@@ -43,6 +45,18 @@ const { Content, headings } = await entry.render()
       <LinkInline to="/">Goulven CLEC'H</LinkInline>
     </p>
   </section>
+  {
+    entry.data.heading == "toc" ? (
+      <HeadOfContent headings={headings} />
+    ) : entry.data.heading == "image" ? (
+      <FigImage
+        src={entry.data.image}
+        alt={entry.data.image_alt}
+        caption={entry.data.image_caption}
+        source={entry.data.image_source}
+      />
+    ) : null
+  }
   <Content />
 </Layout>
 <style is:global>

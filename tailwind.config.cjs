@@ -47,8 +47,8 @@ module.exports = {
       // stay the same in light and dark mode
       primary: "#EC6A88",
     },
+    // limit the number of font weights as possible
     fontWeight: {
-      // limit the number of font weights as possible
       normal: "400",
       bold: "600",
     },
@@ -57,6 +57,9 @@ module.exports = {
         // I like Source Serif 4, it's a serif font but not too serious
         // Also, it's has small caps, witch is nice.
         sans: ['"Source Serif 4 Variable"', '"Source Serif 4"', ...defaultTheme.fontFamily.serif],
+      },
+      spacing: {
+        18: "4.5rem",
       },
     },
   },
