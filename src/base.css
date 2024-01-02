@@ -70,7 +70,8 @@
     LINKS
   */
   p a,
-  #toc a {
+  #toc a,
+  .changelog > a {
     @apply whitespace-nowrap text-font-light underline underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
   }
 
@@ -84,7 +85,8 @@
     display: inline-block;
   }
 
-  p a[href^="http://"]::after, p a[href^="https://"]::after
+  p a[href^="http://"]::after, p a[href^="https://"]::after,
+  .changelog > a[href^="http://"]::after, .changelog > a[href^="https://"]::after
   {
     content: "\f360";
     font-family: "Font Awesome 6 Free";

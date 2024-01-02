@@ -31,7 +31,7 @@ const { Content } = await (entry.render?.() ?? { Content: null })
       )
     }
   </div>
-  <div class="grow">
+  <div class="changelog grow">
     <span class="font-bold">{entry.name}:</span>
     {entry.description}
     {entry.url && <a href={entry.url}>{entry.url_caption}</a>}
