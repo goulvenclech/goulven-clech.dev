@@ -1,7 +1,5 @@
 ---
 import GithubInline from "$components/inlines/GithubInline.astro"
-import LinkInline from "$components/inlines/LinkInline.astro"
-import TagInline from "$components/inlines/TagInline.astro"
 import Layout from "$layouts/Layout.astro"
 import Search from "$components/Search.astro"
 /**
@@ -20,11 +18,14 @@ const pageTitle = "Hello"
     <p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
     <p>
       Currently, I'm working for the auction platform
-      <LinkInline to="https://encheres-immo.com">Enchères Immo</LinkInline>, and I'm the co-founder
-      of <LinkInline to="https://gamedevalliance.fr/">Game Dev Alliance</LinkInline>.
+      <a href="https://encheres-immo.com">Enchères Immo</a>, and I'm the co-founder of <a
+        href="https://gamedevalliance.fr/">Game Dev Alliance</a
+      >.
     </p>
     <p>
-      Here, I chat about <TagInline tag="web development" />, <TagInline tag="coffee" />...
+      Here, I chat about <a href="/tag-web development">web development</a>, <a href="/tag-coffee"
+        >coffee</a
+      >...
     </p>
   </section>
   <section>

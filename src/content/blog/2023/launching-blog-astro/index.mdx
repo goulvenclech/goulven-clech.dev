@@ -12,7 +12,7 @@ icon: "🚀"
 abstract: "My thoughts on the best Static Site Generator available, and why you should use it, especially if you are new to web development."
 ---
 
-import LinkInline from "$components/inlines/LinkInline.astro"
+
 import GithubInline from "$components/inlines/GithubInline.astro"
 import FigImage from "$components/figures/FigImage.astro"
 import Image0 from "./image0.png"
@@ -25,15 +25,15 @@ After almost two years of procrastinating, I finally launched a blog.
 
 Besides illegitimacy and lack of time, the main reason not to launch earlier was that I needed a blogging technology that amused me...
 
-Until my friend <GithubInline user="3019731" /> introduced me to <LinkInline to="https://astro.build/">Astro</LinkInline> !
+Until my friend <GithubInline user="3019731" /> introduced me to <a href="https://astro.build/">Astro</a> !
 
 ## What's a Static Site Generator?
 
 Before seeing how Astro works, you need to understand two concepts:
 
-Firstly, a <LinkInline to="https://en.wikipedia.org/wiki/Static_web_page">static website</LinkInline> consists of web pages delivered to the browser exactly as they are stored, unlike a <LinkInline to="https://en.wikipedia.org/wiki/Dynamic_web_page">dynamic website</LinkInline> where a server will generate the pages at every user request.
+Firstly, a <a href="https://en.wikipedia.org/wiki/Static_web_page">static website</a> consists of web pages delivered to the browser exactly as they are stored, unlike a <a href="https://en.wikipedia.org/wiki/Dynamic_web_page">dynamic website</a> where a server will generate the pages at every user request.
 
-Therefore a static site won't need a server, which can be expensive and unreliable, and can instead use a free <LinkInline to="https://en.wikipedia.org/wiki/Content_delivery_network">content delivery network (CDN)</LinkInline> like <LinkInline to="https://vercel.com/">Vercel</LinkInline> or <LinkInline to="https://www.netlify.com/">Netlify</LinkInline>.
+Therefore a static site won't need a server, which can be expensive and unreliable, and can instead use a free <a href="https://en.wikipedia.org/wiki/Content_delivery_network">content delivery network (CDN)</a> like <a href="https://vercel.com/">Vercel</a> or <a href="https://www.netlify.com/">Netlify</a>.
 
 <FigImage
   src={ImageAstroCDN}
@@ -41,9 +41,9 @@ Therefore a static site won't need a server, which can be expensive and unreliab
   caption="Once your static site is shipped (in blue), every page will be cached on multiple CDN servers around the world (in pink). When a user requests a page (in green), it will be delivered from the closest CDN server, ensuring good performance and cost efficiency."
 />
 
-Secondly, a <LinkInline to="https://en.wikipedia.org/wiki/Static_site_generator">site generator</LinkInline> is a software that will generate your pages by taking, on the one hand, a template describing the appearance of your site, and on the other hand, text files representing the content.
+Secondly, a <a href="https://en.wikipedia.org/wiki/Static_site_generator">site generator</a> is a software that will generate your pages by taking, on the one hand, a template describing the appearance of your site, and on the other hand, text files representing the content.
 
-Storing content in text files rather than a database is not only a time saver, but allows to edit them in a simple code editor, easily export them, store them with the rest of the code, and use a versioning system like <LinkInline to="https://git-scm.com/">Git</LinkInline> to track changes.
+Storing content in text files rather than a database is not only a time saver, but allows to edit them in a simple code editor, easily export them, store them with the rest of the code, and use a versioning system like <a href="https://git-scm.com/">Git</a> to track changes.
 
 ```md title="a basic text file in Markdown"
 title: "My first blog post"
@@ -82,7 +82,7 @@ This is my first blog post, I hope you will enjoy it!
 </main>
 ```
 
-Since the genesis of static site generators (SSG) with <LinkInline to="https://en.wikipedia.org/">Wikipedia</LinkInline> and <LinkInline to="https://jekyllrb.com/">Jekyll</LinkInline>, these softwares have become popular among devs like us. However, the general experience is still "nerdy" and requires not being scared by a code editor or command lines... Explaining the general public preference for <LinkInline to="https://wordpress.com/">WordPress</LinkInline>, even though it's more expensive and less reliable.
+Since the genesis of static site generators (SSG) with <a href="https://en.wikipedia.org/">Wikipedia</a> and <a href="https://jekyllrb.com/">Jekyll</a>, these softwares have become popular among devs like us. However, the general experience is still "nerdy" and requires not being scared by a code editor or command lines... Explaining the general public preference for <a href="https://wordpress.com/">WordPress</a>, even though it's more expensive and less reliable.
 
 Even for us, the experience can be frustrating. Without making a complete list, the majority of the available SSGs falls into one of these three faults:
 
@@ -115,7 +115,7 @@ Astro won't ship your content into a huge JS application, but only generate simp
 
 However, Astro is fully integrated into the JS ecosystem. If you need any JS logic or any NPM library, you can add it above the template and it will be executed at build time. If you need client-side JS, you can simply add a `<script>` tag to your template that will be injected into the page.
 
-Even better, if you can't do without a JS framework, the <LinkInline to="https://docs.astro.build/concepts/islands/">Astro Islands</LinkInline> allow you to inject a specific component in the middle of a classic Astro page. 
+Even better, if you can't do without a JS framework, the <a href="https://docs.astro.build/concepts/islands/">Astro Islands</a> allow you to inject a specific component in the middle of a classic Astro page. 
 
 ```md
 Soon here: an example of an Astro component with build time logic, client side JS,
@@ -126,7 +126,7 @@ I think I summed up the spirit of Astro pretty well. On the one hand, it's an SS
 
 ## How Astro help beginners
 
-Let's swift through the obvious answer: yes, Astro has a stellar CLI, a comprehensive documentation, and a great <LinkInline to="https://docs.astro.build/en/tutorial/0-introduction/">tutorial for your first blog</LinkInline>. And yes, as <GithubInline user="3019731" /> said on her blog, you should not underestimate the power of Astro's <LinkInline to="https://erika.florist/articles/dontunderestimateeditorintegration">good editor tooling!</LinkInline>
+Let's swift through the obvious answer: yes, Astro has a stellar CLI, a comprehensive documentation, and a great <a href="https://docs.astro.build/en/tutorial/0-introduction/">tutorial for your first blog</a>. And yes, as <GithubInline user="3019731" /> said on her blog, you should not underestimate the power of Astro's <a href="https://erika.florist/articles/dontunderestimateeditorintegration">good editor tooling!</a>
 
 But, on a deeper level, I think that two fundamental aspects of Astro's philosophy makes it the perfect launchpad:
 
@@ -155,6 +155,6 @@ Of course, Astro is not a magic wand: you still have to learn web development, w
 
 But Astro make the web development easier: easier to learn, easier to ship, easier to maintain... and more fun!
 
-Now is the perfect time to start, as the software is experiencing fast and intelligent growth, attracting major companies like Google, Microsoft, UNDP, Ikea, Vercel, NordVPN, The Guardian, Trivago, Cloudflare... Plus, unlike in space, we can hear you scream on the <LinkInline to="https://astro.build/chat">Discord server</LinkInline>, where you can meet the friendly and helpful core team.
+Now is the perfect time to start, as the software is experiencing fast and intelligent growth, attracting major companies like Google, Microsoft, UNDP, Ikea, Vercel, NordVPN, The Guardian, Trivago, Cloudflare... Plus, unlike in space, we can hear you scream on the <a href="https://astro.build/chat">Discord server</a>, where you can meet the friendly and helpful core team.
 
 See you out there astro-nauts 🚀

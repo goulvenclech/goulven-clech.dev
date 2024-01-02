@@ -1,5 +1,4 @@
 ---
-import LinkInline from "../inlines/LinkInline.astro"
 import { type ChangelogEntry } from "./Changelog.astro"
 
 /**
@@ -35,7 +34,7 @@ const { Content } = await (entry.render?.() ?? { Content: null })
   <div class="grow">
     <span class="font-bold">{entry.name}:</span>
     {entry.description}
-    {entry.url && <LinkInline to={entry.url}>{entry.url_caption}</LinkInline>}
+    {entry.url && <a href={entry.url}>{entry.url_caption}</a>}
     {Content && <Content />}
   </div>
 </li>

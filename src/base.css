@@ -22,7 +22,7 @@
 /* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
 @layer base {
   body {
-    @apply text-font-light dark:text-font-dark bg-body-light font-sans text-sm sm:text-base dark:bg-body-dark;
+    @apply bg-body-light font-sans text-sm text-font-light sm:text-base dark:bg-body-dark dark:text-font-dark;
   }
 
   /*
@@ -35,7 +35,7 @@
   h1,
   h2,
   h3 {
-    @apply text-font-light dark:text-font-dark mb-6 font-bold leading-none;
+    @apply mb-6 font-bold leading-none text-font-light dark:text-font-dark;
   }
 
   h1 {
@@ -63,7 +63,72 @@
     BASE COMPONENTS
   */
   section {
-    @apply sm:my-18 my-12;
+    @apply my-12 sm:my-18;
+  }
+
+  /*
+    LINKS
+  */
+  p a,
+  #toc a {
+    @apply whitespace-nowrap text-font-light underline underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
+  }
+
+  p a[href^="/tag-"]::before {
+    content: "\f02b";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.75rem;
+    padding-right: 0.2rem;
+    color: inherit;
+    display: inline-block;
+  }
+
+  p a[href^="http://"]::after, p a[href^="https://"]::after
+  {
+    content: "\f360";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.65rem;
+    padding-left: 0.2rem;
+    color: inherit;
+    display: inline-block;
+  }
+
+  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after
+  {
+    content: "\f167";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after
+  {
+    content: "\f266";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://www.instagram.com/"]::after
+  {
+    content: "\f16d";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://github.com/"]::after
+  {
+    content: "";
+  }
+
+  p a[href^="mailto"]::after {
+    content: "\f1d8";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.65rem;
+    padding-left: 0.2rem;
+    color: inherit;
+    display: inline-block;
   }
 
   /*

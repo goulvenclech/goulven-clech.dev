@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import { formatDate } from "src/utils"
-import LinkInline from "$components/inlines/LinkInline.astro"
+
 import TableOfContent from "$components/TableOfContent.astro"
 import FigImage from "$components/figures/FigImage.astro"
 /**
@@ -42,7 +42,7 @@ const { Content, headings } = await entry.render()
     <p>{entry.data.abstract}</p>
     <p>
       {formatDate(entry.data.date)} -
-      <LinkInline to="/">Goulven CLEC'H</LinkInline>
+      <a href="/">Goulven CLEC'H</a>
     </p>
   </section>
   {
