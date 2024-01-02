@@ -72,7 +72,8 @@
   p a,
   #toc a,
   .changelog > a {
-    @apply whitespace-nowrap text-font-light underline underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
+    /* decoration has a fixed value, so it doesn't change with the font size */
+    @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
   }
 
   p a[href^="/tag-"]::before {
