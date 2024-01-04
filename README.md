@@ -8,11 +8,15 @@ Some articles may cite text, images or resources from external sources: their or
 
 ## Notable features
 
-At its heart, this project looks like any blog made with Astro, you can start by reading my article ["Launching a blog with Astro"](https://goulven-clech.dev/2023/launching-blog-astro). But, little by little, I added some original features that might interest you:
+At its heart, this project looks like any blog made with Astro, you can start by reading my article ["Launching a blog with Astro"](https://goulven-clech.dev/2023/launching-blog-astro). But, little by little, I added some original features that might interest you, here are the main ones:
 
 - [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/Search.astro): made with Astro and Web Components only, filter blog entries based on user's input.
 
+- [Table of contents](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/TableOfContent.astro): using Astro and MDX, generate a table of contents based on the headings. With nested lists.
+
 - [Open Library](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/BookBlock.astro) & [Google Maps](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/MapsBlock.astro) blocks: nicely displays API results in blog entries.
+
+- [Dark mode](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/icons/DarkMode.astro): toggle between light, dark, and system color schemes. Use local storage to persist the user's choice.
 
 - [Custom image service](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/imageService.ts): retrieved from [Erika's blog](https://erika.florist/), gain performance and display a placeholder during image loading.
 
@@ -20,9 +24,6 @@ At its heart, this project looks like any blog made with Astro, you can start by
 
 ```
 /
-├── public/
-│   └── fonts.ttf
-│
 ├── src/
 │   ├── components/
 │   │   └── Card.astro
@@ -51,8 +52,6 @@ At its heart, this project looks like any blog made with Astro, you can start by
 `content/` contains every blog entry (and their images), as `.mdx` files.
 
 `layouts/` and `components/` contains every web component as `.astro`` files.
-
-Any static assets, like images, can be placed in the `public/` directory.
 
 ## Commands
 
