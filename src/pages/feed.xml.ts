@@ -8,10 +8,10 @@ import { getCollection } from "astro:content"
 export async function GET(context: any) {
   // get all blogEntries
   const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-    // filter out draft articles if we're in production
-    if (process.env.PROD) return data.draft !== true
-    // else return every articles
-    return true
+    // filter out draft and hidden articles if we're in production
+    if (process.env.PROD) return data.draft !== true && data.hidden !== true
+    // else return every not hidden articles
+    return data.hidden !== true
   })
   return rss({
     title: "Goulven CLEC'H - Blog",

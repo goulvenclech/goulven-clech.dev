@@ -16,6 +16,7 @@ const blogCollection = defineCollection({
       image_source: z.string().optional(),
       icon: z.string().default("📝"),
       draft: z.boolean().default(false),
+      hidden: z.boolean().default(false),
     }),
 })
 const changelogCollection = defineCollection({

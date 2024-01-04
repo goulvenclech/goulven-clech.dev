@@ -10,10 +10,10 @@ import { formatDate } from "src/utils"
 
 // get all blogEntries
 const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-  // filter out draft articles if we're in production
-  if (process.env.PROD) return data.draft !== true
-  // else return every articles
-  return true
+  // filter out draft and hidden articles if we're in production
+  if (process.env.PROD) return data.draft !== true && data.hidden !== true
+  // else return every not hidden articles
+  return data.hidden !== true
 })
 
 // Sort blog entries by date, then format date to be displayed properly.
@@ -30,7 +30,7 @@ const blogEntries = blogEntriesRaw
 <>
   <input
     id="search"
-    class="placeholder:text-font-light/50 dark:placeholder:text-font-dark/50 bg-alt-light dark:bg-alt-dark mb-6 w-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+    class="mb-6 w-full rounded-lg bg-alt-light px-3 py-2 placeholder:text-font-light/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-alt-dark dark:placeholder:text-font-dark/50"
     placeholder="Search by keywords..."
     type="text"
   />
