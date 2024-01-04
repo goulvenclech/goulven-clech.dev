@@ -1,5 +1,4 @@
 ---
-import "@fontsource/work-sans"
 import BaseLayout from "./BaseLayout.astro"
 import Footer from "./Footer.astro"
 /**
@@ -18,7 +17,7 @@ const { title, description, img, icon } = Astro.props
 ---
 
 <BaseLayout title={title} description={description} img={img} icon={icon}>
-  <main class="mx-auto max-w-screen-sm px-4 md:px-0">
+  <main class="mx-auto max-w-prose px-4 md:px-0">
     <slot />
     <Footer />
   </main>

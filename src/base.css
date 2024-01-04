@@ -1,0 +1,162 @@
+/*
+  This file is used as base styling. Because I don't like using TailwindCSS plugins
+  (See -> https://tailwindcss.com/docs/adding-custom-styles#writing-plugins )
+  nor Astro's global style balise (See -> https://docs.astro.build/guides/styling#global-styles )
+
+  Unlike my friend Aurélien ( https://aureliendossantos.com/website ) I'm not interested in
+  diverse page styles nor conserving old page styles. I prefer a unique and unified style 
+  which will evolve with me, and will force me to change the shape of the old pages.
+  I think this is the best way to make the different components of a page recognizable 
+  (like a link or a title) and to ensure the continued evolution of accessibility.
+
+  This file contain extensive use of TailwindCSS's @apply directive.
+  (See -> https://tailwindcss.com/docs/functions-and-directives#apply )
+
+  Specific styling for each component is done in the component's file. Using TailwindCSS.
+  (Example -> src/components/icons/ToTop.astro )
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
+@layer base {
+  body {
+    @apply bg-body-light font-sans text-sm text-font-light sm:text-base dark:bg-body-dark dark:text-font-dark;
+  }
+
+  /*
+    TYPOGRAPHY
+  */
+  p {
+    @apply mb-6 text-sm leading-relaxed sm:text-base;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply mb-6 font-bold leading-none text-font-light dark:text-font-dark;
+  }
+
+  h1 {
+    @apply mt-12 text-lg sm:text-xl;
+  }
+
+  h2 {
+    @apply mt-12 text-base sm:text-lg;
+  }
+
+  h3 {
+    @apply text-sm sm:text-base;
+  }
+
+  /*
+    ENTRIES ONLY TYPOGRAPHY
+  */
+  /* If an entry start with a title (so it appear in the TOC) 
+    hide it for a better reading flow */
+  #entry h2:first-child {
+    @apply invisible m-0 h-0;
+  }
+
+  /*
+    BASE COMPONENTS
+  */
+  section {
+    @apply my-12 sm:my-18;
+  }
+
+  /*
+    LINKS
+  */
+  p a,
+  #toc a,
+  .changelog > a {
+    /* decoration has a fixed value, so it doesn't change with the font size */
+    @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
+  }
+
+  p a[href^="/tag-"]::before {
+    content: "\f02b";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.75rem;
+    padding-right: 0.2rem;
+    color: inherit;
+    display: inline-block;
+  }
+
+  p a[href^="http://"]::after, p a[href^="https://"]::after,
+  .changelog > a[href^="http://"]::after, .changelog > a[href^="https://"]::after
+  {
+    content: "\f360";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.65rem;
+    padding-left: 0.2rem;
+    color: inherit;
+    display: inline-block;
+  }
+
+  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after
+  {
+    content: "\f167";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after
+  {
+    content: "\f266";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://www.instagram.com/"]::after
+  {
+    content: "\f16d";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  p a[href^="https://github.com/"]::after
+  {
+    content: "";
+  }
+
+  p a[href^="mailto"]::after {
+    content: "\f1d8";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.65rem;
+    padding-left: 0.2rem;
+    color: inherit;
+    display: inline-block;
+  }
+
+  /*
+    LISTS
+  */
+  ol li {
+    @apply ml-4 list-none p-0;
+  }
+
+  /* 
+    Used "list-non" above to remove the default list style.
+    Then we add our own style using the ::marker pseudo-element.
+
+    counters() is used to support nested lists.
+    (See -> https://developer.mozilla.org/en-US/docs/Web/CSS/counters )
+    "\a0\a0" is used to add a double space between the marker and the list item.
+    (instead of the default dot and single space)
+  */
+  ol li::marker {
+    content: counters(list-item, ".") "\a0\a0";
+  }
+
+  @media screen(sm) {
+    ol li {
+      @apply ml-0;
+    }
+  }
+}

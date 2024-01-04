@@ -14,7 +14,10 @@ dependencies:
   '@astrojs/rss':
     specifier: ^4.0.1
     version: 4.0.1
-  '@fontsource/work-sans':
+  '@fontsource-variable/source-serif-4':
+    specifier: ^5.0.17
+    version: 5.0.17
+  '@fontsource/source-serif-4':
     specifier: ^5.0.16
     version: 5.0.16
   '@tailwindcss/typography':
@@ -734,8 +737,12 @@ packages:
       unist-util-visit-parents: 5.1.3
     dev: true
 
-  /@fontsource/work-sans@5.0.16:
-    resolution: {integrity: sha512-NSWgUQC7MIV4ujGTZ5qxHwEZ5ttOVtY3OhVa3ESj+rB+BiN5XVxEwkUEoJ4mnWTYB3ibwn45S/V7TgjDuG21kg==}
+  /@fontsource-variable/source-serif-4@5.0.17:
+    resolution: {integrity: sha512-22iJUqbcJIZW6rfrtd1tUEfFw2rk6VcUvwyEIx+kQ5sq0HBnssfTQYZ5eDayZTse5Y5gUssYSlaT1PhVY0GjDw==}
+    dev: false
+
+  /@fontsource/source-serif-4@5.0.16:
+    resolution: {integrity: sha512-PpwBrV5qK6ACN1bxsvKNYPvCdHuq4t5kTS5APYO7CclmKgI8G83kkxRlhYk6HYVZM9zDBOJdPjK48MvSsgydRg==}
     dev: false
 
   /@img/sharp-darwin-arm64@0.33.1:

@@ -1,9 +1,10 @@
 ---
 import { getCollection } from "astro:content"
-import Hero from "$components/Hero.astro"
-import FigImage from "$components/figures/FigImage.astro"
 import Layout from "$layouts/Layout.astro"
 import { formatDate } from "src/utils"
+
+import TableOfContent from "$components/TableOfContent.astro"
+import FigImage from "$components/figures/FigImage.astro"
 /**
  * Create a page for each blog entries, display frontmatter
  * informations & the content.
@@ -27,7 +28,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await entry.render()
+const { Content, headings } = await entry.render()
 ---
 
 <Layout
@@ -36,19 +37,29 @@ const { Content } = await entry.render()
   description={entry.data.abstract}
   img={entry.data.image.src}
 >
-  <Hero title={entry.data.title}>
+  <section>
+    <h1>{entry.data.title}</h1>
     <p>{entry.data.abstract}</p>
-  </Hero>
-  <FigImage
-    src={entry.data.image}
-    alt={entry.data.image_alt}
-    caption={entry.data.image_caption}
-    source={entry.data.image_source}
-  />
-  <div class="prose prose-sm prose-slate dark:prose-invert sm:prose-base">
+    <p>
+      {formatDate(entry.data.date)} -
+      <a href="/">Goulven CLEC'H</a>
+    </p>
+  </section>
+  {
+    entry.data.heading == "toc" ? (
+      <TableOfContent headings={headings} />
+    ) : entry.data.heading == "image" ? (
+      <FigImage
+        src={entry.data.image}
+        alt={entry.data.image_alt}
+        caption={entry.data.image_caption}
+        source={entry.data.image_source}
+      />
+    ) : null
+  }
+  <section id="entry">
     <Content />
-  </div>
-  <p class="mb-24 mt-6">- published {formatDate(entry.data.date)}</p>
+  </section>
 </Layout>
 <style is:global>
   .frame.is-terminal .header {

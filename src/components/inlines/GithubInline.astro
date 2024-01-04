@@ -34,18 +34,12 @@ const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userD
   userName ? (
     <a
       href={userUrl}
-      class="not-prose dark:text-accent-dark text-accent-light whitespace-nowrap font-bold hover:text-primary dark:hover:text-primary"
+      class="whitespace-nowrap text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary"
     >
-      <Image
-        src={avatarUrl}
-        width={24}
-        height={24}
-        alt="..."
-        class="not-prose mr-1 inline rounded-full"
-      />
+      <Image src={avatarUrl} width={24} height={24} alt="..." class="mr-1 inline rounded-full" />
       {userName}
     </a>
   ) : (
-    <span class="not-prose text-accent-light font-bold">Error</span>
+    <span class="text-font-light">Error</span>
   )
 }

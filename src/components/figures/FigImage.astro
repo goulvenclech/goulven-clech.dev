@@ -1,6 +1,5 @@
 ---
 import { Picture as AstroPicture, getConfiguredImageService } from "astro:assets"
-import LinkInline from "$components/inlines/LinkInline.astro"
 import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
  * ⚠️ Warning for beginners ⚠️
@@ -23,7 +22,7 @@ const placeholderURL = await imageService.generatePlaceholder(
 const { caption, source, ...props } = Astro.props as any
 ---
 
-<figure class="not-prose my-12">
+<figure class="my-6">
   <AstroPicture
     {...props}
     width={Astro.props.src.width / 2}
@@ -35,6 +34,6 @@ const { caption, source, ...props } = Astro.props as any
   />
   <figcaption class="mx-4 my-2 text-center text-xs italic sm:text-sm">
     {caption}
-    {source && <LinkInline to={source}> Source</LinkInline>}
+    {source && <a href={source}> Source</a>}
   </figcaption>
 </figure>

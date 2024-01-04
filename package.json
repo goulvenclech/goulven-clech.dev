@@ -2,7 +2,7 @@
   "name": "goulven-clech.dev",
   "description": "My personnal blog, made with Astro, TypeScript & Tailwind CSS.",
   "private": true,
-  "version": "1.1.2",
+  "version": "1.2.0-alpha-3",
   "repository": {
     "type": "git",
     "url": "https://github.com/GoulvenC/goulven-clech.dev.git"
@@ -24,7 +24,8 @@
     "@11ty/eleventy-fetch": "^4.0.0",
     "@astrojs/check": "^0.3.4",
     "@astrojs/rss": "^4.0.1",
-    "@fontsource/work-sans": "^5.0.16",
+    "@fontsource-variable/source-serif-4": "^5.0.17",
+    "@fontsource/source-serif-4": "^5.0.16",
     "@tailwindcss/typography": "^0.5.10",
     "@vercel/analytics": "^1.1.1",
     "prettier-plugin-astro": "^0.12.3",

@@ -9,12 +9,14 @@ const blogCollection = defineCollection({
       date: z.date(),
       tags: z.array(z.string()),
       abstract: z.string(),
+      heading: z.enum(["none", "image", "toc"]).default("none"),
       image: image(),
       image_alt: z.string(),
-      image_caption: z.string(),
+      image_caption: z.string().default(""),
       image_source: z.string().optional(),
       icon: z.string().default("📝"),
       draft: z.boolean().default(false),
+      hidden: z.boolean().default(false),
     }),
 })
 const changelogCollection = defineCollection({

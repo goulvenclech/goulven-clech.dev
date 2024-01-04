@@ -33,7 +33,7 @@ const book = result[`ISBN:${isbn}`]
 ---
 
 <Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
-  <h3 class="line-clamp-2 text-ellipsis pb-1 font-bold leading-8 sm:line-clamp-1">
+  <h3 id={book.details.title} class="mb-1 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
     {book.details.title}
   </h3>
   <ul class="flex flex-col gap-2">

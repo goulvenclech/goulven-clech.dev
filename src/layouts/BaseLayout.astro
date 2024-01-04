@@ -1,4 +1,9 @@
 ---
+// Fonts imports
+import "@fontsource/source-serif-4"
+import "@fontsource-variable/source-serif-4"
+// Global CSS imports
+import "../base.css"
 /**
  * Base of our html. Mainly html headers and dark mode inline script.
  * @param {string} title - What is this page about?
@@ -41,9 +46,7 @@ const {
     <script src="/_vercel/insights/script.js" defer></script>
     <title>{title} | Goulven Clec'h</title>
   </head>
-  <body
-    class="bg-body-light font-sans text-sm text-base-light dark:bg-body-dark dark:text-base-dark sm:text-base"
-  >
+  <body>
     <!-- Dark Mode Script -->
     <script is:inline>
       /**

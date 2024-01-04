@@ -19,7 +19,9 @@ const { id, name, brand, img, price, rating, ratings_total } = Astro.props
 ---
 
 <Block image={img} to={`https://www.amazon.fr/gp/product/${id}/`}>
-  <h3 class="pb-1 font-bold text-ellipsis line-clamp-2 sm:line-clamp-1 leading-8">{name}</h3>
+  <h3 id={name} class="mb-1 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
+    {name}
+  </h3>
   <ul class="flex flex-col gap-2">
     <li>
       <i class="fa-solid fa-building pr-2"></i>
@@ -30,7 +32,8 @@ const { id, name, brand, img, price, rating, ratings_total } = Astro.props
       {price}
     </li>
     <li>
-      {[...Array(Math.round(rating))].map(() => <i class="fas fa-star" />)} ({ratings_total} reviews)
+      {[...Array(Math.round(rating))].map(() => <i class="fas fa-star" />)} ({ratings_total}
+       reviews)
     </li>
   </ul>
 </Block>
