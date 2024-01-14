@@ -39,23 +39,23 @@ const { Content, headings } = await entry.render()
 >
   <section>
     <h1>{entry.data.title}</h1>
-    <p>{entry.data.abstract}</p>
+    {entry.data.display_abstract && <p>{entry.data.abstract}</p>}
     <p>
       {formatDate(entry.data.date)} -
       <a href="/">Goulven CLEC'H</a>
     </p>
   </section>
+
+  {entry.data.display_toc && headings.length > 0 && <TableOfContent headings={headings} />}
   {
-    entry.data.heading == "toc" ? (
-      <TableOfContent headings={headings} />
-    ) : entry.data.heading == "image" ? (
+    entry.data.display_cover && (
       <FigImage
         src={entry.data.image}
         alt={entry.data.image_alt}
         caption={entry.data.image_caption}
         source={entry.data.image_source}
       />
-    ) : null
+    )
   }
   <section id="entry">
     <Content />
