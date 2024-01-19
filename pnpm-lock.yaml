@@ -49,6 +49,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.11.5
     version: 20.11.5
+  '@types/semver':
+    specifier: ^7.5.6
+    version: 7.5.6
   astro:
     specifier: ^4.2.1
     version: 4.2.1(@types/node@20.11.5)(typescript@5.3.3)
@@ -58,6 +61,9 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.11
     version: 0.5.11(prettier-plugin-astro@0.12.3)(prettier@3.2.4)
+  semver:
+    specifier: ^7.5.4
+    version: 7.5.4
   tailwindcss:
     specifier: ^3.4.1
     version: 3.4.1
@@ -1239,6 +1245,10 @@ packages:
 
   /@types/parse5@6.0.3:
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
+    dev: true
+
+  /@types/semver@7.5.6:
+    resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
     dev: true
 
   /@types/unist@2.0.10:

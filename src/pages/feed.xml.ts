@@ -1,17 +1,15 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
+import { isEntryPublished } from "src/utils"
 /**
  * Generate an RSS feed of all published blog posts.
  * @param context Astro context object
  * @returns an XML file containing the RSS feed
  */
 export async function GET(context: any) {
-  // get all blogEntries
+  // get all blogEntries published
   const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-    // filter out draft and hidden articles if we're in production
-    if (process.env.PROD) return data.draft !== true && data.hidden !== true
-    // else return every not hidden articles
-    return data.hidden !== true
+    return isEntryPublished(data.published, true)
   })
   return rss({
     title: "Goulven CLEC'H - Blog",
