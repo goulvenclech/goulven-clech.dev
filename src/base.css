@@ -59,6 +59,11 @@
     @apply invisible m-0 h-0;
   }
 
+  #entry ul,
+  #entry ol {
+    @apply list-inside;
+  }
+
   #entry ul {
     @apply mb-6 list-disc;
   }
@@ -68,11 +73,19 @@
   }
 
   #entry li {
-    @apply mb-3;
+    @apply mb-3 ml-0;
+  }
+
+  @media screen(sm) {
+    #entry ul,
+    #entry ol {
+      @apply list-outside;
+    }
   }
 
   #entry li code,
   #entry p code {
+    overflow-wrap: break-word;
     @apply rounded bg-alt-light p-1 font-mono text-sm dark:bg-alt-dark;
   }
 
