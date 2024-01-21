@@ -16,26 +16,26 @@ export function formatDate(date: Date): string {
  * @return {boolean} - Is this entry published?
  */
 export function isEntryPublished(published: string, strict: boolean = false): boolean {
-  // In all cases, "hidden" are parsed, but never shown.
-  if (import.meta.env.DEV) {
-    // In dev mode, we don't want to show "never" entries.
-    if (strict) {
-      return published !== "never" && published !== "hidden"
-      // But we want to parse them (they will me available by URL)
-    } else {
-      return true
-    }
+  // In "showing" mode, we filter out "never", "hidden", "draft" and versions higher than the current version.
+  if (strict) {
+    return (
+      published !== "never" &&
+      published !== "draft" &&
+      published !== "hidden" &&
+      semver.lte(published, import.meta.env.npm_package_version)
+    )
+    // But in "parsing" mode, based on the environment
   } else {
-    // In prod mode, we don't want to show "never" or "draft" entries.
-    if (strict) {
-      return published !== "never" && published !== "draft" && published !== "hidden"
+    if (import.meta.env.DEV) {
+      // In dev mode, we want to parse everything. So we can access it by URL.
+      return true
     } else {
-      // And we don't want to parse them (they won't be available by URL)
-      // Also, filters out entries with a version higher than the current version.
+      // In prod mode, we don't want to parse entries with "never", "draft", and versions higher than the current version.
+      // Hidden entries are parsed, so they can be accessed by URL.
       return (
         published !== "never" &&
         published !== "draft" &&
-        semver.gt(published, import.meta.env.npm_package_version)
+        semver.lte(published, import.meta.env.npm_package_version)
       )
     }
   }
