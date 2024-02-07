@@ -16,7 +16,7 @@ const { article, index } = Astro.props
 
 <a
   href={`/${article.slug}`}
-  class="hover:bg-alt-light dark:hover:bg-alt-dark flex flex-col overflow-hidden rounded-lg sm:flex-row"
+  class="flex flex-col overflow-hidden rounded-lg hover:bg-alt-light dark:hover:bg-alt-dark sm:flex-row"
 >
   <Image
     src={article.data.image}
@@ -29,7 +29,7 @@ const { article, index } = Astro.props
     ]}
   />
   <article class="mx-6 my-5 min-w-0">
-    <h3>
+    <h3 class="mt-0">
       {article.data.title}
     </h3>
     <div class="overflow-hidden text-ellipsis whitespace-nowrap">
