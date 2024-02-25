@@ -33,7 +33,7 @@ const { Content, headings } = await entry.render()
   title={entry.data.title}
   icon={entry.data.icon}
   description={entry.data.abstract}
-  img={entry.data.image.src}
+  img={entry.data.image ? entry.data.image.src : undefined}
 >
   <section>
     <h1>{entry.data.title}</h1>
