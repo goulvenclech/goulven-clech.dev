@@ -2,19 +2,31 @@ import { defineConfig } from "astro/config"
 import { inject } from "@vercel/analytics"
 import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
-import { astroExpressiveCode } from "astro-expressive-code"
+import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
+import fs from "node:fs"
 
+// Import code themes from JSONC files to be used by astro-expressive-code
 //  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
+const darkThemeJsoncString = fs.readFileSync(
+  new URL(`src/code-dark-theme.jsonc`, import.meta.url),
+  "utf-8"
+)
+const lightThemeJsoncString = fs.readFileSync(
+  new URL(`src/code-light-theme.jsonc`, import.meta.url),
+  "utf-8"
+)
+const myDarkTheme = ExpressiveCodeTheme.fromJSONString(darkThemeJsoncString)
+const myLightTheme = ExpressiveCodeTheme.fromJSONString(lightThemeJsoncString)
+
 const astroExpressiveCodeOptions = {
-  themes: ["github-dark"],
+  themes: [myDarkTheme, myLightTheme],
   useDarkModeMediaQuery: false,
   styleOverrides: {
     frames: {
-      terminalBackground: "#2E303E",
+      frameBoxShadowCssValue: "0",
     },
     borderRadius: "0.5rem",
-    codeBackground: "#2E303E",
   },
 }
 

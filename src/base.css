@@ -83,7 +83,7 @@
   #entry li code,
   #entry p code {
     overflow-wrap: break-word;
-    @apply rounded bg-alt-light p-1 font-mono text-sm dark:bg-alt-dark;
+    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[2px] font-mono text-sm dark:border-[#45485d] dark:bg-alt-dark;
   }
 
   /*
