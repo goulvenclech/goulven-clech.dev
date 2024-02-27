@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content"
-import { formatDate } from "src/utils"
+import { formatDate, isEntryPublished } from "src/utils"
+import Card from "./Card.astro"
 
 /**
  * A component that show all blog entries and where users can search by typing keywords.
@@ -10,10 +11,7 @@ import { formatDate } from "src/utils"
 
 // get all blogEntries
 const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-  // filter out draft and hidden articles if we're in production
-  if (process.env.PROD) return data.draft !== true && data.hidden !== true
-  // else return every not hidden articles
-  return data.hidden !== true
+  return isEntryPublished(data.published, true)
 })
 
 // Sort blog entries by date, then format date to be displayed properly.
@@ -35,12 +33,14 @@ const blogEntries = blogEntriesRaw
     type="text"
   />
   <!-- By default, output display all blog entries -->
-  <div id="output" class="flex flex-col gap-6"></div>
+  <div id="output" class="flex flex-col gap-6">
+    {blogEntries.map((result, index) => <Card article={result} index={index} />)}
+  </div>
 </>
 <script>
   /* Can't import & use "define:vars" cause script inline gnagna
     see here -> https://docs.astro.build/en/reference/directives-reference/#definevars */
-  import { Card } from "../components/Card.js"
+  import { Card } from "./Card.js"
   /**
    * Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
    * This SearchCard will be used to display search's results, see ->
@@ -48,7 +48,7 @@ const blogEntries = blogEntriesRaw
    */
   customElements.define("search-card", Card)
 </script>
-<script define:vars={{ blogEntries }}>
+<script is:inline define:vars={{ blogEntries }}>
   /**
    * Okay, here we go 🧙
    */
@@ -83,15 +83,16 @@ const blogEntries = blogEntriesRaw
       output.insertAdjacentHTML(
         "beforeend",
         `<search-card title="${result.data.title}" slug="${result.slug}" 
-        date="${result.data.date}" tags="${result.data.tags.join(", ")}" 
-        abstract="${result.data.abstract}" index=${index}
-        image="${result.data.image.src}" 
+        date="${result.data.date}" index=${index}
+        tags="${result.data.tags.length > 0 ? result.data.tags.join(", ") : "No tags"}" 
+        abstract="${result.data.abstract}" 
+        image="${result.data.image ? result.data.image.src : ""}"
         imageAlt="${result.data.image_alt}"></search-card>`
       )
     })
   }
-  // On the first page load, initialize the output with an empty search to
-  // display every blog entries by default.
+  // On the first page load, remove the SSR content and replace it with an empty search.
+  output.innerHTML = ""
   applyInput("")
   // add an event listener on input, to call applyInput/2 at each search
   input.addEventListener("input", (event) => {

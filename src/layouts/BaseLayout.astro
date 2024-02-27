@@ -27,7 +27,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -42,8 +42,9 @@ const {
       rel="icon"
       href=`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${icon}</text></svg>`
     />
-    <script src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer></script>
-    <script src="/_vercel/insights/script.js" defer></script>
+    <script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
+    ></script>
+    <script is:inline src="/_vercel/insights/script.js" defer></script>
     <title>{title} | Goulven Clec'h</title>
   </head>
   <body>
@@ -60,21 +61,27 @@ const {
       const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
       // If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
-      if (theme === "dark" || (theme === "system" && isSystemDark))
+      if (theme === "dark" || (theme === "system" && isSystemDark)) {
         document.documentElement.classList.add("dark")
+        document.documentElement.setAttribute("data-theme", "dark")
+      }
       // If local theme is "light" or "system" and system is light -> remove dark mode.
-      if (theme === "light" || (theme === "system" && !isSystemDark))
+      if (theme === "light" || (theme === "system" && !isSystemDark)) {
         document.documentElement.classList.remove("dark")
+        document.documentElement.setAttribute("data-theme", "light")
+      }
       // If local theme is not set, look at the system preference and initialize the local storage.
       if (!theme) {
         if (isSystemDark == false) {
           localStorage.setItem("theme", "light")
           document.documentElement.classList.remove("dark")
+          document.documentElement.setAttribute("data-theme", "light")
         } else {
           // By default, if local theme is not set and system is dark or not set
           // we are going dark 🥷🥷🥷
           localStorage.setItem("theme", "dark")
           document.documentElement.classList.add("dark")
+          document.documentElement.setAttribute("data-theme", "dark")
         }
       }
     </script>

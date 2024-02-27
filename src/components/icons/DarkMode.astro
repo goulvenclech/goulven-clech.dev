@@ -40,26 +40,31 @@
         localStorage.theme = "light"
         if (buttons) changeIcon("light", buttons)
         document.documentElement.classList.remove("dark")
+        document.documentElement.setAttribute("data-theme", "light")
         break
       case "light":
         localStorage.theme = "dark"
         if (buttons) changeIcon("dark", buttons)
         document.documentElement.classList.add("dark")
+        document.documentElement.setAttribute("data-theme", "dark")
         break
       case "dark":
         localStorage.theme = "system"
         if (buttons) changeIcon("system", buttons)
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
           document.documentElement.classList.add("dark")
+          document.documentElement.setAttribute("data-theme", "dark")
         } else {
           document.documentElement.classList.remove("dark")
+          document.documentElement.setAttribute("data-theme", "light")
         }
         break
-      // Should never happen, but just in case fallback to dark
+      // Should never happen, but just in case fallback as dark
       default:
         localStorage.theme = "light"
         if (buttons) changeIcon("light", buttons)
         document.documentElement.classList.remove("dark")
+        document.documentElement.setAttribute("data-theme", "light")
         break
     }
   }

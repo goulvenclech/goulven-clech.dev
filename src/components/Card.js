@@ -1,6 +1,10 @@
 /**
  * A JS vanilla component used to present a blog entry as a card in search results.
- * Duplication of Card.astro, see explanation -> src/pages/search.astro
+ * Mainly use in this inline script -> src/pages/search.astro
+ * ⚠️ Duplication of src/components/Card.astro ⚠️
+ * Sadly, Astro can't SSR web components yet. So this components is used in the
+ * CSR search.astro script. And the Card.astro is used for SSR, for example to render
+ * the default results (before the script is loaded or if JS is disabled).
  * @param {string} slug - What's the blog entry slug?
  * @param {string} title - What's the blog entry title?
  * @param {string} date - What's the blog entry publish date?
@@ -25,16 +29,26 @@ export class Card extends HTMLElement {
 
   connectedCallback() {
     const template = document.createElement("template")
+    console.log(this.image)
     // The good old way of templating 👴
     template.innerHTML = `
       <a href="/${
         this.slug
       }" class="flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-alt-light dark:hover:bg-alt-dark">
-        <img class="h-[150px] w-auto shrink-0 sm:h-auto sm:max-h-48 sm:w-[150px] object-cover ${this.getOrder(
-          this.index
-        )}" src="${this.image}" alt={} />
+      ${
+        this.image !== ""
+          ? `<img
+            class="${this.getOrder(this.index)} h-[150px] w-auto shrink-0 object-cover sm:h-auto
+          sm:max-h-48
+        sm:w-[150px]"
+            src="${this.image}"
+            alt="${this.image_alt}"
+          />
+        `
+          : ``
+      }
         <article class="mx-6 my-5 min-w-0">
-          <h3 class="mb-3">
+          <h3 class="mb-3 mt-0">
             ${this.title}
           </h3>
           <div class="overflow-hidden text-ellipsis whitespace-nowrap">

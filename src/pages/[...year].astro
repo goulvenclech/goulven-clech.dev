@@ -2,17 +2,15 @@
 import { type CollectionEntry, getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
+import { isEntryPublished } from "src/utils"
 /**
  * Create a page for each year where we published, display the
  * related blog entries.
  */
 export async function getStaticPaths() {
-  /* get all blog entries */
+  /* get all blog entries published */
   const blogEntries = await getCollection("blog", ({ data }) => {
-    // filter out draft articles if we're in production
-    if (process.env.PROD) return data.draft !== true
-    // else return every articles
-    return true
+    return isEntryPublished(data.published, true)
   })
   /* get all years */
   const allYears: Set<number> = new Set()

@@ -22,7 +22,7 @@
 /* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
 @layer base {
   body {
-    @apply bg-body-light font-sans text-sm text-font-light sm:text-base dark:bg-body-dark dark:text-font-dark;
+    @apply bg-body-light font-sans text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
   }
 
   /*
@@ -35,19 +35,15 @@
   h1,
   h2,
   h3 {
-    @apply mb-6 font-bold leading-none text-font-light dark:text-font-dark;
+    @apply mb-6 mt-12 font-bold leading-none text-font-light dark:text-font-dark;
   }
 
   h1 {
-    @apply mt-12 text-lg sm:text-xl;
+    @apply text-lg sm:text-xl;
   }
 
   h2 {
-    @apply mt-12 text-base sm:text-lg;
-  }
-
-  h3 {
-    @apply text-sm sm:text-base;
+    @apply text-base sm:text-lg;
   }
 
   /*
@@ -57,6 +53,37 @@
     hide it for a better reading flow */
   #entry h2:first-child {
     @apply invisible m-0 h-0;
+  }
+
+  #entry > ul,
+  #entry > ol {
+    @apply list-inside;
+  }
+
+  #entry > ul {
+    @apply mb-6 list-disc;
+  }
+
+  #entry > ol {
+    @apply mb-6;
+  }
+
+  #entry > ol > li,
+  #entry > ul > li {
+    @apply mb-3 ml-0;
+  }
+
+  @media screen(sm) {
+    #entry > ul,
+    #entry > ol {
+      @apply list-outside;
+    }
+  }
+
+  #entry li code,
+  #entry p code {
+    overflow-wrap: break-word;
+    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[2px] font-mono text-sm dark:border-[#45485d] dark:bg-alt-dark;
   }
 
   /*

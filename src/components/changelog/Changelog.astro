@@ -3,6 +3,7 @@ import { getCollection } from "astro:content"
 import ChangelogCard from "../changelog/ChangelogCard.astro"
 import FigImage from "../figures/FigImage.astro"
 import oldWebsiteImage from "src/content/changelog/2023/old_website.png"
+import { isEntryPublished } from "src/utils"
 
 /**
  * This file is used to generate the changelog section in $pages/about.astro
@@ -11,12 +12,9 @@ import oldWebsiteImage from "src/content/changelog/2023/old_website.png"
  * It's a bit hacky, but it works.
  */
 
-// get all blogEntries
+// get all blogEntries that are published
 const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-  // filter out draft and hidden articles if we're in production
-  if (process.env.PROD) return data.draft !== true && data.hidden !== true
-  // else return every not hidden articles
-  return data.hidden !== true
+  return isEntryPublished(data.published, true)
 })
 
 // get all others changelog entries
