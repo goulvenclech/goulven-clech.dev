@@ -25,31 +25,25 @@ At its heart, this project looks like any blog made with Astro, you can start by
 ```
 /
 ├── src/
+│   ├── content/ -> Sub repository
+│   ├── assets/
+│   │   └── base.css
 │   ├── components/
 │   │   └── Card.astro
-│   │
-│   ├── content/
-│   │   ├── blog/
-│   │   │   └── year/
-│   │   │       └── an entries_slug/
-│   │   │           ├── index.mdx
-│   │   │           └── static.img
-│   │   │
-│   │   └── orgs/
-│   │       └── organization.mdx/
-│   │
 │   ├── layouts/
 │   │   └── Layout.astro
-│   │
-│   └── pages/
-│       └── index.astro
-│
+│   ├── pages/
+│   │   └── index.astro
+│   ├── env.d.ts
+│   └── [...utils].ts
+├── public/
+│   └── Iosevka-Regular.woff2
+├── [... config files]
+├── README.md
 └── package.json
 ```
 
 `pages/` contains every page of this blog as `.astro` files.
-
-`content/` contains every blog entry (and their images), as `.mdx` files.
 
 `layouts/` and `components/` contains every web component as `.astro`` files.
 
