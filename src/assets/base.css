@@ -21,19 +21,37 @@
 
 /**
  * FONTS
+  * Source Serif 4 for the body text (p, h1, h2, h3, etc.)
+  * Iosevka for the mono text (code, pre, etc.)
  */
 @font-face {
   font-family: "Source Serif 4";
-  src: url("/SourceSerif4Variable-Roman.otf") format("opentype");
-  font-weight: 200 900;
+  src: url("/SourceSerif4-Regular.otf.woff2") format("woff2");
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Source Serif 4";
-  src: url("/SourceSerif4Variable-Italic.otf") format("opentype");
-  font-weight: 200 900;
+  src: url("/SourceSerif4-It.otf.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/SourceSerif4-Semibold.otf.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/SourceSerif4-SemiboldIt.otf.woff2") format("woff2");
+  font-weight: bold;
   font-style: italic;
   font-display: swap;
 }
@@ -147,7 +165,7 @@
   }
 
   #entry abbr,
-  p #entry strong {
+  #entry strong {
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.05em;
     margin-right: -0.05em;
