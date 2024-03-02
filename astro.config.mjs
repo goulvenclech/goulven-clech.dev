@@ -9,11 +9,11 @@ import fs from "node:fs"
 //  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const darkThemeJsoncString = fs.readFileSync(
-  new URL(`src/code-dark-theme.jsonc`, import.meta.url),
+  new URL(`src/assets/code-dark-theme.jsonc`, import.meta.url),
   "utf-8"
 )
 const lightThemeJsoncString = fs.readFileSync(
-  new URL(`src/code-light-theme.jsonc`, import.meta.url),
+  new URL(`src/assets/code-light-theme.jsonc`, import.meta.url),
   "utf-8"
 )
 const myDarkTheme = ExpressiveCodeTheme.fromJSONString(darkThemeJsoncString)
@@ -26,6 +26,9 @@ const astroExpressiveCodeOptions = {
     frames: {
       frameBoxShadowCssValue: "0",
     },
+    codeFontFamily: "Iosevka",
+    uiFontFamily: "Source Serif 4",
+    codeFontSize: "14px",
     borderRadius: "0.5rem",
   },
 }
