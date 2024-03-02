@@ -77,10 +77,12 @@
 @layer base {
   body {
     @apply bg-body-light font-sans text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
-    /* Give me those sweet ligatures */
+    /* This line activates standard ligatures (liga) and contextual ligatures (clig). The 1 after each feature tag enables the feature. */
     font-feature-settings:
       "liga" 1,
       "clig" 1;
+    /* This line activates proportional old style numbers. */
+    font-feature-settings: "onum";
   }
 
   /*
@@ -141,11 +143,11 @@
   #entry li code,
   #entry p code {
     overflow-wrap: break-word;
-    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[2px] font-mono text-xs dark:border-[#45485d] dark:bg-alt-dark sm:text-sm;
+    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[0.125rem] font-mono text-xs dark:border-[#45485d] dark:bg-alt-dark sm:text-sm;
   }
 
   #entry abbr,
-  #entry strong {
+  p #entry strong {
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.05em;
     margin-right: -0.05em;
@@ -230,19 +232,29 @@
   /*
     LISTS
   */
+
   ol li {
-    @apply ml-4 list-none p-0;
+    @apply ml-4 list-decimal p-0;
   }
 
   /* 
-    Used "list-non" above to remove the default list style.
+    Use ol li::before { content: none;} to remove the default marker.
     Then we add our own style using the ::marker pseudo-element.
 
+    NESTED LISTS 
     counters() is used to support nested lists.
     (See -> https://developer.mozilla.org/en-US/docs/Web/CSS/counters )
     "\a0\a0" is used to add a double space between the marker and the list item.
     (instead of the default dot and single space)
+
+    SAFARI FALLBACK
+    ::marker is not supported in Safari so I can't use `list-none` or nothing will be displayed.
+    That's why li::before { content: none;}, `list-decimal` serve as a fallback for Safari.
   */
+  ol li::before {
+    content: none;
+  }
+
   ol li::marker {
     content: counters(list-item, ".") "\a0\a0";
   }
