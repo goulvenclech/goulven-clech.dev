@@ -19,10 +19,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
+/**
+ * FONTS
+ */
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/SourceSerif4Variable-Roman.otf") format("opentype");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/SourceSerif4Variable-Italic.otf") format("opentype");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka-Italic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka-BoldItalic.woff2") format("woff2");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+/**
+  * BASE LAYER
+  * See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
+  */
 @layer base {
   body {
     @apply bg-body-light font-sans text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
+    /* Give me those sweet ligatures */
+    font-feature-settings:
+      "liga" 1,
+      "clig" 1;
   }
 
   /*
@@ -83,7 +141,15 @@
   #entry li code,
   #entry p code {
     overflow-wrap: break-word;
-    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[2px] font-mono text-sm dark:border-[#45485d] dark:bg-alt-dark;
+    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[2px] font-mono text-xs dark:border-[#45485d] dark:bg-alt-dark sm:text-sm;
+  }
+
+  #entry abbr,
+  #entry strong {
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.05em;
+    margin-right: -0.05em;
+    @apply font-normal not-italic;
   }
 
   /*

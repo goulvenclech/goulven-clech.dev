@@ -29,7 +29,6 @@ export class Card extends HTMLElement {
 
   connectedCallback() {
     const template = document.createElement("template")
-    console.log(this.image)
     // The good old way of templating 👴
     template.innerHTML = `
       <a href="/${

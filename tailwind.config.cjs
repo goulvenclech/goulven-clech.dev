@@ -56,7 +56,9 @@ module.exports = {
       fontFamily: {
         // I like Source Serif 4, it's a serif font but not too serious
         // Also, it's has small caps, witch is nice.
-        sans: ['"Source Serif 4 Variable"', '"Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        sans: ['"Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        // Iosevka is a modern monospace font, a straight up banger
+        mono: ["Iosevka", ...defaultTheme.fontFamily.mono],
       },
       spacing: {
         18: "4.5rem",
