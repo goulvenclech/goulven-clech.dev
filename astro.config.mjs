@@ -27,7 +27,7 @@ const astroExpressiveCodeOptions = {
       frameBoxShadowCssValue: "0",
     },
     codeFontFamily: "Iosevka",
-    uiFontFamily: "Source Serif 4",
+    uiFontFamily: "Iosevka",
     codeFontSize: "14px",
     borderRadius: "0.5rem",
   },

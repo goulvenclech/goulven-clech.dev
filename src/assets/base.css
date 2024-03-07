@@ -164,12 +164,12 @@
     @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[0.125rem] font-mono text-xs dark:border-[#45485d] dark:bg-alt-dark sm:text-sm;
   }
 
-  #entry abbr,
-  #entry strong {
+  abbr,
+  strong {
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.05em;
     margin-right: -0.05em;
-    @apply font-normal not-italic;
+    @apply font-normal not-italic no-underline;
   }
 
   /*
@@ -235,6 +235,7 @@
   p a[href^="https://github.com/"]::after
   {
     content: "";
+    padding-left: 0;
   }
 
   p a[href^="mailto"]::after {
