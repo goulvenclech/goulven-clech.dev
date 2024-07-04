@@ -21,60 +21,69 @@
 
 /**
  * FONTS
-  * Source Serif 4 for the body text (p, h1, h2, h3, etc.)
+  * Cormorant for the body text (p, h1, h2, h3, etc.)
   * Iosevka for the mono text (code, pre, etc.)
+  * Abby for personal annotations (goofy incoming)
  */
 @font-face {
-  font-family: "Source Serif 4";
-  src: url("/SourceSerif4-Regular.otf.woff2") format("woff2");
+  font-family: "Cormorant";
+  src: url("/CormorantSC/CormorantGaramond-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Source Serif 4";
-  src: url("/SourceSerif4-It.otf.woff2") format("woff2");
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Source Serif 4";
-  src: url("/SourceSerif4-Semibold.otf.woff2") format("woff2");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Source Serif 4";
-  src: url("/SourceSerif4-SemiboldIt.otf.woff2") format("woff2");
-  font-weight: bold;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka-Italic.woff2") format("woff2");
+  font-family: "Cormorant";
+  src: url("/CormorantSC/CormorantGaramond-Italic.woff2") format("woff2");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
+  font-family: "Cormorant";
+  src: url("/CormorantSC/CormorantGaramond-SemiBold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant";
+  src: url("/CormorantSC/CormorantGaramond-SemiBoldItalic.woff2") format("woff2");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Abby";
+  src: url("/Abby/AbbyYOFF.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Iosevka";
-  src: url("/Iosevka-Bold.woff2") format("woff2");
+  src: url("/Iosevka/Iosevka-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka/Iosevka-Italic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Iosevka";
+  src: url("/Iosevka/Iosevka-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -82,7 +91,7 @@
 
 @font-face {
   font-family: "Iosevka";
-  src: url("/Iosevka-BoldItalic.woff2") format("woff2");
+  src: url("/Iosevka/Iosevka-BoldItalic.woff2") format("woff2");
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -94,13 +103,8 @@
   */
 @layer base {
   body {
-    @apply bg-body-light font-sans text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
-    /* This line activates standard ligatures (liga) and contextual ligatures (clig). The 1 after each feature tag enables the feature. */
-    font-feature-settings:
-      "liga" 1,
-      "clig" 1;
-    /* This line activates proportional old style numbers. */
-    font-feature-settings: "onum";
+    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
+    font-feature-settings: "liga", "clig", "onum";
   }
 
   /*
@@ -118,10 +122,12 @@
 
   h1 {
     @apply text-lg sm:text-xl;
+    font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
     @apply text-base sm:text-lg;
+    font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   /*
@@ -129,6 +135,12 @@
   */
   /* If an entry start with a title (so it appear in the TOC) 
     hide it for a better reading flow */
+
+  #entry > p:first-of-type::first-letter {
+    /* Drop cap */
+    @apply float-left mr-1 mt-1 text-[calc(20px*2+16.25px*3)];
+  }
+
   #entry h2:first-child {
     @apply invisible m-0 h-0;
   }
@@ -161,15 +173,47 @@
   #entry li code,
   #entry p code {
     overflow-wrap: break-word;
-    @apply rounded border-[1.5px] border-[#f6b9ab] bg-alt-light px-1 py-[0.125rem] font-mono text-xs dark:border-[#45485d] dark:bg-alt-dark sm:text-sm;
+    @apply text-xxs rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono dark:border-alt-dark sm:text-xs;
   }
 
   abbr,
   strong {
-    font-feature-settings: "smcp", "c2sc";
+    font-feature-settings: "c2sc";
     letter-spacing: 0.05em;
     margin-right: -0.05em;
-    @apply font-normal not-italic no-underline;
+    @apply font-normal uppercase not-italic no-underline;
+  }
+
+  u {
+    @apply underline decoration-primary decoration-[1.5px] underline-offset-2;
+  }
+
+  s {
+    @apply line-through decoration-primary decoration-[1.5px] underline-offset-4;
+  }
+
+  #entry annotation,
+  .changelog annotation {
+    @apply mx-3 mt-3 block font-goofy text-xs text-primary no-underline;
+    transform: rotate(-1deg);
+  }
+
+  @media screen(sm) {
+    #entry annotation,
+    .changelog annotation {
+      @apply mx-9;
+    }
+  }
+
+  @media screen(xl) {
+    #entry annotation {
+      @apply float-right clear-right -mr-[20rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
+    }
+
+    /* TODO: fix the annotation position in lists */
+    .changelog annotation {
+      @apply float-right clear-right -mr-[15rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
+    }
   }
 
   /*
@@ -184,11 +228,14 @@
   */
   p a,
   #toc a,
+  figcaption a,
   .changelog > a {
     /* decoration has a fixed value, so it doesn't change with the font size */
     @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
   }
 
+  figcaption a[href^="/tag-"]::before,
+  .changelog > a[href^="/tag-"]::before,
   p a[href^="/tag-"]::before {
     content: "\f02b";
     font-family: "Font Awesome 6 Free";
@@ -200,6 +247,7 @@
   }
 
   p a[href^="http://"]::after, p a[href^="https://"]::after,
+  figcaption a[href^="http://"]::after, figcaption a[href^="https://"]::after,
   .changelog > a[href^="http://"]::after, .changelog > a[href^="https://"]::after
   {
     content: "\f360";
@@ -212,20 +260,26 @@
   }
 
   p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after
+  .changelog > a[href^="https://www.youtube.com/"]::after, .changelog > a[href^="https://youtu.be/"]::after,
+  figcaption a[href^="https://www.youtube.com/"]::after, figcaption a[href^="https://youtu.be/"]::after
   {
     content: "\f167";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after
+  p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after,
+  .changelog > a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
+  figcaption a[href^="https://en.wikipedia.org/"]::after, figcaption a[href^="https://fr.wikipedia.org/"]::after
   {
     content: "\f266";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://www.instagram.com/"]::after
+  p a[href^="https://www.instagram.com/"]::after,
+  .changelog > a[href^="https://www.instagram.com/"]::after,
+  figcaption a[href^="https://www.instagram.com/"]::after
   {
     content: "\f16d";
     font-weight: 400;

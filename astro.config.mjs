@@ -5,8 +5,6 @@ import mdx from "@astrojs/mdx"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
 
-// Import code themes from JSONC files to be used by astro-expressive-code
-//  https://www.npmjs.com/package/astro-expressive-code
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const darkThemeJsoncString = fs.readFileSync(
   new URL(`src/assets/code-dark-theme.jsonc`, import.meta.url),
@@ -20,7 +18,7 @@ const myDarkTheme = ExpressiveCodeTheme.fromJSONString(darkThemeJsoncString)
 const myLightTheme = ExpressiveCodeTheme.fromJSONString(lightThemeJsoncString)
 
 const astroExpressiveCodeOptions = {
-  themes: [myDarkTheme, myLightTheme],
+  themes: [myDarkTheme, myLightTheme, "github-dark", "github-light"],
   useDarkModeMediaQuery: false,
   styleOverrides: {
     frames: {

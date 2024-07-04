@@ -15,14 +15,14 @@ import FigImage from "$components/figures/FigImage.astro"
 // https://docs.astro.build/en/guides/content-collections
 // Here we get all blogEntries that are published
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog", ({ data }) => {
-    return isEntryPublished(data.published)
-  })
+	const blogEntries = await getCollection("blog", ({ data }) => {
+		return isEntryPublished(data.published)
+	})
 
-  return blogEntries.map((entry) => ({
-    params: { entry: entry.slug },
-    props: { entry },
-  }))
+	return blogEntries.map((entry) => ({
+		params: { entry: entry.slug },
+		props: { entry },
+	}))
 }
 
 const { entry } = Astro.props
@@ -30,40 +30,40 @@ const { Content, headings } = await entry.render()
 ---
 
 <Layout
-  title={entry.data.title}
-  icon={entry.data.icon}
-  description={entry.data.abstract}
-  img={entry.data.image ? entry.data.image.src : undefined}
+	title={entry.data.title}
+	icon={entry.data.icon}
+	description={entry.data.abstract}
+	img={entry.data.image ? entry.data.image.src : undefined}
 >
-  <section>
-    <h1>{entry.data.title}</h1>
-    {entry.data.display_abstract && <p>{entry.data.abstract}</p>}
-    <p>
-      {formatDate(entry.data.date)} -
-      <a href="/">Goulven CLEC'H</a>
-    </p>
-  </section>
+	<section>
+		<h1>{entry.data.title}</h1>
+		{entry.data.display_abstract && <p>{entry.data.abstract}</p>}
+		<p>
+			{formatDate(entry.data.date)} —
+			<a href="/">Goulven CLEC'H</a>
+		</p>
+	</section>
 
-  {entry.data.display_toc && headings.length > 0 && <TableOfContent headings={headings} />}
-  {
-    entry.data.display_cover && (
-      <FigImage
-        src={entry.data.image}
-        alt={entry.data.image_alt}
-        caption={entry.data.image_caption}
-        source={entry.data.image_source}
-      />
-    )
-  }
-  <section id="entry">
-    <Content />
-  </section>
+	{entry.data.display_toc && headings.length > 0 && <TableOfContent headings={headings} />}
+	{
+		entry.data.display_cover && (
+			<FigImage
+				src={entry.data.image}
+				alt={entry.data.image_alt}
+				caption={entry.data.image_caption}
+				source={entry.data.image_source}
+			/>
+		)
+	}
+	<section id="entry">
+		<Content />
+	</section>
 </Layout>
 <style is:global>
-  .frame.is-terminal .header {
-    display: none;
-  }
-  .expressive-code {
-    @apply mb-6;
-  }
+	.frame.is-terminal .header {
+		display: none;
+	}
+	.expressive-code {
+		@apply mb-6;
+	}
 </style>

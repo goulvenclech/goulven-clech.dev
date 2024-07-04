@@ -14,11 +14,12 @@ module.exports = {
      * See -> https://tailwindcss.com/docs/font-size#customizing-your-theme
      */
     fontSize: {
-      xs: "14px", // 0.875rem
-      sm: "16px", // 1rem
-      base: "18px", // 1.125rem
-      lg: "24px", // 1.5rem
-      xl: "32px", // 2.25rem
+      xxs: "13px",
+      xs: "16px",
+      sm: "18px",
+      base: "20px",
+      lg: "24px",
+      xl: "32px",
     },
     /**
      * Blog custom colors 🎨
@@ -28,24 +29,23 @@ module.exports = {
      * use dark or light version depending on the theme
      */
     colors: {
-      // Document default for background
-      body: {
-        light: "#FFFCFB",
-        dark: "#1C1E26",
-      },
-      // Same as body but inverted for text
       font: {
         light: "#1C1E26",
-        dark: "#FFFCFB",
+        dark: "#f4f4f5",
+      },
+      // Document default for background
+      body: {
+        light: "#fff",
+        dark: "#1C1E26",
       },
       // Alt body color for background, used for hover
       alt: {
-        light: "#FFEDE6",
+        light: "#f4f4f5",
         dark: "#2E303E",
       },
       // Mainly used when hovering buttons or links
       // stay the same in light and dark mode
-      primary: "#EC6A88",
+      primary: "#E95678",
     },
     // limit the number of font weights as possible
     fontWeight: {
@@ -56,9 +56,11 @@ module.exports = {
       fontFamily: {
         // I like Source Serif 4, it's a serif font but not too serious
         // Also, it's has small caps, witch is nice.
-        sans: ['"Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        serif: ['"Cormorant","Source Serif 4"', ...defaultTheme.fontFamily.serif],
         // Iosevka is a modern monospace font, a straight up banger
         mono: ["Iosevka", ...defaultTheme.fontFamily.mono],
+        // Abby is a handwriting font, used for personal touch
+        goofy: ["Abby", ...defaultTheme.fontFamily.sans],
       },
       spacing: {
         18: "4.5rem",
