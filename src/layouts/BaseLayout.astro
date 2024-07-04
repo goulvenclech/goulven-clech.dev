@@ -1,5 +1,5 @@
 ---
-// Global CSS imports
+// Global CSS import
 import "$assets/base.css"
 /**
  * Base of our html. Mainly html headers and dark mode inline script.
@@ -9,80 +9,93 @@ import "$assets/base.css"
  * @param {string} icon - What is the smiley to use as favicon?
  */
 interface Props {
-  title: string
-  description?: string
-  img?: string
-  icon?: string
+	title: string
+	description?: string
+	img?: string
+	icon?: string
 }
 
 const {
-  title,
-  img,
-  description = "I'm a software developer based in Toulouse, France. Welcome to my personal blog!",
-  icon = "👋",
+	title,
+	img,
+	description = "I'm a software developer based in Toulouse, France. Welcome to my personal blog!",
+	icon = "👋",
 } = Astro.props
 ---
 
 <!doctype html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="author" content="Goulven Clec'h" />
-    <meta name="description" content={description} />
-    <meta property="og:title" content=`${title} | Goulven Clec'h` />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    {img && <meta property="og:image" content={img} />}
-    <link
-      rel="icon"
-      href=`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${icon}</text></svg>`
-    />
-    <script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
-    ></script>
-    <script is:inline src="/_vercel/insights/script.js" defer></script>
-    <title>{title} | Goulven Clec'h</title>
-  </head>
-  <body>
-    <!-- Dark Mode Script -->
-    <script is:inline>
-      /**
-       * This script is inlined and put at the top of the body to avoid a flicker of light mode.
-       * It initializes the dark mode based on the local storage or the system preference.
-       * After page load, the dark mode is handled by the DarkMode component
-       * See there -> src/components/icons/DarkMode.astro
-       */
-      // Get theme from local storage and/or browser media queries (system).
-      const theme = localStorage.getItem("theme")
-      const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="author" content="Goulven Clec'h" />
+		<meta name="description" content={description} />
+		<meta property="og:title" content=`${title} | Goulven Clec'h` />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		{img && <meta property="og:image" content={img} />}
+		<link
+			rel="icon"
+			href=`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${icon}</text></svg>`
+		/>
+		<script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
+		></script>
+		<script is:inline src="/_vercel/insights/script.js" defer></script>
+		<title>{title} | Goulven Clec'h</title>
+	</head>
+	<body>
+		<!-- Dark Mode Script -->
+		<script is:inline>
+			/**
+			 * This script is inlined and put at the top of the body to avoid a flicker of light mode.
+			 * It initializes the dark mode based on the local storage or the system preference.
+			 * After page load, the dark mode is handled by the DarkMode component
+			 * See there -> src/components/icons/DarkMode.astro
+			 */
+			// Get theme from local storage and/or browser media queries (system).
+			const theme = localStorage.getItem("theme")
+			const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
-      // If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
-      if (theme === "dark" || (theme === "system" && isSystemDark)) {
-        document.documentElement.classList.add("dark")
-        document.documentElement.setAttribute("data-theme", "dark")
-      }
-      // If local theme is "light" or "system" and system is light -> remove dark mode.
-      if (theme === "light" || (theme === "system" && !isSystemDark)) {
-        document.documentElement.classList.remove("dark")
-        document.documentElement.setAttribute("data-theme", "light")
-      }
-      // If local theme is not set, look at the system preference and initialize the local storage.
-      if (!theme) {
-        if (isSystemDark == false) {
-          localStorage.setItem("theme", "light")
-          document.documentElement.classList.remove("dark")
-          document.documentElement.setAttribute("data-theme", "light")
-        } else {
-          // By default, if local theme is not set and system is dark or not set
-          // we are going dark 🥷🥷🥷
-          localStorage.setItem("theme", "dark")
-          document.documentElement.classList.add("dark")
-          document.documentElement.setAttribute("data-theme", "dark")
-        }
-      }
-    </script>
-    <!-- Body content -->
-    <slot />
-  </body>
+			// If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
+			if (theme === "dark" || (theme === "system" && isSystemDark)) {
+				document.documentElement.classList.add("dark")
+				document.documentElement.setAttribute("data-theme", "dark")
+			}
+			// If local theme is "light" or "system" and system is light -> remove dark mode.
+			if (theme === "light" || (theme === "system" && !isSystemDark)) {
+				document.documentElement.classList.remove("dark")
+				document.documentElement.setAttribute("data-theme", "light")
+			}
+			// If local theme is not set, look at the system preference and initialize the local storage.
+			if (!theme) {
+				if (isSystemDark == false) {
+					localStorage.setItem("theme", "system")
+					document.documentElement.classList.remove("dark")
+					document.documentElement.setAttribute("data-theme", "light")
+				} else {
+					// By default, if local theme is not set and system is dark or not set
+					// we are going dark 🥷🥷🥷
+					localStorage.setItem("theme", "system")
+					document.documentElement.classList.add("dark")
+					document.documentElement.setAttribute("data-theme", "dark")
+				}
+			}
+		</script>
+		<script>
+			// MediumZoom is a library to zoom images in better quality.
+			import mediumZoom from "medium-zoom"
+			mediumZoom("[data-zoomable]", {
+				margin: 24,
+				background: "",
+			})
+		</script>
+		<style is:global>
+			.medium-zoom-overlay {
+				@apply bg-body-light/50 backdrop-blur dark:bg-body-dark/50;
+			}
+		</style>
+		<!-- Body content -->
+		<slot />
+	</body>
 </html>

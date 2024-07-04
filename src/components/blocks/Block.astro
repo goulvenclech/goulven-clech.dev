@@ -4,21 +4,21 @@ import { Image } from "astro:assets"
  * Used to present an something as a card, also a link to that something.
  */
 interface Props {
-  image: string
-  to: string
+	image: string
+	to: string
 }
 
 const { image, to } = Astro.props
 ---
 
 <a
-  href={to}
-  class="hover:bg-alt-light dark:hover:bg-alt-dark mb-6 flex flex-col overflow-hidden rounded-lg sm:flex-row"
+	href={to}
+	class="mb-6 flex flex-col overflow-hidden rounded hover:bg-alt-light dark:hover:bg-alt-dark sm:flex-row"
 >
-  <div class="h-[150px] w-auto shrink-0 sm:h-auto sm:max-h-44 sm:w-[150px]">
-    <Image src={image} width={500} height={500} alt="" class="h-full w-full object-cover" />
-  </div>
-  <article class="text-font-light dark:text-font-dark mx-6 my-5 min-w-0">
-    <slot />
-  </article>
+	<div class="h-[150px] w-auto shrink-0 sm:h-auto sm:max-h-48 sm:w-[150px]">
+		<Image src={image} width={500} height={500} alt="" class="h-full w-full object-cover" />
+	</div>
+	<article class="mx-6 my-5 min-w-0 text-font-light dark:text-font-dark">
+		<slot />
+	</article>
 </a>

@@ -33,31 +33,29 @@ export class Card extends HTMLElement {
     template.innerHTML = `
       <a href="/${
         this.slug
-      }" class="flex flex-col sm:flex-row overflow-hidden rounded-lg hover:bg-alt-light dark:hover:bg-alt-dark">
+      }" class="flex flex-col sm:flex-row overflow-hidden rounded hover:bg-alt-light dark:hover:bg-alt-dark">
       ${
         this.image !== ""
           ? `<img
-            class="${this.getOrder(this.index)} h-[150px] w-auto shrink-0 object-cover sm:h-auto
-          sm:max-h-48
-        sm:w-[150px]"
+            class="${this.getOrder(this.index)} sm:max-h-48 sm:w-[150px] sm:h-[162.5px] w-auto shrink-0 object-cover"
             src="${this.image}"
             alt="${this.image_alt}"
           />
         `
           : ``
       }
-        <article class="mx-6 my-5 min-w-0">
-          <h3 class="mb-3 mt-0">
+        <article class="px-6 py-5 min-w-0">
+          <h3 class="mb-0 mt-0 leading-relaxed">
             ${this.title}
           </h3>
-          <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+          <!--div class="overflow-hidden text-ellipsis whitespace-nowrap">
             <i class="fa-solid fa-calendar-day w-3.5 sm:w-4 mr-1"></i>
             ${this.date}
             <i class="fa-solid fa-tags ml-3 w-3.5 sm:w-4 mr-1"></i>
             ${this.tags}
-          </div>
-          <span class="mt-3 text-ellipsis py-0 line-clamp-3">
-            ${this.abstract}
+          </div-->
+          <span class="mt-0 text-ellipsis py-0 line-clamp-3">
+            ${this.abstract} — ${this.date}
           </span>
         </article>
       </a>
