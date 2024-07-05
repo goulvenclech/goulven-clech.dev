@@ -8,27 +8,27 @@ import { isEntryPublished } from "src/utils"
  * related blog entries.
  */
 export async function getStaticPaths() {
-  /* get all blog entries published */
-  const blogEntries = await getCollection("blog", ({ data }) => {
-    return isEntryPublished(data.published, true)
-  })
-  /* get all years */
-  const allYears: Set<number> = new Set()
-  blogEntries.forEach((entry) => {
-    allYears.add(entry.data.date.getFullYear())
-  })
-  // pair each year with all its blog entries
-  const yearsWithEntries = Object.fromEntries(
-    [...allYears].map((year) => {
-      const relatedEntries = blogEntries.filter((entry) => entry.data.date.getFullYear() === year)
-      return [year, relatedEntries]
-    })
-  )
-  // Now return all static path and related blog entries
-  return Object.entries(yearsWithEntries).map(([year, relatedEntries]) => ({
-    params: { year: year },
-    props: { year: year, entries: relatedEntries },
-  }))
+	/* get all blog entries published */
+	const blogEntries = await getCollection("blog", ({ data }) => {
+		return isEntryPublished(data.published, true)
+	})
+	/* get all years */
+	const allYears: Set<number> = new Set()
+	blogEntries.forEach((entry) => {
+		allYears.add(entry.data.date.getFullYear())
+	})
+	// pair each year with all its blog entries
+	const yearsWithEntries = Object.fromEntries(
+		[...allYears].map((year) => {
+			const relatedEntries = blogEntries.filter((entry) => entry.data.date.getFullYear() === year)
+			return [year, relatedEntries]
+		})
+	)
+	// Now return all static path and related blog entries
+	return Object.entries(yearsWithEntries).map(([year, relatedEntries]) => ({
+		params: { year: year },
+		props: { year: year, entries: relatedEntries },
+	}))
 }
 const year = Astro.props.year
 const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
@@ -38,14 +38,14 @@ const pageTitle = `Published in ${year}`
 ---
 
 <Layout title={pageTitle} icon="📅">
-  <section>
-    <h1>{pageTitle}</h1>
-    <div class="flex flex-col gap-6">
-      {
-        entries
-          .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-          .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
-      }
-    </div>
-  </section>
+	<section>
+		<h1>{pageTitle}</h1>
+		<div class="flex flex-col gap-6">
+			{
+				entries
+					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+					.map((blogEntry, index) => <Card entry={blogEntry} index={index} />)
+			}
+		</div>
+	</section>
 </Layout>

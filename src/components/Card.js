@@ -48,12 +48,6 @@ export class Card extends HTMLElement {
           <h3 class="mb-0 mt-0 leading-relaxed">
             ${this.title}
           </h3>
-          <!--div class="overflow-hidden text-ellipsis whitespace-nowrap">
-            <i class="fa-solid fa-calendar-day w-3.5 sm:w-4 mr-1"></i>
-            ${this.date}
-            <i class="fa-solid fa-tags ml-3 w-3.5 sm:w-4 mr-1"></i>
-            ${this.tags}
-          </div-->
           <span class="mt-0 text-ellipsis py-0 line-clamp-3">
             ${this.abstract} — ${this.date}
           </span>

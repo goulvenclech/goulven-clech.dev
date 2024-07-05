@@ -4,11 +4,11 @@ My personnal blog, made with [Astro](https://docs.astro.build), [TypeScript](htt
 
 The source code is provided under the [0BSD license](https://spdx.org/licenses/0BSD.html), attribution is appreciated but not required. The blog textual content is provided under the [CC BY 4.0 Deed](https://spdx.org/licenses/CC-BY-4.0.html), attribution is required. But for both, you are free to use, copy, modify, and/or distribute for any purpose, commercial or personal.
 
-Some articles may cite text, images or resources from external sources: their original licenses apply, and I indicate the authors if known.
+Some entries may cite text, images or resources from external sources: their original licenses apply, and I indicate the authors if known.
 
 ## Notable features
 
-At its heart, this project looks like any blog made with Astro, you can start by reading my article ["Launching a blog with Astro"](https://goulven-clech.dev/2023/launching-blog-astro). But, little by little, I added some original features that might interest you, here are the main ones:
+At its heart, this project looks like any blog made with Astro, you can start by reading my entry ["Launching a blog with Astro"](https://goulven-clech.dev/2023/launching-blog-astro). But, little by little, I added some original features that might interest you, here are the main ones:
 
 - [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/Search.astro): made with Astro and Web Components only, filter blog entries based on user's input.
 
