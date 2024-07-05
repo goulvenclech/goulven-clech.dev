@@ -235,7 +235,7 @@
   }
 
   figcaption a[href^="/tag-"]::before,
-  .changelog > a[href^="/tag-"]::before,
+  .changelog a[href^="/tag-"]::before,
   p a[href^="/tag-"]::before {
     content: "\f02b";
     font-family: "Font Awesome 6 Free";
@@ -248,7 +248,7 @@
 
   p a[href^="http://"]::after, p a[href^="https://"]::after,
   figcaption a[href^="http://"]::after, figcaption a[href^="https://"]::after,
-  .changelog > a[href^="http://"]::after, .changelog > a[href^="https://"]::after
+  .changelog a[href^="http://"]::after, .changelog a[href^="https://"]::after
   {
     content: "\f360";
     font-family: "Font Awesome 6 Free";
@@ -259,8 +259,8 @@
     display: inline-block;
   }
 
-  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after
-  .changelog > a[href^="https://www.youtube.com/"]::after, .changelog > a[href^="https://youtu.be/"]::after,
+  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after,
+  .changelog a[href^="https://www.youtube.com/"]::after, .changelog a[href^="https://youtu.be/"]::after,
   figcaption a[href^="https://www.youtube.com/"]::after, figcaption a[href^="https://youtu.be/"]::after
   {
     content: "\f167";
@@ -269,7 +269,7 @@
   }
 
   p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after,
-  .changelog > a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
+  .changelog a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
   figcaption a[href^="https://en.wikipedia.org/"]::after, figcaption a[href^="https://fr.wikipedia.org/"]::after
   {
     content: "\f266";
@@ -278,7 +278,7 @@
   }
 
   p a[href^="https://www.instagram.com/"]::after,
-  .changelog > a[href^="https://www.instagram.com/"]::after,
+  .changelog a[href^="https://www.instagram.com/"]::after,
   figcaption a[href^="https://www.instagram.com/"]::after
   {
     content: "\f16d";

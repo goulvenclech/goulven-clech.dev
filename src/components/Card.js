@@ -37,7 +37,7 @@ export class Card extends HTMLElement {
       ${
         this.image !== ""
           ? `<img
-            class="${this.getOrder(this.index)} sm:max-h-48 sm:w-[150px] sm:h-[162.5px] w-auto shrink-0 object-cover"
+            class="${this.getOrder(this.index)} max-h-36 w-auto object-cover sm:h-[162.5px] sm:max-h-48 sm:w-[150px]"
             src="${this.image}"
             alt="${this.image_alt}"
           />

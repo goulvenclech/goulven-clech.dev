@@ -8,7 +8,7 @@ import Block from "./Block.astro"
  * @param {string} isbn - What's this exciting book's ISBN?
  */
 interface Props {
-  isbn: string
+	isbn: string
 }
 
 const { isbn } = Astro.props
@@ -18,11 +18,11 @@ const { isbn } = Astro.props
  * TO DO : handle errors !
  */
 const userData: any = EleventyFetch(
-  `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
-  {
-    duration: "1d",
-    type: "json",
-  }
+	`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
+	{
+		duration: "1d",
+		type: "json",
+	}
 )
 
 // Got what what we needed 💰 See response format ->
@@ -33,24 +33,18 @@ const book = result[`ISBN:${isbn}`]
 ---
 
 <Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
-  <h3
-    id={book.details.title}
-    class="mb-1 mt-0 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1"
-  >
-    {book.details.title}
-  </h3>
-  <ul class="flex flex-col gap-2">
-    <li>
-      <i class="fa-solid fa-user pr-2"></i>
-      {book.details.authors.map((author: any) => author.name).join(" & ")}
-    </li>
-    <li>
-      <i class="fa-solid fa-building pr-2"></i>
-      {book.details.publishers.join(" & ")} ({new Date(book.details.publish_date).getFullYear()})
-    </li>
-    <li>
-      <i class="fa-solid fa-book-open"></i>
-      ISBN: {book.details.isbn_13}
-    </li>
-  </ul>
+	<h3 id={book.details.title} class="my-0 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
+		{book.details.title}
+	</h3>
+	<ul class="flex flex-col">
+		<li>
+			By {book.details.authors.map((author: any) => author.name).join(" & ")}
+		</li>
+		<li>
+			{book.details.publishers.join(" & ")} ({new Date(book.details.publish_date).getFullYear()})
+		</li>
+		<li>
+			ISBN: {book.details.isbn_13}
+		</li>
+	</ul>
 </Block>
