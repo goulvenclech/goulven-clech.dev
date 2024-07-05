@@ -7,29 +7,29 @@ import { isEntryPublished } from "src/utils"
  * Create a page for each tag, display the related blog entries.
  */
 export async function getStaticPaths() {
-  /* get all blog entries published */
-  const blogEntries = await getCollection("blog", ({ data }) => {
-    return isEntryPublished(data.published, true)
-  })
-  /* get all tags */
-  const allTags: Set<string> = new Set()
-  blogEntries.forEach((entry) => {
-    entry.data.tags.forEach((tag: string) => {
-      allTags.add(tag.toLowerCase())
-    })
-  })
-  // pair each tag with all its blog entries
-  const tagsWithEntries = Object.fromEntries(
-    [...allTags].map((tag) => {
-      const relatedEntries = blogEntries.filter((entry) => entry.data.tags.includes(tag))
-      return [tag, relatedEntries]
-    })
-  )
-  // Now return all static path and related blog entries
-  return Object.entries(tagsWithEntries).map(([tag, relatedEntries]) => ({
-    params: { tag: `tag-${tag}` },
-    props: { tag: tag, entries: relatedEntries },
-  }))
+	/* get all blog entries published */
+	const blogEntries = await getCollection("blog", ({ data }) => {
+		return isEntryPublished(data.published, true)
+	})
+	/* get all tags */
+	const allTags: Set<string> = new Set()
+	blogEntries.forEach((entry) => {
+		entry.data.tags.forEach((tag: string) => {
+			allTags.add(tag.toLowerCase())
+		})
+	})
+	// pair each tag with all its blog entries
+	const tagsWithEntries = Object.fromEntries(
+		[...allTags].map((tag) => {
+			const relatedEntries = blogEntries.filter((entry) => entry.data.tags.includes(tag))
+			return [tag, relatedEntries]
+		})
+	)
+	// Now return all static path and related blog entries
+	return Object.entries(tagsWithEntries).map(([tag, relatedEntries]) => ({
+		params: { tag: `tag-${tag}` },
+		props: { tag: tag, entries: relatedEntries },
+	}))
 }
 const tag = Astro.props.tag
 const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
@@ -39,14 +39,14 @@ const pageTitle = `Tagged ${tag}`
 ---
 
 <Layout title={pageTitle} icon="🏷️">
-  <section>
-    <h1>{pageTitle}</h1>
-    <div class="flex flex-col gap-3">
-      {
-        entries
-          .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-          .map((blogEntry, index) => <Card article={blogEntry} index={index} />)
-      }
-    </div>
-  </section>
+	<section>
+		<h1>{pageTitle}</h1>
+		<div class="flex flex-col gap-3">
+			{
+				entries
+					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+					.map((blogEntry, index) => <Card entry={blogEntry} index={index} />)
+			}
+		</div>
+	</section>
 </Layout>

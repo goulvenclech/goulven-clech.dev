@@ -133,14 +133,30 @@
   /*
     ENTRIES ONLY TYPOGRAPHY
   */
-  /* If an entry start with a title (so it appear in the TOC) 
-    hide it for a better reading flow */
 
+  /* Drop cap — Don't ask why I need the fix below, I'll cry */
   #entry > p:first-of-type::first-letter {
-    /* Drop cap */
-    @apply float-left mr-1 mt-1 text-[calc(20px*2+16.25px*3)];
+    @apply float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
   }
 
+  /* Fix for Firefox and older browsers */
+  @supports (not (initial-letter: 5)) and (not (-webkit-initial-letter: 5)) {
+    #entry > p:first-of-type::first-letter {
+      @apply mt-[0.4rem];
+      line-height: 1;
+    }
+  }
+
+  /* Fix for Safari and Chrome */
+  @supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
+    #entry > p:first-of-type::first-letter {
+      @apply mt-[-0.6rem] sm:mt-[-0.5rem];
+      line-height: 0.8;
+    }
+  }
+
+  /* If an entry start with a title (so it appear in the TOC) 
+    hide it for a better reading flow */
   #entry h2:first-child {
     @apply invisible m-0 h-0;
   }
@@ -173,7 +189,7 @@
   #entry li code,
   #entry p code {
     overflow-wrap: break-word;
-    @apply text-xxs rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono dark:border-alt-dark sm:text-xs;
+    @apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[14px] dark:border-alt-dark sm:text-[16px];
   }
 
   abbr,
@@ -235,7 +251,7 @@
   }
 
   figcaption a[href^="/tag-"]::before,
-  .changelog > a[href^="/tag-"]::before,
+  .changelog a[href^="/tag-"]::before,
   p a[href^="/tag-"]::before {
     content: "\f02b";
     font-family: "Font Awesome 6 Free";
@@ -248,7 +264,7 @@
 
   p a[href^="http://"]::after, p a[href^="https://"]::after,
   figcaption a[href^="http://"]::after, figcaption a[href^="https://"]::after,
-  .changelog > a[href^="http://"]::after, .changelog > a[href^="https://"]::after
+  .changelog a[href^="http://"]::after, .changelog a[href^="https://"]::after
   {
     content: "\f360";
     font-family: "Font Awesome 6 Free";
@@ -259,8 +275,8 @@
     display: inline-block;
   }
 
-  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after
-  .changelog > a[href^="https://www.youtube.com/"]::after, .changelog > a[href^="https://youtu.be/"]::after,
+  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after,
+  .changelog a[href^="https://www.youtube.com/"]::after, .changelog a[href^="https://youtu.be/"]::after,
   figcaption a[href^="https://www.youtube.com/"]::after, figcaption a[href^="https://youtu.be/"]::after
   {
     content: "\f167";
@@ -269,7 +285,7 @@
   }
 
   p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after,
-  .changelog > a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
+  .changelog a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
   figcaption a[href^="https://en.wikipedia.org/"]::after, figcaption a[href^="https://fr.wikipedia.org/"]::after
   {
     content: "\f266";
@@ -278,7 +294,7 @@
   }
 
   p a[href^="https://www.instagram.com/"]::after,
-  .changelog > a[href^="https://www.instagram.com/"]::after,
+  .changelog a[href^="https://www.instagram.com/"]::after,
   figcaption a[href^="https://www.instagram.com/"]::after
   {
     content: "\f16d";

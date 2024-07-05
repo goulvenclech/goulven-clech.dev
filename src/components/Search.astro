@@ -16,7 +16,7 @@ const blogEntriesRaw = await getCollection("blog", ({ data }) => {
 
 // Sort blog entries by date, then format date to be displayed properly.
 // Since we can't use formatDate/1 in a script inline, and I want to display the date properly
-// on my article cards, I have to map over all blogEntries and format myself. So here we go 🧙
+// on my entries cards, I have to map over all blogEntries and format myself. So here we go 🧙
 const blogEntries = blogEntriesRaw
 	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 	.map(({ slug, data: { date, ...rest } }) => ({
@@ -29,12 +29,12 @@ const blogEntries = blogEntriesRaw
 	<input
 		id="search"
 		class="mb-6 w-full rounded bg-alt-light px-3 py-2 placeholder:text-font-light/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-alt-dark dark:placeholder:text-font-dark/50"
-		placeholder="Search by keywords..."
+		placeholder="Search by titles, abstracts, keywords..."
 		type="text"
 	/>
 	<!-- By default, output display all blog entries -->
 	<div id="output" class="flex flex-col gap-6">
-		{blogEntries.map((result, index) => <Card article={result} index={index} />)}
+		{blogEntries.map((result, index) => <Card entry={result} index={index} />)}
 	</div>
 </>
 <script>
@@ -59,7 +59,7 @@ const blogEntries = blogEntriesRaw
 	 * Function called at each search, returns the list of blog entries corresponding
 	 * to the keywords provided in input.
 	 * @param {string} input - What's the search input?
-	 * @return {Array<blogEntry>} - Articles returned by the search
+	 * @return {Array<blogEntry>} - Entries returned by the search
 	 */
 	const applyInput = (input) => {
 		const searchKeywords = input.toLowerCase().split(" ")

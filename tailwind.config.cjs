@@ -14,9 +14,8 @@ module.exports = {
      * See -> https://tailwindcss.com/docs/font-size#customizing-your-theme
      */
     fontSize: {
-      xxs: "13px",
-      xs: "16px",
-      sm: "18px",
+      xs: "17px",
+      sm: "19px",
       base: "20px",
       lg: "24px",
       xl: "32px",
