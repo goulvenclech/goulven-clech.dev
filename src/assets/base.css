@@ -138,12 +138,12 @@
   }
 
   h1 {
-    @apply font-display text-lg sm:text-xl;
+    @apply font-display sm:text-2xl text-pretty text-xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
-    @apply font-display text-base sm:text-lg;
+    @apply font-display text-pretty text-lg sm:text-xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
