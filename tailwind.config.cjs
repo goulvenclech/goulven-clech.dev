@@ -14,8 +14,8 @@ module.exports = {
      * See -> https://tailwindcss.com/docs/font-size#customizing-your-theme
      */
     fontSize: {
-      xs: "17px",
-      sm: "19px",
+      xs: "16px",
+      sm: "18px",
       base: "20px",
       lg: "24px",
       xl: "32px",
@@ -53,12 +53,14 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        // I like Source Serif 4, it's a serif font but not too serious
-        // Also, it's has small caps, witch is nice.
-        serif: ['"Cormorant","Source Serif 4"', ...defaultTheme.fontFamily.serif],
-        // Iosevka is a modern monospace font, a straight up banger
+        // Self hosted. See base.css for the font-face declaration
+        // Cormorant is an elegant and complete Garamond display font, but too light for body text (free)
+        display: ['"Cormorant", "EB Garamond", "Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        // EB Garamond is a beautiful and complete Garamond font, fidelity to the original (free)
+        serif: ['"EB Garamond", "Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        // Iosevka is a monospace font with a lot of ligatures and a good readability (free)
         mono: ["Iosevka", ...defaultTheme.fontFamily.mono],
-        // Abby is a handwriting font, used for personal touch
+        // Abby is a handwritten font, used for personal annotations (paid)
         goofy: ["Abby", ...defaultTheme.fontFamily.sans],
       },
       spacing: {

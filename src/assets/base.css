@@ -21,10 +21,27 @@
 
 /**
  * FONTS
-  * Cormorant for the body text (p, h1, h2, h3, etc.)
+  * Cormorant for display text (titles, etc.)
+  * EB Garamond for the serif text (paragraphs, etc.)
   * Iosevka for the mono text (code, pre, etc.)
   * Abby for personal annotations (goofy incoming)
  */
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/EBGaramond/EBGaramond12-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/EBGaramond/EBGaramond12-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Cormorant";
   src: url("/CormorantSC/CormorantGaramond-Regular.woff2") format("woff2");
@@ -121,12 +138,12 @@
   }
 
   h1 {
-    @apply text-lg sm:text-xl;
+    @apply font-display text-lg sm:text-xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
-    @apply text-base sm:text-lg;
+    @apply font-display text-base sm:text-lg;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
@@ -136,21 +153,20 @@
 
   /* Drop cap — Don't ask why I need the fix below, I'll cry */
   #entry > p:first-of-type::first-letter {
-    @apply float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
+    @apply font-display float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
   }
 
   /* Fix for Firefox and older browsers */
   @supports (not (initial-letter: 5)) and (not (-webkit-initial-letter: 5)) {
     #entry > p:first-of-type::first-letter {
-      @apply mt-[0.4rem];
-      line-height: 1;
+      @apply mt-[0.2rem] sm:mt-[0.3rem];
     }
   }
 
   /* Fix for Safari and Chrome */
   @supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
     #entry > p:first-of-type::first-letter {
-      @apply mt-[-0.6rem] sm:mt-[-0.5rem];
+      @apply mt-[-0.7rem] sm:mt-[-0.45rem];
       line-height: 0.8;
     }
   }

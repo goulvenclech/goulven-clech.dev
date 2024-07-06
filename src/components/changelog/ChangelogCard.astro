@@ -6,7 +6,7 @@ import { type ChangelogEntry } from "./Changelog.astro"
  * @param entry - What's the changelog entry ?
  */
 interface Props {
-  entry: ChangelogEntry
+	entry: ChangelogEntry
 }
 
 const { entry } = Astro.props
@@ -14,27 +14,27 @@ const { Content } = await (entry.render?.() ?? { Content: null })
 ---
 
 <li class="my-6 flex flex-row gap-2">
-  <div class="w-6 shrink-0 grow-0 text-center">
-    {
-      entry.type == "blog" ? (
-        <i class="fa-solid fa-newspaper" />
-      ) : entry.type == "feature" ? (
-        <i class="fa-solid fa-star" />
-      ) : entry.type == "page" ? (
-        <i class="fa-solid fa-file" />
-      ) : entry.type == "content" ? (
-        <i class="fa-solid fa-pencil" />
-      ) : entry.type == "memory" ? (
-        <i class="fa-solid fa-monument" />
-      ) : (
-        <i class="fa-solid fa-rocket" />
-      )
-    }
-  </div>
-  <div class="changelog grow">
-    <span class="font-bold">{entry.name}:</span>
-    {entry.description}
-    {entry.url && <a href={entry.url}>{entry.url_caption}</a>}
-    {Content && <Content />}
-  </div>
+	<div class="w-6 shrink-0 grow-0 text-center">
+		{
+			entry.type == "blog" ? (
+				<i class="fa-solid fa-newspaper text-xs" />
+			) : entry.type == "feature" ? (
+				<i class="fa-solid fa-star text-xs" />
+			) : entry.type == "page" ? (
+				<i class="fa-solid fa-file text-xs" />
+			) : entry.type == "content" ? (
+				<i class="fa-solid fa-pencil text-xs" />
+			) : entry.type == "memory" ? (
+				<i class="fa-solid fa-monument text-xs" />
+			) : (
+				<i class="fa-solid fa-rocket text-xs" />
+			)
+		}
+	</div>
+	<div class="changelog grow">
+		<span class="font-bold">{entry.name}:</span>
+		{entry.description}
+		{entry.url && <a href={entry.url}>{entry.url_caption}</a>}
+		{Content && <Content />}
+	</div>
 </li>
