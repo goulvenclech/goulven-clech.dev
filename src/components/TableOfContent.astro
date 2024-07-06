@@ -6,7 +6,7 @@ type BetterHeading = MarkdownHeading & { subheadings: Array<BetterHeading> }
  * @param {Array<MarkdownHeading>} headings - What are the headings in the MDX file?
  */
 interface Props {
-  headings: Array<MarkdownHeading>
+	headings: Array<MarkdownHeading>
 }
 
 const { headings } = Astro.props
@@ -20,57 +20,57 @@ const toc = buildToc(headings)
  * @returns {Array<BetterHeading>} - A nested array of headings.
  */
 function buildToc(headings: Array<MarkdownHeading>): Array<BetterHeading> {
-  // Init an empty array to store the final table of contents
-  const toc: Array<BetterHeading> = []
-  // Init a map to store the parent headings (depth 2)
-  const parentHeadings = new Map()
-  // Loop through all the headings
-  headings.forEach((h) => {
-    // Create a new BetterHeading object with an empty subheadings array
-    const heading = { ...h, subheadings: [] }
-    // In JavaScript, Maps are ordered and use unique keys
-    // So we can use the heading depth as the key to store the parent heading
-    // If the next heading is a depth 2 heading, it will overwrite the previous one.
-    // If the next heading is a depth 3 heading, it will be added to the subheadings array
-    // and its parent will be the previous depth 2 heading. Magic! 🎩
-    parentHeadings.set(heading.depth, heading)
-    // If the heading is a depth 2 heading, add it to the final table of contents
-    if (heading.depth === 2) {
-      toc.push(heading)
-    } else {
-      // Else, get its parent heading and push it in the parent's subheadings array
-      parentHeadings.get(heading.depth - 1).subheadings.push(heading)
-    }
-  })
-  // Return the final table of contents
-  return toc
+	// Init an empty array to store the final table of contents
+	const toc: Array<BetterHeading> = []
+	// Init a map to store the parent headings (depth 2)
+	const parentHeadings = new Map()
+	// Loop through all the headings
+	headings.forEach((h) => {
+		// Create a new BetterHeading object with an empty subheadings array
+		const heading = { ...h, subheadings: [] }
+		// In JavaScript, Maps are ordered and use unique keys
+		// So we can use the heading depth as the key to store the parent heading
+		// If the next heading is a depth 2 heading, it will overwrite the previous one.
+		// If the next heading is a depth 3 heading, it will be added to the subheadings array
+		// and its parent will be the previous depth 2 heading. Magic! 🎩
+		parentHeadings.set(heading.depth, heading)
+		// If the heading is a depth 2 heading, add it to the final table of contents
+		if (heading.depth === 2) {
+			toc.push(heading)
+		} else {
+			// Else, get its parent heading and push it in the parent's subheadings array
+			parentHeadings.get(heading.depth - 1).subheadings.push(heading)
+		}
+	})
+	// Return the final table of contents
+	return toc
 }
 ---
 
 <section>
-  <ol>
-    {
-      // For each heading in the table of contents, render a list item
-      toc.map((heading) => (
-        <li id="toc" class="mb-3">
-          <a href={`#${heading.slug}`}>{heading.text}</a>
-          {
-            // If the heading has subheadings, render a nested list
-            heading.subheadings.length > 0 && (
-              <ol class="ml-8 mt-3 text-xs sm:text-sm">
-                {
-                  // For each subheading, render a list item
-                  heading.subheadings.map((subheading) => (
-                    <li class="mb-3">
-                      <a href={`#${subheading.slug}`}>{subheading.text}</a>
-                    </li>
-                  ))
-                }
-              </ol>
-            )
-          }
-        </li>
-      ))
-    }
-  </ol>
+	<ol>
+		{
+			// For each heading in the table of contents, render a list item
+			toc.map((heading) => (
+				<li id="toc" class="mb-3">
+					<a href={`#${heading.slug}`}>{heading.text}</a>
+					{
+						// If the heading has subheadings, render a nested list
+						heading.subheadings.length > 0 && (
+							<ol class="ml-8 mt-3 text-xs sm:text-sm">
+								{
+									// For each subheading, render a list item
+									heading.subheadings.map((subheading) => (
+										<li class="mb-3">
+											<a href={`#${subheading.slug}`}>{subheading.text}</a>
+										</li>
+									))
+								}
+							</ol>
+						)
+					}
+				</li>
+			))
+		}
+	</ol>
 </section>

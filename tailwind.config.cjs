@@ -17,8 +17,8 @@ module.exports = {
       xs: "16px",
       sm: "18px",
       base: "20px",
-      lg: "24px",
-      xl: "32px",
+      lg: "28px",
+      xl: "40px",
     },
     /**
      * Blog custom colors 🎨

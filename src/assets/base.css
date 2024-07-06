@@ -60,7 +60,7 @@
 
 @font-face {
   font-family: "Cormorant";
-  src: url("/CormorantSC/CormorantGaramond-SemiBold.woff2") format("woff2");
+  src: url("/CormorantSC/Cormorant-Medium.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -68,7 +68,7 @@
 
 @font-face {
   font-family: "Cormorant";
-  src: url("/CormorantSC/CormorantGaramond-SemiBoldItalic.woff2") format("woff2");
+  src: url("/CormorantSC/Cormorant-MediumItalic.woff2") format("woff2");
   font-weight: bold;
   font-style: italic;
   font-display: swap;
