@@ -7,18 +7,18 @@ import Footer from "./Footer.astro"
  * @param {string} title - What is this page about?
  */
 interface Props {
-  title: string
-  description?: string
-  img?: string
-  icon?: string
+	title: string
+	description?: string
+	img?: string
+	icon?: string
 }
 
 const { title, description, img, icon } = Astro.props
 ---
 
 <BaseLayout title={title} description={description} img={img} icon={icon}>
-  <main class="mx-auto max-w-prose px-4 md:px-0">
-    <slot />
-    <Footer />
-  </main>
+	<main class="mx-auto max-w-[650px] px-4 md:px-0">
+		<slot />
+		<Footer />
+	</main>
 </BaseLayout>

@@ -138,12 +138,12 @@
   }
 
   h1 {
-    @apply font-display sm:text-2xl text-pretty text-xl;
+    @apply text-pretty font-display text-xl sm:text-2xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
-    @apply font-display text-pretty text-lg sm:text-xl;
+    @apply text-pretty font-display text-lg sm:text-xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
@@ -153,7 +153,7 @@
 
   /* Drop cap — Don't ask why I need the fix below, I'll cry */
   #entry > p:first-of-type::first-letter {
-    @apply font-display float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
+    @apply float-left mr-1 font-display text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
   }
 
   /* Fix for Firefox and older browsers */
@@ -182,8 +182,14 @@
     @apply list-inside;
   }
 
+  /* I use a manicule as a list marker, and indent the list */
   #entry > ul {
-    @apply mb-6 list-disc;
+    @apply mb-6 list-none indent-0 md:indent-[-1.85rem];
+  }
+
+  #entry > ul > li::before {
+    content: "☞";
+    @apply mr-2;
   }
 
   #entry > ol {
@@ -208,12 +214,20 @@
     @apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[14px] dark:border-alt-dark sm:text-[16px];
   }
 
+  abbr {
+    font-feature-settings: "c2sc";
+    @apply uppercase;
+  }
+
+  strong {
+    font-feature-settings: "smcp";
+  }
+
   abbr,
   strong {
-    font-feature-settings: "c2sc";
     letter-spacing: 0.05em;
     margin-right: -0.05em;
-    @apply font-normal uppercase not-italic no-underline;
+    @apply font-normal not-italic no-underline;
   }
 
   u {
