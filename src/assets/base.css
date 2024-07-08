@@ -289,62 +289,51 @@
     @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
   }
 
-  figcaption a[href^="/tag-"]::before,
-  .changelog p > a[href^="/tag-"]::before,
-  p a[href^="/tag-"]::before {
-    content: "\f02b";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    font-size: 0.75rem;
-    padding-right: 0.2rem;
-    color: inherit;
-    display: inline-block;
-  }
-
-  p a[href^="http://"]::after, p a[href^="https://"]::after,
-  figcaption a[href^="http://"]::after, figcaption a[href^="https://"]::after,
-  .changelog p > a[href^="http://"]::after, .changelog p > a[href^="https://"]::after
+  p a[href^="http://"]::before, p a[href^="https://"]::before,
+  figcaption a[href^="http://"]::before, figcaption a[href^="https://"]::before,
+  .changelog p > a[href^="http://"]::before, .changelog p > a[href^="https://"]::before
   {
-    content: "\f360";
+    content: "\f0c1";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 0.65rem;
-    padding-left: 0.2rem;
+    padding-right: 0.15rem;
     color: inherit;
     display: inline-block;
+    @apply not-italic;
   }
 
-  p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after,
-  .changelog p > a[href^="https://www.youtube.com/"]::after, .changelog p > a[href^="https://youtu.be/"]::after,
-  figcaption a[href^="https://www.youtube.com/"]::after, figcaption a[href^="https://youtu.be/"]::after
+  p a[href^="https://www.youtube.com/"]::before, p a[href^="https://youtu.be/"]::before,
+  .changelog p > a[href^="https://www.youtube.com/"]::before, .changelog p > a[href^="https://youtu.be/"]::before,
+  figcaption a[href^="https://www.youtube.com/"]::before, figcaption a[href^="https://youtu.be/"]::before
   {
     content: "\f167";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after,
-  .changelog p > a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
-  figcaption a[href^="https://en.wikipedia.org/"]::after, figcaption a[href^="https://fr.wikipedia.org/"]::after
+  p a[href^="https://en.wikipedia.org/"]::before, p a[href^="https://fr.wikipedia.org/"]::before,
+  .changelog p > a[href^="https://en.wikipedia.org/"]::before, .changelog > a[href^="https://fr.wikipedia.org/"]::before,
+  figcaption a[href^="https://en.wikipedia.org/"]::before, figcaption a[href^="https://fr.wikipedia.org/"]::before
   {
     content: "\f266";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://www.instagram.com/"]::after,
-  .changelog p > a[href^="https://www.instagram.com/"]::after,
-  figcaption a[href^="https://www.instagram.com/"]::after
+  p a[href^="https://www.instagram.com/"]::before,
+  .changelog p > a[href^="https://www.instagram.com/"]::before,
+  figcaption a[href^="https://www.instagram.com/"]::before
   {
     content: "\f16d";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://github.com/"]::after
+  p a[href^="https://github.com/"]::before
   {
     content: "";
-    padding-left: 0;
+    padding-right: 0;
   }
 
   p a[href^="mailto"]::after {
@@ -352,7 +341,7 @@
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 0.65rem;
-    padding-left: 0.2rem;
+    padding-left: 0.15rem;
     color: inherit;
     display: inline-block;
   }

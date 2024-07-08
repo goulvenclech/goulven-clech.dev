@@ -48,8 +48,8 @@ export class Card extends HTMLElement {
           <h3 class="mb-0 mt-0 leading-relaxed">
             ${this.title}
           </h3>
-          <span class="mt-0 text-ellipsis py-0 line-clamp-3">
-            ${this.abstract} — ${this.date}
+          <span class="mt-0 text-ellipsis py-0 line-clamp-4 sm:line-clamp-3">
+            ${this.abstract} —<span class="whitespace-nowrap"> ${this.date}</span>
           </span>
         </article>
       </a>
