@@ -14,25 +14,8 @@ const { Content } = await (entry.render?.() ?? { Content: null })
 ---
 
 <li class="my-6 flex flex-row gap-2">
-	<div class="w-6 shrink-0 grow-0 text-center">
-		{
-			entry.type == "blog" ? (
-				<i class="fa-solid fa-newspaper text-xs" />
-			) : entry.type == "feature" ? (
-				<i class="fa-solid fa-star text-xs" />
-			) : entry.type == "page" ? (
-				<i class="fa-solid fa-file text-xs" />
-			) : entry.type == "content" ? (
-				<i class="fa-solid fa-pencil text-xs" />
-			) : entry.type == "memory" ? (
-				<i class="fa-solid fa-monument text-xs" />
-			) : (
-				<i class="fa-solid fa-rocket text-xs" />
-			)
-		}
-	</div>
 	<div class="changelog grow">
-		<span class="font-bold">{entry.name}:</span>
+		<strong>{entry.name}:</strong>
 		{entry.description}
 		{entry.url && <a href={entry.url}>{entry.url_caption}</a>}
 		{Content && <Content />}

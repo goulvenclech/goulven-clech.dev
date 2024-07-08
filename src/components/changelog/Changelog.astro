@@ -30,16 +30,7 @@ export interface ChangelogEntry {
 	description: string
 	render?(): any
 }
-const changelogEntries: ChangelogEntry[] = [
-	...blogEntriesRaw.map((entry) => ({
-		type: "blog",
-		date: entry.data.date,
-		url: "/" + entry.slug,
-		url_caption: "Read more...",
-		name: entry.data.title,
-		description: entry.data.abstract,
-	})),
-	...changelogEntriesRaw.map((entry) => ({
+const changelogEntries: ChangelogEntry[] = changelogEntriesRaw.map((entry) => ({
 		type: entry.data.type,
 		date: new Date(entry.data.date),
 		url: entry.data.url || undefined,
@@ -49,8 +40,7 @@ const changelogEntries: ChangelogEntry[] = [
 		render(): any {
 			return entry.render()
 		},
-	})),
-]
+	}))
 
 // Sort by date, and reduce into array of years, each containing an array of months, each containing an array of entries
 const changelogEntriesSorted = changelogEntries.reduce(
@@ -78,8 +68,8 @@ const changelogEntriesSorted = changelogEntries.reduce(
 			// map each year to a div containing the months
 			.map(([year, months]) => (
 				<div>
-					<h3 class="mt-9">{year}</h3>
-					<ul class="mb-6 ml-6">
+					<h3 class="mt-9 text-center text-lg font-normal">☙ {year} ❧</h3>
+					<ul class="mb-6">
 						{
 							// Record is not iterable, so we have to convert it to an array
 							Object.entries(months)
@@ -87,19 +77,17 @@ const changelogEntriesSorted = changelogEntries.reduce(
 								.sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
 								// map each month to a ul containing the changelog entries
 								.map(([month, entries]) => (
-									<li>
 										<h4 class="mb-6 font-bold text-font-light dark:text-font-dark">
 											{new Date(0, Number(month)).toLocaleString("default", { month: "long" })}
 										</h4>
-										<ul class="ml-6">
-											{entries
-												// sort by date from most recent to oldest
-												.sort((entryA, entryB) => entryB.date.getTime() - entryA.date.getTime())
-												.map((entry) => (
-													<ChangelogCard entry={entry} />
-												))}
+										<ul class="tmp">
+												{entries
+													// sort by date from most recent to oldest
+													.sort((entryA, entryB) => entryB.date.getTime() - entryA.date.getTime())
+													.map((entry) => (
+														<ChangelogCard entry={entry} />
+													))}
 										</ul>
-									</li>
 								))
 						}
 					</ul>
@@ -108,16 +96,16 @@ const changelogEntriesSorted = changelogEntries.reduce(
 	}
 	{/* I should find a cleaner way to do this */}
 	<div>
-		<h3 class="mt-9">2020</h3>
-		<div class="mb-6 ml-6">
+		<h3 class="mt-9 text-center text-lg font-normal">☙ 2020 ❧</h3>
+		<div class="mb-6">
 			<ChangelogCard
 				entry={{
 					type: "memory",
 					date: new Date(2019),
-					name: "My old website",
-					description: "a simple HTML/CSS page presenting myself, with a language selector in JS.",
+					name: "Legacy",
+					description: "My website was a simple HTML/CSS page presenting myself, with a language selector in JS.",
 					url: "https://github.com/goulvenclech/goulven-clech.dev/blob/09f69e58a120875301c0a434823484348ae8b7be/index.html",
-					url_caption: "View source code",
+					url_caption: "View source code.",
 				}}
 			/>
 			<div class="-mt-2 ml-8">

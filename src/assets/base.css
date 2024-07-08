@@ -182,7 +182,8 @@
     @apply list-inside;
   }
 
-  /* I use a manicule as a list marker, and indent the list */
+  /* I use a manicule as a list marker, in the future I'll use "indent hanging" 
+     but it's not supported in Chrome yet */
   #entry > ul {
     @apply mb-6 list-none indent-0 md:indent-[-1.85rem];
   }
@@ -269,6 +270,14 @@
     @apply my-12 sm:my-18;
   }
 
+  .changelog {
+    @apply ml-6 -indent-6;
+  }
+
+  .changelog * {
+    @apply indent-0;
+  }
+
   /*
     LINKS
   */
@@ -281,7 +290,7 @@
   }
 
   figcaption a[href^="/tag-"]::before,
-  .changelog a[href^="/tag-"]::before,
+  .changelog p > a[href^="/tag-"]::before,
   p a[href^="/tag-"]::before {
     content: "\f02b";
     font-family: "Font Awesome 6 Free";
@@ -294,7 +303,7 @@
 
   p a[href^="http://"]::after, p a[href^="https://"]::after,
   figcaption a[href^="http://"]::after, figcaption a[href^="https://"]::after,
-  .changelog a[href^="http://"]::after, .changelog a[href^="https://"]::after
+  .changelog p > a[href^="http://"]::after, .changelog p > a[href^="https://"]::after
   {
     content: "\f360";
     font-family: "Font Awesome 6 Free";
@@ -306,7 +315,7 @@
   }
 
   p a[href^="https://www.youtube.com/"]::after, p a[href^="https://youtu.be/"]::after,
-  .changelog a[href^="https://www.youtube.com/"]::after, .changelog a[href^="https://youtu.be/"]::after,
+  .changelog p > a[href^="https://www.youtube.com/"]::after, .changelog p > a[href^="https://youtu.be/"]::after,
   figcaption a[href^="https://www.youtube.com/"]::after, figcaption a[href^="https://youtu.be/"]::after
   {
     content: "\f167";
@@ -315,7 +324,7 @@
   }
 
   p a[href^="https://en.wikipedia.org/"]::after, p a[href^="https://fr.wikipedia.org/"]::after,
-  .changelog a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
+  .changelog p > a[href^="https://en.wikipedia.org/"]::after, .changelog > a[href^="https://fr.wikipedia.org/"]::after,
   figcaption a[href^="https://en.wikipedia.org/"]::after, figcaption a[href^="https://fr.wikipedia.org/"]::after
   {
     content: "\f266";
@@ -324,7 +333,7 @@
   }
 
   p a[href^="https://www.instagram.com/"]::after,
-  .changelog a[href^="https://www.instagram.com/"]::after,
+  .changelog p > a[href^="https://www.instagram.com/"]::after,
   figcaption a[href^="https://www.instagram.com/"]::after
   {
     content: "\f16d";
