@@ -41,7 +41,7 @@ const { entry, index } = Astro.props
 			{entry.data.title}
 		</h3>
 		<span class="mt-0 line-clamp-4 text-ellipsis py-0 sm:line-clamp-3">
-			${entry.data.abstract} —<span class="whitespace-nowrap"> ${entry.data.date}</span>
+			{entry.data.abstract} —<span class="whitespace-nowrap"> {formatDate(entry.data.date)}</span>
 		</span>
 	</article>
 </a>
