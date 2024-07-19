@@ -3,20 +3,12 @@ import { getCollection } from "astro:content"
 import ChangelogCard from "../changelog/ChangelogCard.astro"
 import FigImage from "../figures/FigImage.astro"
 import oldWebsiteImage from "src/content/changelog/2023/old_website.png"
-import { isEntryPublished } from "src/utils"
-
 /**
  * This file is used to generate the changelog section in $pages/about.astro
  * An historic of this blog, from new features to page redesigns.
  * Use the blog and changelog collections to generate a list of entries, sorted by date.
  * It's a bit hacky, but it works.
  */
-
-// get all blogEntries that are published
-const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-	return isEntryPublished(data.published, true)
-})
-
 // get all others changelog entries
 const changelogEntriesRaw = await getCollection("changelog")
 

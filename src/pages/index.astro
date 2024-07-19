@@ -14,7 +14,7 @@ const pageTitle = "Hello"
 
 <Layout title={pageTitle}>
 	<section>
-		<h1>Hello 👋</h1>
+		<h1>Hello<span>✌</span></h1>
 		<p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
 		<p>
 			Currently, I'm working for the auction platform
@@ -33,3 +33,9 @@ const pageTitle = "Hello"
 		<Search />
 	</section>
 </Layout>
+<style>
+	h1 span {
+		@apply ml-1.5 inline-block font-normal;
+		transform: rotate(5deg);
+	}
+</style>
