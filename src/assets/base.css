@@ -21,8 +21,7 @@
 
 /**
  * FONTS
-  * Cormorant for display text (titles, etc.)
-  * EB Garamond for the serif text (paragraphs, etc.)
+  * EB Garamond for core text (paragraph, title, etc.)
   * Iosevka for the mono text (code, pre, etc.)
   * Abby for personal annotations (goofy incoming)
  */
@@ -38,38 +37,6 @@
   font-family: "EB Garamond";
   src: url("/EBGaramond/EBGaramond12-Italic.woff") format("woff");
   font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Cormorant";
-  src: url("/CormorantSC/CormorantGaramond-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Cormorant";
-  src: url("/CormorantSC/CormorantGaramond-Italic.woff2") format("woff2");
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Cormorant";
-  src: url("/CormorantSC/Cormorant-Medium.woff2") format("woff2");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Cormorant";
-  src: url("/CormorantSC/Cormorant-MediumItalic.woff2") format("woff2");
-  font-weight: bold;
   font-style: italic;
   font-display: swap;
 }
@@ -134,16 +101,16 @@
   h1,
   h2,
   h3 {
-    @apply mb-6 mt-12 font-bold leading-none text-font-light dark:text-font-dark;
+    @apply mb-6 mt-12 leading-none text-font-light dark:text-font-dark;
   }
 
   h1 {
-    @apply text-pretty font-display text-xl sm:text-2xl;
+    @apply text-pretty text-xl sm:text-2xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
-    @apply text-pretty font-display text-lg sm:text-xl;
+    @apply text-pretty text-lg sm:text-xl;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
@@ -153,7 +120,7 @@
 
   /* Drop cap — Don't ask why I need the fix below, I'll cry */
   #entry > p:first-of-type::first-letter {
-    @apply float-left mr-1 font-display text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
+    @apply float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
   }
 
   /* Fix for Firefox and older browsers */
@@ -239,21 +206,19 @@
     @apply line-through decoration-primary decoration-[1.5px] underline-offset-4;
   }
 
-  #entry annotation,
-  .changelog annotation {
+  annotation {
     @apply mx-3 mt-3 block font-goofy text-xs text-primary no-underline;
     transform: rotate(-1deg);
   }
 
   @media screen(sm) {
-    #entry annotation,
-    .changelog annotation {
+    annotation {
       @apply mx-9;
     }
   }
 
   @media screen(xl) {
-    #entry annotation {
+    annotation {
       @apply float-right clear-right -mr-[20rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
     }
 

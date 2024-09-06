@@ -55,10 +55,8 @@ module.exports = {
     extend: {
       fontFamily: {
         // Self hosted. See base.css for the font-face declaration
-        // Cormorant is an elegant and complete Garamond display font, but too light for body text (free)
-        display: ['"Cormorant", "EB Garamond", "Source Serif 4"', ...defaultTheme.fontFamily.serif],
-        // EB Garamond is a beautiful and complete Garamond font, fidelity to the original (free)
-        serif: ['"EB Garamond", "Cormorant", "Source Serif 4"', ...defaultTheme.fontFamily.serif],
+        // EB Garamond is a beautiful and complete Garamond font, fidel to the original (free)
+        serif: ['"EB Garamond", "Source Serif 4"', ...defaultTheme.fontFamily.serif],
         // Iosevka is a monospace font with a lot of ligatures and a good readability (free)
         mono: ["Iosevka", ...defaultTheme.fontFamily.mono],
         // Abby is a handwritten font, used for personal annotations (paid)
