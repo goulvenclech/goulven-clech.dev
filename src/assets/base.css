@@ -102,39 +102,37 @@
   h2,
   h3 {
     @apply mb-6 mt-12 leading-none text-font-light dark:text-font-dark;
+    font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h1 {
     @apply text-pretty text-xl sm:text-2xl;
-    font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h2 {
     @apply text-pretty text-lg sm:text-xl;
-    font-feature-settings: "liga", "clig", "onum", "ss01";
+  }
+
+  h3 {
+    @apply font-bold;
   }
 
   /*
     ENTRIES ONLY TYPOGRAPHY
   */
 
-  /* Drop cap — Don't ask why I need the fix below, I'll cry */
+  /* Drop cap */
   #entry > p:first-of-type::first-letter {
-    @apply float-left mr-1 text-[calc(19px*2+16.25px*3)] leading-none sm:text-[calc(20px*2+16.25px*3)];
+    /* Font size is 2.5 times the text size * 1.625 (line height) */
+    /* Margin top verticaly align the drop cap with the two text lines */
+    @apply float-left mr-1 mt-[3px] text-[calc(18px*1.625*2.5)] sm:text-[calc(20px*1.625*2.5)];
   }
 
-  /* Fix for Firefox and older browsers */
-  @supports (not (initial-letter: 5)) and (not (-webkit-initial-letter: 5)) {
-    #entry > p:first-of-type::first-letter {
-      @apply mt-[0.2rem] sm:mt-[0.3rem];
-    }
-  }
-
-  /* Fix for Safari and Chrome */
+  /* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
+  /* Use @supports to discriminate Firefox and olders browsers */
   @supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
     #entry > p:first-of-type::first-letter {
-      @apply mt-[-0.7rem] sm:mt-[-0.45rem];
-      line-height: 0.8;
+      @apply mb-[-2rem] leading-none;
     }
   }
 
