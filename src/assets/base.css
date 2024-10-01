@@ -95,7 +95,7 @@
     TYPOGRAPHY
   */
   p {
-    @apply mb-6 text-sm leading-relaxed sm:text-base;
+    @apply relative mb-6 text-sm leading-relaxed sm:text-base;
   }
 
   h1,
@@ -223,6 +223,16 @@
     /* TODO: fix the annotation position in lists */
     .changelog annotation {
       @apply float-right clear-right -mr-[15rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
+    }
+  }
+
+  side-note {
+    @apply my-6 block px-8 text-xs leading-snug;
+  }
+
+  @media screen(xl) {
+    side-note {
+      @apply relative float-right clear-right mr-[-350px] mt-0 w-[350px];
     }
   }
 

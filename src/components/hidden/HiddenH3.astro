@@ -7,6 +7,6 @@
 const props = Astro.props
 ---
 
-<h3 {...props} class="invisible m-0 h-0">
-  <slot />
+<h3 {...props} class="invisible m-0 h-0" aria-hidden="true">
+	<slot />
 </h3>

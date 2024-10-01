@@ -6,24 +6,31 @@ import ToTop from "$components/icons/ToTop.astro"
  */
 ---
 
-<footer class="text-font-light dark:text-font-dark sm:my-18 my-12 flex items-center gap-6">
-  <ToTop />
-  <DarkMode />
-  <a class="hover:text-primary dark:hover:text-primary" href="/about" title="About this blog">
-    <i class="fa-solid fa-circle-info"></i>
-  </a>
-  <a
-    class="hover:text-primary dark:hover:text-primary"
-    href="https://github.com/goulvenclech/goulven-clech.dev/"
-    title="See source code"
-  >
-    <i class="fab fa-github"></i>
-  </a>
-  <a
-    class="hover:text-primary dark:hover:text-primary"
-    href="https://www.linkedin.com/in/goulvenclech//"
-    title="My LinkedIn profile"
-  >
-    <i class="fab fa-linkedin"></i>
-  </a>
+<footer class="my-12 flex items-center gap-6 text-font-light dark:text-font-dark sm:my-18">
+	<ToTop />
+	<DarkMode />
+	<a
+		class="hover:text-primary dark:hover:text-primary"
+		href="/about"
+		title="About this blog"
+		aria-label="About this blog"
+	>
+		<i class="fa-solid fa-circle-info"></i>
+	</a>
+	<a
+		class="hover:text-primary dark:hover:text-primary"
+		href="https://github.com/goulvenclech/goulven-clech.dev/"
+		aria-label="GitHub"
+		title="See source code"
+	>
+		<i class="fab fa-github"></i>
+	</a>
+	<a
+		class="hover:text-primary dark:hover:text-primary"
+		href="https://www.linkedin.com/in/goulvenclech//"
+		aria-label="LinkedIn"
+		title="My LinkedIn profile"
+	>
+		<i class="fab fa-linkedin"></i>
+	</a>
 </footer>

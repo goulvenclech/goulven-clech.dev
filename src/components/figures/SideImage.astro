@@ -1,0 +1,32 @@
+---
+import { Picture as AstroPicture, getConfiguredImageService, getImage } from "astro:assets"
+import type { LocalImageServiceWithPlaceholder } from "src/imageService"
+/**
+ * If you want to understand this component, you'll need to look at :
+ * -> src/imageService.ts
+ */
+const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
+const placeholderURL = await imageService.generatePlaceholder(
+	Astro.props.src.src,
+	Astro.props.src.width,
+	Astro.props.src.height
+)
+const goodQualityURL = await getImage({
+	src: Astro.props.src,
+})
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const { ...props } = Astro.props as any
+---
+
+<AstroPicture
+	{...props}
+	data-zoomable
+	data-zoom-src={goodQualityURL}
+	width={Astro.props.src.width / 2}
+	densities={Astro.props.densities ?? [1.5, 2]}
+	formats={Astro.props.formats ?? ["webp"]}
+	class="mb-3 w-full max-w-[350px] overflow-hidden rounded"
+	style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
+	onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+/>

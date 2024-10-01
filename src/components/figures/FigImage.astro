@@ -2,12 +2,6 @@
 import { Picture as AstroPicture, getConfiguredImageService, getImage } from "astro:assets"
 import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
- * ⚠️ Warning for beginners ⚠️
- * What you're about to read here is an overly complicated and far-fetched way of
- * displaying images with Astro. Mainly to gain performance and to display a
- * placeholder during image loading.
- * You should rather use the default utils for images :
- * -> https://docs.astro.build/en/guides/images/
  * If you want to understand this component, you'll need to look at :
  * -> src/imageService.ts
  */
@@ -37,7 +31,7 @@ const { caption, source, ...props } = Astro.props as any
 		style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
 		onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 	/>
-	<figcaption class="mx-4 my-2 text-center text-xs italic sm:text-sm">
+	<figcaption class="mx-8 my-2 text-pretty text-center text-xs italic sm:text-sm">
 		{caption}
 		{source && <a href={source}> Source</a>}
 	</figcaption>
