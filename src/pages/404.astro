@@ -1,4 +1,5 @@
 ---
+import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 /**
  * This will build to a 404.html page. Most deploy services will find and use it.
@@ -8,9 +9,9 @@ import Layout from "$layouts/Layout.astro"
 <Layout title="Oops">
 	<section>
 		<h1>Oops</h1>
+		<p>The page you are looking for doesn't exist or has been deleted.</p>
 		<p>
-			The page you are looking for doesn't exist or has been deleted. <a href="/">Return to home</a
-			>?
+			<ReturnHome />
 		</p>
 	</section>
 </Layout>

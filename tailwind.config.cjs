@@ -14,12 +14,12 @@ module.exports = {
      * See -> https://tailwindcss.com/docs/font-size#customizing-your-theme
      */
     fontSize: {
-      xs: "16px",
-      sm: "18px",
-      base: "20px",
-      lg: "24px",
-      xl: "28px",
-      "2xl": "40px",
+      xs: ["14px", "20px"],
+      sm: ["16px", "24px"],
+      base: ["18px", "28px"],
+      lg: ["20px", "28px"],
+      xl: ["24px", "28px"],
+      "2xl": ["30px", "28px"],
     },
     /**
      * Blog custom colors 🎨

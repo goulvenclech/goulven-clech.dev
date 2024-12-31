@@ -15,11 +15,11 @@ export async function GET(context: any) {
     title: "Goulven CLEC'H - Blog",
     description: "I'm a software developer based in Toulouse, France. Welcome to my personal blog!",
     site: context.site,
-    items: blogEntriesRaw.map(({ slug, data }) => ({
+    items: blogEntriesRaw.map(({ id, data }) => ({
       title: data.title,
       description: data.abstract,
       pubDate: data.date,
-      link: context.site + slug,
+      link: context.site + id,
       // No full content in the RSS feed cause I don't know
       // how to parse MDX in RSS yet 😥
     })),

@@ -7,7 +7,7 @@ import { Image } from "astro:assets"
  * @param {string} user - What is the user's GitHub ID?
  */
 interface Props {
-  user: string
+	user: string
 }
 
 const { user } = Astro.props
@@ -18,11 +18,11 @@ const { user } = Astro.props
  * See -> https://docs.github.com/en/rest/overview/other-authentication-methods#via-personal-access-tokens
  */
 const userData: any = EleventyFetch(`https://api.github.com/user/${user}`, {
-  duration: "1d",
-  type: "json",
-  headers: {
-    Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
-  },
+	duration: "1d",
+	type: "json",
+	headers: {
+		Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
+	},
 })
 
 // Got what what we needed 💰 See response format ->
@@ -31,15 +31,21 @@ const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userD
 ---
 
 {
-  userName ? (
-    <a
-      href={userUrl}
-      class="whitespace-nowrap text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary"
-    >
-      <Image src={avatarUrl} width={24} height={24} alt="..." class="mr-1 inline rounded-full" />
-      {userName}
-    </a>
-  ) : (
-    <span class="text-font-light">Error</span>
-  )
+	userName ? (
+		<a
+			href={userUrl}
+			class="github-inline whitespace-nowrap text-font-light before:content-none hover:text-primary dark:text-font-dark dark:hover:text-primary"
+		>
+			<Image src={avatarUrl} width={24} height={24} alt="..." class="mr-1 inline rounded-full" />
+			{userName}
+		</a>
+	) : (
+		<span class="text-font-light">Error</span>
+	)
 }
+<style>
+	/* Remove link symbol, set by base.css */
+	.github-inline::before {
+		content: "";
+	}
+</style>

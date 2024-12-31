@@ -16,7 +16,7 @@ At its heart, this project looks like any blog made with Astro, you can start by
 
 - [Open Library](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/BookBlock.astro) & [Google Maps](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/MapsBlock.astro) blocks: nicely displays API results in blog entries.
 
-- [Dark mode](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/icons/DarkMode.astro): toggle between light, dark, and system color schemes. Use local storage to persist the user's choice.
+- [Dark mode](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/controls/DarkMode.astro): toggle between light, dark, and system color schemes. Use local storage to persist the user's choice.
 
 - [Custom image service](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/imageService.ts): retrieved from [Erika's blog](https://erika.florist/), gain performance and display a placeholder during image loading.
 

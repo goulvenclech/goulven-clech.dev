@@ -1,10 +1,11 @@
-import { defineConfig } from "astro/config"
+import { defineConfig, envField } from "astro/config"
 import { inject } from "@vercel/analytics"
 import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
 
+// Astro Expressive Code - Used to style code blocks
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
 const darkThemeJsoncString = fs.readFileSync(
   new URL(`src/assets/code-dark-theme.jsonc`, import.meta.url),
@@ -31,7 +32,7 @@ const astroExpressiveCodeOptions = {
   },
 }
 
-// Vercel analytics
+// Vercel analytics - I need to get rid of this... Or Vercel as a whole
 inject()
 
 // https://astro.build/config
@@ -43,4 +44,11 @@ export default defineConfig({
       entrypoint: "./src/imageService.ts",
     },
   },
+	env: {
+    schema: {
+      WEBSITE_URL: envField.string({ context: "client", access: "public", default: "http://localhost:4321/"}),
+      MAPS_TOKEN: envField.string({ context: "client", access: "public"}),
+      GITHUB_TOKEN: envField.string({ context: "client", access: "public"}),
+    }
+  }
 })

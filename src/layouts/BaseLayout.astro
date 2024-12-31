@@ -46,10 +46,10 @@ const {
 			 * This script is inlined and put at the top of the body to avoid a flicker of light mode.
 			 * It initializes the dark mode based on the local storage or the system preference.
 			 * After page load, the dark mode is handled by the DarkMode component
-			 * See there -> src/components/icons/DarkMode.astro
+			 * See there -> src/components/controls/DarkMode.astro
 			 */
 			// Get theme from local storage and/or browser media queries (system).
-			const theme = localStorage.getItem("theme")
+			const theme = localStorage.getItem("color-theme")
 			const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
 			// If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
@@ -62,18 +62,16 @@ const {
 				document.documentElement.classList.remove("dark")
 				document.documentElement.setAttribute("data-theme", "light")
 			}
-			// If local theme is not set, look at the system preference and initialize the local storage.
+			// If local theme is not set, set it to system theme and apply it.
 			if (!theme) {
-				if (isSystemDark == false) {
-					localStorage.setItem("theme", "system")
-					document.documentElement.classList.remove("dark")
-					document.documentElement.setAttribute("data-theme", "light")
-				} else {
-					// By default, if local theme is not set and system is dark or not set
-					// we are going dark 🥷🥷🥷
-					localStorage.setItem("theme", "system")
+				if (isSystemDark) {
+					localStorage.setItem("color-theme", "system")
 					document.documentElement.classList.add("dark")
 					document.documentElement.setAttribute("data-theme", "dark")
+				} else {
+					localStorage.setItem("color-theme", "system")
+					document.documentElement.classList.remove("dark")
+					document.documentElement.setAttribute("data-theme", "light")
 				}
 			}
 		</script>

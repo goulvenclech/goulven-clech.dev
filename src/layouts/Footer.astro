@@ -1,36 +1,32 @@
 ---
-import DarkMode from "$components/icons/DarkMode.astro"
-import ToTop from "$components/icons/ToTop.astro"
+import DarkMode from "$components/controls/DarkMode.astro"
+import ToTop from "$components/controls/ToTop.astro"
 /**
  * Simple footer. Mainly used to give some credits to Cesar.
  */
 ---
 
-<footer class="my-12 flex items-center gap-6 text-font-light dark:text-font-dark sm:my-18">
-	<ToTop />
-	<DarkMode />
-	<a
-		class="hover:text-primary dark:hover:text-primary"
-		href="/about"
-		title="About this blog"
-		aria-label="About this blog"
+<footer>
+	<p>
+		If you have any questions or feedback, feel free to reach out by
+		<a href="mailto:goulven.clech@protonmail.com">email</a>
+	</p>
+	<nav
+		class="my-10 flex flex-wrap items-center gap-5 text-sm text-font-light dark:text-font-dark sm:my-14"
 	>
-		<i class="fa-solid fa-circle-info"></i>
-	</a>
-	<a
-		class="hover:text-primary dark:hover:text-primary"
-		href="https://github.com/goulvenclech/goulven-clech.dev/"
-		aria-label="GitHub"
-		title="See source code"
-	>
-		<i class="fab fa-github"></i>
-	</a>
-	<a
-		class="hover:text-primary dark:hover:text-primary"
-		href="https://www.linkedin.com/in/goulvenclech//"
-		aria-label="LinkedIn"
-		title="My LinkedIn profile"
-	>
-		<i class="fab fa-linkedin"></i>
-	</a>
+		<ToTop />
+		<DarkMode />
+		<a href="/about" title="About this blog" aria-label="About this blog">About</a>
+		<a href="/feed.xml" title="RSS feed" aria-label="RSS feed">Feed</a>
+		<a
+			href="https://github.com/goulvenclech/goulven-clech.dev/"
+			aria-label="GitHub"
+			title="See source code">Github</a
+		>
+		<a
+			href="https://www.linkedin.com/in/goulvenclech//"
+			aria-label="LinkedIn"
+			title="My LinkedIn profile">LinkedIn</a
+		>
+	</nav>
 </footer>

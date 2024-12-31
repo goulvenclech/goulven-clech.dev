@@ -1,0 +1,62 @@
+---
+import Layout from "$layouts/Layout.astro"
+import ResumeSection from "$components/resume/Resume.astro"
+import ReturnHome from "$components/controls/ReturnHome.astro"
+
+/**
+ * Misc page with legal notice, changelog, etc.
+ */
+const pageTitle = "About this blog"
+---
+
+<Layout title={pageTitle}>
+	<section>
+		<h1>
+			Goulven C<strong style="font-feature-settings: 'smcp' 1;">LEC'H</strong>
+		</h1>
+		<p>
+			I am a 27 years old <i>software engineer</i> with extensive experience in <i>Elixir</i>,
+			<i>Rust</i>, and <i>JavaScript/TypeScript</i> web ecosystems.
+		</p>
+		<p>
+			Interested in <i>functional programming</i> and <i>software craftsmanship</i>, I want to
+			deliver maintainable and performant software, that solve real-world problems. I'm also
+			passionate about game development, hiking in forests, visiting cute villages, kayaking in
+			rivers, and drinking specialty coffees.
+		</p>
+		<p>
+			<ReturnHome />
+		</p>
+	</section>
+	<ResumeSection />
+	<section id="language">
+		<h2>Languages</h2>
+		<ul>
+			<li>
+				<strong>French:</strong> Native.
+			</li>
+			<li>
+				<strong>English:</strong> Professional proficiency (C1), and seeking experience in an English-speaking
+				company to reach the next level.
+			</li>
+			<li>
+				<strong>Finnish:</strong> Basic skills (A1), from courses with native speakers and autonomous
+				learning. Seeking experience in a English-speaking Finnish company to reach the next level.
+			</li>
+		</ul>
+	</section>
+	<style>
+		#language ul {
+			@apply my-5 list-none indent-0 md:indent-[-2rem];
+		}
+
+		#language li {
+			@apply my-5;
+		}
+
+		#language li::before {
+			content: "☞";
+			@apply mr-2;
+		}
+	</style>
+</Layout>

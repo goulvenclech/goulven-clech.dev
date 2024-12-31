@@ -11,18 +11,9 @@ interface Props {
 const { image, to } = Astro.props
 ---
 
-<a
-	href={to}
-	class="mb-6 flex flex-col overflow-hidden rounded hover:bg-alt-light dark:hover:bg-alt-dark sm:flex-row"
->
-	<Image
-		src={image}
-		width={500}
-		height={500}
-		alt=""
-		class="max-h-36 w-auto object-cover sm:h-[162.5px] sm:max-h-48 sm:w-[150px]"
-	/>
-	<article class="mx-6 my-5 min-w-0 text-font-light dark:text-font-dark">
+<a href={to} class="card">
+	<Image src={image} width={500} height={500} alt="" />
+	<article>
 		<slot />
 	</article>
 </a>

@@ -26,7 +26,7 @@ const { ...props } = Astro.props as any
 	width={Astro.props.src.width / 2}
 	densities={Astro.props.densities ?? [1.5, 2]}
 	formats={Astro.props.formats ?? ["webp"]}
-	class="mb-3 w-full max-w-[350px] overflow-hidden rounded"
+	class="my-2.5 w-full max-w-[350px] overflow-hidden rounded"
 	style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
 	onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 />

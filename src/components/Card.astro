@@ -1,6 +1,6 @@
 ---
-import { Image } from "astro:assets"
 import { formatDate } from "src/utils"
+import Block from "./blocks/Block.astro"
 /**
  * Used to present an entry as a card, also a link to that entry.
  * ⚠️ Duplication of src/components/Card.js ⚠️
@@ -8,40 +8,19 @@ import { formatDate } from "src/utils"
  * search.astro script. And this component is used for SSR, for example to
  * render the default results (before the script is loaded or if JS is disabled).
  * @param {any} entry - What an exciting entry we want to show?
- * @param {number} index - What's the index of this card?
  */
 interface Props {
 	entry: any // TO DO: should be better typed
-	index: number // Used to alternate which side the cover is displayed on
 }
 
-const { entry, index } = Astro.props
+const { entry } = Astro.props
 ---
 
-<a
-	href={`/${entry.slug}`}
-	class="flex flex-col overflow-hidden rounded hover:bg-alt-light dark:hover:bg-alt-dark sm:flex-row"
->
-	{
-		entry.data.image && (
-			<Image
-				src={entry.data.image}
-				width={500}
-				height={500}
-				alt=""
-				class:list={[
-					"max-h-36 w-auto object-cover sm:h-[162.5px] sm:max-h-48 sm:w-[150px]",
-					{ "sm:order-2": index % 2 == 1 },
-				]}
-			/>
-		)
-	}
-	<article class="mx-6 my-5 min-w-0">
-		<h3 class="mb-0 mt-0 leading-relaxed">
-			{entry.data.title}
-		</h3>
-		<span class="mt-0 line-clamp-4 text-ellipsis py-0 sm:line-clamp-3">
-			{entry.data.abstract} —<span class="whitespace-nowrap"> {formatDate(entry.data.date)}</span>
-		</span>
-	</article>
-</a>
+<Block image={entry.data.image} to={`/${entry.id}`}>
+	<h3 class="my-0 leading-relaxed">
+		{entry.data.title}
+	</h3>
+	<span class="mt-0 line-clamp-4 text-ellipsis py-0 sm:line-clamp-3">
+		{entry.data.abstract} —<span class="whitespace-nowrap"> {formatDate(entry.data.date)}</span>
+	</span>
+</Block>

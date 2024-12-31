@@ -44,7 +44,7 @@ const pageTitle = `Published in ${year}`
 			{
 				entries
 					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-					.map((blogEntry, index) => <Card entry={blogEntry} index={index} />)
+					.map((blogEntry) => <Card entry={blogEntry} />)
 			}
 		</div>
 	</section>

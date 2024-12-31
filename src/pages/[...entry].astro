@@ -1,32 +1,29 @@
 ---
-import { getCollection } from "astro:content"
+import { getCollection, render } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import { formatDate, isEntryPublished } from "src/utils"
 
 import TableOfContent from "$components/TableOfContent.astro"
-import FigImage from "$components/figures/FigImage.astro"
+import FigImage from "$components/images/FigImage.astro"
 /**
  * Create a page for each blog entries, display frontmatter
  * informations & the content.
  */
-
-// New "content collection" from Astro 2.0 are super duper cool,
-// but can be a little tricky to understand. Read doc first ->
-// https://docs.astro.build/en/guides/content-collections
-// Here we get all blogEntries that are published
 export async function getStaticPaths() {
 	const blogEntries = await getCollection("blog", ({ data }) => {
 		return isEntryPublished(data.published)
 	})
 
 	return blogEntries.map((entry) => ({
-		params: { entry: entry.slug },
+		params: {
+			entry: entry.id,
+		},
 		props: { entry },
 	}))
 }
 
 const { entry } = Astro.props
-const { Content, headings } = await entry.render()
+const { Content, headings } = await render(entry)
 ---
 
 <Layout
@@ -63,7 +60,67 @@ const { Content, headings } = await entry.render()
 	.frame.is-terminal .header {
 		display: none;
 	}
+
 	.expressive-code {
-		@apply mb-6;
+		@apply my-5;
+	}
+
+	/* Drop cap */
+	#entry > p:first-of-type::first-letter {
+		/* Font size is 2.5 times the text size * 1.625 (line height) */
+		/* Margin top verticaly align the drop cap with the two text lines */
+		@apply float-left mr-1 mt-[3px] text-[calc(16px*1.625*2.5)] sm:text-[calc(18px*1.625*2.5)];
+	}
+
+	/* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
+	/* Use @supports to discriminate Firefox and olders browsers */
+	@supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
+		#entry > p:first-of-type::first-letter {
+			@apply mb-[-2rem] leading-none;
+		}
+	}
+
+	/* If an entry start with a title (so it appear in the TOC)
+    hide it for a better reading flow */
+	#entry h2:first-child {
+		@apply invisible m-0 h-0;
+	}
+
+	#entry > ul,
+	#entry > ol {
+		@apply list-inside;
+	}
+
+	/* I use a manicule as a list marker, in the future I'll use "indent hanging"
+     but it's not supported in Chrome yet */
+	#entry > ul {
+		@apply my-5 list-none indent-0 md:indent-[-1.85rem];
+	}
+
+	#entry > ul > li::before {
+		content: "☞";
+		@apply mr-2;
+	}
+
+	#entry > ol {
+		@apply mb-5;
+	}
+
+	#entry > ol > li,
+	#entry > ul > li {
+		@apply my-2.5 ml-0;
+	}
+
+	@media screen(sm) {
+		#entry > ul,
+		#entry > ol {
+			@apply list-outside;
+		}
+	}
+
+	#entry li code,
+	#entry p code {
+		overflow-wrap: break-word;
+		@apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
 	}
 </style>

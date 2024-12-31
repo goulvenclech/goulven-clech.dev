@@ -18,14 +18,14 @@
 	buttons?.forEach((button) => {
 		button.addEventListener("click", () => {
 			// Get the current theme from localStorage
-			const theme = localStorage.theme
+			const theme = localStorage.getItem("color_theme") as Theme
 			// And change it to the next one
 			changeTheme(theme)
 		})
 	})
 
 	// Theme can be "dark" or "light" or the browser preference ("system")
-	// "Dark" is the default theme if no preference is set
+	// "System" is the default theme if no preference is set
 	type Theme = "dark" | "light" | "system"
 
 	/**
@@ -37,19 +37,19 @@
 	const changeTheme = (theme: Theme) => {
 		switch (theme) {
 			case "system":
-				localStorage.theme = "light"
+				localStorage.setItem("color_theme", "light")
 				if (buttons) changeIcon("light", buttons)
 				document.documentElement.classList.remove("dark")
 				document.documentElement.setAttribute("data-theme", "light")
 				break
 			case "light":
-				localStorage.theme = "dark"
+				localStorage.setItem("color_theme", "dark")
 				if (buttons) changeIcon("dark", buttons)
 				document.documentElement.classList.add("dark")
 				document.documentElement.setAttribute("data-theme", "dark")
 				break
 			case "dark":
-				localStorage.theme = "system"
+				localStorage.setItem("color_theme", "system")
 				if (buttons) changeIcon("system", buttons)
 				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 					document.documentElement.classList.add("dark")
@@ -59,12 +59,17 @@
 					document.documentElement.setAttribute("data-theme", "light")
 				}
 				break
-			// Should never happen, but just in case fallback as dark
+			// Should never happen, but just in case fallback as system
 			default:
-				localStorage.theme = "light"
-				if (buttons) changeIcon("light", buttons)
-				document.documentElement.classList.remove("dark")
-				document.documentElement.setAttribute("data-theme", "light")
+				localStorage.setItem("color_theme", "system")
+				if (buttons) changeIcon("system", buttons)
+				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+					document.documentElement.classList.add("dark")
+					document.documentElement.setAttribute("data-theme", "dark")
+				} else {
+					document.documentElement.classList.remove("dark")
+					document.documentElement.setAttribute("data-theme", "light")
+				}
 				break
 		}
 	}
@@ -94,5 +99,5 @@
 	}
 
 	// At page load, init the button icon to reflect the current theme
-	if (buttons) changeIcon(localStorage.theme, buttons)
+	if (buttons) changeIcon(localStorage.color_theme || "system", buttons)
 </script>

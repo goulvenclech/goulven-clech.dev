@@ -1,9 +1,10 @@
 ---
-import GithubInline from "$components/inlines/GithubInline.astro"
+import GithubInline from "$components/typography/GithubInline.astro"
 import Layout from "$layouts/Layout.astro"
 import Search from "$components/Search.astro"
+import { getMyAge } from "src/utils"
 /**
- * Home page of our blog, so we have to make a good first impression 💅
+ * Home page of my blog, so I have to make a good first impression 💅
  * Contains a presentation of myself (I love talking about myself) and the blog,
  * then display the last blog entries & some tags you could be interessed in.
  */
@@ -15,21 +16,25 @@ const pageTitle = "Hello"
 <Layout title={pageTitle}>
 	<section>
 		<h1>Hello<span>✌</span></h1>
-		<p>I'm <GithubInline user="35667800" />, a software developer based in Toulouse, France.</p>
 		<p>
-			Currently, I'm working for the auction platform
-			<a href="https://encheres-immo.com">Enchères Immo</a>, and I'm the co-founder of <a
-				href="https://gamedevalliance.fr/">Game Dev Alliance</a
-			>.
+			I'm <GithubInline user="35667800" />, a {getMyAge()} yo software developer based in Toulouse, France.
 		</p>
 		<p>
-			Here, I chat about <a href="/tag-web development">web development</a>, <a href="/tag-coffee"
-				>coffee</a
-			>...
+			Mainly working in the <i>Elixir</i>, <i>Rust</i>, and <i>TypeScript</i> web ecosystems, I'm currently
+			the lead developer of
+			<a href="https://encheres-immo.com">Enchères Immo</a>, a real estate auction platform, and the
+			co-creator of <a href="https://github.com/web-lsp/weblsp/">WEBlsp</a>, a language server for
+			the web. Learn more on my <a href="/resume">resume</a>.
+		</p>
+		<p>
+			Interested in <i>functional programming</i> and <i>software craftsmanship</i>, I want to
+			deliver maintainable and performant software, that solve real-world problems. I also love
+			talking about <a href="/tag-game development">game development</a> and
+			<a href="/tag-coffee">specialty coffees</a>.
 		</p>
 	</section>
 	<section>
-		<h2 class="mb-5" id="last_entries">Last Entries</h2>
+		<h2 id="last_entries">Blog entries</h2>
 		<Search />
 	</section>
 </Layout>

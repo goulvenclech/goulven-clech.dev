@@ -1,8 +1,9 @@
 ---
 import Layout from "$layouts/Layout.astro"
-import GithubInline from "$components/inlines/GithubInline.astro"
+import GithubInline from "$components/typography/GithubInline.astro"
 
 import Changelog from "$components/changelog/Changelog.astro"
+import ReturnHome from "$components/controls/ReturnHome.astro"
 
 /**
  * Misc page with legal notice, changelog, etc.
@@ -14,7 +15,8 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 <Layout title={pageTitle}>
 	<section>
 		<h1>{pageTitle}</h1>
-		<p>Everything you need to know about <a href="/">my blog</a>, and more.</p>
+		<p>All the boring stuff about this blog. Legal, colophon, changelog, and maybe more.</p>
+		<p><ReturnHome /></p>
 	</section>
 	<section>
 		<h2 id="legal_notice">Legal notice</h2>
@@ -25,8 +27,8 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 		</p>
 		<p>
 			<strong>Hosted by:</strong>
-			<a href="https://vercel.com/">Vercel</a>, domiciled in Covina, California, <abbr>USA</abbr>.
-			Contact them by
+			<a href="https://vercel.com/">Vercel</a>, domiciled in Covina, <abbr>USA</abbr>. Contact them
+			by
 			<a href="mailto:privacy@vercel.com">email</a>.
 		</p>
 		<p>
@@ -47,6 +49,45 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 			<strong>Others licenses:</strong>
 			Some entries may cite text, images or resources from external sources. Their original licenses
 			apply, and I indicate the authors if known.
+		</p>
+	</section>
+	<section>
+		<h2 id="colophon">Colophon</h2>
+		<p>
+			<strong>Typography:</strong> I mainly use
+			<a href="https://googlefonts.github.io/ebgaramond-specimen/">EB Garamond</a> by Georg Duffner,
+			a beautiful free and open-source serif typeface based on the 16th century designs of
+			<a href="https://fr.wikipedia.org/wiki/Garamond_(police_de_caract%C3%A8res)"
+				>Claude Garamond</a
+			>. In code snippets, I use
+			<a href="https://typeof.net/Iosevka/">Iosevka</a> by Belleve Invis, a more than complete open-source
+			monospace typeface that I severely underuse. And finally, annotations are set in
+			<a href="https://yourownfont.com/shop/product/abby/">Abby</a> by "Your Own Font Foundry", a cute
+			handwriting typeface (not free).
+		</p>
+		<p>
+			<strong>Technologies:</strong> This blog is built with <a href="https://astro.build/">Astro</a
+			>, I wrote a bit about this static website generator in a dedicated
+			<a href="/2023/launching-blog-astro">blog entry</a>. Notable dependencies include
+			<a href="https://tailwindcss.com/">Tailwind CSS</a> for styling,
+			<a href="https://github.com/expressive-code/expressive-code">expressive-code</a> for code blocks,
+			<a href="https://github.com/lovell/sharp">sharp</a> for image processing, and
+			<a href="https://github.com/francoischalifour/medium-zoom">medium-zoom</a> for image zooming.
+		</p>
+		<p>
+			<strong>Inspiration:</strong> A mishmash of inspiring links, in alphabetical order,
+			<a href="https://aureliendossantos.com/">Aurélien Dos Santos</a>,
+			<a href="https://www.edwardtufte.com/">Edward Tufte</a>,
+			<a href="https://erika.florist/">Erika</a>,
+			<a href="https://gwern.net/">Gwern Branwen</a>,
+			<a href="https://100r.co/">Hundred Rabbits</a>,
+			<a href="https://kalele.io/blog/">Kalele (Vaughn Vernon)</a>,
+			<a href="https://sinja.io/">OlegWock</a>,
+			<a href="https://pilcrowonpaper.com/">Pilcrow</a>,
+			<a href="https://practicaltypography.com/">Practical Typography</a>,
+			<a href="https://staffeng.com/">StaffEng</a>,
+			<a href="https://press.stripe.com/">Stripe Press</a>,
+			<a href="https://lethain.com/">Will Larson</a>.
 		</p>
 	</section>
 	<section>

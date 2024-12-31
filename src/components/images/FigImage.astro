@@ -19,7 +19,7 @@ const goodQualityURL = await getImage({
 const { caption, source, ...props } = Astro.props as any
 ---
 
-<figure class="my-6">
+<figure class="my-5">
 	<AstroPicture
 		{...props}
 		data-zoomable
@@ -33,6 +33,6 @@ const { caption, source, ...props } = Astro.props as any
 	/>
 	<figcaption class="mx-8 my-2 text-pretty text-center text-xs italic sm:text-sm">
 		{caption}
-		{source && <a href={source}> Source</a>}
+		{source && <a href={source}>Source</a>}
 	</figcaption>
 </figure>

@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import Card from "$components/Card.astro"
 import { isEntryPublished } from "src/utils"
+import ReturnHome from "$components/controls/ReturnHome.astro"
 /**
  * Create a page for each tag, display the related blog entries.
  */
@@ -35,17 +36,20 @@ const tag = Astro.props.tag
 const entries: Array<CollectionEntry<"blog">> = Astro.props.entries
 
 // Page title use in Hero & Metadata
-const pageTitle = `Tagged ${tag}`
+const pageTitle = `Tag: ${tag}`
 ---
 
 <Layout title={pageTitle}>
 	<section>
 		<h1>{pageTitle}</h1>
+		<p>
+			<ReturnHome />
+		</p>
 		<div class="flex flex-col gap-3">
 			{
 				entries
 					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-					.map((blogEntry, index) => <Card entry={blogEntry} index={index} />)
+					.map((blogEntry) => <Card entry={blogEntry} />)
 			}
 		</div>
 	</section>

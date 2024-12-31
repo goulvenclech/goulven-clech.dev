@@ -4,16 +4,16 @@
   nor Astro's global style balise (See -> https://docs.astro.build/guides/styling#global-styles )
 
   Unlike my friend Aurélien ( https://aureliendossantos.com/website ) I'm not interested in
-  diverse page styles nor conserving old page styles. I prefer a unique and unified style 
+  diverse page styles nor conserving old page styles. I prefer a unique and unified style
   which will evolve with me, and will force me to change the shape of the old pages.
-  I think this is the best way to make the different components of a page recognizable 
+  I think this is the best way to make the different components of a page recognizable
   (like a link or a title) and to ensure the continued evolution of accessibility.
 
   This file contain extensive use of TailwindCSS's @apply directive.
   (See -> https://tailwindcss.com/docs/functions-and-directives#apply )
 
   Specific styling for each component is done in the component's file. Using TailwindCSS.
-  (Example -> src/components/icons/ToTop.astro )
+  (Example -> src/components/controls/ToTop.astro )
 */
 @tailwind base;
 @tailwind components;
@@ -91,17 +91,21 @@
     font-feature-settings: "liga", "clig", "onum";
   }
 
+  main {
+    @apply mx-auto max-w-prose px-4 md:px-0;
+  }
+
   /*
     TYPOGRAPHY
   */
   p {
-    @apply relative mb-6 text-sm leading-relaxed sm:text-base;
+    @apply relative my-5 text-sm sm:text-base;
   }
 
   h1,
   h2,
   h3 {
-    @apply mb-6 mt-12 leading-none text-font-light dark:text-font-dark;
+    @apply mb-5 mt-10 text-font-light dark:text-font-dark;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
@@ -117,67 +121,9 @@
     @apply font-bold;
   }
 
-  /*
-    ENTRIES ONLY TYPOGRAPHY
-  */
-
-  /* Drop cap */
-  #entry > p:first-of-type::first-letter {
-    /* Font size is 2.5 times the text size * 1.625 (line height) */
-    /* Margin top verticaly align the drop cap with the two text lines */
-    @apply float-left mr-1 mt-[3px] text-[calc(18px*1.625*2.5)] sm:text-[calc(20px*1.625*2.5)];
-  }
-
-  /* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
-  /* Use @supports to discriminate Firefox and olders browsers */
-  @supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
-    #entry > p:first-of-type::first-letter {
-      @apply mb-[-2rem] leading-none;
-    }
-  }
-
-  /* If an entry start with a title (so it appear in the TOC) 
-    hide it for a better reading flow */
-  #entry h2:first-child {
-    @apply invisible m-0 h-0;
-  }
-
-  #entry > ul,
-  #entry > ol {
-    @apply list-inside;
-  }
-
-  /* I use a manicule as a list marker, in the future I'll use "indent hanging" 
-     but it's not supported in Chrome yet */
-  #entry > ul {
-    @apply mb-6 list-none indent-0 md:indent-[-1.85rem];
-  }
-
-  #entry > ul > li::before {
-    content: "☞";
-    @apply mr-2;
-  }
-
-  #entry > ol {
-    @apply mb-6;
-  }
-
-  #entry > ol > li,
-  #entry > ul > li {
-    @apply mb-3 ml-0;
-  }
-
-  @media screen(sm) {
-    #entry > ul,
-    #entry > ol {
-      @apply list-outside;
-    }
-  }
-
-  #entry li code,
-  #entry p code {
-    overflow-wrap: break-word;
-    @apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[14px] dark:border-alt-dark sm:text-[16px];
+  abbr,
+  strong {
+    @apply font-normal not-italic no-underline;
   }
 
   abbr {
@@ -185,15 +131,13 @@
     @apply uppercase;
   }
 
-  strong {
-    font-feature-settings: "smcp";
+  i abbr {
+    font-feature-settings: "c2sc";
+    @apply uppercase italic;
   }
 
-  abbr,
   strong {
-    letter-spacing: 0.05em;
-    margin-right: -0.05em;
-    @apply font-normal not-italic no-underline;
+    font-feature-settings: "smcp";
   }
 
   u {
@@ -204,68 +148,56 @@
     @apply line-through decoration-primary decoration-[1.5px] underline-offset-4;
   }
 
+  /*
+    BASE COMPONENTS
+  */
+  section {
+    @apply my-10 sm:my-14;
+  }
+
+  .card {
+    /* Only margin-bottom because card has sometimes prececed by an hidden title */
+    @apply mb-5 flex flex-col overflow-hidden whitespace-normal rounded no-underline before:!content-none hover:!bg-alt-light hover:!text-font-light dark:hover:!bg-alt-dark dark:hover:!text-font-dark sm:flex-row;
+  }
+
+  .card article {
+    @apply m-5 min-w-0 p-0;
+  }
+
+  .card img {
+    /* height is based on the height of .card article, width is arbitrary */
+    @apply h-[153.25px] w-full object-cover sm:max-w-[150px];
+  }
+
+  side-note,
   annotation {
-    @apply mx-3 mt-3 block font-goofy text-xs text-primary no-underline;
+    @apply my-5 block px-8 text-xs leading-snug;
+  }
+
+  annotation {
+    @apply font-goofy leading-normal text-primary;
     transform: rotate(-1deg);
   }
 
-  @media screen(sm) {
-    annotation {
-      @apply mx-9;
-    }
-  }
-
   @media screen(xl) {
+    side-note,
     annotation {
-      @apply float-right clear-right -mr-[20rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
-    }
-
-    /* TODO: fix the annotation position in lists */
-    .changelog annotation {
-      @apply float-right clear-right -mr-[15rem] -mt-20 ml-[calc(100%+0.75rem)] inline text-sm;
-    }
-  }
-
-  side-note {
-    @apply my-6 block px-8 text-xs leading-snug;
-  }
-
-  @media screen(xl) {
-    side-note {
       @apply relative float-right clear-right mr-[-350px] mt-0 w-[350px];
     }
   }
 
   /*
-    BASE COMPONENTS
-  */
-  section {
-    @apply my-12 sm:my-18;
-  }
-
-  .changelog {
-    @apply ml-6 -indent-6;
-  }
-
-  .changelog * {
-    @apply indent-0;
-  }
-
-  /*
     LINKS
   */
-  p a,
-  #toc a,
-  figcaption a,
-  .changelog > a {
+  a,
+  button {
     /* decoration has a fixed value, so it doesn't change with the font size */
     @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
   }
 
-  p a[href^="http://"]::before, p a[href^="https://"]::before,
-  figcaption a[href^="http://"]::before, figcaption a[href^="https://"]::before,
-  .changelog p > a[href^="http://"]::before, .changelog p > a[href^="https://"]::before
-  {
+  a[href^="http://"]::before, a[href^="https://"]::before,
+	a[href^="/about"]::before, a[href^="/feed.xml"]::before,
+	button::before {
     content: "\f0c1";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
@@ -276,40 +208,54 @@
     @apply not-italic;
   }
 
-  p a[href^="https://www.youtube.com/"]::before, p a[href^="https://youtu.be/"]::before,
-  .changelog p > a[href^="https://www.youtube.com/"]::before, .changelog p > a[href^="https://youtu.be/"]::before,
-  figcaption a[href^="https://www.youtube.com/"]::before, figcaption a[href^="https://youtu.be/"]::before
+  a[href^="/about"]::before {
+    content: "\f05a";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Free";
+  }
+
+  a[href^="/feed.xml"]::before {
+    content: "\f09e";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Free";
+  }
+
+  a[href^="https://www.youtube.com/"]::before, a[href^="https://youtu.be/"]::before
   {
     content: "\f167";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://en.wikipedia.org/"]::before, p a[href^="https://fr.wikipedia.org/"]::before,
-  .changelog p > a[href^="https://en.wikipedia.org/"]::before, .changelog > a[href^="https://fr.wikipedia.org/"]::before,
-  figcaption a[href^="https://en.wikipedia.org/"]::before, figcaption a[href^="https://fr.wikipedia.org/"]::before
+  a[href^="https://en.wikipedia.org/"]::before, a[href^="https://fr.wikipedia.org/"]::before
   {
     content: "\f266";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://www.instagram.com/"]::before,
-  .changelog p > a[href^="https://www.instagram.com/"]::before,
-  figcaption a[href^="https://www.instagram.com/"]::before
+  a[href^="https://www.instagram.com/"]::before
   {
     content: "\f16d";
     font-weight: 400;
     font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="https://github.com/"]::before
+  a[href^="https://github.com/"]::before
   {
-    content: "";
-    padding-right: 0;
+    content: "\f09b";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
   }
 
-  p a[href^="mailto"]::after {
+  a[href^="https://www.linkedin.com/"]::before
+  {
+    content: "\f08c";
+    font-weight: 400;
+    font-family: "Font Awesome 6 Brands";
+  }
+
+  a[href^="mailto"]::after {
     content: "\f1d8";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
@@ -317,6 +263,15 @@
     padding-left: 0.15rem;
     color: inherit;
     display: inline-block;
+  }
+
+  button#toTop::before {
+    content: "\f148";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    padding-left: 0.15rem;
+    /* Flip horizontally */
+    transform: scaleX(-1);
   }
 
   /*
@@ -327,11 +282,11 @@
     @apply ml-4 list-decimal p-0;
   }
 
-  /* 
+  /*
     Use ol li::before { content: none;} to remove the default marker.
     Then we add our own style using the ::marker pseudo-element.
 
-    NESTED LISTS 
+    NESTED LISTS
     counters() is used to support nested lists.
     (See -> https://developer.mozilla.org/en-US/docs/Web/CSS/counters )
     "\a0\a0" is used to add a double space between the marker and the list item.
