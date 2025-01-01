@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content"
+import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
 import Card from "./Card.astro"
 import { getImage } from "astro:assets"
@@ -12,9 +12,12 @@ export type clientBlogEntries = typeof blogEntriesFormatted
  */
 
 // get all blogEntries
-const blogEntriesRaw = await getCollection("blog", ({ data }) => {
-	return isEntryPublished(data.published, true)
-})
+const blogEntriesRaw: CollectionEntry<"Blog">[] = await getCollection(
+	"blog",
+	({ data }: CollectionEntry<"Blog">) => {
+		return isEntryPublished(data.published, true)
+	}
+)
 
 // Sort blog entries by date.
 const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
@@ -49,7 +52,7 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 		<div class="mb-5 ml-auto text-xs sm:text-sm">
 			<input
 				id="search"
-				class="peer border-b-[0.1rem] border-dotted bg-body-light text-font-light outline-none focus:text-primary dark:bg-body-dark dark:text-font-dark"
+				class="peer border-b-[0.1rem] border-dotted bg-body-light outline-none focus:text-primary dark:bg-body-dark"
 				placeholder="Search by title or keywords..."
 				type="text"
 			/>
@@ -133,7 +136,7 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 							(keyword) =>
 								entry.title.toLowerCase().includes(keyword) ||
 								entry.abstract.toLowerCase().includes(keyword) ||
-								entry.tags.some((tag) => tag.toLowerCase().includes(keyword))
+								entry.tags.some((tag: string) => tag.toLowerCase().includes(keyword))
 						)
 					)
 				} else {
