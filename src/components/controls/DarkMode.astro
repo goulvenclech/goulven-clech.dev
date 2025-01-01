@@ -18,7 +18,7 @@
 	buttons?.forEach((button) => {
 		button.addEventListener("click", () => {
 			// Get the current theme from localStorage
-			const theme = localStorage.getItem("color_theme") as Theme
+			const theme = localStorage.getItem("color-theme") as Theme
 			// And change it to the next one
 			changeTheme(theme)
 		})
@@ -37,19 +37,19 @@
 	const changeTheme = (theme: Theme) => {
 		switch (theme) {
 			case "system":
-				localStorage.setItem("color_theme", "light")
+				localStorage.setItem("color-theme", "light")
 				if (buttons) changeIcon("light", buttons)
 				document.documentElement.classList.remove("dark")
 				document.documentElement.setAttribute("data-theme", "light")
 				break
 			case "light":
-				localStorage.setItem("color_theme", "dark")
+				localStorage.setItem("color-theme", "dark")
 				if (buttons) changeIcon("dark", buttons)
 				document.documentElement.classList.add("dark")
 				document.documentElement.setAttribute("data-theme", "dark")
 				break
 			case "dark":
-				localStorage.setItem("color_theme", "system")
+				localStorage.setItem("color-theme", "system")
 				if (buttons) changeIcon("system", buttons)
 				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 					document.documentElement.classList.add("dark")
@@ -61,7 +61,7 @@
 				break
 			// Should never happen, but just in case fallback as system
 			default:
-				localStorage.setItem("color_theme", "system")
+				localStorage.setItem("color-theme", "system")
 				if (buttons) changeIcon("system", buttons)
 				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 					document.documentElement.classList.add("dark")
@@ -99,5 +99,5 @@
 	}
 
 	// At page load, init the button icon to reflect the current theme
-	if (buttons) changeIcon(localStorage.color_theme || "system", buttons)
+	if (buttons) changeIcon((localStorage.getItem("color-theme") as Theme) || "system", buttons)
 </script>

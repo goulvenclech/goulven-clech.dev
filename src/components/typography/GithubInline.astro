@@ -1,7 +1,7 @@
 ---
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
-import { Image } from "astro:assets"
+import { getImage, Image } from "astro:assets"
 /**
  * Take a Github User ID, and render a link to this user account, with their avatar and name.
  * @param {string} user - What is the user's GitHub ID?
@@ -28,6 +28,13 @@ const userData: any = EleventyFetch(`https://api.github.com/user/${user}`, {
 // Got what what we needed 💰 See response format ->
 // https://docs.github.com/en/rest/users/users#get-a-user
 const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userData
+
+// Optimize image size and quality
+const avatarImg = await getImage({
+	src: avatarUrl,
+	width: 24 * 2, // Displayed at 24px multiplied by the density
+	height: 24 * 2,
+})
 ---
 
 {
@@ -36,7 +43,13 @@ const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userD
 			href={userUrl}
 			class="github-inline whitespace-nowrap text-font-light before:content-none hover:text-primary dark:text-font-dark dark:hover:text-primary"
 		>
-			<Image src={avatarUrl} width={24} height={24} alt="..." class="mr-1 inline rounded-full" />
+			<Image
+				src={avatarImg.src}
+				width={24}
+				height={24}
+				alt="..."
+				class="mr-1 inline rounded-full"
+			/>
 			{userName}
 		</a>
 	) : (

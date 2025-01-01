@@ -43,12 +43,17 @@ export default defineConfig({
     service: {
       entrypoint: "./src/imageService.ts",
     },
+    domains: ["avatars.githubusercontent.com"],
   },
-	env: {
+  env: {
     schema: {
-      WEBSITE_URL: envField.string({ context: "client", access: "public", default: "http://localhost:4321/"}),
-      MAPS_TOKEN: envField.string({ context: "client", access: "public"}),
-      GITHUB_TOKEN: envField.string({ context: "client", access: "public"}),
-    }
-  }
+      WEBSITE_URL: envField.string({
+        context: "client",
+        access: "public",
+        default: "http://localhost:4321/",
+      }),
+      MAPS_TOKEN: envField.string({ context: "client", access: "public" }),
+      GITHUB_TOKEN: envField.string({ context: "client", access: "public" }),
+    },
+  },
 })

@@ -8,11 +8,12 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
 const placeholderURL = await imageService.generatePlaceholder(
 	Astro.props.src.src,
-	Astro.props.src.width,
+	Math.max(Astro.props.src.width, 300 * 2), // The width of a sidenote multiplied by the density
 	Astro.props.src.height
 )
 const goodQualityURL = await getImage({
 	src: Astro.props.src,
+	width: Astro.props.src.width,
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,11 +23,10 @@ const { ...props } = Astro.props as any
 <AstroPicture
 	{...props}
 	data-zoomable
-	data-zoom-src={goodQualityURL}
-	width={Astro.props.src.width / 2}
-	densities={Astro.props.densities ?? [1.5, 2]}
+	data-zoom-src={goodQualityURL.src}
+	width={Math.min(Astro.props.src.width, 300 * 2)}
 	formats={Astro.props.formats ?? ["webp"]}
-	class="my-2.5 w-full max-w-[350px] overflow-hidden rounded"
+	class="my-2.5 w-full overflow-hidden rounded"
 	style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
 	onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 />

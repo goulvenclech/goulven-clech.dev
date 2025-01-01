@@ -33,7 +33,7 @@ const { Content, headings } = await render(entry)
 >
 	<section>
 		<h1>{entry.data.title}</h1>
-		{entry.data.display_abstract && <p>{entry.data.abstract}</p>}
+		{entry.data.display_abstract && <p set:html={entry.data.abstract} />}
 		<p>
 			{formatDate(entry.data.date)} —
 			<a href="/">Goulven CLEC'H</a>

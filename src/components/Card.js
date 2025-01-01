@@ -14,8 +14,9 @@
  * @param {string} imageAlt - What's the blog entry cover alt?
  */
 export class Card extends HTMLElement {
-  constructor() {
-    super()
+  connectedCallback() {
+    // Not using a constructor because Search.astro calls this component in fragments,
+    // and the constructor checks for attributes before they are set.
     this.id = this.attributes.id.value
     this.title = this.attributes.title.value
     this.date = this.attributes.date.value
@@ -23,11 +24,8 @@ export class Card extends HTMLElement {
     this.abstract = this.attributes.abstract.value
     this.image = this.attributes.image.value
     this.imageAlt = this.attributes.imageAlt.value
-  }
-
-  connectedCallback() {
-    const template = document.createElement("template")
     // The good old way of templating 👴
+    const template = document.createElement("template")
     template.innerHTML = `
       <a href="/${this.id}" class="card">
       ${

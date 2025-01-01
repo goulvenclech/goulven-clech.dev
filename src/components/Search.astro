@@ -2,6 +2,8 @@
 import { getCollection } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
 import Card from "./Card.astro"
+import { getImage } from "astro:assets"
+export type clientBlogEntries = typeof blogEntriesFormatted
 
 /**
  * A component that show all blog entries and where users can search by typing keywords.
@@ -14,92 +16,131 @@ const blogEntriesRaw = await getCollection("blog", ({ data }) => {
 	return isEntryPublished(data.published, true)
 })
 
-// Sort blog entries by date, then format date to be displayed properly.
-// Since we can't use formatDate/1 in a script inline, and I want to display the date properly
-// on my entries cards, I have to map over all blogEntries and format myself. So here we go 🧙
-const blogEntries = blogEntriesRaw
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-	.map(({ id, data: { date, ...rest } }) => ({
+// Sort blog entries by date.
+const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+// Get optimized images for every blog Cards
+// This is needed to use the same image for SSR and CSR Cards
+const images = await Promise.all(
+	blogEntries.map(async ({ id, data }) => ({
 		id,
-		data: { date: formatDate(date), ...rest },
+		src: data.image
+			? (await getImage({ src: data.image, height: 400, quality: 80, format: "webp" })).src
+			: "",
 	}))
+)
+
+// Format blog entries to be used in the search script (client side)
+// Reduce the amount of data sent to the client as much as possible
+const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
+	id,
+	title: data.title,
+	date: formatDate(data.date),
+	tags: data.tags,
+	abstract: data.abstract,
+	image: images.find((image) => image.id === id),
+	image_alt: data.image_alt,
+}))
 ---
 
 <>
-	<!--input
-		id="search"
-		class="mb-5 w-full rounded bg-alt-light px-3 py-2 placeholder:text-font-light/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary dark:bg-alt-dark dark:placeholder:text-font-dark/50"
-		placeholder="Search by titles, abstracts, keywords..."
-		type="text"
-	/-->
-	<!-- By default, output display all blog entries -->
-	<div id="output" class="flex flex-col gap-2.5">
-		{blogEntries.map((result) => <Card entry={result} />)}
+	<div class="flex items-baseline gap-5">
+		<h2 class="shrink-0" id="last_entries">Blog entries</h2>
+		<div class="mb-5 ml-auto text-xs sm:text-sm">
+			<input
+				id="search"
+				class="peer border-b-[0.1rem] border-dotted bg-body-light text-font-light outline-none focus:text-primary dark:bg-body-dark dark:text-font-dark"
+				placeholder="Search by title or keywords..."
+				type="text"
+			/>
+			<i class="fas fa-search ml-1.5 peer-focus:text-primary"></i>
+		</div>
 	</div>
 </>
+<!-- By default, output display all blog entries -->
+<div id="output" class="flex flex-col gap-2.5">
+	{
+		blogEntries.map((result) => (
+			<Card entry={result} image={images.find((image) => image.id === result.id)?.src} />
+		))
+	}
+</div>
+
+<div data-blog={JSON.stringify(blogEntriesFormatted)}></div>
 <script>
-	/* Can't import & use "define:vars" cause script inline gnagna
-    see here -> https://docs.astro.build/en/reference/directives-reference/#definevars */
 	import { Card } from "./Card.js"
+	import type { clientBlogEntries } from "./Search.astro"
 	/**
 	 * Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
 	 * This SearchCard will be used to display search's results, see ->
 	 * src/components/SearchCard.js
 	 */
 	customElements.define("search-card", Card)
-</script>
-<script is:inline define:vars={{ blogEntries }}>
-	/**
-	 * Okay, here we go 🧙
-	 */
+	// Okay, here we go 🧙
 	// get the HTML elements on which we will interact
+	const blogData = document.querySelector("[data-blog]")?.getAttribute("data-blog")
+	const blogEntries: clientBlogEntries = blogData ? JSON.parse(blogData) : []
 	const input = document.getElementById("search")
 	const output = document.getElementById("output")
-	/**
-	 * Function called at each search, returns the list of blog entries corresponding
-	 * to the keywords provided in input.
-	 * @param {string} input - What's the search input?
-	 * @return {Array<blogEntry>} - Entries returned by the search
-	 */
-	const applyInput = (input) => {
-		const searchKeywords = input.toLowerCase().split(" ")
-		if (searchKeywords.length > 0) {
-			// Filter block entries based on their title, abstract & tags
-			// should match every keywords provided by search input !
-			results = blogEntries.filter((entry) =>
-				searchKeywords.every(
-					(keyword) =>
-						entry.data.title.toLowerCase().includes(keyword) ||
-						entry.data.abstract.toLowerCase().includes(keyword) ||
-						entry.data.tags.some((tag) => tag.toLowerCase().includes(keyword))
-				)
-			)
-		} else {
-			// if no keywords, return every blog entries
-			results = blogEntries
-		}
-		results.forEach((result) => {
-			// For every result, insert a SearchCard in the output
-			output.insertAdjacentHTML(
-				"beforeend",
-				`<search-card title="${result.data.title}" id="${result.id}"
-        date="${result.data.date}"
-        tags="${result.data.tags.length > 0 ? result.data.tags.join(", ") : "No tags"}"
-        abstract="${result.data.abstract}"
-        image="${result.data.image ? result.data.image.src : ""}"
-        imageAlt="${result.data.image_alt}"></search-card>`
-			)
-		})
+	if (!input || !output || blogEntries.length === 0) {
+		throw new Error("Search component is missing input/output elements.")
 	}
-	// On the first page load, remove the SSR content and replace it with an empty search.
+	// create a search object, that will be used to store the search results
+	const search = {
+		_results: blogEntries,
+		get results() {
+			return this._results
+		},
+		set results(value) {
+			this._results = value
+			applyInput()
+		},
+	}
+	/**
+	 * Update UI with search results
+	 */
+	const applyInput = () => {
+		let fragment = document.createDocumentFragment()
+		search.results.forEach((result) => {
+			// For every result, insert a SearchCard in the output
+			const searchCard = document.createElement("search-card")
+			searchCard.setAttribute("title", result.title)
+			searchCard.setAttribute("id", result.id)
+			searchCard.setAttribute("date", result.date)
+			searchCard.setAttribute("tags", result.tags.length > 0 ? result.tags.join(", ") : "No tags")
+			searchCard.setAttribute("abstract", result.abstract)
+			searchCard.setAttribute("image", result.image ? result.image.src : "")
+			searchCard.setAttribute("imageAlt", result.image_alt)
+			fragment.append(searchCard)
+		})
+		output.append(fragment)
+	}
+	// On the first page load, remove the SSR content and display every blog entries
 	output.innerHTML = ""
-	applyInput("")
+	search.results = blogEntries
 	// add an event listener on input, to call applyInput/2 at each search
 	input.addEventListener("input", (event) => {
 		output.innerHTML = ""
 		if (event.target) {
 			const element = event.currentTarget
-			applyInput(element.value)
+			if (element instanceof HTMLInputElement) {
+				const searchKeywords = element.value.toLowerCase().split(" ")
+				if (searchKeywords.length > 0) {
+					// Filter block entries based on their title, abstract & tags
+					// should match every keywords provided by search input !
+					search.results = blogEntries.filter((entry) =>
+						searchKeywords.every(
+							(keyword) =>
+								entry.title.toLowerCase().includes(keyword) ||
+								entry.abstract.toLowerCase().includes(keyword) ||
+								entry.tags.some((tag) => tag.toLowerCase().includes(keyword))
+						)
+					)
+				} else {
+					// if no keywords, return every blog entries
+					search.results = blogEntries
+				}
+			}
 		}
 	})
 	// that should do it 🧙

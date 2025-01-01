@@ -4,7 +4,7 @@ import { Image } from "astro:assets"
  * Used to present an something as a card, also a link to that something.
  */
 interface Props {
-	image: string
+	image?: ImageMetadata | string
 	to: string
 }
 
@@ -12,7 +12,7 @@ const { image, to } = Astro.props
 ---
 
 <a href={to} class="card">
-	<Image src={image} width={500} height={500} alt="" />
+	{image && <Image src={image as ImageMetadata} width={500} height={500} alt="" />}
 	<article>
 		<slot />
 	</article>
