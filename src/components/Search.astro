@@ -12,12 +12,9 @@ export type clientBlogEntries = typeof blogEntriesFormatted
  */
 
 // get all blogEntries
-const blogEntriesRaw: CollectionEntry<"Blog">[] = await getCollection(
-	"blog",
-	({ data }: CollectionEntry<"Blog">) => {
-		return isEntryPublished(data.published, true)
-	}
-)
+const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
+	return isEntryPublished(data.published, true)
+})
 
 // Sort blog entries by date.
 const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())

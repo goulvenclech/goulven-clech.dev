@@ -169,9 +169,23 @@
     @apply h-[153.25px] w-full object-cover sm:max-w-[150px];
   }
 
+  li code,
+  p code {
+    overflow-wrap: break-word;
+    @apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
+  }
+
   side-note,
   annotation {
     @apply my-5 block px-8 text-xs leading-snug;
+  }
+
+  side-note p {
+    @apply text-xs leading-snug;
+  }
+
+  side-note code {
+    @apply text-[13px];
   }
 
   annotation {

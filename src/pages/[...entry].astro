@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content"
+import { getCollection, render, type CollectionEntry } from "astro:content"
 import Layout from "$layouts/Layout.astro"
 import { formatDate, isEntryPublished } from "src/utils"
 
@@ -10,7 +10,7 @@ import FigImage from "$components/images/FigImage.astro"
  * informations & the content.
  */
 export async function getStaticPaths() {
-	const blogEntries = await getCollection("blog", ({ data }) => {
+	const blogEntries: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
 		return isEntryPublished(data.published)
 	})
 
@@ -116,11 +116,5 @@ const { Content, headings } = await render(entry)
 		#entry > ol {
 			@apply list-outside;
 		}
-	}
-
-	#entry li code,
-	#entry p code {
-		overflow-wrap: break-word;
-		@apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
 	}
 </style>
