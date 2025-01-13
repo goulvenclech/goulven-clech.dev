@@ -4,6 +4,7 @@ import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
+import rehypeMermaid from "rehype-mermaid"
 
 // Astro Expressive Code - Used to style code blocks
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -44,6 +45,9 @@ export default defineConfig({
       entrypoint: "./src/imageService.ts",
     },
     domains: ["avatars.githubusercontent.com"],
+  },
+  markdown: {
+    rehypePlugins: [[rehypeMermaid, { strategy: "img-svg", dark: true }]],
   },
   env: {
     schema: {
