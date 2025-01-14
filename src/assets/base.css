@@ -323,4 +323,12 @@
       @apply ml-0;
     }
   }
+
+  /*
+		MISC
+	*/
+  /* See -> https://github.com/expressive-code/expressive-code/issues/292 */
+  .expressive-code :nth-child(1 of .ec-line) .code {
+    padding-inline-end: 20px !important;
+  }
 }
