@@ -19,7 +19,7 @@ interface Props {
 const { entry, image } = Astro.props
 ---
 
-<Block image={image || entry.data.image} to={`/${entry.id}`}>
+<Block image={image || entry.data.image} imageDark={entry.data.image_dark} to={`/${entry.id}`}>
 	<h3 class="my-0 leading-relaxed">
 		{entry.data.title}
 	</h3>

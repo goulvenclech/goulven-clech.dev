@@ -29,6 +29,15 @@ const images = await Promise.all(
 			: "",
 	}))
 )
+// Dark version
+const imagesDark = await Promise.all(
+	blogEntries.map(async ({ id, data }) => ({
+		id,
+		src: data.image_dark
+			? (await getImage({ src: data.image_dark, height: 400, quality: 80, format: "webp" })).src
+			: "",
+	}))
+)
 
 // Format blog entries to be used in the search script (client side)
 // Reduce the amount of data sent to the client as much as possible
@@ -39,6 +48,7 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 	tags: data.tags,
 	abstract: data.abstract,
 	image: images.find((image) => image.id === id),
+	imageDark: imagesDark.find((image) => image.id === id),
 	image_alt: data.image_alt,
 }))
 ---
@@ -110,6 +120,7 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 			searchCard.setAttribute("tags", result.tags.length > 0 ? result.tags.join(", ") : "No tags")
 			searchCard.setAttribute("abstract", result.abstract)
 			searchCard.setAttribute("image", result.image ? result.image.src : "")
+			searchCard.setAttribute("imageDark", result.imageDark ? result.imageDark.src : "")
 			searchCard.setAttribute("imageAlt", result.image_alt)
 			fragment.append(searchCard)
 		})

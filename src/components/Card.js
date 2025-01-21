@@ -11,6 +11,7 @@
  * @param {string} tags - What's the blog entry tags?
  * @param {string} abstract - What's the blog entry abstract?
  * @param {string} image - What's the blog entry cover?
+ * @param {string} imageDark - What's the blog entry cover for dark theme?
  * @param {string} imageAlt - What's the blog entry cover alt?
  */
 export class Card extends HTMLElement {
@@ -23,6 +24,7 @@ export class Card extends HTMLElement {
     this.tags = this.attributes.tags.value
     this.abstract = this.attributes.abstract.value
     this.image = this.attributes.image.value
+    this.imageDark = this.attributes.imageDark.value
     this.imageAlt = this.attributes.imageAlt.value
     // The good old way of templating 👴
     const template = document.createElement("template")
@@ -31,7 +33,18 @@ export class Card extends HTMLElement {
       ${
         this.image !== ""
           ? `<img
+            class="${this.imageDark ? "block dark:hidden" : "block"}"
             src="${this.image}"
+            alt="${this.image_alt}"
+          />
+        `
+          : ``
+      }
+      ${
+        this.imageDark !== ""
+          ? `<img
+            class="hidden dark:block"
+            src="${this.imageDark}"
             alt="${this.image_alt}"
           />
         `
