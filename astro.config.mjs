@@ -22,6 +22,9 @@ const myLightTheme = ExpressiveCodeTheme.fromJSONString(lightThemeJsoncString)
 const astroExpressiveCodeOptions = {
   themes: [myDarkTheme, myLightTheme, "github-dark", "github-light"],
   useDarkModeMediaQuery: false,
+  frames: {
+    showCopyToClipboardButton: false,
+  },
   styleOverrides: {
     frames: {
       frameBoxShadowCssValue: "0",

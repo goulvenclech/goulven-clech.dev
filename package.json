@@ -2,7 +2,7 @@
   "name": "goulven-clech.dev",
   "description": "My personnal blog, made with Astro, TypeScript & Tailwind CSS.",
   "private": true,
-  "version": "1.6.0",
+  "version": "1.7.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/GoulvenC/goulven-clech.dev.git"
@@ -21,9 +21,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@11ty/eleventy-fetch": "^5.0.1",
+    "@11ty/eleventy-fetch": "^5.0.2",
     "@astrojs/check": "^0.9.4",
-    "@astrojs/rss": "^4.0.10",
+    "@astrojs/rss": "^4.0.11",
     "@types/d3": "^7.4.3",
     "@vercel/analytics": "^1.4.1",
     "d3": "^7.9.0",
@@ -33,16 +33,16 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.0.3",
+    "@astrojs/mdx": "^4.0.5",
     "@astrojs/tailwind": "^5.1.4",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.6",
     "@types/semver": "^7.5.8",
-    "astro": "^5.1.1",
-    "astro-expressive-code": "^0.38.3",
+    "astro": "^5.1.6",
+    "astro-expressive-code": "^0.40.0",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "semver": "^7.6.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
