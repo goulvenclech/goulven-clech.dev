@@ -57,7 +57,7 @@ function buildToc(headings: Array<MarkdownHeading>): Array<BetterHeading> {
 					{
 						// If the heading has subheadings, render a nested list
 						heading.subheadings.length > 0 && (
-							<ol class="my-2.5 ml-6 text-xs sm:text-sm">
+							<ol class="my-2.5 ml-5 text-xs sm:text-sm">
 								{
 									// For each subheading, render a list item
 									heading.subheadings.map((subheading) => (

@@ -13,7 +13,7 @@ const { entry } = Astro.props
 const { Content } = await (entry.render?.() ?? { Content: null })
 ---
 
-<li class="my-5 flex flex-row gap-2">
+<li class="my-5 flex flex-row gap-2.5">
 	<div class="changelog grow">
 		<strong>{entry.name}:</strong>
 		{entry.description}

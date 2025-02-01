@@ -2,18 +2,17 @@
 import Layout from "$layouts/Layout.astro"
 import ResumeSection from "$components/resume/Resume.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
+import PrintButton from "$components/controls/PrintButton.astro"
 
 /**
  * Misc page with legal notice, changelog, etc.
  */
-const pageTitle = "About this blog"
+const pageTitle = "Résumé"
 ---
 
 <Layout title={pageTitle}>
 	<section>
-		<h1>
-			Goulven C<strong style="font-feature-settings: 'smcp' 1;">LEC'H</strong>
-		</h1>
+		<h1>Goulven CLEC'H</h1>
 		<p>
 			I am a 27 years old <i>software engineer</i> with extensive experience in <i>Elixir</i>,
 			<i>Rust</i>, and <i>JavaScript/TypeScript</i> web ecosystems.
@@ -24,8 +23,9 @@ const pageTitle = "About this blog"
 			passionate about game development, hiking in forests, visiting cute villages, kayaking in
 			rivers, and drinking specialty coffees.
 		</p>
-		<p>
+		<p class="flex gap-3 print:hidden">
 			<ReturnHome />
+			<PrintButton />
 		</p>
 	</section>
 	<ResumeSection />

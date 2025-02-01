@@ -87,7 +87,7 @@
   */
 @layer base {
   body {
-    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base;
+    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base print:text-font-light print:dark:text-font-light;
     font-feature-settings: "liga", "clig", "onum";
   }
 
@@ -105,7 +105,7 @@
   h1,
   h2,
   h3 {
-    @apply mb-5 mt-10 text-font-light dark:text-font-dark;
+    @apply mb-5 mt-10;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
@@ -216,7 +216,7 @@
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 0.65rem;
-    padding-right: 0.15rem;
+    padding-right: 0.2rem;
     color: inherit;
     display: inline-block;
     @apply not-italic;
