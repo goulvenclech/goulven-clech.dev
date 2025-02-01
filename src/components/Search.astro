@@ -59,7 +59,7 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 		<div class="mb-5 ml-auto text-xs sm:text-sm">
 			<input
 				id="search"
-				class="peer border-b-[0.1rem] border-dotted bg-body-light outline-none focus:text-primary dark:bg-body-dark"
+				class="peer overflow-hidden truncate whitespace-nowrap border-b-[0.1rem] border-dotted bg-body-light outline-none placeholder:truncate focus:text-primary dark:bg-body-dark"
 				placeholder="Search by title or keywords..."
 				type="text"
 			/>
