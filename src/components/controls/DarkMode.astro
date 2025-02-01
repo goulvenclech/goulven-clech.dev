@@ -8,8 +8,7 @@
  */
 ---
 
-<button name="darkMode" class="ml-auto font-bold hover:text-primary dark:hover:text-primary"
-></button>
+<button name="darkMode" class="ml-auto hover:text-primary dark:hover:text-primary"></button>
 
 <script>
 	// Get the button element above (can be multiple)
@@ -81,18 +80,27 @@
 		switch (theme) {
 			case "light":
 				buttons.forEach((button) => {
-					button.innerHTML = `<i title="Click for dark mode" class="fa-solid fa-sun"></i>`
+					button.innerHTML = "Light theme"
+					button.title = "Click for dark theme"
+					button.classList.add("theme-light")
+					button.classList.remove("theme-system")
 				})
 				break
 			case "system":
 				buttons.forEach((button) => {
-					button.innerHTML = `<i title="Click for light mode" class="fa-solid fa-laptop"></i>`
+					button.innerHTML = "System theme"
+					button.title = "Click for light theme"
+					button.classList.add("theme-system")
+					button.classList.remove("theme-dark")
 				})
 				break
 			// Apply for case "dark" or undefined, fallback to dark
 			default:
 				buttons.forEach((button) => {
-					button.innerHTML = `<i title="Click for system mode" class="fa-solid fa-moon"></i>`
+					button.innerHTML = "Dark theme"
+					button.title = "Click for system theme"
+					button.classList.add("theme-dark")
+					button.classList.remove("theme-light")
 				})
 				break
 		}
@@ -101,3 +109,27 @@
 	// At page load, init the button icon to reflect the current theme
 	if (buttons) changeIcon((localStorage.getItem("color-theme") as Theme) || "system", buttons)
 </script>
+<style>
+	.darkMode::before {
+		content: "";
+		font-family: "Font Awesome 6 Free";
+		font-weight: 900;
+		font-size: 0.65rem;
+		padding-right: 0.2rem;
+		color: inherit;
+		display: inline-block;
+		@apply not-italic;
+	}
+
+	.theme-light::before {
+		content: "\f185";
+	}
+
+	.theme-dark::before {
+		content: "\f186";
+	}
+
+	.theme-system::before {
+		content: "\f109";
+	}
+</style>
