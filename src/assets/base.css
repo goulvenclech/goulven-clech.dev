@@ -92,7 +92,7 @@
   }
 
   main {
-    @apply mx-auto max-w-prose px-4 md:px-0;
+    @apply mx-auto max-w-[590px] px-4 md:px-0;
   }
 
   /*
