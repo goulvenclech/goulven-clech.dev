@@ -25,7 +25,7 @@ const { experience } = Astro.props
 const { Content } = await render(experience)
 ---
 
-<article class="resume-card my-5 pb-2.5">
+<article class="resume-card print:page-break-avoid my-5 pb-2.5">
 	<div class="flex flex-row justify-between">
 		<h3 class="my-0">{experience.data.company}</h3>
 		<span>

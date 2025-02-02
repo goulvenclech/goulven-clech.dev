@@ -87,7 +87,7 @@
   */
 @layer base {
   body {
-    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base print:text-font-light print:dark:text-font-light;
+    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light;
     font-feature-settings: "liga", "clig", "onum";
   }
 
