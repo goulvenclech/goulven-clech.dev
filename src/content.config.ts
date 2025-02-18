@@ -36,6 +36,8 @@ const experiencesCollection = defineCollection({
       company: z.string(),
       start_date: z.date(),
       end_date: z.date().optional(),
+      is_education: z.boolean().default(false),
+      is_draft: z.boolean().default(false),
     }),
 })
 // 3. Export a single `collections` object to register your collection(s)

@@ -17,6 +17,10 @@ function format_date(start_date: Date, end_date?: Date) {
 	if (!end_date) return `${formated_start_date} - Present`
 	// If the start and end date are the same, we only work there for one month
 	if (formated_start_date === formated_end_date) return formated_start_date
+	// If the start and end date are in the same year, we only display the year once
+	if (start_date.getFullYear() === end_date.getFullYear()) {
+		return `${start_date.toLocaleString("en-GB", { month: "long" })} - ${formated_end_date}`
+	}
 	// Else we display the start and end date
 	return `${formated_start_date} - ${formated_end_date}`
 }
@@ -25,9 +29,9 @@ const { experience } = Astro.props
 const { Content } = await render(experience)
 ---
 
-<article class="resume-card print:page-break-avoid my-5 pb-2.5">
+<article class="resume-card print:page-break-avoid my-5 flex flex-col gap-1.5 pb-2.5">
 	<div class="flex flex-row justify-between">
-		<h3 class="my-0">{experience.data.company}</h3>
+		<h3 class="my-0" set:html={experience.data.company} />
 		<span>
 			{format_date(experience.data.start_date, experience.data.end_date)}
 		</span>

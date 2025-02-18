@@ -1,18 +1,46 @@
 ---
 import Layout from "$layouts/Layout.astro"
-import ResumeSection from "$components/resume/Resume.astro"
+import { getCollection } from "astro:content"
+import ResumeCard from "$components/resume/ResumeCard.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import PrintButton from "$components/controls/PrintButton.astro"
-
 /**
  * Misc page with legal notice, changelog, etc.
  */
 const pageTitle = "Résumé"
+
+// get all experiences entries
+const experiencesEntries = await getCollection("experiences", ({ data }) => {
+	return data.is_education === false && data.is_draft !== true
+})
+
+experiencesEntries.sort((a, b) => {
+	// if both have an end date, sort by end date (most recent first)
+	if (a.data.end_date && b.data.end_date) {
+		return b.data.end_date.getTime() - a.data.end_date.getTime()
+		// if both don't have an end date, sort by start date (oldest first)
+	} else if (!a.data.end_date && !b.data.end_date) {
+		return a.data.start_date.getTime() - b.data.start_date.getTime()
+		// if one has an end date and the other doesn't
+	} else {
+		return a.data.end_date ? 1 : -1
+	}
+})
+
+// get all education entries
+const educationEntries = await getCollection("experiences", ({ data }) => {
+	return data.is_education === true && data.is_draft !== true
+})
+
+educationEntries.sort((a, b) => {
+	// Just sort by start date (most recent first), should be enough
+	return b.data.start_date.getTime() - a.data.start_date.getTime()
+})
 ---
 
 <Layout title={pageTitle}>
-	<section>
-		<h1>Goulven CLEC'H</h1>
+	<section class="print:mt-0">
+		<h1 class="">Goulven CLEC'H</h1>
 		<p>
 			I am a 27 years old <i>software engineer</i> with extensive experience in <i>Elixir</i>,
 			<i>Rust</i>, and <i>JavaScript/TypeScript</i> web ecosystems.
@@ -32,7 +60,15 @@ const pageTitle = "Résumé"
 			Contact me at <a href="mailto:goulven.clech@protonmail.com">goulven.clech@protonmail.com</a>
 		</p>
 	</section>
-	<ResumeSection />
+	<section>
+		<h2 class="mb-2.5" id="last_entries">Experiences</h2>
+		{experiencesEntries.map((experience) => <ResumeCard experience={experience} />)}
+	</section>
+	<section>
+		<h2 class="mb-2.5" id="education">Education</h2>
+		{educationEntries.map((education) => <ResumeCard experience={education} />)}
+	</section>
+	<style is:global></style>
 	<section id="language">
 		<h2>Languages</h2>
 		<ul>
@@ -49,7 +85,7 @@ const pageTitle = "Résumé"
 			</li>
 		</ul>
 	</section>
-	<style>
+	<style is:global>
 		#language ul {
 			@apply my-5 list-none indent-0 md:indent-[-2rem];
 		}
@@ -61,6 +97,10 @@ const pageTitle = "Résumé"
 		#language li::before {
 			content: "☞";
 			@apply mr-2;
+		}
+
+		.resume-card p {
+			@apply my-1;
 		}
 	</style>
 </Layout>
