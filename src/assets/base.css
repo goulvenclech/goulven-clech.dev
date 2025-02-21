@@ -161,7 +161,7 @@
   }
 
   .card article {
-    @apply m-5 min-w-0 p-0;
+    @apply mx-5 my-4 min-w-0 p-0;
   }
 
   .card img {
