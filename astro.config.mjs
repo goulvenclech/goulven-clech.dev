@@ -44,7 +44,7 @@ export default defineConfig({
     service: {
       entrypoint: "./src/imageService.ts",
     },
-    domains: ["avatars.githubusercontent.com"],
+    domains: ["avatars.githubusercontent.com", "maps.googleapis.com", "lh3.googleusercontent.com"],
   },
 
   markdown: {
