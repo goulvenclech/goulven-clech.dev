@@ -1,10 +1,9 @@
 import { defineConfig, envField } from "astro/config"
-import { inject } from "@vercel/analytics"
-import tailwind from "@astrojs/tailwind"
 import mdx from "@astrojs/mdx"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
 import rehypeMermaid from "rehype-mermaid"
+import tailwindcss from "@tailwindcss/vite";
 
 // Astro Expressive Code - Used to style code blocks
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -36,22 +35,22 @@ const astroExpressiveCodeOptions = {
   },
 }
 
-// Vercel analytics - I need to get rid of this... Or Vercel as a whole
-inject()
-
 // https://astro.build/config
 export default defineConfig({
   site: "https://goulven-clech.dev",
-  integrations: [tailwind(), astroExpressiveCode(astroExpressiveCodeOptions), mdx()],
+  integrations: [astroExpressiveCode(astroExpressiveCodeOptions), mdx()],
+
   image: {
     service: {
       entrypoint: "./src/imageService.ts",
     },
     domains: ["avatars.githubusercontent.com"],
   },
+
   markdown: {
     rehypePlugins: [[rehypeMermaid, { strategy: "img-svg", dark: true }]],
   },
+
   env: {
     schema: {
       WEBSITE_URL: envField.string({
@@ -62,5 +61,9 @@ export default defineConfig({
       MAPS_TOKEN: envField.string({ context: "client", access: "public" }),
       GITHUB_TOKEN: envField.string({ context: "client", access: "public" }),
     },
+  },
+
+  vite: {
+    plugins: [tailwindcss()],
   },
 })

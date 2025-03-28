@@ -15,76 +15,115 @@
   Specific styling for each component is done in the component's file. Using TailwindCSS.
   (Example -> src/components/controls/ToTop.astro )
 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/**
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --text-*: initial;
+  --text-xs: 14px, 20px;
+  --text-sm: 16px, 24px;
+  --text-base: 18px, 28px;
+  --text-lg: 20px, 28px;
+  --text-xl: 24px, 28px;
+  --text-2xl: 30px, 28px;
+
+  --color-*: initial;
+  --color-font-light: #1c1e26;
+  --color-font-dark: #f4f4f5;
+
+  --color-body-light: #ffffff;
+  --color-body-dark: #1c1e26;
+
+  --color-alt-light: #f4f4f5;
+  --color-alt-dark: #2e303e;
+
+  --color-primary: #e95678;
+
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+
+  --font-serif:
+    'EB Garamond', 'Source Serif 4', ui-serif, Georgia, Cambria,
+    'Times New Roman', Times, serif;
+  --font-mono:
+    Iosevka, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  --font-goofy:
+    Abby, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer utilities {
+  /**
  * FONTS
   * EB Garamond for core text (paragraph, title, etc.)
   * Iosevka for the mono text (code, pre, etc.)
   * Abby for personal annotations (goofy incoming)
  */
-@font-face {
-  font-family: "EB Garamond";
-  src: url("/EBGaramond/EBGaramond12-Regular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'EB Garamond';
+    src: url('/EBGaramond/EBGaramond12-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "EB Garamond";
-  src: url("/EBGaramond/EBGaramond12-Italic.woff") format("woff");
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'EB Garamond';
+    src: url('/EBGaramond/EBGaramond12-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "Abby";
-  src: url("/Abby/AbbyYOFF.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Abby';
+    src: url('/Abby/AbbyYOFF.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka/Iosevka-Regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/Iosevka/Iosevka-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka/Iosevka-Italic.woff2") format("woff2");
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/Iosevka/Iosevka-Italic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka/Iosevka-Bold.woff2") format("woff2");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/Iosevka/Iosevka-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
 
-@font-face {
-  font-family: "Iosevka";
-  src: url("/Iosevka/Iosevka-BoldItalic.woff2") format("woff2");
-  font-weight: bold;
-  font-style: italic;
-  font-display: swap;
-}
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/Iosevka/Iosevka-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
 
-/**
+  /**
   * BASE LAYER
   * See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
   */
+}
+
 @layer base {
   body {
     @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light;
@@ -157,7 +196,7 @@
 
   .card {
     /* Only margin-bottom because card has sometimes prececed by an hidden title */
-    @apply mb-5 flex flex-col overflow-hidden whitespace-normal rounded no-underline before:!content-none hover:!bg-alt-light hover:!text-font-light dark:hover:!bg-alt-dark dark:hover:!text-font-dark sm:flex-row;
+    @apply mb-5 flex flex-col overflow-hidden whitespace-normal rounded-sm no-underline before:content-none! hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! sm:flex-row;
   }
 
   .card article {
@@ -172,7 +211,7 @@
   li code,
   p code {
     overflow-wrap: break-word;
-    @apply rounded border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
+    @apply rounded-sm border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
   }
 
   side-note,
@@ -193,7 +232,7 @@
     transform: rotate(-1deg);
   }
 
-  @media screen(xl) {
+  @media (width >= theme(--breakpoint-xl)) {
     side-note,
     annotation {
       @apply relative float-right clear-right mr-[-350px] mt-0 w-[350px];
@@ -318,7 +357,7 @@
     content: counters(list-item, ".") "\a0\a0";
   }
 
-  @media screen(sm) {
+  @media (width >= theme(--breakpoint-sm)) {
     ol li {
       @apply ml-0;
     }

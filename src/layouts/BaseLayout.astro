@@ -36,7 +36,6 @@ const {
 		<link rel="icon" href="/favicon.svg" />
 		<script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
 		></script>
-		<script is:inline src="/_vercel/insights/script.js" defer></script>
 		<title>{title} — Goulven Clec'h</title>
 	</head>
 	<body>
@@ -85,7 +84,7 @@ const {
 		</script>
 		<style is:global>
 			.medium-zoom-overlay {
-				@apply bg-body-light/50 backdrop-blur dark:bg-body-dark/50;
+				@apply bg-body-light/50 dark:bg-body-dark/50 backdrop-blur;
 			}
 		</style>
 		<!-- Body content -->
