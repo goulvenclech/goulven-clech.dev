@@ -235,6 +235,10 @@
     transform: rotate(-1deg);
   }
 
+  annotation a {
+    @apply text-primary dark:text-primary hover:text-font-light dark:hover:text-font-dark;
+  }
+
   @media (width >= theme(--breakpoint-xl)) {
     side-note,
     annotation {
@@ -259,7 +263,6 @@
     font-weight: 900;
     font-size: 0.65rem;
     padding-right: 0.2rem;
-    color: inherit;
     display: inline-block;
     @apply not-italic;
   }
