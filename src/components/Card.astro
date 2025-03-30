@@ -20,7 +20,7 @@ const { entry, image } = Astro.props
 ---
 
 <Block image={image || entry.data.image} imageDark={entry.data.image_dark} to={`/${entry.id}`}>
-	<h3 class="my-0 leading-relaxed">
+	<h3 class="my-0 leading-8">
 		{entry.data.title}
 	</h3>
 	<span

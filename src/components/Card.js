@@ -51,7 +51,7 @@ export class Card extends HTMLElement {
           : ``
       }
         <article>
-          <h3 class="my-0 leading-relaxed">
+          <h3 class="my-0 leading-8">
             ${this.title}
           </h3>
           <span class="my-0 text-ellipsis py-0 line-clamp-4 sm:line-clamp-3">

@@ -8,7 +8,7 @@
  */
 ---
 
-<button name="darkMode" class="ml-auto hover:text-primary dark:hover:text-primary"></button>
+<button name="darkMode" class="hover:text-primary dark:hover:text-primary ml-auto"></button>
 
 <script>
 	// Get the button element above (can be multiple)
@@ -110,6 +110,8 @@
 	if (buttons) changeIcon((localStorage.getItem("color-theme") as Theme) || "system", buttons)
 </script>
 <style>
+	@reference "$assets/base.css";
+
 	.darkMode::before {
 		content: "";
 		font-family: "Font Awesome 6 Free";
