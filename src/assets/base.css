@@ -21,12 +21,18 @@
 
 @theme {
   --text-*: initial;
-  --text-xs: 14px, 20px;
-  --text-sm: 16px, 24px;
-  --text-base: 18px, 28px;
-  --text-lg: 20px, 28px;
-  --text-xl: 24px, 28px;
-  --text-2xl: 30px, 28px;
+  --text-xs: 14px;
+  --text-xs--line-height: 20px;
+  --text-sm: 16px;
+  --text-sm--line-height: 24px;
+  --text-base: 18px;
+  --text-base--line-height: 28px;
+  --text-lg: 20px;
+  --text-lg--line-height: 28px;
+  --text-xl: 24px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 30px;
+  --text-2xl--line-height: 28px;
 
   --color-*: initial;
   --color-font-light: #1c1e26;
@@ -44,15 +50,12 @@
   --font-weight-normal: 400;
   --font-weight-bold: 600;
 
-  --font-serif:
-    'EB Garamond', 'Source Serif 4', ui-serif, Georgia, Cambria,
-    'Times New Roman', Times, serif;
-  --font-mono:
-    Iosevka, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-  --font-goofy:
-    Abby, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif: "EB Garamond", "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
+    Times, serif;
+  --font-mono: Iosevka, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --font-goofy: Abby, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @layer utilities {
@@ -63,56 +66,56 @@
   * Abby for personal annotations (goofy incoming)
  */
   @font-face {
-    font-family: 'EB Garamond';
-    src: url('/EBGaramond/EBGaramond12-Regular.woff') format('woff');
+    font-family: "EB Garamond";
+    src: url("/EBGaramond/EBGaramond12-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'EB Garamond';
-    src: url('/EBGaramond/EBGaramond12-Italic.woff') format('woff');
+    font-family: "EB Garamond";
+    src: url("/EBGaramond/EBGaramond12-Italic.woff") format("woff");
     font-weight: normal;
     font-style: italic;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Abby';
-    src: url('/Abby/AbbyYOFF.woff2') format('woff2');
+    font-family: "Abby";
+    src: url("/Abby/AbbyYOFF.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Iosevka';
-    src: url('/Iosevka/Iosevka-Regular.woff2') format('woff2');
+    font-family: "Iosevka";
+    src: url("/Iosevka/Iosevka-Regular.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Iosevka';
-    src: url('/Iosevka/Iosevka-Italic.woff2') format('woff2');
+    font-family: "Iosevka";
+    src: url("/Iosevka/Iosevka-Italic.woff2") format("woff2");
     font-weight: normal;
     font-style: italic;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Iosevka';
-    src: url('/Iosevka/Iosevka-Bold.woff2') format('woff2');
+    font-family: "Iosevka";
+    src: url("/Iosevka/Iosevka-Bold.woff2") format("woff2");
     font-weight: bold;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Iosevka';
-    src: url('/Iosevka/Iosevka-BoldItalic.woff2') format('woff2');
+    font-family: "Iosevka";
+    src: url("/Iosevka/Iosevka-BoldItalic.woff2") format("woff2");
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -126,7 +129,7 @@
 
 @layer base {
   body {
-    @apply bg-body-light font-serif text-sm text-font-light dark:bg-body-dark dark:text-font-dark sm:text-base print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light;
+    @apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light font-serif text-sm sm:text-base;
     font-feature-settings: "liga", "clig", "onum";
   }
 
@@ -144,16 +147,16 @@
   h1,
   h2,
   h3 {
-    @apply mb-5 mt-10;
+    @apply mt-10 mb-5;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   h1 {
-    @apply text-pretty text-xl sm:text-2xl;
+    @apply text-xl text-pretty sm:text-2xl;
   }
 
   h2 {
-    @apply text-pretty text-lg sm:text-xl;
+    @apply text-lg text-pretty sm:text-xl;
   }
 
   h3 {
@@ -180,11 +183,11 @@
   }
 
   u {
-    @apply underline decoration-primary decoration-[1.5px] underline-offset-2;
+    @apply decoration-primary underline decoration-[1.5px] underline-offset-2;
   }
 
   s {
-    @apply line-through decoration-primary decoration-[1.5px] underline-offset-4;
+    @apply decoration-primary line-through decoration-[1.5px] underline-offset-4;
   }
 
   /*
@@ -196,7 +199,7 @@
 
   .card {
     /* Only margin-bottom because card has sometimes prececed by an hidden title */
-    @apply mb-5 flex flex-col overflow-hidden whitespace-normal rounded-sm no-underline before:content-none! hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! sm:flex-row;
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! mb-5 flex flex-col overflow-hidden rounded-sm whitespace-normal no-underline before:content-none! sm:flex-row;
   }
 
   .card article {
@@ -211,7 +214,7 @@
   li code,
   p code {
     overflow-wrap: break-word;
-    @apply rounded-sm border-[1.5px] border-alt-light px-1 py-[0.125rem] font-mono text-[13px] dark:border-alt-dark sm:text-[15px];
+    @apply border-alt-light dark:border-alt-dark rounded-sm border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
   }
 
   side-note,
@@ -228,14 +231,14 @@
   }
 
   annotation {
-    @apply font-goofy leading-normal text-primary;
+    @apply font-goofy text-primary leading-normal;
     transform: rotate(-1deg);
   }
 
   @media (width >= theme(--breakpoint-xl)) {
     side-note,
     annotation {
-      @apply relative float-right clear-right mr-[-350px] mt-0 w-[350px];
+      @apply relative float-right clear-right mt-0 mr-[-350px] w-[350px];
     }
   }
 
@@ -245,7 +248,7 @@
   a,
   button {
     /* decoration has a fixed value, so it doesn't change with the font size */
-    @apply whitespace-nowrap text-font-light underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] hover:text-primary dark:text-font-dark dark:hover:text-primary;
+    @apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px];
   }
 
   a[href^="http://"]::before, a[href^="https://"]::before,
