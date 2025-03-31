@@ -82,7 +82,7 @@ function dayOfWeekAsString(dayIndex: number): string {
 			{
 				place.opening_hours && place.opening_hours.periods
 					? getClosedDays(place.opening_hours.periods)
-					: "Error while fetching opening hours."
+					: "No opening hours available."
 			}
 		</li>
 		<li>
