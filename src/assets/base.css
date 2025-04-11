@@ -24,7 +24,7 @@
   --text-xs: 14px;
   --text-xs--line-height: 20px;
   --text-sm: 16px;
-  --text-sm--line-height: 24px;
+  --text-sm--line-height: 20px;
   --text-base: 18px;
   --text-base--line-height: 28px;
   --text-lg: 20px;
@@ -35,10 +35,10 @@
   --text-2xl--line-height: 28px;
 
   --color-*: initial;
-  --color-font-light: #1c1e26;
-  --color-font-dark: #f4f4f5;
+  --color-font-light: #262421;
+  --color-font-dark: #e8e8e8;
 
-  --color-body-light: #ffffff;
+  --color-body-light: #fff;
   --color-body-dark: #1c1e26;
 
   --color-alt-light: #f4f4f5;
