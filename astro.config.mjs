@@ -3,7 +3,9 @@ import mdx from "@astrojs/mdx"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
 import rehypeMermaid from "rehype-mermaid"
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from "@tailwindcss/vite"
+
+import netlify from "@astrojs/netlify";
 
 // Astro Expressive Code - Used to style code blocks
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -60,10 +62,14 @@ export default defineConfig({
       }),
       MAPS_TOKEN: envField.string({ context: "client", access: "public" }),
       GITHUB_TOKEN: envField.string({ context: "client", access: "public" }),
+      TURSO_TOKEN: envField.string({ context: "client", access: "public" }),
+      TURSO_URL: envField.string({ context: "client", access: "public" }),
     },
   },
 
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: netlify(),
 })

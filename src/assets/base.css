@@ -256,8 +256,9 @@
   }
 
   a[href^="http://"]::before, a[href^="https://"]::before,
-	a[href^="/about"]::before, a[href^="/feed.xml"]::before,
-	button::before {
+	a[href^="/about"]::before, footer a[href^="/catalogue"]::before,
+	footer a[href^="/resume"]::before,
+	a[href^="/feed.xml"]::before, button::before {
     content: "\f0c1";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
@@ -269,6 +270,18 @@
 
   a[href^="/about"]::before {
     content: "\f05a";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Free";
+  }
+
+  footer a[href^="/catalogue"]::before {
+    content: "\f02d";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Free";
+  }
+
+  footer a[href^="/resume"]::before {
+    content: "\f2bd";
     font-weight: 900;
     font-family: "Font Awesome 6 Free";
   }
