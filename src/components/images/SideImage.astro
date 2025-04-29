@@ -7,7 +7,7 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
  */
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
 const placeholderURL = await imageService.generatePlaceholder(
-	Astro.props.src.src,
+	Astro.props.src.fsPath,
 	Math.max(Astro.props.src.width, 300 * 2), // The width of a sidenote multiplied by the density
 	Astro.props.src.height
 )

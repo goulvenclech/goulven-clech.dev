@@ -6,11 +6,14 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
  * -> src/imageService.ts
  */
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
-const placeholderURL = await imageService.generatePlaceholder(
-	Astro.props.src.src,
-	Math.max(Astro.props.src.width, 600 * 2), // The width of an article multiplied by the density
-	Astro.props.src.height
-)
+const placeholderURL =
+	Astro.props.src.format == "svg"
+		? Astro.props.src.src // We don't support SVG placeholders yet
+		: await imageService.generatePlaceholder(
+				Astro.props.src.fsPath,
+				Math.max(Astro.props.src.width, 600 * 2), // The width of an article multiplied by the density
+				Astro.props.src.height
+			)
 
 const goodQualityURL = await getImage({
 	src: Astro.props.src,
@@ -22,17 +25,29 @@ const { caption, source, className, ...props } = Astro.props as any
 ---
 
 <figure class={"my-5 " + className}>
-	<AstroPicture
-		{...props}
-		data-zoomable
-		data-zoom-src={goodQualityURL.src}
-		width={Math.min(Astro.props.src.width, 600 * 2)}
-		formats={Astro.props.formats ?? ["webp"]}
-		class="w-full overflow-hidden rounded-sm"
-		style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
-		onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
-	/>
-	<figcaption class="mx-8 my-2 text-pretty text-center text-xs italic sm:text-sm">
+	{
+		Astro.props.src.format == "svg" ? (
+			<img
+				{...props}
+				data-zoomable
+				data-zoom-src={goodQualityURL.src}
+				width={Math.min(Astro.props.src.width, 600 * 2)}
+				class="w-full overflow-hidden rounded-sm"
+			/>
+		) : (
+			<AstroPicture
+				{...props}
+				data-zoomable
+				data-zoom-src={goodQualityURL.src}
+				width={Math.min(Astro.props.src.width, 600 * 2)}
+				formats={Astro.props.formats ?? ["webp"]}
+				class="w-full overflow-hidden rounded-sm"
+				style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
+				onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+			/>
+		)
+	}
+	<figcaption class="mx-8 my-2 text-center text-xs text-pretty italic sm:text-sm">
 		{caption}
 		{source && <a href={source}>Source</a>}
 	</figcaption>
