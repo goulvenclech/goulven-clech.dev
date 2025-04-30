@@ -1,0 +1,152 @@
+---
+import ReturnHome from "$components/controls/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+
+/**
+ * Catalogue page
+ */
+const pageTitle = "Cataloguer"
+---
+
+<Layout title={pageTitle}>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			This is a private form. You are probably looking for the <a href="/catalogue">catalogue</a>.
+		</p>
+		<p>
+			<ReturnHome />
+		</p>
+		<section>
+			<form class="grid grid-cols-2 gap-5">
+				<input id="password" name="password" type="password" placeholder="Password" required />
+				<input id="date" name="date" type="date" required />
+				<select id="source" name="source" required>
+					<option value="video_game" selected>Video Game</option>
+					<option value="book">Book</option>
+					<option value="movie">Movie</option>
+				</select>
+				<select id="rating" name="rating" required class="border-b-[0.1rem] border-dotted">
+					<option value="5" selected>😍 loved it</option>
+					<option value="4">😀 liked it</option>
+					<option value="3">🙂 mid</option>
+					<option value="2">🙁 disliked it</option>
+					<option value="1">😡 hated it</option>
+				</select>
+				<input id="source-id" name="source_id" type="text" placeholder="Source ID" required />
+				<textarea
+					id="review"
+					name="comment"
+					placeholder="Write your review here..."
+					class="col-span-2 h-24 resize-none"
+					maxlength="210"></textarea>
+				<fieldset class="col-span-2">
+					<legend>I felt...</legend>
+					<div class="flex flex-wrap gap-2.5">
+						<p>waiting...</p>
+					</div>
+				</fieldset>
+				<button type="submit" class="button col-span-2"> Submit Review </button>
+			</form>
+		</section>
+	</section>
+	<style is:global>
+		@reference "$assets/base.css";
+
+		input,
+		select,
+		textarea {
+			@apply focus:text-primary truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate;
+		}
+		input {
+			@apply col-span-2;
+		}
+		label {
+			@apply rounded-full border-[0.1rem] border-dotted px-2.5 py-1.5 text-xs sm:text-sm;
+		}
+		label:has(input:checked) {
+			@apply border-primary text-primary;
+		}
+	</style>
+
+	<script>
+		import type { Emotion } from "./api/catalogue/emotions"
+
+		// If server-side fetch failed, try to fetch emotions client-side
+		async function loadEmotions() {
+			if (document.querySelector("fieldset p")) {
+				try {
+					const response = await fetch("/api/catalogue/emotions")
+					if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+
+					const emotions: Emotion[] = await response.json()
+					const emotionsContainer = document.querySelector("fieldset div")
+					if (emotionsContainer) {
+						emotionsContainer.innerHTML = ""
+
+						emotions
+							.sort((a, b) => a.name.localeCompare(b.name))
+							.forEach((emotion) => {
+								const wrapper = document.createElement("label")
+								wrapper.innerHTML = `
+																	<input type="checkbox" name="emotions" value=${emotion.id} class="hidden" />
+																	${emotion.emoji} ${emotion.name}
+                                `
+								emotionsContainer.appendChild(wrapper)
+							})
+					}
+				} catch (error) {
+					console.error("Failed to load emotions client-side:", error)
+				}
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", loadEmotions)
+
+		// Form validation
+		const form = document.querySelector("form")
+		form?.addEventListener("submit", async (event) => {
+			event.preventDefault() // stay on page
+
+			// Check if the form is valid
+			const data = new FormData(form)
+
+			const emotions = [...form.querySelectorAll('input[name="emotions"]:checked')].map((c) =>
+				Number((c as HTMLInputElement).value)
+			)
+
+			if (emotions.length === 0 || emotions.length > 3) {
+				alert("Choose between 1 and 3 emotions")
+				return
+			}
+
+			const payload = {
+				password: data.get("password"),
+				date: data.get("date"),
+				source: data.get("source"),
+				source_id: data.get("source_id"),
+				rating: Number(data.get("rating")),
+				emotions,
+				comment: data.get("comment") ?? "",
+			}
+
+			try {
+				const res = await fetch("/api/catalogue/reviews", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				})
+
+				if (!res.ok) {
+					const { error } = await res.json()
+					throw new Error(error ?? "Unknown error")
+				}
+
+				alert("Review saved ✔️")
+				form.reset()
+			} catch (e) {
+				alert(`❌ Cannot save review: ${(e as Error).message}`)
+			}
+		})
+	</script>
+</Layout>

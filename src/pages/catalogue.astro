@@ -19,14 +19,14 @@ const pageTitle = "Catalogue"
 			<ReturnHome />
 		</p>
 		<section>
-			<form class="mb-2.5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-4 sm:text-sm">
+			<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-4 sm:text-sm">
 				<div class="group col-span-2 flex items-center">
 					<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
 					<input
 						id="query"
 						type="text"
 						placeholder="Search a book, movie, or video game..."
-						class="bg-body-light group-has-focus:text-primary dark:bg-body-dark w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
+						class="group-has-focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
 					/>
 				</div>
 				<select id="rating-filter" class="border-b-[0.1rem] border-dotted">
@@ -49,6 +49,7 @@ const pageTitle = "Catalogue"
 	</section>
 
 	<script>
+		import { formatDate } from "src/utils"
 		import type { Emotion } from "./api/catalogue/emotions"
 		import type { Review } from "./api/catalogue/reviews"
 
@@ -153,11 +154,18 @@ const pageTitle = "Catalogue"
 					const emotionsText =
 						reviewEmotionNames.length > 0 ? reviewEmotionNames : "various emotions"
 
+					const date = formatDate(new Date(review.inserted_at))
+
 					blockDiv.innerHTML = `
+												<img
+													class="block w-full"
+													src="https://picsum.photos/seed/${review.source_id}/800"
+													alt="Cover for ${review.source_id}"
+												/>
                         <article>
                             <h3 class="my-0 leading-8">${review.source_id}</h3>
                             <p class="my-0"><span>${ratingEmojis[review.rating]}, and felt ${emotionsText}.</span></p>
-                            <p class="my-0">« ${review.comment} » - March 2025</p>
+                            <p class="my-0">« ${review.comment} » — ${date}</p>
                         </article>
                     `
 

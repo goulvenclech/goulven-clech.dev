@@ -211,6 +211,10 @@
     @apply h-[153.25px] w-full object-cover sm:max-w-[150px];
   }
 
+  .button {
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded-sm px-2.5 py-1.5 font-bold whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
+  }
+
   li code,
   p code {
     overflow-wrap: break-word;
@@ -256,7 +260,7 @@
   }
 
   a[href^="http://"]::before, a[href^="https://"]::before,
-	a[href^="/about"]::before, footer a[href^="/catalogue"]::before,
+	a[href^="/about"]::before, a[href^="/catalogue"]::before,
 	footer a[href^="/resume"]::before,
 	a[href^="/feed.xml"]::before, button::before {
     content: "\f0c1";
@@ -274,7 +278,7 @@
     font-family: "Font Awesome 6 Free";
   }
 
-  footer a[href^="/catalogue"]::before {
+  a[href^="/catalogue"]::before {
     content: "\f02d";
     font-weight: 900;
     font-family: "Font Awesome 6 Free";

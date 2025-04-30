@@ -10,7 +10,7 @@ export interface Emotion {
   is_deleted: boolean
 }
 
-export async function GET(context: APIContext): Promise<Response> {
+export async function GET(_context: APIContext): Promise<Response> {
   try {
     const client = createClient({
       url: import.meta.env.TURSO_URL,

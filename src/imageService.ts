@@ -54,12 +54,10 @@ const service: LocalImageServiceWithPlaceholder = {
   generatePlaceholder: async (src: string, width: number, height: number, quality = 100) => {
     const placeholderDimensions = getBitmapDimensions(width, height, quality)
 
+    console.log(src)
+
     // HACK: It'd be nice to be able to get a Buffer out from an ESM import or `getImage`, wonder how we could do that..
-    const originalFileBuffer = import.meta.env.PROD
-      ? readFileSync(src)
-      : await fetch(new URL(src, "http://localhost:4321/"))
-          .then((response) => response.arrayBuffer())
-          .then((buffer) => Buffer.from(buffer))
+    const originalFileBuffer = readFileSync(src)
 
     const placeholderBuffer = await sharp(originalFileBuffer)
       .resize(placeholderDimensions.width, placeholderDimensions.height, { fit: "inside" })
