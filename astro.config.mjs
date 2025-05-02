@@ -64,6 +64,9 @@ export default defineConfig({
       GITHUB_TOKEN: envField.string({ context: "client", access: "public" }),
       TURSO_TOKEN: envField.string({ context: "client", access: "public" }),
       TURSO_URL: envField.string({ context: "client", access: "public" }),
+      CATALOGUE_PASSWORD: envField.string({ context: "client", access: "public" }),
+      IGDB_ID: envField.string({ context: "client", access: "public" }),
+      IGDB_SECRET: envField.string({ context: "client", access: "public" }),
     },
   },
 

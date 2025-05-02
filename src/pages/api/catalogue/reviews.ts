@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
+import { fetchGame, coverUrl } from "./sources/igdb"
 
 export const prerender = false // API routes should not be pre-rendered
 
@@ -11,6 +12,7 @@ export interface Review {
   id: string
   source: string
   source_id: string
+  source_name: string
   source_link: string
   source_img: string
   rating: number // 1-5
@@ -136,7 +138,28 @@ export async function POST({ request }: APIContext): Promise<Response> {
       })
     }
 
-    // Perform the database operation
+    let source_name = ""
+    let source_link = ""
+    let source_img = ""
+
+    if (source === "IGDB") {
+      const game = await fetchGame(Number(source_id))
+
+      if (!game) {
+        return new Response(JSON.stringify({ error: "Game not found" }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        })
+      }
+
+      const year = new Date(game.first_release_date * 1000).getFullYear()
+      source_name = `${game.name} (${year})`
+      source_link = `https://www.igdb.com/games/${game.slug}`
+      if (game.cover?.image_id) {
+        source_img = coverUrl(game.cover.image_id)
+      }
+    }
+
     const client = createClient({
       url: import.meta.env.TURSO_URL,
       authToken: import.meta.env.TURSO_TOKEN,
@@ -146,9 +169,20 @@ export async function POST({ request }: APIContext): Promise<Response> {
 
     await client.execute({
       sql: `INSERT INTO reviews
-            (source, source_id, rating, emotions, comment, inserted_at)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-      args: [source, source_id, rating, JSON.stringify(emotions), comment, insertedAt],
+            (source, source_id, source_name, source_link, source_img,
+             rating, emotions, comment, inserted_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        source,
+        source_id,
+        source_name,
+        source_link,
+        source_img,
+        rating,
+        JSON.stringify(emotions),
+        comment,
+        insertedAt,
+      ],
     })
 
     return new Response(JSON.stringify({ ok: true }), {
@@ -157,6 +191,76 @@ export async function POST({ request }: APIContext): Promise<Response> {
     })
   } catch (err) {
     console.error("Failed to insert review:", err)
+    return new Response(JSON.stringify({ error: "Server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+}
+
+/**
+ * Used to perform maintenance tasks on the reviews database
+ * Currently supports: syncIGDB - updates missing game metadata
+ */
+export async function PATCH({ request }: APIContext): Promise<Response> {
+  try {
+    const { password, task } = await request.json()
+
+    // Reuse the same admin password as the POST endpoint
+    if (password !== import.meta.env.CATALOGUE_PASSWORD) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    if (task !== "syncIGDB") {
+      return new Response(JSON.stringify({ error: "Unknown task" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+
+    const client = createClient({
+      url: import.meta.env.TURSO_URL,
+      authToken: import.meta.env.TURSO_TOKEN,
+    })
+
+    // 1. Get all IDs with empty metadata
+    const res = await client.execute({
+      sql: `SELECT id, source_id FROM reviews
+            WHERE source = 'IGDB'
+              AND (source_name IS NULL OR source_name = '')`,
+    })
+
+    const rows = res.rows as unknown as { id: string; source_id: string }[]
+    let updated = 0
+
+    // 2. For each review, populate the missing fields via IGDB API
+    for (const row of rows) {
+      const game = await fetchGame(Number(row.source_id))
+      if (!game) continue // skip if ID is invalid
+
+      const year = new Date(game.first_release_date * 1000).getFullYear()
+      const source_name = `${game.name} (${year})`
+      const source_link = `https://www.igdb.com/games/${game.slug}`
+      const source_img = game.cover?.image_id ? coverUrl(game.cover.image_id) : ""
+
+      await client.execute({
+        sql: `UPDATE reviews
+              SET source_name = ?, source_link = ?, source_img = ?
+              WHERE id = ?`,
+        args: [source_name, source_link, source_img, row.id],
+      })
+      updated++
+    }
+
+    return new Response(JSON.stringify({ ok: true, updated }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    })
+  } catch (err) {
+    console.error("Sync IGDB error:", err)
     return new Response(JSON.stringify({ error: "Server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

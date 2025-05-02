@@ -199,7 +199,7 @@
 
   .card {
     /* Only margin-bottom because card has sometimes prececed by an hidden title */
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! mb-5 flex flex-col overflow-hidden rounded-sm whitespace-normal no-underline before:content-none! sm:flex-row;
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! relative mb-5 flex flex-col overflow-hidden rounded-sm whitespace-normal no-underline before:content-none! sm:flex-row;
   }
 
   .card article {

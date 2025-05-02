@@ -138,8 +138,10 @@ const pageTitle = "Catalogue"
 				container.innerHTML = "" // Clear loading message
 
 				reviews.forEach((review) => {
-					const blockDiv = document.createElement("div")
-					blockDiv.className = "card"
+					// TODO: make this a component
+					const blockReview = document.createElement("a")
+					blockReview.href = review.source_link ?? "#"
+					blockReview.className = "card"
 
 					// Map emotion IDs from the review to their names using the map
 					const reviewEmotionNames = review.emotions
@@ -150,26 +152,29 @@ const pageTitle = "Catalogue"
 						.filter((name): name is string => name !== undefined)
 						.join(", ") // Join the names with a comma
 
-					// Use a fallback text if no emotions were found or mapped
 					const emotionsText =
 						reviewEmotionNames.length > 0 ? reviewEmotionNames : "various emotions"
 
 					const date = formatDate(new Date(review.inserted_at))
 
-					blockDiv.innerHTML = `
+					const image = review.source_img
+						? review.source_img
+						: "https://picsum.photos/seed/" + review.source_id + "/800"
+
+					blockReview.innerHTML = `
 												<img
-													class="block w-full"
-													src="https://picsum.photos/seed/${review.source_id}/800"
-													alt="Cover for ${review.source_id}"
+														class="block w-full"
+														src="${image}"
+														alt="Cover for ${review.source_name || review.source_id}"
 												/>
                         <article>
-                            <h3 class="my-0 leading-8">${review.source_id}</h3>
+                            <h3 class="my-0 leading-8">${review.source_name || review.source_id}</h3>
                             <p class="my-0"><span>${ratingEmojis[review.rating]}, and felt ${emotionsText}.</span></p>
-                            <p class="my-0">« ${review.comment} » — ${date}</p>
+                            <p class="my-0">« ${review.comment} » — ${date}</p>
                         </article>
                     `
 
-					container.appendChild(blockDiv)
+					container.appendChild(blockReview)
 				})
 
 				if (reviews.length === 0) {
@@ -206,6 +211,38 @@ const pageTitle = "Catalogue"
 				setupFilterListeners() // Set up event listeners for filtering
 			} catch (error) {
 				console.error("Error initializing catalogue page:", error)
+			}
+		})
+
+		/**
+		 * Hidden function to update existing reviews with IGDB data
+		 * <button id="sync-igdb" class="text-primary hover:text-primary/80 text-xs underline">
+		 *	🔄 Sync IGDB covers
+		 * </button>
+		 */
+		document.getElementById("sync-igdb")?.addEventListener("click", async (e) => {
+			e.preventDefault()
+
+			const password = prompt("Catalogue password ?")
+			if (!password) return
+
+			try {
+				const res = await fetch("/api/catalogue/reviews", {
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ password, task: "syncIGDB" }),
+				})
+
+				const json = await res.json()
+				if (res.ok && json.ok) {
+					alert(`✅ ${json.updated} review(s) updated.`)
+					await loadReviews()
+				} else {
+					alert(`❌ ${json.error ?? res.status}`)
+				}
+			} catch (err) {
+				console.error(err)
+				alert("❌ Network or server error.")
 			}
 		})
 	</script>
