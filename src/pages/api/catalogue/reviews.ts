@@ -74,11 +74,13 @@ function buildSelectQuery({
   rating,
   emotion,
   limit,
+  offset = 0,
 }: {
   search?: string
   rating?: number
   emotion?: number
   limit: number
+  offset?: number
 }): { sql: string; args: (string | number)[] } {
   const clauses: string[] = []
   const args: (string | number)[] = []
@@ -106,8 +108,8 @@ function buildSelectQuery({
 
   let sql = "SELECT * FROM reviews"
   if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
-  sql += " ORDER BY inserted_at DESC LIMIT ?"
-  args.push(limit)
+  sql += " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
+  args.push(limit, offset)
 
   return { sql, args }
 }
@@ -127,7 +129,10 @@ export async function GET({ url }: APIContext): Promise<Response> {
     const limitParam = url.searchParams.get("limit")
     const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
 
-    const { sql, args } = buildSelectQuery({ search, rating, emotion, limit })
+    const offsetParam = url.searchParams.get("offset")
+    const offset = offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
+
+    const { sql, args } = buildSelectQuery({ search, rating, emotion, limit, offset })
 
     const client = getClient()
     const res = await client.execute({ sql, args })

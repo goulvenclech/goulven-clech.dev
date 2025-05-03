@@ -61,14 +61,13 @@ const pageTitle = "Catalogue"
 		/**
 		 * Sync filter & pagination state to the URL
 		 */
-		let currentLimit = 5
-		const LIMIT_STEP = 5
+		const PAGE_SIZE = 5
+		let currentOffset = 0
 		function updateUrl(filters: ReturnType<typeof getFilterValues>) {
 			const params = new URLSearchParams()
 			if (filters.query) params.set("query", filters.query)
 			if (filters.rating) params.set("rating", filters.rating)
 			if (filters.emotion) params.set("emotion", filters.emotion)
-			if (currentLimit !== LIMIT_STEP) params.set("limit", String(currentLimit))
 
 			history.replaceState(
 				null,
@@ -125,14 +124,13 @@ const pageTitle = "Catalogue"
 		}
 
 		// Fetch and display reviews, using the populated emotions map
-		async function loadReviews() {
+		async function loadReviews({ append = false } = {}) {
 			const container = document.getElementById("reviews-container")
 			if (!container) return
-
-			// Show loading skeleton
-			container.innerHTML = ""
-			const skeleton = new ReviewCardSkeleton()
-			container.appendChild(skeleton)
+			if (!append) {
+				container.innerHTML = ""
+				container.appendChild(new ReviewCardSkeleton())
+			}
 
 			// Get filter values
 			const filters = getFilterValues()
@@ -142,7 +140,8 @@ const pageTitle = "Catalogue"
 			if (filters.query) params.append("query", filters.query)
 			if (filters.rating) params.append("rating", filters.rating)
 			if (filters.emotion) params.append("emotion", filters.emotion)
-			if (currentLimit) params.set("limit", String(currentLimit))
+			params.set("limit", String(PAGE_SIZE))
+			params.set("offset", String(currentOffset))
 			const url = `/api/catalogue/reviews${params.toString() ? "?" + params.toString() : ""}`
 
 			try {
@@ -150,7 +149,7 @@ const pageTitle = "Catalogue"
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 				const reviews: Review[] = await response.json()
 
-				container.innerHTML = "" // Clear loading skeleton
+				if (!append) container.innerHTML = ""
 
 				if (reviews.length === 0) {
 					const noResults = new ReviewsEmpty()
@@ -166,7 +165,7 @@ const pageTitle = "Catalogue"
 				// Show or hide the load‑more button
 				const loadMoreBtn = document.getElementById("load-more")
 				if (loadMoreBtn) {
-					if (reviews.length === currentLimit) {
+					if (reviews.length === PAGE_SIZE) {
 						loadMoreBtn.classList.remove("hidden")
 					} else {
 						loadMoreBtn.classList.add("hidden")
@@ -193,26 +192,26 @@ const pageTitle = "Catalogue"
 			queryInput?.addEventListener("input", () => {
 				clearTimeout(debounceTimer)
 				debounceTimer = setTimeout(() => {
-					currentLimit = LIMIT_STEP
+					currentOffset = 0
 					loadReviews()
 				}, 100) as unknown as number
 			})
 
 			// Use change event for dropdowns
 			ratingFilter?.addEventListener("change", () => {
-				currentLimit = LIMIT_STEP
+				currentOffset = 0
 				loadReviews()
 			})
 
 			emotionsFilter?.addEventListener("change", () => {
-				currentLimit = LIMIT_STEP
+				currentOffset = 0
 				loadReviews()
 			})
 
 			// Load‑more button
 			document.getElementById("load-more")?.addEventListener("click", () => {
-				currentLimit += LIMIT_STEP
-				loadReviews()
+				currentOffset += PAGE_SIZE
+				loadReviews({ append: true })
 			})
 		}
 
@@ -228,8 +227,7 @@ const pageTitle = "Catalogue"
 				if (params.has("rating")) ratingFilter.value = params.get("rating") ?? ""
 				const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
 				if (params.has("emotion")) emotionsFilter.value = params.get("emotion") ?? ""
-				currentLimit = params.has("limit") ? Number(params.get("limit")) || LIMIT_STEP : LIMIT_STEP
-
+				currentOffset = 0
 				await loadReviews()
 				setupFilterListeners()
 			} catch (error) {

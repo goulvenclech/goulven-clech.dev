@@ -32,7 +32,7 @@ export class ReviewCardSkeleton extends HTMLElement {
           class="my-5 flex animate-pulse flex-col gap-5 sm:flex-row"
           style="animation-delay: ${i * 0.66}s"
         >
-          <div class="bg-alt-light dark:bg-alt-dark h-[153.25px] w-full rounded sm:max-w-[150px]"></div>
+          <div class="bg-alt-light dark:bg-alt-dark hidden h-[153.25px] w-full rounded sm:block sm:max-w-[150px]"></div>
           <article class="bg-alt-light dark:bg-alt-dark h-[153.25px] w-full min-w-0 rounded p-0"></article>
         </div>
       `
