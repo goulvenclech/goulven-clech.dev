@@ -38,8 +38,8 @@ const pageTitle = "Cataloguer"
 					id="review"
 					name="comment"
 					placeholder="Write your review here..."
-					class="col-span-2 h-24 resize-none"
-					maxlength="210"></textarea>
+					class="col-span-2 block h-24 w-full whitespace-normal"
+					rows="4"></textarea>
 				<fieldset class="col-span-2">
 					<legend>I felt...</legend>
 					<div class="flex flex-wrap gap-2.5">
@@ -56,8 +56,14 @@ const pageTitle = "Cataloguer"
 		input,
 		select,
 		textarea {
-			@apply focus:text-primary truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate;
+			@apply focus:text-primary overflow-hidden border-b-[0.1rem] border-dotted outline-hidden placeholder:truncate;
 		}
+
+		input,
+		select {
+			@apply truncate;
+		}
+
 		input {
 			@apply col-span-2;
 		}

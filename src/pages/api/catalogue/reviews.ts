@@ -37,6 +37,12 @@ export async function GET(context: APIContext): Promise<Response> {
     const query = context.url.searchParams.get("query")?.trim() || ""
     const rating = context.url.searchParams.get("rating")?.trim() || ""
     const emotionId = context.url.searchParams.get("emotion")?.trim() || ""
+    const limitParam = context.url.searchParams.get("limit")?.trim() || ""
+
+    let limit: number | null = null
+    if (limitParam && /^\d+$/.test(limitParam)) {
+      limit = Number(limitParam)
+    }
 
     const client = createClient({
       url: import.meta.env.TURSO_URL,
@@ -67,6 +73,11 @@ export async function GET(context: APIContext): Promise<Response> {
 
     // Add order by inserted_at in descending order (newest first)
     sql += " ORDER BY inserted_at DESC"
+
+    if (limit !== null) {
+      sql += " LIMIT ?"
+      params.push(limit)
+    }
 
     // Execute the main query
     const res = await client.execute({ sql, args: params })
