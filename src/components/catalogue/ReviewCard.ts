@@ -13,7 +13,7 @@ export class ReviewCard extends HTMLElement {
   private static readonly ratingEmojis: { [key: number]: string } = {
     1: "😡 hated it",
     2: "🙁 disliked it",
-    3: "🙂 mid",
+    3: "😐 mid",
     4: "😀 liked it",
     5: "😍 loved it",
   }
