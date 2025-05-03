@@ -32,7 +32,7 @@ const { caption, source, className, ...props } = Astro.props as any
 				data-zoomable
 				data-zoom-src={goodQualityURL.src}
 				width={Math.min(Astro.props.src.width, 600 * 2)}
-				class="w-full overflow-hidden rounded-sm"
+				class="w-full overflow-hidden rounded"
 			/>
 		) : (
 			<AstroPicture
@@ -41,7 +41,7 @@ const { caption, source, className, ...props } = Astro.props as any
 				data-zoom-src={goodQualityURL.src}
 				width={Math.min(Astro.props.src.width, 600 * 2)}
 				formats={Astro.props.formats ?? ["webp"]}
-				class="w-full overflow-hidden rounded-sm"
+				class="w-full overflow-hidden rounded"
 				style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
 				onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 			/>

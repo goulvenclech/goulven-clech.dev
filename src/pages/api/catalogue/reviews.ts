@@ -1,8 +1,28 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
+import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl } from "./sources/igdb"
 
-export const prerender = false // API routes should not be pre-rendered
+/**
+ * Reads a mandatory environment variable or throws if it is missing.
+ */
+function env(key: string): string {
+  const value = import.meta.env[key] as string
+  if (!value) throw new Error(`Environment variable "${key}" is not set`)
+  return value as string
+}
+
+const DB_URL = env("TURSO_URL")
+const DB_TOKEN = env("TURSO_TOKEN")
+const CATALOGUE_PASSWORD = env("CATALOGUE_PASSWORD")
+
+/**
+ * Creates a Turso client scoped to the current request.
+ * When running in a long‑lived environment, consider memoising this.
+ */
+function getClient(): Client {
+  return createClient({ url: DB_URL, authToken: DB_TOKEN })
+}
 
 /**
  * A review helps me keep track of my feelings about a book, movie, or other media.
@@ -18,166 +38,164 @@ export interface Review {
   rating: number // 1-5
   emotions: number[] // Emotion IDs
   comment: string
-  inserted_at: string // ISO 8601
+  inserted_at: string // ISO-8601
 }
 
 /**
- * Used as a middleman between the row database datas and the Review interface.
+ * Raw row as stored in the database.
  */
 interface DbReviewRow extends Omit<Review, "emotions"> {
-  emotions: string // JSON stringified array of emotion IDs
+  emotions: string // JSON‑encoded array of emotion IDs
 }
 
 /**
- * Used by the catalogue to fetch reviews from the database.
+ * Maps a DB row to the public Review shape.
  */
-export async function GET(context: APIContext): Promise<Response> {
+const mapRow = (row: DbReviewRow): Review => ({
+  ...row,
+  emotions: JSON.parse(row.emotions ?? "[]") as number[],
+})
+
+/**
+ * Returns a JSON response with the given status.
+ */
+function json(payload: unknown, status = 200): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  })
+}
+
+/**
+ * Builds the SELECT query for GET /reviews based on optional filters.
+ */
+function buildSelectQuery({
+  search,
+  rating,
+  emotion,
+  limit,
+}: {
+  search?: string
+  rating?: number
+  emotion?: number
+  limit: number
+}): { sql: string; args: (string | number)[] } {
+  const clauses: string[] = []
+  const args: (string | number)[] = []
+
+  if (search) {
+    clauses.push("(source_name LIKE ? OR comment LIKE ?)")
+    const like = `%${search}%`
+    args.push(like, like)
+  }
+
+  if (typeof rating === "number") {
+    clauses.push("rating = ?")
+    args.push(rating)
+  }
+
+  if (typeof emotion === "number") {
+    // Use EXISTS with json_each to check if the emotion id is present in the JSON array
+    clauses.push(`EXISTS (
+      SELECT 1
+        FROM json_each(reviews.emotions) AS e
+       WHERE e.value = ?
+    )`)
+    args.push(emotion)
+  }
+
+  let sql = "SELECT * FROM reviews"
+  if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
+  sql += " ORDER BY inserted_at DESC LIMIT ?"
+  args.push(limit)
+
+  return { sql, args }
+}
+
+export const prerender = false // API routes should not be pre‑rendered
+
+/**
+ * Retrieves reviews with optional filters.
+ */
+export async function GET({ url }: APIContext): Promise<Response> {
   try {
-    // Get query parameters
-    const query = context.url.searchParams.get("query")?.trim() || ""
-    const rating = context.url.searchParams.get("rating")?.trim() || ""
-    const emotionId = context.url.searchParams.get("emotion")?.trim() || ""
-    const limitParam = context.url.searchParams.get("limit")?.trim() || ""
+    const search = url.searchParams.get("query")?.trim() || undefined
+    const ratingParam = url.searchParams.get("rating")
+    const rating = ratingParam ? Number(ratingParam) : undefined
+    const emotionParam = url.searchParams.get("emotion")
+    const emotion = emotionParam ? Number(emotionParam) : undefined
+    const limitParam = url.searchParams.get("limit")
+    const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
 
-    let limit: number | null = null
-    if (limitParam && /^\d+$/.test(limitParam)) {
-      limit = Number(limitParam)
-    }
+    const { sql, args } = buildSelectQuery({ search, rating, emotion, limit })
 
-    const client = createClient({
-      url: import.meta.env.TURSO_URL,
-      authToken: import.meta.env.TURSO_TOKEN,
-    })
+    const client = getClient()
+    const res = await client.execute({ sql, args })
+    const reviews = (res.rows as unknown as DbReviewRow[]).map(mapRow)
 
-    // Build query with conditionals
-    let sql = "SELECT * FROM reviews"
-    const conditions = []
-    const params: any[] = []
-
-    // Add query parameter for text search
-    if (query) {
-      conditions.push("(source_id LIKE ? OR comment LIKE ?)")
-      params.push(`%${query}%`, `%${query}%`)
-    }
-
-    // Add rating filter
-    if (rating) {
-      conditions.push("rating = ?")
-      params.push(rating)
-    }
-
-    // Add WHERE clause if we have conditions
-    if (conditions.length > 0) {
-      sql += " WHERE " + conditions.join(" AND ")
-    }
-
-    // Add order by inserted_at in descending order (newest first)
-    sql += " ORDER BY inserted_at DESC"
-
-    if (limit !== null) {
-      sql += " LIMIT ?"
-      params.push(limit)
-    }
-
-    // Execute the main query
-    const res = await client.execute({ sql, args: params })
-    let reviews = (res.rows as unknown as DbReviewRow[]).map((row) => ({
-      ...row,
-      emotions: JSON.parse(row.emotions ?? "[]") as number[],
-    }))
-
-    // Filter by emotion ID if specified (needs post-processing since emotions is JSON)
-    if (emotionId) {
-      reviews = reviews.filter((review) => review.emotions.some((id) => String(id) === emotionId))
-    }
-
-    return new Response(JSON.stringify(reviews), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  } catch (error) {
-    console.error("Failed to fetch reviews:", error)
-    return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    return json(reviews)
+  } catch (err) {
+    console.error("GET /reviews failed:", err)
+    return json({ error: "Failed to fetch reviews" }, 500)
   }
 }
 
 /**
- * Used by the cataloguer to insert a new review into the database.
+ * Inserts a new review.
  */
 export async function POST({ request }: APIContext): Promise<Response> {
   try {
+    const body = await request.json()
+
+    // Basic auth
+    if (body?.password !== CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
+
+    // Validation
     const {
-      password,
-      date, // "YYYY-MM-DD" from <input type="date">
+      date,
       source,
       source_id,
       rating,
-      emotions, // number[]
+      emotions,
       comment = "",
-    } = await request.json()
+    }: {
+      date?: string
+      source: string
+      source_id: string
+      rating: number
+      emotions: number[]
+      comment?: string
+    } = body
 
-    // Basic authentication
-    if (password !== import.meta.env.CATALOGUE_PASSWORD) {
-      // wrong password → 401
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      })
-    }
+    const isValid =
+      source &&
+      source_id &&
+      Number.isInteger(rating) &&
+      rating >= 1 &&
+      rating <= 5 &&
+      Array.isArray(emotions) &&
+      emotions.length > 0 &&
+      emotions.length <= 3
 
-    // Validate inputs
-    if (
-      !source ||
-      !source_id ||
-      !Number.isInteger(rating) ||
-      rating < 1 ||
-      rating > 5 ||
-      !Array.isArray(emotions) ||
-      emotions.length === 0 ||
-      emotions.length > 3
-    ) {
-      return new Response(JSON.stringify({ error: "Bad Request" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
-    }
+    if (!isValid) return json({ error: "Bad Request" }, 400)
 
+    // Enrich source metadata (supports IGDB only for now)
     let source_name = ""
     let source_link = ""
     let source_img = ""
 
     if (source === "IGDB") {
       const game = await fetchGame(Number(source_id))
-
-      if (!game) {
-        return new Response(JSON.stringify({ error: "Game not found" }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        })
-      }
+      if (!game) return json({ error: "Game not found" }, 404)
 
       const year = new Date(game.first_release_date * 1000).getFullYear()
       source_name = `${game.name} (${year})`
       source_link = `https://www.igdb.com/games/${game.slug}`
-      if (game.cover?.image_id) {
-        source_img = coverUrl(game.cover.image_id)
-      }
+      if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
     }
 
-    const client = createClient({
-      url: import.meta.env.TURSO_URL,
-      authToken: import.meta.env.TURSO_TOKEN,
-    })
-
-    const insertedAt = date ? new Date(date).toISOString() : new Date().toISOString()
-
+    // Insert row
+    const client = getClient()
     await client.execute({
       sql: `INSERT INTO reviews
             (source, source_id, source_name, source_link, source_img,
@@ -192,52 +210,30 @@ export async function POST({ request }: APIContext): Promise<Response> {
         rating,
         JSON.stringify(emotions),
         comment,
-        insertedAt,
+        date ? new Date(date).toISOString() : new Date().toISOString(),
       ],
     })
 
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    })
+    return json({ ok: true }, 201)
   } catch (err) {
-    console.error("Failed to insert review:", err)
-    return new Response(JSON.stringify({ error: "Server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    })
+    console.error("POST /reviews failed:", err)
+    return json({ error: "Server error" }, 500)
   }
 }
 
 /**
- * Used to perform maintenance tasks on the reviews database
- * Currently supports: syncIGDB - updates missing game metadata
+ * Maintenance tasks on the reviews table (currently: syncIGDB).
  */
 export async function PATCH({ request }: APIContext): Promise<Response> {
   try {
     const { password, task } = await request.json()
 
-    // Reuse the same admin password as the POST endpoint
-    if (password !== import.meta.env.CATALOGUE_PASSWORD) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      })
-    }
+    if (password !== CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
+    if (task !== "syncIGDB") return json({ error: "Unknown task" }, 400)
 
-    if (task !== "syncIGDB") {
-      return new Response(JSON.stringify({ error: "Unknown task" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
-    }
+    const client = getClient()
 
-    const client = createClient({
-      url: import.meta.env.TURSO_URL,
-      authToken: import.meta.env.TURSO_TOKEN,
-    })
-
-    // 1. Get all IDs with empty metadata
+    // 1. Fetch rows missing metadata
     const res = await client.execute({
       sql: `SELECT id, source_id FROM reviews
             WHERE source = 'IGDB'
@@ -247,10 +243,10 @@ export async function PATCH({ request }: APIContext): Promise<Response> {
     const rows = res.rows as unknown as { id: string; source_id: string }[]
     let updated = 0
 
-    // 2. For each review, populate the missing fields via IGDB API
+    // 2. Populate metadata via IGDB API
     for (const row of rows) {
       const game = await fetchGame(Number(row.source_id))
-      if (!game) continue // skip if ID is invalid
+      if (!game) continue // skip invalid IDs
 
       const year = new Date(game.first_release_date * 1000).getFullYear()
       const source_name = `${game.name} (${year})`
@@ -258,23 +254,15 @@ export async function PATCH({ request }: APIContext): Promise<Response> {
       const source_img = game.cover?.image_id ? coverUrl(game.cover.image_id) : ""
 
       await client.execute({
-        sql: `UPDATE reviews
-              SET source_name = ?, source_link = ?, source_img = ?
-              WHERE id = ?`,
+        sql: `UPDATE reviews SET source_name = ?, source_link = ?, source_img = ? WHERE id = ?`,
         args: [source_name, source_link, source_img, row.id],
       })
       updated++
     }
 
-    return new Response(JSON.stringify({ ok: true, updated }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    })
+    return json({ ok: true, updated })
   } catch (err) {
-    console.error("Sync IGDB error:", err)
-    return new Response(JSON.stringify({ error: "Server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    })
+    console.error("PATCH /reviews failed:", err)
+    return json({ error: "Server error" }, 500)
   }
 }

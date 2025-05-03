@@ -1,4 +1,5 @@
 ---
+import ReviewCardSkeleton from "$components/catalogue/ReviewCardSkeleton.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 
@@ -44,7 +45,7 @@ const pageTitle = "Catalogue"
 		</form>
 
 		<div id="reviews-container">
-			<p class="text-gray-500">Loading reviews...</p>
+			<ReviewCardSkeleton />
 		</div>
 		<button id="load-more" class="button" type="button"> Load more </button>
 	</section>
@@ -53,6 +54,9 @@ const pageTitle = "Catalogue"
 		import type { Emotion } from "./api/catalogue/emotions"
 		import type { Review } from "./api/catalogue/reviews"
 		import { ReviewCard } from "../components/catalogue/ReviewCard"
+		import { ReviewCardSkeleton } from "../components/catalogue/ReviewCardSkeleton"
+		import { ReviewsError } from "../components/catalogue/ReviewsError"
+		import { ReviewsEmpty } from "../components/catalogue/ReviewsEmpty"
 
 		/**
 		 * Sync filter & pagination state to the URL
@@ -125,8 +129,10 @@ const pageTitle = "Catalogue"
 			const container = document.getElementById("reviews-container")
 			if (!container) return
 
-			// Show loading message
-			container.innerHTML = '<p class="text-gray-500">Loading reviews...</p>'
+			// Show loading skeleton
+			container.innerHTML = ""
+			const skeleton = new ReviewCardSkeleton()
+			container.appendChild(skeleton)
 
 			// Get filter values
 			const filters = getFilterValues()
@@ -144,16 +150,17 @@ const pageTitle = "Catalogue"
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 				const reviews: Review[] = await response.json()
 
-				container.innerHTML = "" // Clear loading message
-
-				reviews.forEach((review) => {
-					const reviewCard = new ReviewCard()
-					reviewCard.setReviewData(review, allEmotionsMap)
-					container.appendChild(reviewCard)
-				})
+				container.innerHTML = "" // Clear loading skeleton
 
 				if (reviews.length === 0) {
-					container.innerHTML = "<p>No reviews found matching your criteria.</p>"
+					const noResults = new ReviewsEmpty()
+					container.appendChild(noResults)
+				} else {
+					reviews.forEach((review) => {
+						const reviewCard = new ReviewCard()
+						reviewCard.setReviewData(review, allEmotionsMap)
+						container.appendChild(reviewCard)
+					})
 				}
 
 				// Show or hide the load‑more button
@@ -169,7 +176,9 @@ const pageTitle = "Catalogue"
 				updateUrl(filters)
 			} catch (error) {
 				console.error("Failed to load reviews:", error)
-				container.innerHTML = `<p class="text-red-500">Failed to load reviews.</p>`
+				container.innerHTML = ""
+				const errorMessage = new ReviewsError()
+				container.appendChild(errorMessage)
 			}
 		}
 

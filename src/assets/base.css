@@ -199,7 +199,7 @@
 
   .card {
     /* Only margin-bottom because card has sometimes prececed by an hidden title */
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! relative mb-5 flex flex-col overflow-hidden rounded-sm whitespace-normal no-underline before:content-none! sm:flex-row;
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline before:content-none! sm:flex-row;
   }
 
   .card article {
@@ -212,13 +212,13 @@
   }
 
   .button {
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded-sm px-2.5 py-1.5 font-bold whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-bold whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
   }
 
   li code,
   p code {
     overflow-wrap: break-word;
-    @apply border-alt-light dark:border-alt-dark rounded-sm border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
+    @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
   }
 
   side-note,
@@ -348,6 +348,15 @@
     padding-left: 0.15rem;
     /* Flip horizontally */
     transform: scaleX(-1);
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   /*
