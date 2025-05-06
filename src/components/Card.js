@@ -35,18 +35,18 @@ export class Card extends HTMLElement {
           ? `<div class="card-image"><img
             class="${this.imageDark ? "block dark:hidden" : "block"}"
             src="${this.image}"
-            alt="${this.image_alt}"
+            alt="${this.imageAlt}"
           /></div>
         `
           : ``
       }
       ${
         this.imageDark !== ""
-          ? `<img
+          ? `<div class="card-image"><img
             class="hidden dark:block"
             src="${this.imageDark}"
-            alt="${this.image_alt}"
-          />
+            alt="${this.imageAlt}"
+          /></div>
         `
           : ``
       }

@@ -29,13 +29,15 @@ const { image, imageDark, imageAlt = "", to } = Astro.props
 	}
 	{
 		imageDark && (
-			<Image
-				src={imageDark as ImageMetadata}
-				class="hidden dark:block"
-				width={500}
-				height={500}
-				alt={imageAlt}
-			/>
+			<div class="card-image">
+				<Image
+					src={imageDark as ImageMetadata}
+					class="hidden dark:block"
+					width={500}
+					height={500}
+					alt={imageAlt}
+				/>
+			</div>
 		)
 	}
 	<article>
