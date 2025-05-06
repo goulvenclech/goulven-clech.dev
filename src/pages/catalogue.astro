@@ -31,6 +31,16 @@ const pageTitle = "Catalogue"
 					class="group-has-focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
 				/>
 			</div>
+
+			<select id="source-filter" class="border-b-[0.1rem] border-dotted">
+				<option value="" selected>⭐ all sources</option>
+				<option value="IGDB">🎮 Video Games</option>
+				<option value="TMDB_MOVIE">🎬 Movies</option>
+				<option value="TMDB_TV">📺 Shows</option>
+			</select>
+
+			{
+				/* I'm not sure if I want this filter or not. It's useful, but I don't like the vibe.
 			<select id="rating-filter" class="border-b-[0.1rem] border-dotted">
 				<option value="" selected>⭐ all ratings</option>
 				<option value="5">😍 loved it</option>
@@ -39,6 +49,9 @@ const pageTitle = "Catalogue"
 				<option value="2">🙁 disliked it</option>
 				<option value="1">😡 hated it</option>
 			</select>
+			*/
+			}
+
 			<select id="emotions-filter" class="border-b-[0.1rem] border-dotted">
 				<option value="" selected>🎭 all emotions</option>
 			</select>
@@ -67,6 +80,7 @@ const pageTitle = "Catalogue"
 			const params = new URLSearchParams()
 			if (filters.query) params.set("query", filters.query)
 			if (filters.rating) params.set("rating", filters.rating)
+			if (filters.source) params.set("source", filters.source)
 			if (filters.emotion) params.set("emotion", filters.emotion)
 
 			history.replaceState(
@@ -90,7 +104,7 @@ const pageTitle = "Catalogue"
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 				const emotions: Emotion[] = await response.json()
 				const sortedEmotions = [...emotions].sort((a, b) => a.name.localeCompare(b.name))
-
+				console.log("Emotions loaded:", sortedEmotions)
 				// Build <option> elements
 				sortedEmotions.forEach((emotion: Emotion) => {
 					allEmotionsMap.set(emotion.id, emotion)
@@ -113,12 +127,14 @@ const pageTitle = "Catalogue"
 		// Get current filter values from the form
 		function getFilterValues() {
 			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement
+			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
+			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
 
 			return {
 				query: queryInput?.value || "",
-				rating: ratingFilter?.value || "",
+				rating: ratingFilter?.value || "", // Still usable from the URL
+				source: sourceFilter?.value || "",
 				emotion: emotionsFilter?.value || "",
 			}
 		}
@@ -139,6 +155,7 @@ const pageTitle = "Catalogue"
 			const params = new URLSearchParams()
 			if (filters.query) params.append("query", filters.query)
 			if (filters.rating) params.append("rating", filters.rating)
+			if (filters.source) params.append("source", filters.source)
 			if (filters.emotion) params.append("emotion", filters.emotion)
 			params.set("limit", String(PAGE_SIZE))
 			params.set("offset", String(currentOffset))
@@ -184,7 +201,8 @@ const pageTitle = "Catalogue"
 		// Add event listeners to form controls to trigger filtering
 		function setupFilterListeners() {
 			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement
+			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
+			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
 
 			// Use input event for text search with small delay
@@ -199,6 +217,11 @@ const pageTitle = "Catalogue"
 
 			// Use change event for dropdowns
 			ratingFilter?.addEventListener("change", () => {
+				currentOffset = 0
+				loadReviews()
+			})
+
+			sourceFilter?.addEventListener("change", () => {
 				currentOffset = 0
 				loadReviews()
 			})
@@ -223,9 +246,11 @@ const pageTitle = "Catalogue"
 				const params = new URLSearchParams(location.search)
 				const queryInput = document.getElementById("query") as HTMLInputElement
 				if (params.has("query")) queryInput.value = params.get("query") ?? ""
-				const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement
-				if (params.has("rating")) ratingFilter.value = params.get("rating") ?? ""
+				const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
+				const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 				const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
+				if (params.has("rating") && ratingFilter) ratingFilter.value = params.get("rating") ?? ""
+				if (params.has("source")) sourceFilter.value = params.get("source") ?? ""
 				if (params.has("emotion")) emotionsFilter.value = params.get("emotion") ?? ""
 				currentOffset = 0
 				await loadReviews()

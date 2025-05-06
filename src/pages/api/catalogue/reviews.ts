@@ -2,6 +2,7 @@ import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl } from "./sources/igdb"
+import { fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 
 /**
  * Reads a mandatory environment variable or throws if it is missing.
@@ -73,12 +74,14 @@ function buildSelectQuery({
   search,
   rating,
   emotion,
+  source,
   limit,
   offset = 0,
 }: {
   search?: string
   rating?: number
   emotion?: number
+  source?: string
   limit: number
   offset?: number
 }): { sql: string; args: (string | number)[] } {
@@ -106,6 +109,11 @@ function buildSelectQuery({
     args.push(emotion)
   }
 
+  if (source) {
+    clauses.push("source = ?")
+    args.push(source)
+  }
+
   let sql = "SELECT * FROM reviews"
   if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
   sql += " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
@@ -126,13 +134,14 @@ export async function GET({ url }: APIContext): Promise<Response> {
     const rating = ratingParam ? Number(ratingParam) : undefined
     const emotionParam = url.searchParams.get("emotion")
     const emotion = emotionParam ? Number(emotionParam) : undefined
+    const source = url.searchParams.get("source") || undefined
     const limitParam = url.searchParams.get("limit")
     const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
 
     const offsetParam = url.searchParams.get("offset")
     const offset = offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
 
-    const { sql, args } = buildSelectQuery({ search, rating, emotion, limit, offset })
+    const { sql, args } = buildSelectQuery({ search, rating, emotion, source, limit, offset })
 
     const client = getClient()
     const res = await client.execute({ sql, args })
@@ -184,19 +193,48 @@ export async function POST({ request }: APIContext): Promise<Response> {
 
     if (!isValid) return json({ error: "Bad Request" }, 400)
 
-    // Enrich source metadata (supports IGDB only for now)
+    // Enrich source metadata
     let source_name = ""
     let source_link = ""
     let source_img = ""
 
-    if (source === "IGDB") {
-      const game = await fetchGame(Number(source_id))
-      if (!game) return json({ error: "Game not found" }, 404)
+    switch (source) {
+      case "IGDB": {
+        const game = await fetchGame(Number(source_id))
+        if (!game) return json({ error: "Game not found" }, 404)
 
-      const year = new Date(game.first_release_date * 1000).getFullYear()
-      source_name = `${game.name} (${year})`
-      source_link = `https://www.igdb.com/games/${game.slug}`
-      if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
+        const year = new Date(game.first_release_date * 1000).getFullYear()
+        source_name = `${game.name} (${year})`
+        source_link = `https://www.igdb.com/games/${game.slug}`
+        if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
+        break
+      }
+
+      case "TMDB_MOVIE": {
+        const movie = await fetchMovie(Number(source_id))
+        if (!movie) return json({ error: "Movie not found" }, 404)
+
+        const year = movie.release_date ? new Date(movie.release_date).getFullYear() : "??"
+        source_name = `${movie.title} (${year})`
+        source_link = `https://www.themoviedb.org/movie/${movie.id}`
+        if (movie.poster_path) source_img = posterUrl(movie.poster_path)
+        break
+      }
+
+      case "TMDB_TV": {
+        const show = await fetchShow(Number(source_id))
+        if (!show) return json({ error: "Show not found" }, 404)
+
+        const year = show.first_air_date ? new Date(show.first_air_date).getFullYear() : "??"
+        source_name = `${show.name} (${year})`
+        source_link = `https://www.themoviedb.org/tv/${show.id}`
+        if (show.poster_path) source_img = posterUrl(show.poster_path)
+        break
+      }
+
+      default:
+        console.error("Unknown source:", source)
+        break
     }
 
     // Insert row
@@ -222,52 +260,6 @@ export async function POST({ request }: APIContext): Promise<Response> {
     return json({ ok: true }, 201)
   } catch (err) {
     console.error("POST /reviews failed:", err)
-    return json({ error: "Server error" }, 500)
-  }
-}
-
-/**
- * Maintenance tasks on the reviews table (currently: syncIGDB).
- */
-export async function PATCH({ request }: APIContext): Promise<Response> {
-  try {
-    const { password, task } = await request.json()
-
-    if (password !== CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
-    if (task !== "syncIGDB") return json({ error: "Unknown task" }, 400)
-
-    const client = getClient()
-
-    // 1. Fetch rows missing metadata
-    const res = await client.execute({
-      sql: `SELECT id, source_id FROM reviews
-            WHERE source = 'IGDB'
-              AND (source_name IS NULL OR source_name = '')`,
-    })
-
-    const rows = res.rows as unknown as { id: string; source_id: string }[]
-    let updated = 0
-
-    // 2. Populate metadata via IGDB API
-    for (const row of rows) {
-      const game = await fetchGame(Number(row.source_id))
-      if (!game) continue // skip invalid IDs
-
-      const year = new Date(game.first_release_date * 1000).getFullYear()
-      const source_name = `${game.name} (${year})`
-      const source_link = `https://www.igdb.com/games/${game.slug}`
-      const source_img = game.cover?.image_id ? coverUrl(game.cover.image_id) : ""
-
-      await client.execute({
-        sql: `UPDATE reviews SET source_name = ?, source_link = ?, source_img = ? WHERE id = ?`,
-        args: [source_name, source_link, source_img, row.id],
-      })
-      updated++
-    }
-
-    return json({ ok: true, updated })
-  } catch (err) {
-    console.error("PATCH /reviews failed:", err)
     return json({ error: "Server error" }, 500)
   }
 }
