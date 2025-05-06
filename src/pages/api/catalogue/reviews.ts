@@ -141,13 +141,23 @@ export async function GET({ url }: APIContext): Promise<Response> {
     const offsetParam = url.searchParams.get("offset")
     const offset = offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
 
-    const { sql, args } = buildSelectQuery({ search, rating, emotion, source, limit, offset })
+    const { sql, args } = buildSelectQuery({
+      search,
+      rating,
+      emotion,
+      source,
+      limit: limit + 1, // Get one extra row to check for "hasMore"
+      offset,
+    })
 
     const client = getClient()
     const res = await client.execute({ sql, args })
-    const reviews = (res.rows as unknown as DbReviewRow[]).map(mapRow)
+    const rows = res.rows as unknown as DbReviewRow[]
 
-    return json(reviews)
+    const hasMore = rows.length > limit
+    const reviews = rows.slice(0, limit).map(mapRow)
+
+    return json({ reviews, hasMore })
   } catch (err) {
     console.error("GET /reviews failed:", err)
     return json({ error: "Failed to fetch reviews" }, 500)

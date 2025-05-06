@@ -197,18 +197,21 @@
     @apply my-10 sm:my-14;
   }
 
+  /* app.css ou directives @apply */
   .card {
-    /* Only margin-bottom because card has sometimes prececed by an hidden title */
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline before:content-none! sm:flex-row;
+    @apply hover:bg-alt-light hover:text-font-light dark:hover:bg-alt-dark dark:hover:text-font-dark relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline sm:flex-row;
   }
 
   .card article {
-    @apply mx-5 my-4 min-w-0 p-0;
+    @apply m-5 min-w-0 p-0 sm:pl-[150px];
   }
 
-  .card img {
-    /* height is based on the height of .card article, width is arbitrary */
-    @apply h-[153.25px] w-full object-cover sm:max-w-[150px];
+  .card .card-image {
+    @apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-[150px] sm:flex-none sm:object-cover;
+  }
+
+  .card .card-image img {
+    @apply h-full w-full object-cover;
   }
 
   .button {

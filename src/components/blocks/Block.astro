@@ -16,13 +16,15 @@ const { image, imageDark, imageAlt = "", to } = Astro.props
 <a href={to} class="card">
 	{
 		image && (
-			<Image
-				src={image as ImageMetadata}
-				width={500}
-				height={500}
-				alt={imageAlt}
-				class={imageDark ? "block dark:hidden" : "block"}
-			/>
+			<div class="card-image">
+				<Image
+					src={image as ImageMetadata}
+					width={500}
+					height={500}
+					alt={imageAlt}
+					class={imageDark ? "block dark:hidden" : "block"}
+				/>
+			</div>
 		)
 	}
 	{

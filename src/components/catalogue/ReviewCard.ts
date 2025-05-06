@@ -61,15 +61,16 @@ export class ReviewCard extends HTMLElement {
       : "https://picsum.photos/seed/" + this.review.source_id + "/800"
 
     this.innerHTML = `
-      <img
-        class="block w-full"
-        src="${image}"
-        alt="Cover for ${this.review.source_name || this.review.source_id}"
-      />
+			<div class="card-image">
+				<img
+					src="${image}"
+					alt="Cover for ${this.review.source_name || this.review.source_id}"
+				/>
+			</div>
       <article>
         <h3 class="my-0 leading-8">${this.review.source_name || this.review.source_id}</h3>
         <p class="my-0"><span>${ReviewCard.ratingEmojis[this.review.rating]}, and felt ${emotionsText}.</span></p>
-        <p class="my-0">« ${this.review.comment} » — ${date}</p>
+        <p class="my-0">« ${this.review.comment} » — ${date}</p>
       </article>
     `
   }

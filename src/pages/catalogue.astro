@@ -33,15 +33,17 @@ const pageTitle = "Catalogue"
 			</div>
 
 			<select id="source-filter" class="border-b-[0.1rem] border-dotted">
-				<option value="" selected>⭐ all sources</option>
-				<option value="IGDB">🎮 Video Games</option>
-				<option value="TMDB_MOVIE">🎬 Movies</option>
-				<option value="TMDB_TV">📺 Shows</option>
+				<option value="" selected>⭐ everything</option>
+				<option value="IGDB">🎮 video games</option>
+				<option value="TMDB_MOVIE">🎬 movies</option>
+				<option value="TMDB_TV">📺 shows</option>
 			</select>
 
-			{
-				/* I'm not sure if I want this filter or not. It's useful, but I don't like the vibe.
-			<select id="rating-filter" class="border-b-[0.1rem] border-dotted">
+			<!--
+			I'm not sure if I want this filter or not. It's useful, but I don't like the vibe.
+			So it's hidden for now, but I can still filter by rating using the URL parameter.
+			-->
+			<select id="rating-filter" class="hidden border-b-[0.1rem] border-dotted">
 				<option value="" selected>⭐ all ratings</option>
 				<option value="5">😍 loved it</option>
 				<option value="4">😀 liked it</option>
@@ -49,8 +51,6 @@ const pageTitle = "Catalogue"
 				<option value="2">🙁 disliked it</option>
 				<option value="1">😡 hated it</option>
 			</select>
-			*/
-			}
 
 			<select id="emotions-filter" class="border-b-[0.1rem] border-dotted">
 				<option value="" selected>🎭 all emotions</option>
@@ -61,6 +61,13 @@ const pageTitle = "Catalogue"
 			<ReviewCardSkeleton />
 		</div>
 		<button id="load-more" class="button" type="button"> Load more </button>
+		<side-note>
+			Images and datas are fetched from <a href="https://igdb.com/"
+				><abbr title="The Internet Game Database">IGDB</abbr></a
+			> for video games and
+			<a href="https://themoviedb.org/"><abbr title="The Movie DataBase">TMDB</abbr></a> for movies and
+			shows. Their licenses apply.
+		</side-note>
 	</section>
 
 	<script>
@@ -164,11 +171,14 @@ const pageTitle = "Catalogue"
 			try {
 				const response = await fetch(url)
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-				const reviews: Review[] = await response.json()
+				const { reviews, hasMore } = (await response.json()) as {
+					reviews: Review[]
+					hasMore: boolean
+				}
 
 				if (!append) container.innerHTML = ""
 
-				if (reviews.length === 0) {
+				if (reviews.length === 0 && !append) {
 					const noResults = new ReviewsEmpty()
 					container.appendChild(noResults)
 				} else {
@@ -181,13 +191,7 @@ const pageTitle = "Catalogue"
 
 				// Show or hide the load‑more button
 				const loadMoreBtn = document.getElementById("load-more")
-				if (loadMoreBtn) {
-					if (reviews.length === PAGE_SIZE) {
-						loadMoreBtn.classList.remove("hidden")
-					} else {
-						loadMoreBtn.classList.add("hidden")
-					}
-				}
+				loadMoreBtn?.classList.toggle("hidden", !hasMore)
 
 				updateUrl(filters)
 			} catch (error) {
@@ -245,10 +249,10 @@ const pageTitle = "Catalogue"
 				// Restore state from URL (if any)
 				const params = new URLSearchParams(location.search)
 				const queryInput = document.getElementById("query") as HTMLInputElement
-				if (params.has("query")) queryInput.value = params.get("query") ?? ""
 				const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
 				const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 				const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
+				if (params.has("query")) queryInput.value = params.get("query") ?? ""
 				if (params.has("rating") && ratingFilter) ratingFilter.value = params.get("rating") ?? ""
 				if (params.has("source")) sourceFilter.value = params.get("source") ?? ""
 				if (params.has("emotion")) emotionsFilter.value = params.get("emotion") ?? ""

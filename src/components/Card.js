@@ -32,11 +32,11 @@ export class Card extends HTMLElement {
       <a href="/${this.id}" class="card">
       ${
         this.image !== ""
-          ? `<img
+          ? `<div class="card-image"><img
             class="${this.imageDark ? "block dark:hidden" : "block"}"
             src="${this.image}"
             alt="${this.image_alt}"
-          />
+          /></div>
         `
           : ``
       }
