@@ -25,7 +25,7 @@ const pageTitle = "Catalogue"
 	</section>
 	<section>
 		<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-3 sm:text-sm">
-			<div class="group col-span-3 flex items-center">
+			<div class="group col-span-2 flex items-center sm:col-span-3">
 				<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
 				<input
 					id="query"
@@ -46,11 +46,17 @@ const pageTitle = "Catalogue"
 				<option value="" selected>🎭 all emotions</option>
 			</select>
 
+			<select id="sort-filter" class="col-span-2 border-b-[0.1rem] border-dotted sm:col-span-1">
+				<option value="date" selected>🗓️ by date</option>
+				<option value="rating">😍 by rating</option>
+			</select>
+
 			<!--
 			I'm not sure if I want this filter or not. It's useful, but I don't like the vibe.
 			So it's hidden for now, but I can still filter by rating using the URL parameter.
 			-->
 			<select id="rating-filter" class="hidden border-b-[0.1rem] border-dotted">
+				<option value="" selected>⭐ all ratings</option>
 				<option value="5">😍 loved it</option>
 				<option value="4">😀 liked it</option>
 				<option value="3">😐 mid</option>
@@ -91,6 +97,7 @@ const pageTitle = "Catalogue"
 			if (filters.rating) params.set("rating", filters.rating)
 			if (filters.source) params.set("source", filters.source)
 			if (filters.emotion) params.set("emotion", filters.emotion)
+			if (filters.sort && filters.sort !== "date") params.append("sort", filters.sort)
 
 			history.replaceState(
 				null,
@@ -139,12 +146,14 @@ const pageTitle = "Catalogue"
 			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
 			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
+			const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
 
 			return {
 				query: queryInput?.value || "",
 				rating: ratingFilter?.value || "", // Still usable from the URL
 				source: sourceFilter?.value || "",
 				emotion: emotionsFilter?.value || "",
+				sort: sortFilter?.value || "date",
 			}
 		}
 
@@ -166,6 +175,7 @@ const pageTitle = "Catalogue"
 			if (filters.rating) params.append("rating", filters.rating)
 			if (filters.source) params.append("source", filters.source)
 			if (filters.emotion) params.append("emotion", filters.emotion)
+			if (filters.sort && filters.sort !== "date") params.append("sort", filters.sort)
 			params.set("limit", String(PAGE_SIZE))
 			params.set("offset", String(currentOffset))
 			const url = `/api/catalogue/reviews${params.toString() ? "?" + params.toString() : ""}`
@@ -237,6 +247,11 @@ const pageTitle = "Catalogue"
 				loadReviews()
 			})
 
+			document.getElementById("sort-filter")?.addEventListener("change", () => {
+				currentOffset = 0
+				loadReviews()
+			})
+
 			// Load‑more button
 			document.getElementById("load-more")?.addEventListener("click", () => {
 				currentOffset += PAGE_SIZE
@@ -254,10 +269,12 @@ const pageTitle = "Catalogue"
 				const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
 				const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 				const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
+				const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
 				if (params.has("query")) queryInput.value = params.get("query") ?? ""
 				if (params.has("rating") && ratingFilter) ratingFilter.value = params.get("rating") ?? ""
 				if (params.has("source")) sourceFilter.value = params.get("source") ?? ""
 				if (params.has("emotion")) emotionsFilter.value = params.get("emotion") ?? ""
+				if (params.has("sort")) sortFilter.value = params.get("sort") ?? "date"
 				currentOffset = 0
 				await loadReviews()
 				setupFilterListeners()

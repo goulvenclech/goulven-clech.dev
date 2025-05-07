@@ -77,6 +77,7 @@ function buildSelectQuery({
   source,
   limit,
   offset = 0,
+  sort = "date",
 }: {
   search?: string
   rating?: number
@@ -84,6 +85,7 @@ function buildSelectQuery({
   source?: string
   limit: number
   offset?: number
+  sort?: "date" | "rating"
 }): { sql: string; args: (string | number)[] } {
   const clauses: string[] = []
   const args: (string | number)[] = []
@@ -116,7 +118,11 @@ function buildSelectQuery({
 
   let sql = "SELECT * FROM reviews"
   if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
-  sql += " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
+  sql +=
+    sort === "rating"
+      ? " ORDER BY rating DESC, inserted_at DESC LIMIT ? OFFSET ?"
+      : " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
+
   args.push(limit, offset)
 
   return { sql, args }
@@ -135,6 +141,7 @@ export async function GET({ url }: APIContext): Promise<Response> {
     const emotionParam = url.searchParams.get("emotion")
     const emotion = emotionParam ? Number(emotionParam) : undefined
     const source = url.searchParams.get("source") || undefined
+    const sortParam = url.searchParams.get("sort") === "rating" ? "rating" : "date"
     const limitParam = url.searchParams.get("limit")
     const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
 
@@ -148,6 +155,7 @@ export async function GET({ url }: APIContext): Promise<Response> {
       source,
       limit: limit + 1, // Get one extra row to check for "hasMore"
       offset,
+      sort: sortParam,
     })
 
     const client = getClient()
