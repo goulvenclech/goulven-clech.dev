@@ -254,6 +254,43 @@
   }
 
   /*
+		FORM
+	*/
+
+  input,
+  select,
+  textarea {
+    @apply focus:text-primary overflow-hidden border-b-[0.1rem] border-dotted outline-hidden placeholder:truncate;
+  }
+
+  input,
+  select {
+    @apply truncate;
+  }
+
+  input {
+    @apply col-span-2;
+  }
+  label {
+    @apply rounded-full border-[0.1rem] border-dotted px-2.5 py-1.5 text-xs sm:text-sm;
+  }
+  label:has(input:checked) {
+    @apply border-primary text-primary;
+  }
+
+  select,
+  optgroup,
+  option {
+    @apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark;
+  }
+
+  /*	Fix for select element in dark mode on Windows.
+	See -> https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme */
+  select {
+    color-scheme: light dark;
+  }
+
+  /*
     LINKS
   */
   a,

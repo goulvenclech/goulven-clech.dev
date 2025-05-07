@@ -50,31 +50,6 @@ const pageTitle = "Cataloguer"
 			</form>
 		</section>
 	</section>
-	<style is:global>
-		@reference "$assets/base.css";
-
-		input,
-		select,
-		textarea {
-			@apply focus:text-primary overflow-hidden border-b-[0.1rem] border-dotted outline-hidden placeholder:truncate;
-		}
-
-		input,
-		select {
-			@apply truncate;
-		}
-
-		input {
-			@apply col-span-2;
-		}
-		label {
-			@apply rounded-full border-[0.1rem] border-dotted px-2.5 py-1.5 text-xs sm:text-sm;
-		}
-		label:has(input:checked) {
-			@apply border-primary text-primary;
-		}
-	</style>
-
 	<script>
 		import type { Emotion } from "./api/catalogue/emotions"
 

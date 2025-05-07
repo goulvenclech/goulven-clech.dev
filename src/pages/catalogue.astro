@@ -24,8 +24,8 @@ const pageTitle = "Catalogue"
 		</p>
 	</section>
 	<section>
-		<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-4 sm:text-sm">
-			<div class="group col-span-2 flex items-center">
+		<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-3 sm:text-sm">
+			<div class="group col-span-3 flex items-center">
 				<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
 				<input
 					id="query"
@@ -42,21 +42,20 @@ const pageTitle = "Catalogue"
 				<option value="TMDB_TV">📺 shows</option>
 			</select>
 
+			<select id="emotions-filter" class="border-b-[0.1rem] border-dotted">
+				<option value="" selected>🎭 all emotions</option>
+			</select>
+
 			<!--
 			I'm not sure if I want this filter or not. It's useful, but I don't like the vibe.
 			So it's hidden for now, but I can still filter by rating using the URL parameter.
 			-->
 			<select id="rating-filter" class="hidden border-b-[0.1rem] border-dotted">
-				<option value="" selected>⭐ all ratings</option>
 				<option value="5">😍 loved it</option>
 				<option value="4">😀 liked it</option>
 				<option value="3">😐 mid</option>
 				<option value="2">🙁 disliked it</option>
 				<option value="1">😡 hated it</option>
-			</select>
-
-			<select id="emotions-filter" class="border-b-[0.1rem] border-dotted">
-				<option value="" selected>🎭 all emotions</option>
 			</select>
 		</form>
 
