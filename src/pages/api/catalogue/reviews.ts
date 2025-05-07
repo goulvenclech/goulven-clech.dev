@@ -60,11 +60,13 @@ const mapRow = (row: DbReviewRow): Review => ({
 /**
  * Returns a JSON response with the given status.
  */
-function json(payload: unknown, status = 200): Response {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  })
+function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
+  const headers: Record<string, string> = { "Content-Type": "application/json" }
+  if (cacheSeconds)
+    headers["Cache-Control"] =
+      `public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
+
+  return new Response(JSON.stringify(payload), { status, headers })
 }
 
 /**
@@ -165,7 +167,7 @@ export async function GET({ url }: APIContext): Promise<Response> {
     const hasMore = rows.length > limit
     const reviews = rows.slice(0, limit).map(mapRow)
 
-    return json({ reviews, hasMore })
+    return json({ reviews, hasMore }, 200, 60) // 1 min cache
   } catch (err) {
     console.error("GET /reviews failed:", err)
     return json({ error: "Failed to fetch reviews" }, 500)

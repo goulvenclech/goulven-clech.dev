@@ -24,6 +24,7 @@ export async function GET(_context: APIContext): Promise<Response> {
       status: 200,
       headers: {
         "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=86400, immutable", // 24h cache
       },
     })
   } catch (error) {
