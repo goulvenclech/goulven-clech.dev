@@ -120,7 +120,6 @@ const pageTitle = "Catalogue"
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 				const emotions: Emotion[] = await response.json()
 				const sortedEmotions = [...emotions].sort((a, b) => a.name.localeCompare(b.name))
-				console.log("Emotions loaded:", sortedEmotions)
 				// Build <option> elements
 				sortedEmotions.forEach((emotion: Emotion) => {
 					allEmotionsMap.set(emotion.id, emotion)
