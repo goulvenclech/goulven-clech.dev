@@ -35,12 +35,46 @@ async function getToken(): Promise<string> {
   return accessToken!
 }
 
+export interface IgdbCompanyRef {
+  name: string
+}
+
+export interface IgdbInvolvedCompany {
+  developer?: boolean
+  publisher?: boolean
+  company?: IgdbCompanyRef
+}
+
+export interface IgdbGenre {
+  name: string
+}
+
+export interface IgdbPlatform {
+  name: string
+}
+
+export interface IgdbAlternativeName {
+  name: string
+  comment?: string
+}
+
+export interface IgdbCollection {
+  name: string
+}
+
 export interface IgdbGame {
   id: number
   name: string
   slug: string
-  first_release_date: number // UNIX timestamp (s)
+  first_release_date: number // UNIX timestamp (s)
   cover?: { image_id: string }
+
+  /* extra fields used by buildIgdbMeta */
+  genres?: IgdbGenre[]
+  collection?: IgdbCollection
+  alternative_names?: IgdbAlternativeName[]
+  involved_companies?: IgdbInvolvedCompany[]
+  platforms?: IgdbPlatform[]
 }
 
 /**
@@ -50,7 +84,19 @@ export async function fetchGame(id: number): Promise<IgdbGame | null> {
   const token = await getToken()
 
   const body = `
-    fields name, slug, first_release_date, cover.image_id;
+    fields
+      name,
+      slug,
+      first_release_date,
+      cover.image_id,
+      genres.name,
+      collection.name,
+      alternative_names.name,
+      alternative_names.comment,
+      involved_companies.developer,
+      involved_companies.publisher,
+      involved_companies.company.name,
+      platforms.name;
     where id = ${id};
     limit 1;
   `.trim()
@@ -78,4 +124,42 @@ export async function fetchGame(id: number): Promise<IgdbGame | null> {
  */
 export function coverUrl(imageId: string, size = "cover_big_2x"): string {
   return `https://images.igdb.com/igdb/image/upload/t_${size}/${imageId}.jpg`
+}
+
+/**
+ * Builds a compact searchable meta string for an IGDB game.
+ * Expected game object already contains expanded relations.
+ */
+export function buildIgdbMeta(game: IgdbGame): string {
+  const parts: string[] = []
+
+  if (game.genres?.length) parts.push(game.genres.map((g) => g.name).join(", "))
+
+  if (game.collection?.name) parts.push(game.collection.name)
+
+  if (game.alternative_names?.length) {
+    const acronyms = game.alternative_names
+      .filter((n) => n.comment?.toLowerCase() === "acronym")
+      .map((n) => n.name)
+      .filter(Boolean)
+    if (acronyms.length) parts.push(acronyms.join(", "))
+  }
+
+  if (game.involved_companies?.length) {
+    const devs = game.involved_companies
+      .filter((c) => c.developer)
+      .map((c) => c.company?.name)
+      .filter(Boolean)
+    if (devs.length) parts.push(devs.join(", "))
+
+    const pubs = game.involved_companies
+      .filter((c) => c.publisher)
+      .map((c) => c.company?.name)
+      .filter(Boolean)
+    if (pubs.length) parts.push(pubs.join(", "))
+  }
+
+  if (game.platforms?.length) parts.push(game.platforms.map((p) => p.name).join(", "))
+
+  return parts.join(" | ")
 }

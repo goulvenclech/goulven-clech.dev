@@ -1,8 +1,8 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
-import { fetchGame, coverUrl } from "./sources/igdb"
-import { fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
+import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
+import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 
 /**
  * Reads a mandatory environment variable or throws if it is missing.
@@ -40,6 +40,7 @@ export interface Review {
   emotions: number[] // Emotion IDs
   comment: string
   inserted_at: string // ISO-8601
+  meta: string
 }
 
 /**
@@ -93,9 +94,9 @@ function buildSelectQuery({
   const args: (string | number)[] = []
 
   if (search) {
-    clauses.push("(source_name LIKE ? OR comment LIKE ?)")
+    clauses.push("(source_name LIKE ? OR comment LIKE ? OR meta LIKE ?)")
     const like = `%${search}%`
-    args.push(like, like)
+    args.push(like, like, like)
   }
 
   if (typeof rating === "number") {
@@ -217,6 +218,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
     let source_name = ""
     let source_link = ""
     let source_img = ""
+    let meta = ""
 
     switch (source) {
       case "IGDB": {
@@ -226,6 +228,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
         const year = new Date(game.first_release_date * 1000).getFullYear()
         source_name = `${game.name} (${year})`
         source_link = `https://www.igdb.com/games/${game.slug}`
+        meta = buildIgdbMeta(game)
         if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
         break
       }
@@ -237,6 +240,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
         const year = movie.release_date ? new Date(movie.release_date).getFullYear() : "??"
         source_name = `${movie.title} (${year})`
         source_link = `https://www.themoviedb.org/movie/${movie.id}`
+        meta = buildMovieMeta(movie)
         if (movie.poster_path) source_img = posterUrl(movie.poster_path)
         break
       }
@@ -248,6 +252,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
         const year = show.first_air_date ? new Date(show.first_air_date).getFullYear() : "??"
         source_name = `${show.name} (${year})`
         source_link = `https://www.themoviedb.org/tv/${show.id}`
+        meta = buildShowMeta(show)
         if (show.poster_path) source_img = posterUrl(show.poster_path)
         break
       }
@@ -262,8 +267,8 @@ export async function POST({ request }: APIContext): Promise<Response> {
     await client.execute({
       sql: `INSERT INTO reviews
             (source, source_id, source_name, source_link, source_img,
-             rating, emotions, comment, inserted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             rating, emotions, comment, meta, inserted_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         source,
         source_id,
@@ -273,6 +278,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
         rating,
         JSON.stringify(emotions),
         comment,
+        meta,
         date ? new Date(date).toISOString() : new Date().toISOString(),
       ],
     })
