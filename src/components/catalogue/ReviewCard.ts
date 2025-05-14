@@ -52,7 +52,6 @@ export class ReviewCard extends HTMLElement {
 
     const emotionsText = reviewEmotionNames || "various emotions"
 
-    // carte cliquable
     this.innerHTML = `
       <a href="${url}" target="_blank" rel="noopener" class="card">
         <div class="card-image">
