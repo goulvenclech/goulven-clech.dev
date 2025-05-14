@@ -30,26 +30,26 @@ export class Card extends HTMLElement {
     const template = document.createElement("template")
     template.innerHTML = `
       <a href="/${this.id}" class="card">
-      ${
-        this.image !== ""
-          ? `<div class="card-image"><img
-            class="${this.imageDark ? "block dark:hidden" : "block"}"
-            src="${this.image}"
-            alt="${this.imageAlt}"
-          /></div>
-        `
-          : ``
-      }
-      ${
-        this.imageDark !== ""
-          ? `<div class="card-image"><img
-            class="hidden dark:block"
-            src="${this.imageDark}"
-            alt="${this.imageAlt}"
-          /></div>
-        `
-          : ``
-      }
+				<div class="card-image">
+					${
+            this.image !== ""
+              ? `<img
+								class="${this.imageDark ? "block dark:hidden" : "block"}"
+								src="${this.image}"
+								alt="${this.imageAlt}"
+							/>`
+              : ``
+          }
+					${
+            this.imageDark !== ""
+              ? `<img
+								class="hidden dark:block"
+								src="${this.imageDark}"
+								alt="${this.imageAlt}"
+							/>`
+              : ``
+          }
+				</div>
         <article>
           <h3 class="my-0 leading-8">
             ${this.title}
