@@ -5,7 +5,6 @@ import Block from "./Block.astro"
 
 /**
  * Used to present a Google Maps Place as a card, also a link to that place.
- * @param {any} id - What's this exciting place's id?
  */
 interface Props {
 	id: string
@@ -14,81 +13,71 @@ interface Props {
 const { id } = Astro.props
 
 /**
- * Await fetch function, to the Google Maps Api, using our Maps token stored in ~/.env (secret file)
- * TO DO : handle errors !
+ * See docs -> https://developers.google.com/maps/documentation/
+ * TO DO : proper error handling 🙂
  */
-const placeData: any = EleventyFetch(
-	`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${
-		import.meta.env.MAPS_TOKEN
-	}`,
+const place: any = await EleventyFetch(
+	`https://places.googleapis.com/v1/places/${id}` +
+		`?fields=id,displayName,formattedAddress,regularOpeningHours,photos,rating,` +
+		`userRatingCount,googleMapsUri,businessStatus` +
+		`&key=${import.meta.env.MAPS_TOKEN}`,
 	{
 		duration: "1d",
 		type: "json",
 	}
 )
 
-// Got what what we needed 💰 See response format ->
-// https://developers.google.com/maps/documentation/places/web-service/details
-const { result: place } = await placeData
+const isClosedPermanent = place.businessStatus === "CLOSED_PERMANENTLY"
+
+const openingHoursDisplay = isClosedPermanent
+	? "Permanently closed."
+	: place.regularOpeningHours?.periods
+		? getClosedDays(place.regularOpeningHours.periods)
+		: "Error while retrieving opening hours."
 
 /**
- * From an array of opened days numbers, return a string with closed days.
+ * Return a human sentence listing the closed days.
  */
 function getClosedDays(periods: any): string {
-	// Every day of the week is represented by a number from 0 to 6, Sunday being 0.
-	// Get the opened days numbers from the API response.
-	let openedDays = periods.map((period: any) => period.open.day)
-	// By default, all days are closed...
-	let closedDays = [0, 1, 2, 3, 4, 5, 6]
-		// ...then we filters out the ones that are opened.
-		.filter((dayNumber) => !openedDays.includes(dayNumber))
-		// ...and we convert the remaining numbers to strings.
-		.map((x) => dayOfWeekAsString(x))
-		// ...and we join them with a comma to form the final string.
+	if (!Array.isArray(periods)) return "Unknown opening days."
+	const openedDays = periods.map((p: any) => p.open?.day).filter((d: number) => d !== undefined)
+
+	const closedDays = [0, 1, 2, 3, 4, 5, 6]
+		.filter((d) => !openedDays.includes(d))
+		.map(dayOfWeekAsString)
 		.join(", ")
-	// If no days are closed, we return a string saying the place is open everyday.
-	if (closedDays === "") return "Open everyday."
-	// Else return the final string.
-	return `Closed on ${closedDays}.`
+
+	return closedDays === "" ? "Open every day." : `Closed on ${closedDays}.`
 }
 
 /**
- * Converts a day number (see above) to a string.
- *
- * @param {Number} dayIndex
- * @return {String} Returns day as string
+ * Converts a day index (0 = Sunday) to string.
  */
-function dayOfWeekAsString(dayIndex: number): string {
-	return (
-		["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayIndex] || ""
-	)
+function dayOfWeekAsString(i: number): string {
+	return ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][i] || ""
 }
 ---
 
 <Block
-	image={`https://maps.googleapis.com/maps/api/place/photo?maxheight=500&photo_reference=${
-		place.photos[0].photo_reference
-	}&key=${import.meta.env.MAPS_TOKEN}`}
-	to={place.url}
+	image={place.photos?.length
+		? `https://places.googleapis.com/v1/${place.photos[0].name}/media` +
+			`?maxHeightPx=500&key=${import.meta.env.MAPS_TOKEN}`
+		: undefined}
+	to={place.googleMapsUri}
 >
-	<h3 id={place.name} class="my-0 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
-		{place.name}
+	<h3 id={place.id} class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1">
+		{place.displayName?.text}
 	</h3>
 	<ul class="flex flex-col">
 		<li class="line-clamp-2 text-ellipsis sm:line-clamp-1">
-			{place.vicinity}
+			{place.formattedAddress}
+		</li>
+		<li class:list={[{ "text-primary": isClosedPermanent }]}>
+			{openingHoursDisplay}
 		</li>
 		<li>
-			{
-				place.opening_hours && place.opening_hours.periods
-					? getClosedDays(place.opening_hours.periods)
-					: "Error while fetching opening hours."
-			}
-		</li>
-		<li>
-			{[...Array(Math.round(place.rating))].map(() => <i class="fas fa-star text-xs" />)} ({
-				place.user_ratings_total
-			} reviews)
+			{[...Array(Math.round(place.rating || 0))].map(() => <i class="fas fa-star text-xs" />)}{" "}
+			({place.userRatingCount} reviews)
 		</li>
 	</ul>
 </Block>
