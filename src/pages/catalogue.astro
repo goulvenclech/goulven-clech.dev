@@ -91,19 +91,19 @@ const pageTitle = "Catalogue"
 		 */
 		const PAGE_SIZE = 5
 		let currentOffset = 0
-		function updateUrl(filters: ReturnType<typeof getFilterValues>) {
+
+		// Used so stale requests shouldn't win the race
+		let inflight: AbortController | null = null
+
+		function updateUrlNow(filters: ReturnType<typeof getFilterValues>) {
 			const params = new URLSearchParams()
 			if (filters.query) params.set("query", filters.query)
 			if (filters.rating) params.set("rating", filters.rating)
 			if (filters.source) params.set("source", filters.source)
 			if (filters.emotion) params.set("emotion", filters.emotion)
-			if (filters.sort && filters.sort !== "date") params.append("sort", filters.sort)
+			if (filters.sort && filters.sort !== "date") params.set("sort", filters.sort)
 
-			history.replaceState(
-				null,
-				"",
-				`${location.pathname}${params.toString() ? "?" + params.toString() : ""}`
-			)
+			history.replaceState(null, "", `${location.pathname}${params.toString() ? "?" + params : ""}`)
 		}
 
 		// Fetch and display emotions, and populate the map
@@ -158,6 +158,9 @@ const pageTitle = "Catalogue"
 
 		// Fetch and display reviews, using the populated emotions map
 		async function loadReviews({ append = false } = {}) {
+			const filters = getFilterValues()
+			updateUrlNow(filters)
+
 			const container = document.getElementById("reviews-container")
 			if (!container) return
 			if (!append) {
@@ -165,10 +168,10 @@ const pageTitle = "Catalogue"
 				container.appendChild(new ReviewCardSkeleton())
 			}
 
-			// Get filter values
-			const filters = getFilterValues()
+			// Cancel older fetch (if any)
+			inflight?.abort()
+			inflight = new AbortController()
 
-			// Build URL with query params
 			const params = new URLSearchParams()
 			if (filters.query) params.append("query", filters.query)
 			if (filters.rating) params.append("rating", filters.rating)
@@ -180,7 +183,7 @@ const pageTitle = "Catalogue"
 			const url = `/api/catalogue/reviews${params.toString() ? "?" + params.toString() : ""}`
 
 			try {
-				const response = await fetch(url)
+				const response = await fetch(url, { signal: inflight.signal })
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 				const { reviews, hasMore } = (await response.json()) as {
 					reviews: Review[]
@@ -190,8 +193,7 @@ const pageTitle = "Catalogue"
 				if (!append) container.innerHTML = ""
 
 				if (reviews.length === 0 && !append) {
-					const noResults = new ReviewsEmpty()
-					container.appendChild(noResults)
+					container.appendChild(new ReviewsEmpty())
 				} else {
 					reviews.forEach((review) => {
 						const reviewCard = new ReviewCard()
@@ -201,15 +203,12 @@ const pageTitle = "Catalogue"
 				}
 
 				// Show or hide the load‑more button
-				const loadMoreBtn = document.getElementById("load-more")
-				loadMoreBtn?.classList.toggle("hidden", !hasMore)
-
-				updateUrl(filters)
-			} catch (error) {
-				console.error("Failed to load reviews:", error)
+				document.getElementById("load-more")?.classList.toggle("hidden", !hasMore)
+			} catch (err: any) {
+				if (err.name === "AbortError") return // out-of-date request
+				console.error("Failed to load reviews:", err)
 				container.innerHTML = ""
-				const errorMessage = new ReviewsError()
-				container.appendChild(errorMessage)
+				container.appendChild(new ReviewsError())
 			}
 		}
 
@@ -219,6 +218,7 @@ const pageTitle = "Catalogue"
 			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
 			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
 			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
+			const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
 
 			// Use input event for text search with small delay
 			let debounceTimer: number | undefined
@@ -227,29 +227,16 @@ const pageTitle = "Catalogue"
 				debounceTimer = setTimeout(() => {
 					currentOffset = 0
 					loadReviews()
-				}, 100) as unknown as number
+				}, 200) as unknown as number
 			})
 
-			// Use change event for dropdowns
-			ratingFilter?.addEventListener("change", () => {
-				currentOffset = 0
-				loadReviews()
-			})
-
-			sourceFilter?.addEventListener("change", () => {
-				currentOffset = 0
-				loadReviews()
-			})
-
-			emotionsFilter?.addEventListener("change", () => {
-				currentOffset = 0
-				loadReviews()
-			})
-
-			document.getElementById("sort-filter")?.addEventListener("change", () => {
-				currentOffset = 0
-				loadReviews()
-			})
+			// Unified change handling
+			;[ratingFilter, sourceFilter, emotionsFilter, sortFilter].forEach((el) =>
+				el?.addEventListener("change", () => {
+					currentOffset = 0
+					loadReviews()
+				})
+			)
 
 			// Load‑more button
 			document.getElementById("load-more")?.addEventListener("click", () => {
