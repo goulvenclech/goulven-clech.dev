@@ -77,10 +77,54 @@ const {
 		<script>
 			// MediumZoom is a library to zoom images in better quality.
 			import mediumZoom from "medium-zoom"
-			mediumZoom("[data-zoomable]", {
+			const zoom = mediumZoom("[data-zoomable]", {
 				margin: 24,
 				background: "",
 			})
+
+			function createDot({ key, color, legend }: { key: string; color?: string; legend?: string }) {
+				const dot = document.createElement("span")
+				dot.textContent = key
+				dot.className =
+					"zoom-marker bg-primary text-body-light fixed z-9999 block aspect-square h-3 rounded-full pt-[1px] sm:pt-0.5 text-center text-xs leading-none sm:h-4 sm:text-sm cursor-help"
+				if (color) dot.style.backgroundColor = color
+				if (legend) dot.title = legend
+				dot.style.fontFeatureSettings = "'lnum'"
+				return dot
+			}
+
+			function injectMarkers(event: any) {
+				const zoomed = document.querySelector(".medium-zoom-image--opened")
+				if (!zoomed) return
+
+				const rect = zoomed.getBoundingClientRect()
+				const markers = JSON.parse(event.target.dataset.markers || "[]") as Array<{
+					top: number
+					left: number
+					key: string
+					color?: string
+					legend?: string
+				}>
+
+				markers.forEach((marker) => {
+					const dot = createDot({
+						key: marker.key,
+						color: marker.color,
+						legend: marker.legend,
+					})
+					dot.style.top = `${rect.top + (marker.top / 100) * rect.height}px`
+					dot.style.left = `${rect.left + (marker.left / 100) * rect.width}px`
+					document.body.appendChild(dot)
+				})
+			}
+
+			function clearMarkers() {
+				document.querySelectorAll(".zoom-marker").forEach((el) => el.remove())
+			}
+
+			zoom.on("opened", injectMarkers)
+			zoom.on("close", clearMarkers)
+			zoom.on("closed", clearMarkers)
 		</script>
 		<style is:global>
 			@reference "$assets/base.css";
@@ -89,7 +133,6 @@ const {
 				@apply bg-body-light/50 dark:bg-body-dark/50 backdrop-blur;
 			}
 		</style>
-		<!-- Body content -->
 		<slot />
 	</body>
 </html>

@@ -21,29 +21,30 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@11ty/eleventy-fetch": "^5.0.2",
+    "@11ty/eleventy-fetch": "^5.1.0",
     "@astrojs/check": "^0.9.4",
-    "@astrojs/netlify": "^6.3.0",
+    "@astrojs/netlify": "^6.3.3",
     "@astrojs/rss": "^4.0.11",
-    "@libsql/client": "^0.15.4",
+    "@libsql/client": "^0.15.7",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "medium-zoom": "^1.1.0",
     "playwright": "^1.52.0",
     "rehype-mermaid": "^3.0.0",
-    "sharp": "^0.34.1"
+    "remark-gfm": "^4.0.1",
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.2.4",
-    "@tailwindcss/vite": "^4.1.4",
-    "@types/node": "^22.14.1",
+    "@astrojs/mdx": "^4.2.6",
+    "@tailwindcss/vite": "^4.1.7",
+    "@types/node": "^22.15.20",
     "@types/semver": "^7.7.0",
-    "astro": "^5.7.4",
+    "astro": "^5.7.13",
     "astro-expressive-code": "^0.41.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "semver": "^7.7.1",
-    "tailwindcss": "^4.1.4",
+    "semver": "^7.7.2",
+    "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3"
   }
 }

@@ -46,6 +46,9 @@
 
   --color-primary: #e95678;
 
+	--color-success: oklch(59.6% 0.145 163.225);
+	--color-warning: oklch(66.6% 0.179 58.318);
+
   --font-weight-*: initial;
   --font-weight-normal: 400;
   --font-weight-bold: 600;
@@ -222,6 +225,19 @@
   p code {
     overflow-wrap: break-word;
     @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
+  }
+
+	table {
+    @apply w-full table-auto text-xs sm:text-sm border-separate border-spacing-y-2.5 -my-2.5 border-spacing-x-5 -mx-5;
+  }
+
+  th,
+  td {
+    @apply text-left align-top;
+  }
+
+  th {
+    @apply whitespace-nowrap font-bold ;
   }
 
   side-note,

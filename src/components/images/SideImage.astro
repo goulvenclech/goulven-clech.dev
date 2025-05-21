@@ -5,28 +5,90 @@ import type { LocalImageServiceWithPlaceholder } from "src/imageService"
  * If you want to understand this component, you'll need to look at :
  * -> src/imageService.ts
  */
+interface Props {
+	src: any
+	alt: string
+	width?: number
+	height?: number
+	formats?: string[]
+	className?: string
+	markers?: Marker[]
+}
+
+interface Marker {
+	key: string
+	legend: string
+	color?: string
+	top: number
+	left: number
+}
+
 const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
-const placeholderURL = await imageService.generatePlaceholder(
-	Astro.props.src.fsPath,
-	Math.max(Astro.props.src.width, 300 * 2), // The width of a sidenote multiplied by the density
-	Astro.props.src.height
-)
+
+const placeholderURL =
+	Astro.props.src.format === "svg"
+		? Astro.props.src.src
+		: await imageService.generatePlaceholder(
+				Astro.props.src.fsPath,
+				Math.max(Astro.props.src.width, 300 * 2), // The width of a sidenote multiplied by the density
+				Astro.props.src.height
+			)
+
 const goodQualityURL = await getImage({
 	src: Astro.props.src,
 	width: Astro.props.src.width,
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const { ...props } = Astro.props as any
+const { className, markers = [], ...props } = Astro.props as Props
 ---
 
-<AstroPicture
-	{...props}
-	data-zoomable
-	data-zoom-src={goodQualityURL.src}
-	width={Math.min(Astro.props.src.width, 300 * 2)}
-	formats={Astro.props.formats ?? ["webp"]}
-	class="my-2.5 w-full overflow-hidden rounded"
-	style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
-	onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
-/>
+<span class={"relative inline-block " + (className ?? "")}>
+	{
+		Astro.props.src.format === "svg" ? (
+			<img
+				{...props}
+				data-zoomable
+				data-zoom-src={goodQualityURL.src}
+				width={Math.min(Astro.props.src.width, 300 * 2)}
+				class="w-full overflow-hidden rounded"
+			/>
+		) : (
+			<AstroPicture
+				{...(props as any)}
+				data-zoomable
+				data-zoom-src={goodQualityURL.src}
+				data-markers={JSON.stringify(markers)}
+				width={Math.min(Astro.props.src.width, 300 * 2)}
+				formats={Astro.props.formats ?? ["webp"]}
+				class="w-full overflow-hidden rounded"
+				style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
+				onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+			/>
+		)
+	}
+
+	{
+		markers.map((marker) => (
+			<span
+				class="bg-primary text-body-light absolute block aspect-square h-3 rounded-full pt-[1px] text-center text-xs leading-none"
+				style={`top: ${marker.top}%; left: ${marker.left}%; background-color: ${marker.color}; font-feature-settings: 'lnum'`}
+			>
+				{marker.key}
+			</span>
+		))
+	}
+</span>
+{
+	markers.length > 0 &&
+		markers.map((marker) => (
+			<span>
+				<span
+					class="bg-primary text-body-light inline-block aspect-square h-3 rounded-full pt-[1px] text-center text-xs leading-none"
+					style={`top: ${marker.top}%; left: ${marker.left}%; background-color: ${marker.color}; font-feature-settings: 'lnum'`}
+				>
+					{marker.key}
+				</span>
+				{marker.legend}
+			</span>
+		))
+}

@@ -1,5 +1,6 @@
 import { defineConfig, envField } from "astro/config"
 import mdx from "@astrojs/mdx"
+import remarkGfm from "remark-gfm"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
 import fs from "node:fs"
 import rehypeMermaid from "rehype-mermaid"
@@ -40,13 +41,18 @@ const astroExpressiveCodeOptions = {
 // https://astro.build/config
 export default defineConfig({
   site: "https://goulven-clech.dev",
-  integrations: [astroExpressiveCode(astroExpressiveCodeOptions), mdx()],
+  integrations: [
+    astroExpressiveCode(astroExpressiveCodeOptions),
+    mdx({
+      remarkPlugins: [remarkGfm],
+    }),
+  ],
 
   image: {
     service: {
       entrypoint: "./src/imageService.ts",
     },
-    domains: ["avatars.githubusercontent.com"],
+    domains: ["avatars.githubusercontent.com", "maps.googleapis.com", "lh3.googleusercontent.com"],
   },
 
   markdown: {
