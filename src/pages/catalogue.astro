@@ -30,7 +30,7 @@ const pageTitle = "Catalogue"
 				<input
 					id="query"
 					type="text"
-					placeholder="Search a book, movie, or video game..."
+					placeholder="Search a book, movie, album, or video game..."
 					class="group-has-focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
 				/>
 			</div>
@@ -40,6 +40,7 @@ const pageTitle = "Catalogue"
 				<option value="IGDB">🎮 video games</option>
 				<option value="TMDB_MOVIE">🎬 movies</option>
 				<option value="TMDB_TV">📺 shows</option>
+				<option value="SPOTIFY">💿 albums</option>
 			</select>
 
 			<select id="emotions-filter" class="border-b-[0.1rem] border-dotted">
@@ -72,9 +73,10 @@ const pageTitle = "Catalogue"
 		<side-note>
 			Images and datas are fetched from <a href="https://igdb.com/"
 				><abbr title="The Internet Game Database">IGDB</abbr></a
-			> for video games and
-			<a href="https://themoviedb.org/"><abbr title="The Movie DataBase">TMDB</abbr></a> for movies and
-			shows. Their licenses apply.
+			> for video games, <a href="https://themoviedb.org/"
+				><abbr title="The Movie DataBase">TMDB</abbr></a
+			> for movies and shows, and <a href="https://spotify.com/">Spotify</a> for albums. Their licenses
+			apply.
 		</side-note>
 	</section>
 

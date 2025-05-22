@@ -3,6 +3,7 @@ import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
+import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
 
 /**
  * Reads a mandatory environment variable or throws if it is missing.
@@ -254,6 +255,18 @@ export async function POST({ request }: APIContext): Promise<Response> {
         source_link = `https://www.themoviedb.org/tv/${show.id}`
         meta = buildShowMeta(show)
         if (show.poster_path) source_img = posterUrl(show.poster_path)
+        break
+      }
+
+      case "SPOTIFY": {
+        const album = await fetchAlbum(String(source_id))
+        if (!album) return json({ error: "Album not found" }, 404)
+
+        const year = album.release_date?.slice(0, 4) || "??"
+        source_name = `${album.name} (${year})`
+        source_link = album.external_urls.spotify
+        meta        = buildAlbumMeta(album)
+        if (album.images?.length) source_img = albumCoverUrl(album)
         break
       }
 

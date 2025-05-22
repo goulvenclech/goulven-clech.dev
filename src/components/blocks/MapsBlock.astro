@@ -33,7 +33,7 @@ const openingHoursDisplay = isClosedPermanent
 	? "Permanently closed."
 	: place.regularOpeningHours?.periods
 		? getClosedDays(place.regularOpeningHours.periods)
-		: "Error while retrieving opening hours."
+		: "No opening hours available."
 
 /**
  * Return a human sentence listing the closed days.

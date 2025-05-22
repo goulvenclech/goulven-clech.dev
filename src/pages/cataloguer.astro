@@ -22,9 +22,11 @@ const pageTitle = "Cataloguer"
 				<input id="password" name="password" type="password" placeholder="Password" required />
 				<input id="date" name="date" type="date" required />
 				<select id="source" name="source" required>
-					<option value="IGDB" selected>🎮 Video Game (IGDB)</option>
+					<option value="" disabled selected>Select a source </option>
+					<option value="IGDB">🎮 Video Game (IGDB)</option>
 					<option value="TMDB_MOVIE">🎬 Movie (TMDB)</option>
 					<option value="TMDB_TV">📺 Show (TMDB)</option>
+					<option value="SPOTIFY">💿 Album (Spotify)</option>
 				</select>
 				<select id="rating" name="rating" required class="border-b-[0.1rem] border-dotted">
 					<option value="5" selected>😍 loved it</option>
