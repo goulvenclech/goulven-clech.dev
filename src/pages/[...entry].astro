@@ -37,11 +37,11 @@ const { Content, headings } = await render(entry)
 		</p>
 		{
 			!isEntryPublished(entry.data.published, true) && (
-				<p class="bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded px-2 pt-1">
+				<warning-note>
 					<span class="font-bold">Warning:</span>
 					You're currently reading an work-in-progress draft. Its content is probably incomplete,
 					and may be updated before public release.
-				</p>
+				</warning-note>
 			)
 		}
 	</section>

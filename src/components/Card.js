@@ -47,7 +47,7 @@ export class Card extends HTMLElement {
           <h3 class="my-0 leading-8">
             ${this.title}
 						${ this.isPublished == "false"
-							? `<span class="bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1">Draft</span>`
+							? `<span class="badge">Draft</span>`
 							: ``}
           </h3>
           <span class="my-0 text-ellipsis py-0 line-clamp-4 sm:line-clamp-3">

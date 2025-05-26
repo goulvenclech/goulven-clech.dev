@@ -269,6 +269,34 @@
     }
   }
 
+	.badge {
+		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1;
+	}
+
+	warning-note {
+		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded px-2 pt-1 block my-5 text-sm sm:text-base;
+	}
+
+	draft-section,
+	side-note.draft {
+		@apply border-alt-dark dark:border-alt-light border block border-dashed rounded relative py-5;
+	}
+
+	draft-section {
+		@apply py-0 px-5 mx-0 sm:-mx-5 my-5;
+	}
+
+	draft-section::before,
+	side-note.draft::before {
+  content: "Draft";
+  @apply absolute -top-3 left-4 text-xs bg-alt-dark text-font-dark rounded px-1 pt-0.5;
+}
+
+	.dark draft-section::before,
+	.dark side-note.draft::before {
+  @apply bg-alt-light  text-font-light;
+}
+
   /*
 		FORM
 	*/
