@@ -10,7 +10,7 @@ import { isEntryPublished } from "src/utils"
 export async function getStaticPaths() {
 	/* get all blog entries published */
 	const blogEntries = await getCollection("blog", ({ data }) => {
-		return isEntryPublished(data.published, true)
+		return isEntryPublished(data.published)
 	})
 	/* get all years */
 	const allYears: Set<number> = new Set()

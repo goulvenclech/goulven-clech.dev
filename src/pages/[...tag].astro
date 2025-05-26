@@ -10,7 +10,7 @@ import ReturnHome from "$components/controls/ReturnHome.astro"
 export async function getStaticPaths() {
 	/* get all blog entries published */
 	const blogEntries = await getCollection("blog", ({ data }) => {
-		return isEntryPublished(data.published, true)
+		return isEntryPublished(data.published)
 	})
 	/* get all tags */
 	const allTags: Set<string> = new Set()

@@ -13,7 +13,7 @@ const blogCollection = defineCollection({
       abstract_clean: z.string().optional(),
       image: image().optional(),
       image_dark: image().optional(),
-      image_alt: z.string().default("Cover image"),
+      imageAlt: z.string().default("Cover image"),
       published: z.string().default("never"),
     }),
 })

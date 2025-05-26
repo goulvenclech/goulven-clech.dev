@@ -9,9 +9,7 @@ import TableOfContent from "$components/TableOfContent.astro"
  * informations & the content.
  */
 export async function getStaticPaths() {
-	const blogEntries: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
-		return isEntryPublished(data.published)
-	})
+	const blogEntries: CollectionEntry<"blog">[] = await getCollection("blog")
 
 	return blogEntries.map((entry) => ({
 		params: {
@@ -37,6 +35,15 @@ const { Content, headings } = await render(entry)
 			{formatDate(entry.data.date)} —
 			<a href="/">Goulven CLEC'H</a>
 		</p>
+		{
+			!isEntryPublished(entry.data.published, true) && (
+				<p class="bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded px-2 pt-1">
+					<span class="font-bold">Warning:</span>
+					You're currently reading an work-in-progress draft. Its content is probably incomplete,
+					and may be updated before public release.
+				</p>
+			)
+		}
 	</section>
 
 	{headings.length > 0 && <TableOfContent headings={headings} />}

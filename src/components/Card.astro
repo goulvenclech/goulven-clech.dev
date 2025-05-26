@@ -1,5 +1,5 @@
 ---
-import { formatDate } from "src/utils"
+import { formatDate, isEntryPublished } from "src/utils"
 import Block from "./blocks/Block.astro"
 import type { CollectionEntry } from "astro:content"
 /**
@@ -8,8 +8,6 @@ import type { CollectionEntry } from "astro:content"
  * Sadly, Astro can't SSR web components yet. So Card.js is used in the CSR
  * search.astro script. And this component is used for SSR, for example to
  * render the default results (before the script is loaded or if JS is disabled).
- * @param {any} entry - What an exciting entry we want to show?
- * @param {GetImageResult} image - If the image was already fetched, use it.
  */
 interface Props {
 	entry: CollectionEntry<"blog">
@@ -22,9 +20,16 @@ const { entry, image } = Astro.props
 <Block image={image || entry.data.image} imageDark={entry.data.image_dark} to={`/${entry.id}`}>
 	<h3 class="my-0 leading-8">
 		{entry.data.title}
+		{
+			!isEntryPublished(entry.data.published, true) && (
+				<span class="bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1">
+					Draft
+				</span>
+			)
+		}
 	</h3>
 	<span
-		class="mt-0 line-clamp-4 text-ellipsis py-0 sm:line-clamp-3"
+		class="mt-0 line-clamp-4 py-0 text-ellipsis sm:line-clamp-3"
 		set:html={entry.data.abstract +
 			` —<span class="whitespace-nowrap"> ${formatDate(entry.data.date)}</span></span>`}
 	/>

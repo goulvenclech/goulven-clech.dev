@@ -12,33 +12,20 @@ export function formatDate(date: Date): string {
 }
 
 /**
- * Should we show/parse this entry?
- * @param {string} published - Either "never", "draft", or a valid semver version. Defaults to "never".
- * @param {boolean} strict - Is this "showing" mode (true) or "parsing" mode (false)? Defaults to false.
- * @return {boolean} - Is this entry published?
+ * Determines whether an entry should be shown.
  */
 export function isEntryPublished(published: string, strict: boolean = false): boolean {
-  // In "showing" mode, we filter out "never", "draft" and versions higher than the current version.
-  if (strict) {
+	if (import.meta.env.PROD || strict ) {
+    // In strict mode or in production, we filter out "never", "draft" and versions higher than the current version.
     return (
       published !== "never" &&
       published !== "draft" &&
       semver.lte(published, import.meta.env.npm_package_version)
     )
-    // But in "parsing" mode, based on the environment
-  } else {
-    if (import.meta.env.DEV) {
-      // In dev mode, we want to parse everything. So we can access it by URL.
-      return true
-    } else {
-      // In prod mode, we don't want to parse entries with "never", "draft", and versions higher than the current version.
-      return (
-        published !== "never" &&
-        published !== "draft" &&
-        semver.lte(published, import.meta.env.npm_package_version)
-      )
-    }
-  }
+	} else {
+		// In non-strict mode, only "never" entries are filtered out.
+		return published !== "never"
+	}
 }
 
 /**

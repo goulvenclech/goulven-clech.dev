@@ -13,7 +13,7 @@ export type clientBlogEntries = typeof blogEntriesFormatted
 
 // get all blogEntries
 const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
-	return isEntryPublished(data.published, true)
+	return isEntryPublished(data.published)
 })
 
 // Sort blog entries by date.
@@ -49,7 +49,8 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 	abstract: data.abstract,
 	image: images.find((image) => image.id === id),
 	imageDark: imagesDark.find((image) => image.id === id),
-	image_alt: data.image_alt,
+	imageAlt: data.imageAlt,
+	isPublished: isEntryPublished(data.published, true),
 }))
 ---
 
@@ -59,11 +60,11 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 		<div class="mb-5 ml-auto text-xs sm:text-sm">
 			<input
 				id="search"
-				class="peer overflow-hidden truncate whitespace-nowrap border-b-[0.1rem] border-dotted bg-body-light outline-hidden placeholder:truncate focus:text-primary dark:bg-body-dark"
+				class="peer bg-body-light focus:text-primary dark:bg-body-dark truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
 				placeholder="Search by title or keywords..."
 				type="text"
 			/>
-			<i class="fas fa-search ml-1.5 peer-focus:text-primary"></i>
+			<i class="fas fa-search peer-focus:text-primary ml-1.5"></i>
 		</div>
 	</div>
 </>
@@ -121,7 +122,8 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 			searchCard.setAttribute("abstract", result.abstract)
 			searchCard.setAttribute("image", result.image ? result.image.src : "")
 			searchCard.setAttribute("imageDark", result.imageDark ? result.imageDark.src : "")
-			searchCard.setAttribute("imageAlt", result.image_alt)
+			searchCard.setAttribute("imageAlt", result.imageAlt)
+			searchCard.setAttribute("isPublished", result.isPublished.toString())
 			fragment.append(searchCard)
 		})
 		output.append(fragment)
