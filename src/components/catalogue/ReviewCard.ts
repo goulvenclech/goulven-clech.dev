@@ -58,9 +58,9 @@ export class ReviewCard extends HTMLElement {
           <img src="${image}" alt="Cover for ${this.review.source_name || this.review.source_id}" />
         </div>
         <article>
-          <h3 class="my-0 leading-8">${this.review.source_name || this.review.source_id}</h3>
-          <p class="my-0"><span>${ReviewCard.ratingEmojis[this.review.rating]}, and felt ${emotionsText}.</span></p>
-          <p class="my-0">« ${this.review.comment} » — ${date}</p>
+          <h3>${this.review.source_name || this.review.source_id}</h3>
+          <p><span>${ReviewCard.ratingEmojis[this.review.rating]}, and felt ${emotionsText}.</span></p>
+          <p>« ${this.review.comment} » — ${date}</p>
         </article>
       </a>
     `

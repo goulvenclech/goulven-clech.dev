@@ -18,12 +18,12 @@ const { entry, image } = Astro.props
 ---
 
 <Block image={image || entry.data.image} imageDark={entry.data.image_dark} to={`/${entry.id}`}>
-	<h3 class="my-0 leading-8">
+	<h3>
 		{entry.data.title}
 		{!isEntryPublished(entry.data.published, true) && <span class="badge">Draft</span>}
 	</h3>
-	<span
-		class="mt-0 line-clamp-4 py-0 text-ellipsis sm:line-clamp-3"
+	<p
+		class="line-clamp-4 text-ellipsis sm:line-clamp-3"
 		set:html={entry.data.abstract +
 			` —<span class="whitespace-nowrap"> ${formatDate(entry.data.date)}</span></span>`}
 	/>

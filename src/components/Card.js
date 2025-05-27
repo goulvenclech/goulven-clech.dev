@@ -44,15 +44,15 @@ export class Card extends HTMLElement {
           }
 				</div>
         <article>
-          <h3 class="my-0 leading-8">
+          <h3>
             ${this.title}
 						${ this.isPublished == "false"
 							? `<span class="badge">Draft</span>`
 							: ``}
           </h3>
-          <span class="my-0 text-ellipsis py-0 line-clamp-4 sm:line-clamp-3">
+          <p class="text-ellipsis line-clamp-4 sm:line-clamp-3">
             ${this.abstract} —<span class="whitespace-nowrap"> ${this.date}</span>
-          </span>
+          </p>
         </article>
       </a>
     `

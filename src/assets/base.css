@@ -209,6 +209,10 @@
     @apply m-5 min-w-0 p-0 sm:pl-[150px];
   }
 
+	.card h3, .card p {
+		@apply my-0;
+	}
+
   .card .card-image {
     @apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-[150px] sm:flex-none sm:object-cover;
   }
@@ -270,7 +274,7 @@
   }
 
 	.badge {
-		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1;
+		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1 text-xs sm:text-sm;
 	}
 
 	warning-note {
