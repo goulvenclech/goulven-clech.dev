@@ -281,7 +281,11 @@
 	draft-section,
 	side-note.draft,
 	warning-note {
-		@apply border-alt-dark dark:border-alt-light border block border-dashed rounded relative py-5;
+		@apply border block border-dashed rounded relative py-5;
+	}
+
+	draft-section, side-note.draft {
+		@apply border-alt-dark dark:border-alt-light;
 	}
 
 	warning-note {
