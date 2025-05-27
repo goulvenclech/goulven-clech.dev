@@ -38,9 +38,10 @@ const { Content, headings } = await render(entry)
 		{
 			!isEntryPublished(entry.data.published, true) && (
 				<warning-note>
-					<span class="font-bold">Warning:</span>
-					You're currently reading an work-in-progress draft. Its content is probably incomplete,
-					and may be updated before public release.
+					<p>
+						You're currently reading an work-in-progress draft. Its content is probably incomplete,
+						and may be updated before public release.
+					</p>
 				</warning-note>
 			)
 		}
