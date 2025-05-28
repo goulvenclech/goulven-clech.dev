@@ -222,6 +222,10 @@
     @apply h-full w-full object-cover;
   }
 
+	.legend {
+		@apply mx-8 mt-2 text-center text-xs text-pretty italic sm:text-sm;
+	}
+
   .button {
     @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-bold whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
   }

@@ -47,7 +47,7 @@ const { caption, source, className, ...props } = Astro.props as any
 			/>
 		)
 	}
-	<figcaption class="mx-8 my-2 text-center text-xs text-pretty italic sm:text-sm">
+	<figcaption class="legend">
 		{caption}
 		{source && <a href={source}>Source</a>}
 	</figcaption>
