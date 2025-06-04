@@ -23,9 +23,9 @@
   "dependencies": {
     "@11ty/eleventy-fetch": "^5.1.0",
     "@astrojs/check": "^0.9.4",
-    "@astrojs/netlify": "^6.3.3",
-    "@astrojs/rss": "^4.0.11",
-    "@libsql/client": "^0.15.7",
+    "@astrojs/netlify": "^6.3.4",
+    "@astrojs/rss": "^4.0.12",
+    "@libsql/client": "^0.15.8",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "medium-zoom": "^1.1.0",
@@ -35,16 +35,16 @@
     "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.2.6",
-    "@tailwindcss/vite": "^4.1.7",
-    "@types/node": "^22.15.20",
+    "@astrojs/mdx": "^4.3.0",
+    "@tailwindcss/vite": "^4.1.8",
+    "@types/node": "^22.15.29",
     "@types/semver": "^7.7.0",
-    "astro": "^5.7.13",
+    "astro": "^5.8.2",
     "astro-expressive-code": "^0.41.2",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "semver": "^7.7.2",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
   }
 }

@@ -165,7 +165,17 @@ const pageTitle = "Catalogue"
 
 			const container = document.getElementById("reviews-container")
 			if (!container) return
-			if (!append) {
+
+			// Show loading state
+			const loadMoreBtn = document.getElementById("load-more")
+			if (append) {
+				if (loadMoreBtn) {
+					loadMoreBtn.classList.add("hidden")
+					const skeleton = new ReviewCardSkeleton()
+					skeleton.id = "load-more-skeleton"
+					container.appendChild(skeleton)
+				}
+			} else {
 				container.innerHTML = ""
 				container.appendChild(new ReviewCardSkeleton())
 			}
@@ -193,6 +203,10 @@ const pageTitle = "Catalogue"
 				}
 
 				if (!append) container.innerHTML = ""
+				else {
+					const skeleton = document.getElementById("load-more-skeleton")
+					if (skeleton) skeleton.remove()
+				}
 
 				if (reviews.length === 0 && !append) {
 					container.appendChild(new ReviewsEmpty())
@@ -205,10 +219,15 @@ const pageTitle = "Catalogue"
 				}
 
 				// Show or hide the load‑more button
-				document.getElementById("load-more")?.classList.toggle("hidden", !hasMore)
-			} catch (err: any) {
-				if (err.name === "AbortError") return // out-of-date request
-				console.error("Failed to load reviews:", err)
+				if (loadMoreBtn) loadMoreBtn.classList.toggle("hidden", !hasMore)
+			} catch (error: any) {
+				if (append) {
+					const skeleton = document.getElementById("load-more-skeleton")
+					if (skeleton) skeleton.remove()
+					if (loadMoreBtn) loadMoreBtn.classList.remove("hidden")
+				}
+				if (error.name === "AbortError") return // out-of-date request
+				console.error("Failed to load reviews:", error)
 				container.innerHTML = ""
 				container.appendChild(new ReviewsError())
 			}
