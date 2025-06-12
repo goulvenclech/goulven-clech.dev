@@ -8,14 +8,13 @@ import ReturnHome from "$components/controls/ReturnHome.astro"
 /**
  * Misc page with legal notice, changelog, etc.
  */
-const pageTitle = "About this blog"
-const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/releases"
+const pageTitle = "About"
 ---
 
 <Layout title={pageTitle}>
 	<section>
 		<h1>{pageTitle}</h1>
-		<p>All the boring stuff about this blog. Legal, colophon, changelog, and maybe more.</p>
+		<p>All the boring stuff. Legal, colophon, changelog, and maybe more.</p>
 		<p><ReturnHome /></p>
 	</section>
 	<section>
@@ -27,9 +26,9 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 		</p>
 		<p>
 			<strong>Hosted by:</strong>
-			<a href="https://vercel.com/">Vercel</a>, domiciled in Covina, <abbr>USA</abbr>. Contact them
-			by
-			<a href="mailto:privacy@vercel.com">email</a>.
+			<a href="https://www.netlify.com/">Netlify</a>, domiciled in San Francisco, California, <abbr
+				title="United States of America">USA</abbr
+			>. Contact them by <a href="mailto:support@netlify.com.">email</a>.
 		</p>
 		<p>
 			<strong>Data & cookies policy:</strong>
@@ -40,7 +39,7 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 			<strong>Licenses:</strong>
 			The source code is provided under the
 			<a href="https://spdx.org/licenses/0BSD.html"><abbr>0BSD</abbr> license</a>, attribution is
-			appreciated but not required. The blog textual content is provided under the
+			appreciated but not required. The textual content is provided under the
 			<a href="https://spdx.org/licenses/CC-BY-4.0.html"><abbr>CC BY 4.0</abbr> Deed</a>,
 			attribution is required. But for both, you are free to use, copy, modify, and/or distribute
 			for any purpose, commercial or personal.
@@ -66,7 +65,8 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 			handwriting typeface (not free).
 		</p>
 		<p>
-			<strong>Technologies:</strong> This blog is built with <a href="https://astro.build/">Astro</a
+			<strong>Technologies:</strong> This website is built with <a href="https://astro.build/"
+				>Astro</a
 			>, I wrote a bit about this static website generator in a dedicated
 			<a href="/2023/launching-blog-astro">blog entry</a>. Notable dependencies include
 			<a href="https://tailwindcss.com/">Tailwind CSS</a> for styling,
@@ -92,11 +92,7 @@ const githubReleaseLink = "https://github.com/goulvenclech/goulven-clech.dev/rel
 	</section>
 	<section>
 		<h2 id="changelog">Changelog</h2>
-		<p>
-			An historic of this blog, its new features and page redesigns, with examples. For a more
-			technical changelog, go to
-			<a href={githubReleaseLink}>GitHub releases</a>.
-			<Changelog />
-		</p>
+		<p>An historic of this website, its new features and page redesigns, with examples.</p>
+		<Changelog />
 	</section>
 </Layout>

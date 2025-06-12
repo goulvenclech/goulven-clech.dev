@@ -149,8 +149,7 @@
   }
 
   h1,
-  h2,
-  h3 {
+  h2, {
     @apply mt-10 mb-5;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }
@@ -164,7 +163,8 @@
   }
 
   h3 {
-    @apply font-bold;
+    @apply font-bold my-5;
+		font-feature-settings: "liga", "clig", "onum", "ss01";
   }
 
   abbr,

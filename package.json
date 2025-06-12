@@ -1,6 +1,6 @@
 {
   "name": "goulven-clech.dev",
-  "description": "My personnal blog, made with Astro, TypeScript & Tailwind CSS.",
+  "description": "My personnal website, made with Astro, TypeScript & Tailwind CSS.",
   "private": true,
   "version": "1.7.0",
   "repository": {
