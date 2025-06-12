@@ -1,31 +1,64 @@
 ---
+import type { Day } from "./day"
 import HealthGauges from "./HealthGauges.astro"
+import HealthNoData from "./HealthNoData.astro"
+import HealthToday from "./HealthToday.astro"
 
-export interface Day {
-	steps: number
-	sleep: number
-	energy: number
-}
+type Slot = Day | "today" | "noData" | null
+
 export interface Props {
-	days: Day[]
+	days: Slot[]
 }
 const { days } = Astro.props
 
-const avgSteps = Math.round(days.reduce((s, d) => s + d.steps, 0) / days.length)
-const avgSleep = +(days.reduce((s, d) => s + d.sleep, 0) / days.length).toFixed(1)
-const avgEnergy = Math.round(days.reduce((s, d) => s + d.energy, 0) / days.length)
+const filled = days.filter((d): d is Day => typeof d === "object" && d !== null)
+
+const avgSteps = filled.length
+	? Math.round(filled.reduce((s, d) => s + d.steps, 0) / filled.length)
+	: 0
+const avgSleep = filled.length
+	? +(filled.reduce((s, d) => s + d.sleep, 0) / filled.length).toFixed(1)
+	: 0
+const avgEnergy = filled.length
+	? Math.round(filled.reduce((s, d) => s + d.energy, 0) / filled.length)
+	: 0
 
 const stepsOK = avgSteps >= 7500
 const sleepOK = avgSleep >= 7
 const energyOK = avgEnergy >= 75
+
+const formatK = (n: number) =>
+	n >= 1000
+		? (n / 1000).toLocaleString("fr-FR", {
+				minimumFractionDigits: 1,
+				maximumFractionDigits: 1,
+			}) + "k"
+		: n.toString()
+
+const avgStepsDisplay = formatK(avgSteps)
 ---
 
-<div class="mb-2.5 flex gap-2.5">
-	{days.map((d) => <HealthGauges steps={d.steps} sleep={d.sleep} energy={d.energy} />)}
+<div class="mb-2.5 flex min-w-lg gap-2.5">
+	{
+		days.map((d) => {
+			switch (d) {
+				case null:
+					return <div class="flex aspect-square w-1/8" />
+				case "today":
+					return <HealthToday />
+				case "noData":
+					return <HealthNoData />
+				default:
+					return <HealthGauges steps={d.steps} sleep={d.sleep} energy={d.energy} />
+			}
+		})
+	}
 
-	<div class="flex aspect-square w-1/8 flex-col items-center justify-center text-sm leading-tight">
-		<span class:list={{ "text-primary": stepsOK }}>{avgSteps} steps</span>
-		<span class:list={{ "text-success": sleepOK }}>{avgSleep} hours</span>
-		<span class:list={{ "text-info": energyOK }}>{avgEnergy} energy</span>
+	<div
+		class="flex aspect-square w-1/8 flex-col items-center justify-center text-xs leading-tight sm:text-sm"
+	>
+		<span class:list={{ "text-primary": stepsOK }}>{avgStepsDisplay}&nbsp;steps</span>
+		<span class:list={{ "text-success": sleepOK }}>{avgSleep}&nbsp;hours</span>
+		<span class:list={{ "text-info": energyOK }}>{avgEnergy}&nbsp;energy</span>
 	</div>
 </div>

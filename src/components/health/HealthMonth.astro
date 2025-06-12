@@ -1,26 +1,77 @@
 ---
 import HealthWeek from "./HealthWeek.astro"
+import type { Day } from "./day"
 
-export interface Props {
+interface Props {
 	month: string
 	comment: string
-	days: { steps: number; sleep: number; energy: number }[]
+	days: Day[]
 }
-const { month, comment, days } = Astro.props
 
-// split into chunks of 7 days
-const weeks = []
-for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7))
+const { month, comment, days }: Props = Astro.props
+
+const key = (d: Date) => d.toISOString().slice(0, 10)
+const dataMap = new Map(days.map((d) => [key(d.date), d]))
+
+const today = new Date()
+const firstDayOfMonth = new Date(days[0].date.getFullYear(), days[0].date.getMonth(), 1)
+const daysInMonth = new Date(
+	firstDayOfMonth.getFullYear(),
+	firstDayOfMonth.getMonth() + 1,
+	0
+).getDate()
+
+// week offset (0 = Mon … 6 = Sun)
+const firstWeekday = (firstDayOfMonth.getDay() + 6) % 7
+
+const isSameDay = (a: Date, b: Date) =>
+	a.getFullYear() === b.getFullYear() &&
+	a.getMonth() === b.getMonth() &&
+	a.getDate() === b.getDate()
+
+type Slot = Day | "today" | "noData" | null
+const slots: Slot[] = []
+
+// blanks before the 1st
+slots.push(...Array(firstWeekday).fill(null))
+
+for (let day = 1; day <= daysInMonth; day++) {
+	const date = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth(), day)
+	if (date > today) {
+		slots.push(null) // future → blank
+		continue
+	}
+	if (isSameDay(date, today)) {
+		slots.push("today")
+		continue
+	}
+	const d = dataMap.get(key(date))
+	slots.push(d ?? "noData")
+}
+
+// pad end of last week
+while (slots.length % 7 !== 0) slots.push(null)
+
+// chunk by weeks
+const weeks: Slot[][] = []
+for (let i = 0; i < slots.length; i += 7) weeks.push(slots.slice(i, i + 7))
+
+// remove empty weeks at the end
+while (weeks.length && weeks[weeks.length - 1].every((s) => s === null)) {
+	weeks.pop()
+}
 ---
 
-<>
-	<h2>{month}</h2>
+<article>
+	<h3>{month}</h3>
 	<p>{comment}</p>
 
-	<div class="mb-2.5 grid grid-cols-8 gap-2.5 text-center">
-		<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span>
-		<span>Fri</span><span>Sat</span><span>Sun</span><span>Avg</span>
-	</div>
+	<div class="overflow-x-auto">
+		<div class="mb-1 grid min-w-lg grid-cols-8 gap-2.5 text-center">
+			<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span>
+			<span>Fri</span><span>Sat</span><span>Sun</span><span>Avg</span>
+		</div>
 
-	{weeks.map((w) => <HealthWeek days={w} />)}
-</>
+		{weeks.map((w) => <HealthWeek days={w} />)}
+	</div>
+</article>

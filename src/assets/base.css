@@ -149,7 +149,7 @@
   }
 
   h1,
-  h2, {
+  h2 {
     @apply mt-10 mb-5;
     font-feature-settings: "liga", "clig", "onum", "ss01";
   }

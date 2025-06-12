@@ -2,58 +2,65 @@
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "../layouts/Layout.astro"
 import HealthMonth from "$components/health/HealthMonth.astro"
+import type { Day } from "$components/health/day"
 
 const pageTitle = "My health"
 
 // Temporary mock (will be replaced by API call)
-const dailyData = Array.from({ length: 28 }).map(() => ({
-	steps: 6000 + Math.floor(Math.random() * 6000), // int
-	sleep: +(6 + Math.random() * 3).toFixed(1), // float (hours)
-	energy: Math.floor(50 + Math.random() * 50), // 0-100
-}))
+const dailyData: Day[] = Array.from({ length: 7 }, (_, i) => {
+	const date = new Date(2025, 5, 5 + i)
+	return {
+		date,
+		steps: 6000 + Math.floor(Math.random() * 6000),
+		sleep: +(6 + Math.random() * 3).toFixed(1),
+		energy: Math.floor(50 + Math.random() * 50),
+	}
+})
 ---
 
 <Layout title={pageTitle}>
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
+			Some tools to maintain good habits. I don't want to obsess over my health, but I do want to
+			stay healthy enough to fully enjoy life.
+		</p>
+		<p>
 			Based on the strongest scientific literature, there are several habits that can significantly
 			improve my health: daily physical activity, regular sleep schedules, a balanced diet,<sup
 				>1</sup
 			> no tobacco, little to none alcohol,<sup>2</sup> avoiding air pollution,<sup>3</sup> reducing
 			UV exposure, up-to-date vaccinations and screenings, quality social relationships, and managing
-			stress. Everything else tends to be marginal or marketing scams.<side-note class="xl:-mt-16"
-				>1 — My dream diet is diverse and mostly plant-based, with enough protein, fiber, and
-				healthy fats. I don't want to avoid all salty, processed, and sugary foods as long as they
-				stay occasional. And I don't believe in strict diets that are hard to maintain,
-				guilt-inducing, and often not backed by science.</side-note
+			stress. Everything else tends to be marginal, marketing scams, or not relevant for me.<side-note
+				class="xl:-mt-16"
+				>1 — A diverse and mostly plant-based diet, with enough protein, fiber, and healthy fats. I
+				don't want to avoid all salty, processed, and sugary foods as long as they stay occasional.
+				And I don't believe in strict diets that are hard to maintain, guilt-inducing, and often not
+				backed by science.</side-note
 			><side-note
-				>2 — I don't smoke, but I do drink alcohol occasionally. But it's usually just a glass of
-				wine in social settings, or lonkero after sauna.</side-note
+				>2 — I don't smoke, but I do drink alcohol occasionally—usually just a glass of wine in
+				social settings, or lonkero after sauna.</side-note
 			><side-note
 				>3 — I currently live in Toulouse, France, which has a good to moderate air quality. But I
 				plan to move to Helsinki, Finland, in the near future, which has excellent to good air
 				quality.</side-note
 			>
-			<p>
-				I don't want to obsess over my health, but I do want to maintain good habits and stay
-				healthy enough to fully enjoy life. To do so, I'll be tracking on this page my daily
-				physical activity, sleep hours, daily energy levels,<sup>4</sup> and personal comments.<side-note
-					>4 — All three tracked with my Galaxy Watch Ultra and Samsung Health app.</side-note
-				>
-			</p>
-			<ReturnHome />
 		</p>
+		<ReturnHome />
 	</section>
-
 	<section>
+		<h2>Daily tracking</h2>
+		<p>
+			My daily steps, sleep, and energy levels—tracked with my Galaxy Watch Ultra and Samsung Health
+			app. I want to walk at least 7,500 steps a day, sleep 7 hours, and keep my energy above 75%.
+			Weekly averages are more important than daily values.
+		</p>
 		<warning-note>
 			<p>
 				You're currently reading a work-in-progress experiment. The data are not real (randomly
-				generated at each load) and the design is not final.
+				generated) and the design is not final.
 			</p>
 		</warning-note>
-		<HealthMonth month="June 2025" comment="No comment for this month." days={dailyData} />
-		<HealthMonth month="May" comment="No comment for this month." days={dailyData} />
+		<HealthMonth month="June 2025" comment="No comment for this month yet." days={dailyData} />
 	</section>
 </Layout>
