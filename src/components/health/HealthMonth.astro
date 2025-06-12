@@ -1,0 +1,26 @@
+---
+import HealthWeek from "./HealthWeek.astro"
+
+export interface Props {
+	month: string
+	comment: string
+	days: { steps: number; sleep: number; energy: number }[]
+}
+const { month, comment, days } = Astro.props
+
+// split into chunks of 7 days
+const weeks = []
+for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7))
+---
+
+<>
+	<h2>{month}</h2>
+	<p>{comment}</p>
+
+	<div class="mb-2.5 grid grid-cols-8 gap-2.5 text-center">
+		<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span>
+		<span>Fri</span><span>Sat</span><span>Sun</span><span>Avg</span>
+	</div>
+
+	{weeks.map((w) => <HealthWeek days={w} />)}
+</>

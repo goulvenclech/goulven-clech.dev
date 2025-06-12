@@ -1,0 +1,31 @@
+---
+import HealthGauges from "./HealthGauges.astro"
+
+export interface Day {
+	steps: number
+	sleep: number
+	energy: number
+}
+export interface Props {
+	days: Day[]
+}
+const { days } = Astro.props
+
+const avgSteps = Math.round(days.reduce((s, d) => s + d.steps, 0) / days.length)
+const avgSleep = +(days.reduce((s, d) => s + d.sleep, 0) / days.length).toFixed(1)
+const avgEnergy = Math.round(days.reduce((s, d) => s + d.energy, 0) / days.length)
+
+const stepsOK = avgSteps >= 7500
+const sleepOK = avgSleep >= 7
+const energyOK = avgEnergy >= 75
+---
+
+<div class="mb-2.5 flex gap-2.5">
+	{days.map((d) => <HealthGauges steps={d.steps} sleep={d.sleep} energy={d.energy} />)}
+
+	<div class="flex aspect-square w-1/8 flex-col items-center justify-center text-sm leading-tight">
+		<span class:list={{ "text-primary": stepsOK }}>{avgSteps} steps</span>
+		<span class:list={{ "text-success": sleepOK }}>{avgSleep} hours</span>
+		<span class:list={{ "text-info": energyOK }}>{avgEnergy} energy</span>
+	</div>
+</div>
