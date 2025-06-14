@@ -47,7 +47,7 @@
   --color-primary: #e95678;
 
 	--color-success: oklch(59.6% 0.145 163.225);
-	--color-warning: oklch(76.9% 0.188 70.08);
+	--color-warning: oklch(70.5% 0.213 47.604);
 	--color-info: oklch(54.6% 0.245 262.881);
 
   --font-weight-*: initial;
@@ -318,6 +318,29 @@
 
 	.dark warning-note::before {
 		@apply text-body-dark;
+	}
+
+	marker-primary,
+	marker-warning,
+	marker-success,
+	marker-info {
+		@apply inline-flex items-center justify-center h-2.5 w-2.5 text-[9px] pt-0.5 leading-none font-bold text-body-light dark:text-body-dark;
+	}
+
+	marker-primary {
+		@apply bg-primary rounded-full;
+	}
+
+	marker-warning {
+		@apply bg-warning [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)];
+	}
+
+	marker-success {
+		@apply bg-success;
+	}
+
+	marker-info {
+		@apply bg-info [clip-path:polygon(25%_0,75%_0,100%_50%,75%_100%,25%_100%,0_50%)];
 	}
 
   /*

@@ -82,14 +82,33 @@ const {
 				background: "",
 			})
 
-			function createDot({ key, color, legend }: { key: string; color?: string; legend?: string }) {
-				const dot = document.createElement("span")
+			/**
+			 * Create a marker element.
+			 * If a `variant` is provided, we use the corresponding custom tag
+			 * (`marker-primary`, `marker-warning`, …). Otherwise we default to
+			 * `marker-primary` and fallback to an inline `backgroundColor` if a
+			 * specific color is given.
+			 */
+			function createDot({
+				key,
+				color,
+				legend,
+				variant,
+			}: {
+				key: string
+				color?: string
+				legend?: string
+				variant?: "primary" | "warning" | "success" | "info"
+			}) {
+				const tagName = variant ? `marker-${variant}` : "marker-primary"
+				const dot = document.createElement(tagName) as HTMLElement
+				// Overwrite the size and position of marker classes
+				dot.className = "zoom-marker fixed z-9999 text-xs cursor-help h-4 w-4"
+				dot.style.fontFeatureSettings = "'lnum'"
 				dot.textContent = key
-				dot.className =
-					"zoom-marker bg-primary text-body-light fixed z-9999 block aspect-square h-3 rounded-full pt-[1px] sm:pt-0.5 text-center text-xs leading-none sm:h-4 sm:text-sm cursor-help"
 				if (color) dot.style.backgroundColor = color
 				if (legend) dot.title = legend
-				dot.style.fontFeatureSettings = "'lnum'"
+
 				return dot
 			}
 
@@ -104,14 +123,11 @@ const {
 					key: string
 					color?: string
 					legend?: string
+					variant?: "primary" | "warning" | "success" | "info"
 				}>
 
 				markers.forEach((marker) => {
-					const dot = createDot({
-						key: marker.key,
-						color: marker.color,
-						legend: marker.legend,
-					})
+					const dot = createDot(marker)
 					dot.style.top = `${rect.top + (marker.top / 100) * rect.height}px`
 					dot.style.left = `${rect.left + (marker.left / 100) * rect.width}px`
 					document.body.appendChild(dot)

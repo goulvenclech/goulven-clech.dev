@@ -1,4 +1,5 @@
 ---
+import type { HTMLTag } from "astro/types"
 import { Picture as AstroPicture, getConfiguredImageService, getImage } from "astro:assets"
 import type { LocalImageServiceWithPlaceholder } from "src/imageService"
 /**
@@ -18,7 +19,7 @@ interface Props {
 interface Marker {
 	key: string
 	legend: string
-	color?: string
+	variant?: "primary" | "warning" | "success" | "info"
 	top: number
 	left: number
 }
@@ -68,27 +69,29 @@ const { className, markers = [], ...props } = Astro.props as Props
 	}
 
 	{
-		markers.map((marker) => (
-			<span
-				class="bg-primary text-body-light absolute block aspect-square h-3 rounded-full pt-[1px] text-center text-xs leading-none"
-				style={`top: ${marker.top}%; left: ${marker.left}%; background-color: ${marker.color}; font-feature-settings: 'lnum'`}
-			>
-				{marker.key}
-			</span>
-		))
-	}
-</span>
-{
-	markers.length > 0 &&
-		markers.map((marker) => (
-			<span>
-				<span
-					class="bg-primary text-body-light inline-block aspect-square h-3 rounded-full pt-[1px] text-center text-xs leading-none"
-					style={`top: ${marker.top}%; left: ${marker.left}%; background-color: ${marker.color}; font-feature-settings: 'lnum'`}
+		markers.map((marker) => {
+			const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+			return (
+				<Component
+					class="absolute"
+					style={`top: ${marker.top}%; left: ${marker.left}%; font-feature-settings: 'lnum'`}
 				>
 					{marker.key}
+				</Component>
+			)
+		})
+	}
+</span>
+
+{
+	markers.length > 0 &&
+		markers.map((marker) => {
+			const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+			return (
+				<span>
+					<Component style={`font-feature-settings: 'lnum'`}>{marker.key}</Component>
+					{marker.legend}
 				</span>
-				{marker.legend}
-			</span>
-		))
+			)
+		})
 }
