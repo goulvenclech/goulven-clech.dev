@@ -5,14 +5,15 @@
  */
 interface Props {
 	id: string
+	class?: string
 }
 
-const { id } = Astro.props
+const { id, class: className = "" } = Astro.props
 ---
 
 <iframe
 	loading="lazy"
-	class="my-5 aspect-video w-full rounded"
+	class={`my-5 aspect-video w-full rounded ${className}`}
 	src={`https://www.youtube.com/embed/${id}`}
 	title="YouTube video player"
 	allowfullscreen></iframe>
