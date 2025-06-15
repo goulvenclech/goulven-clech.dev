@@ -1,21 +1,8 @@
 ---
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "../layouts/Layout.astro"
-import HealthMonth from "$components/health/HealthMonth.astro"
-import type { Day } from "$components/health/day"
 
 const pageTitle = "My health"
-
-// Temporary mock (will be replaced by API call)
-const dailyData: Day[] = Array.from({ length: 7 }, (_, i) => {
-	const date = new Date(2025, 5, 5 + i)
-	return {
-		date,
-		steps: 6000 + Math.floor(Math.random() * 6000),
-		sleep: +(6 + Math.random() * 3).toFixed(1),
-		energy: Math.floor(50 + Math.random() * 50),
-	}
-})
 ---
 
 <Layout title={pageTitle}>
@@ -52,15 +39,59 @@ const dailyData: Day[] = Array.from({ length: 7 }, (_, i) => {
 		<h2>Daily tracking</h2>
 		<p>
 			My daily steps, sleep, and energy levels—tracked with my Galaxy Watch Ultra and Samsung Health
-			app. I want to walk at least 7,500 steps a day, sleep 7 hours, and keep my energy above 75%.
-			Weekly averages are more important than daily values.
+			app. I want to walk at least 9k steps a day, sleep 7 hours or more, and keep my energy above
+			75%. Weekly averages are more important than daily values.
 		</p>
-		<warning-note>
-			<p>
-				You're currently reading a work-in-progress experiment. The data are not real (randomly
-				generated) and the design is not final.
-			</p>
-		</warning-note>
-		<HealthMonth month="June 2025" comment="No comment for this month yet." days={dailyData} />
+		<div id="health-month">
+			<p>Loading...</p>
+		</div>
 	</section>
+	<script>
+		import type { Day as ApiDay } from "./api/health/health"
+		import { HealthMonth } from "../components/health/HealthMonth"
+		import type { Day } from "../components/health/day"
+
+		async function loadHealth() {
+			const container = document.getElementById("health-month")
+			if (!container) return
+
+			container.innerHTML = "<p>Loading...</p>"
+
+			try {
+				const res = await fetch("/api/health/health")
+				if (!res.ok) throw new Error(`HTTP ${res.status}`)
+				const { days } = (await res.json()) as { days: ApiDay[] }
+
+				const parsed: Day[] = days.map((d) => ({
+					date: new Date(d.date),
+					steps: d.steps,
+					sleep: d.sleep,
+					energy: d.energy,
+				}))
+
+				if (!parsed.length) {
+					container.innerHTML = "<p>No data available.</p>"
+					return
+				}
+
+				const monthName = parsed[0].date.toLocaleString("en-US", {
+					month: "long",
+					year: "numeric",
+				})
+
+				const month = new HealthMonth().setData({
+					month: monthName,
+					comment: "",
+					days: parsed,
+				})
+
+				container.replaceChildren(month)
+			} catch (err) {
+				console.error("Failed to load health data:", err)
+				container.innerHTML = "<p>Failed to load data.</p>"
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", loadHealth)
+	</script>
 </Layout>

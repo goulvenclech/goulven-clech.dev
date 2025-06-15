@@ -12,12 +12,16 @@ import ToTop from "$components/controls/ToTop.astro"
 		<a href="mailto:goulven.clech@protonmail.com">email</a>
 	</p>
 	<nav class="text-font-light dark:text-font-dark my-10 flex gap-5 text-sm sm:my-14">
-		<ToTop />
-		<div class="flex flex-wrap items-center justify-end gap-5 lg:ml-24">
+		<div class="flex flex-col items-start gap-5">
+			<ToTop />
 			<DarkMode />
+		</div>
+		<div class="flex flex-wrap items-center justify-end gap-5 lg:ml-36">
 			<a href="/about" title="About" aria-label="About">About</a>
 			<a href="/resume" title="My resume" aria-label="My resume">Resume</a>
 			<a href="/catalogue" title="My catalogue" aria-label="My catalogue">Catalogue</a>
+			<!--a href="/notes" title="My notes" aria-label="My notes">Notes</a-->
+			<a href="/health" title="My health" aria-label="My health">Health</a>
 			<a href="/feed.xml" title="RSS feed" aria-label="RSS feed">Feed</a>
 			<a
 				href="https://github.com/goulvenclech/goulven-clech.dev/"

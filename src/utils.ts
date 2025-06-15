@@ -39,3 +39,13 @@ export function getMyAge(): number {
   // If my birthday hasn't happened yet this year, I'm still one year younger
   return currentYear - myBirthYear - (myBirthdayThisYear > new Date() ? 1 : 0)
 }
+
+
+/**
+ * Reads a mandatory environment variable or throws if it is missing.
+ */
+export function env(key: string): string {
+  const value = import.meta.env[key] as string
+  if (!value) throw new Error(`Environment variable "${key}" is not set`)
+  return value as string
+}
