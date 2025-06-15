@@ -2,6 +2,7 @@
 export class HealthNoData extends HTMLElement {
   constructor() {
     super()
+    this.classList.add("contents")
     this.render()
   }
 

@@ -1,6 +1,6 @@
 export interface Day {
 	date: Date;
-	steps: number;
-	sleep: number;
-	energy: number;
+	steps: number | null;
+	sleep: number | null;
+	energy: number | null;
 }
