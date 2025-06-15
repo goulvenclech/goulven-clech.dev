@@ -31,9 +31,16 @@ export class HealthMonth extends HTMLElement {
       return
     }
 
-    const key = (d: Date) => d.toISOString().slice(0, 10)
+    // 1. Build a lookup map keyed as YYYY-MM-DD (local time)
+    const key = (d: Date) => {
+      const y = d.getFullYear()
+      const m = (d.getMonth() + 1).toString().padStart(2, "0")
+      const day = d.getDate().toString().padStart(2, "0")
+      return `${y}-${m}-${day}`
+    }
     const dataMap = new Map(this.days.map((d) => [key(d.date), d]))
 
+    // 2. Calendar boundaries & helpers
     const today = new Date()
     const firstDayOfMonth = new Date(this.days[0].date.getFullYear(), this.days[0].date.getMonth(), 1)
     const daysInMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0).getDate()
@@ -42,6 +49,7 @@ export class HealthMonth extends HTMLElement {
     const isSameDay = (a: Date, b: Date) =>
       a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 
+    // 3. Build calendar “slots” (null / today / noData / Day)
     const slots: Slot[] = []
     slots.push(...Array(firstWeekday).fill(null)) // blanks before the 1st
 
@@ -59,6 +67,7 @@ export class HealthMonth extends HTMLElement {
       slots.push(d ?? "noData")
     }
 
+		// 4. Post-processing: pad to full weeks, then chunk
 		// pad end of last week
     while (slots.length % 7 !== 0) slots.push(null)
 
@@ -69,11 +78,12 @@ export class HealthMonth extends HTMLElement {
 		// remove empty weeks at the end
     while (weeks.length && weeks[weeks.length - 1].every((s) => s === null)) weeks.pop()
 
+    // 5. Render: month header + weekday labels + weekly rows
     const article = document.createElement("article")
     const h3 = document.createElement("h3")
     h3.textContent = this.month
     const p = document.createElement("p")
-    p.textContent = this.comment
+    p.textContent = this.comment || "No comment yet."
     article.append(h3, p)
 
     const wrapper = document.createElement("div")
