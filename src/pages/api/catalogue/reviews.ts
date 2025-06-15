@@ -4,15 +4,7 @@ import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
-
-/**
- * Reads a mandatory environment variable or throws if it is missing.
- */
-function env(key: string): string {
-  const value = import.meta.env[key] as string
-  if (!value) throw new Error(`Environment variable "${key}" is not set`)
-  return value as string
-}
+import { env } from "src/utils"
 
 const DB_URL = env("TURSO_URL")
 const DB_TOKEN = env("TURSO_TOKEN")
