@@ -60,7 +60,8 @@ const pageTitle = "Cataloguer"
 			if (document.querySelector("fieldset p")) {
 				try {
 					const response = await fetch("/api/catalogue/emotions")
-					if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+					if (!response.ok)
+						throw new Error(`HTTP ${response.status} ${response.statusText}:  ${response.text()}`)
 
 					const emotions: Emotion[] = await response.json()
 					const emotionsContainer = document.querySelector("fieldset div")

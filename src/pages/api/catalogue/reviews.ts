@@ -4,18 +4,9 @@ import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
-import { env } from "src/utils"
 
-const DB_URL = env("TURSO_URL")
-const DB_TOKEN = env("TURSO_TOKEN")
-const CATALOGUE_PASSWORD = env("CATALOGUE_PASSWORD")
-
-/**
- * Creates a Turso client scoped to the current request.
- * When running in a long‑lived environment, consider memoising this.
- */
 function getClient(): Client {
-  return createClient({ url: DB_URL, authToken: DB_TOKEN })
+  return createClient({ url: import.meta.env.TURSO_URL, authToken: import.meta.env.TURSO_TOKEN })
 }
 
 /**
@@ -176,7 +167,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
     const body = await request.json()
 
     // Basic auth
-    if (body?.password !== CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
+    if (body?.password !== import.meta.env.CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
 
     // Validation
     const {

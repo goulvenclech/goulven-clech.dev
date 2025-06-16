@@ -119,7 +119,8 @@ const pageTitle = "Catalogue"
 
 			try {
 				const response = await fetch("/api/catalogue/emotions")
-				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+				if (!response.ok)
+					throw new Error(`HTTP ${response.status} ${response.statusText}:  ${response.text()}`)
 				const emotions: Emotion[] = await response.json()
 				const sortedEmotions = [...emotions].sort((a, b) => a.name.localeCompare(b.name))
 				// Build <option> elements
@@ -196,7 +197,8 @@ const pageTitle = "Catalogue"
 
 			try {
 				const response = await fetch(url, { signal: inflight.signal })
-				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+				if (!response.ok)
+					throw new Error(`HTTP ${response.status} ${response.statusText}:  ${response.text()}`)
 				const { reviews, hasMore } = (await response.json()) as {
 					reviews: Review[]
 					hasMore: boolean
