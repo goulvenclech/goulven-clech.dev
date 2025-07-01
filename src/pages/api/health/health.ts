@@ -38,8 +38,11 @@ export async function GET({ url }: APIContext): Promise<Response> {
       month = now.getMonth()
     }
 
-    const start = new Date(year, month, 1).toISOString().slice(0, 10)      // yyyy-mm-dd
-    const end   = new Date(year, month + 1, 0).toISOString().slice(0, 10)  // yyyy-mm-dd
+    const startDate = new Date(year, month, 1)
+    const endDate = new Date(year, month + 1, 0)
+		// Format dates as YYYY-MM-DD, avoiding timezone issues
+    const start = `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`
+    const end = `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`
 
     const client = getClient()
     const res = await client.execute({
@@ -57,7 +60,15 @@ export async function GET({ url }: APIContext): Promise<Response> {
       energy: r.energy ?? null,
     }))
 
-    return json({ days }, 200)
+    // Check if there's data in previous months
+    const prevMonthEnd = new Date(year, month, 0).toISOString().slice(0, 10)
+    const hasMoreRes = await client.execute({
+      sql: `SELECT 1 FROM health WHERE day <= ? LIMIT 1`,
+      args: [prevMonthEnd],
+    })
+    const hasMore = hasMoreRes.rows.length > 0
+
+    return json({ days, hasMore }, 200)
   } catch (err) {
     console.error("GET /health failed:", err)
     return json({ error: "Server error" }, 500)

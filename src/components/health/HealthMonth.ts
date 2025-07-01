@@ -7,6 +7,8 @@ export interface MonthData {
   month: string
   comment: string
   days: Day[]
+  year: number
+  monthIndex: number // 0-11
 }
 
 /**
@@ -16,20 +18,24 @@ export class HealthMonth extends HTMLElement {
   private month = ""
   private comment = ""
   private days: Day[] = []
+  private year = 0
+  private monthIndex = 0
 
-  setData({ month, comment, days }: MonthData) {
+  setData({ month, comment, days, year, monthIndex }: MonthData) {
     this.month = month
     this.comment = comment
     this.days = days
+    this.year = year
+    this.monthIndex = monthIndex
     this.render()
     return this
   }
 
   private render() {
-    if (!this.days.length) {
-      this.innerHTML = ""
-      return
-    }
+    // Use the provided year and month from browser date calculation
+    const today = new Date()
+    const firstDayOfMonth = new Date(this.year, this.monthIndex, 1)
+    const monthYear = { year: this.year, month: this.monthIndex }
 
     // 1. Build a lookup map keyed as YYYY-MM-DD (local time)
     const key = (d: Date) => {
@@ -41,25 +47,25 @@ export class HealthMonth extends HTMLElement {
     const dataMap = new Map(this.days.map((d) => [key(d.date), d]))
 
     // 2. Calendar boundaries & helpers
-    const today = new Date()
-    const firstDayOfMonth = new Date(this.days[0].date.getFullYear(), this.days[0].date.getMonth(), 1)
-    const daysInMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0).getDate()
+    const daysInMonth = new Date(monthYear.year, monthYear.month + 1, 0).getDate()
     const firstWeekday = (firstDayOfMonth.getDay() + 6) % 7 // week offset (0 = Mon … 6 = Sun)
 
     const isSameDay = (a: Date, b: Date) =>
       a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 
-    // 3. Build calendar “slots” (null / today / noData / Day)
+    const isCurrentMonth = today.getFullYear() === monthYear.year && today.getMonth() === monthYear.month
+
+    // 3. Build calendar "slots" (null / today / noData / Day)
     const slots: Slot[] = []
     slots.push(...Array(firstWeekday).fill(null)) // blanks before the 1st
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth(), day)
+      const date = new Date(monthYear.year, monthYear.month, day)
       if (date > today) {
         slots.push(null) // future → blank
         continue
       }
-      if (isSameDay(date, today)) {
+      if (isCurrentMonth && isSameDay(date, today)) {
         slots.push("today")
         continue
       }
