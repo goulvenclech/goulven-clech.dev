@@ -231,7 +231,8 @@
   }
 
   li code,
-  p code {
+  p code,
+	side-note code {
     overflow-wrap: break-word;
     @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
   }
