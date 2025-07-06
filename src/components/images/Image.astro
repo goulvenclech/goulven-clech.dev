@@ -1,0 +1,171 @@
+---
+import type { HTMLTag } from "astro/types"
+import { getConfiguredImageService, getImage } from "astro:assets"
+import type { LocalImageServiceWithPlaceholder } from "src/imageService"
+import InternalImage from "./InternalImage.astro"
+// Types for markers used in the image
+export interface Marker {
+	key: string
+	legend: string
+	variant?: "primary" | "warning" | "success" | "info"
+	top: number
+	left: number
+}
+/**
+ * High-level picture component with optional dark variant, zoom-on-click,
+ * dynamic blurred placeholders (see imageService.ts) and marker support.
+ * Rendering is delegated to InternalImage.
+ */
+interface Props {
+	src: any
+	srcDark?: any
+	alt: string
+	width?: number
+	height?: number
+	formats?: string[]
+	class?: string
+	markers?: Marker[]
+	defaultWidth?: number
+	hideMarkerLegend?: boolean
+	[key: string]: any
+}
+
+/**
+ * If you want to understand this component, you'll need to look at :
+ * -> src/imageService.ts
+ */
+const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
+
+const {
+	src,
+	srcDark,
+	alt,
+	width,
+	height,
+	formats,
+	className,
+	markers = [],
+	defaultWidth = 600 * 2,
+	hideMarkerLegend = false,
+	...rest
+} = Astro.props
+
+// Light variant setup
+const isStringSource = typeof src === "string"
+const placeholderURL = isStringSource
+	? src
+	: src.format === "svg"
+		? src.src // We don't support SVG placeholders yet
+		: src.fsPath
+			? await imageService.generatePlaceholder(
+					src.fsPath,
+					Math.max(src.width, defaultWidth),
+					src.height
+				)
+			: src.src
+
+const goodQualityURL = isStringSource
+	? { src: src }
+	: await getImage({
+			src: src,
+			width: src.width,
+		})
+const imageWidth = isStringSource ? width || defaultWidth : Math.min(src.width, defaultWidth)
+
+// Dark variant setup (only if provided)
+let placeholderURLDark, goodQualityURLDark, imageWidthDark
+if (srcDark) {
+	const isStringSourceDark = typeof srcDark === "string"
+	placeholderURLDark = isStringSourceDark
+		? srcDark
+		: srcDark.format === "svg"
+			? srcDark.src
+			: srcDark.fsPath
+				? await imageService.generatePlaceholder(
+						srcDark.fsPath,
+						Math.max(srcDark.width, defaultWidth),
+						srcDark.height
+					)
+				: srcDark.src
+	goodQualityURLDark = isStringSourceDark
+		? { src: srcDark }
+		: await getImage({ src: srcDark, width: srcDark.width })
+	imageWidthDark = isStringSourceDark
+		? width || defaultWidth
+		: Math.min(srcDark.width, defaultWidth)
+}
+---
+
+<span class={"relative inline-block " + (className ?? "")}>
+	{
+		!srcDark ? (
+			<InternalImage
+				{...rest}
+				source={src}
+				alt={alt}
+				goodQualityURL={goodQualityURL}
+				imageWidth={imageWidth}
+				height={height}
+				formats={formats}
+				class="w-full overflow-hidden rounded"
+				placeholderURL={placeholderURL}
+				markers={markers}
+			/>
+		) : (
+			<>
+				<InternalImage
+					{...rest}
+					source={src}
+					alt={alt}
+					goodQualityURL={goodQualityURL}
+					imageWidth={imageWidth}
+					height={height}
+					formats={formats}
+					class="w-full overflow-hidden rounded dark:hidden"
+					placeholderURL={placeholderURL}
+					markers={markers}
+				/>
+				<InternalImage
+					{...rest}
+					source={srcDark}
+					alt={alt}
+					goodQualityURL={goodQualityURLDark!}
+					imageWidth={imageWidthDark!}
+					height={height}
+					formats={formats}
+					class="hidden w-full overflow-hidden rounded dark:block"
+					placeholderURL={placeholderURLDark}
+					markers={markers}
+				/>
+			</>
+		)
+	}
+
+	{
+		markers.map((marker) => {
+			const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+			return (
+				<Component class="absolute" style={`top: ${marker.top}%; left: ${marker.left}%;`}>
+					{marker.key}
+				</Component>
+			)
+		})
+	}
+</span>
+
+{
+	!hideMarkerLegend && (
+		<slot name="marker-legends">
+			{markers.length > 0 &&
+				markers.map((marker) => {
+					const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+					return (
+						<span>
+							<Component>{marker.key}</Component>
+							{marker.legend}
+						</span>
+					)
+				})}
+		</slot>
+	)
+}

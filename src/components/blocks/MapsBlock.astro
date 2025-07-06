@@ -63,6 +63,7 @@ function dayOfWeekAsString(i: number): string {
 		? `https://places.googleapis.com/v1/${place.photos[0].name}/media` +
 			`?maxHeightPx=500&key=${import.meta.env.MAPS_TOKEN}`
 		: undefined}
+	imageAlt={place.displayName?.text ? `Photo of ${place.displayName.text}` : "Place photo"}
 	to={place.googleMapsUri}
 >
 	<h3 id={place.id} class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1">

@@ -1,0 +1,65 @@
+---
+import { Picture as AstroPicture } from "astro:assets"
+import type { Marker } from "./Image.astro" // only for typing, no runtime cost
+/**
+ * Low-level renderer used by Image.astro.
+ * Decides between a plain <img> (for external/SVG sources) and <AstroPicture>
+ * (for local raster files) while wiring zoom, placeholder and marker logic.
+ * Do not use directly in content – prefer Image.astro.
+ */
+interface Props {
+	source: any
+	alt: string
+	goodQualityURL: { src: string }
+	imageWidth: number
+	height?: number
+	formats?: string[]
+	class?: string
+	placeholderURL?: string
+	markers?: Marker[]
+	[key: string]: any
+}
+
+const {
+	source,
+	alt,
+	goodQualityURL,
+	imageWidth,
+	height,
+	formats,
+	class: className = "",
+	placeholderURL,
+	markers = [],
+	...rest
+} = Astro.props
+---
+
+{
+	source.format === "svg" ? (
+		<img
+			{...rest}
+			src={source.src}
+			alt={alt}
+			data-zoomable
+			data-zoom-src={goodQualityURL.src}
+			width={imageWidth}
+			height={height}
+			class={className}
+		/>
+	) : (
+		<AstroPicture
+			{...rest}
+			src={source}
+			alt={alt}
+			data-zoomable
+			data-zoom-src={goodQualityURL.src}
+			data-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
+			width={imageWidth}
+			height={height}
+			formats={formats ?? ["webp"]}
+			class={className}
+			style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
+			onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+		/>
+	)
+}

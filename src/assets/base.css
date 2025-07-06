@@ -326,6 +326,7 @@
 	marker-success,
 	marker-info {
 		@apply inline-flex items-center justify-center h-2.5 w-2.5 text-[9px] pt-0.5 leading-none font-bold text-body-light dark:text-body-dark;
+		font-feature-settings: 'lnum';
 	}
 
 	marker-primary {

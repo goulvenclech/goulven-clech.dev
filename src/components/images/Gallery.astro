@@ -1,0 +1,44 @@
+---
+/**
+ * Simple CSS grid wrapper that arranges 1-4 images and optionally shows a
+ * caption / source link. Insert images via the default slot.
+ */
+interface Props {
+	caption?: string
+	source?: string
+	className?: string
+}
+
+const { caption, source, className } = Astro.props
+---
+
+<figure class={"my-5 " + (className ?? "")}>
+	<div class="gallery-grid grid gap-2.5">
+		<slot />
+	</div>
+	{
+		(caption || source) && (
+			<figcaption class="legend">
+				{caption}
+				{source && <a href={source}>Source</a>}
+			</figcaption>
+		)
+	}
+</figure>
+
+<style is:global>
+	/* A single flexible rule set for 1-4 images */
+	.gallery-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	/* Only 1 image ⇒ span both columns (keeps original ratio) */
+	.gallery-grid > *:only-child {
+		grid-column: 1 / -1;
+	}
+
+	/* 3 images ⇒ first spans two columns, others normal */
+	.gallery-grid > *:first-child:nth-last-child(3) {
+		grid-column: 1 / -1;
+	}
+</style>
