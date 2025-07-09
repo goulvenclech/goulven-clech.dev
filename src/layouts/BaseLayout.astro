@@ -78,7 +78,7 @@ const {
 			// MediumZoom is a library to zoom images in better quality.
 			import mediumZoom from "medium-zoom"
 			const zoom = mediumZoom("[data-zoomable]", {
-				margin: 24,
+				margin: window.innerWidth < 640 ? 8 : 24,
 				background: "",
 			})
 

@@ -138,7 +138,7 @@
   }
 
   main {
-    @apply mx-auto max-w-[590px] px-4 md:px-0;
+    @apply mx-auto max-w-[590px] px-4 sm:px-0;
   }
 
   /*
@@ -325,7 +325,7 @@
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply inline-flex items-center justify-center h-2.5 w-2.5 text-[9px] pt-0.5 leading-none font-bold text-body-light dark:text-body-dark;
+		@apply inline-flex items-center justify-center h-3 w-3 text-xs pt-0.75 leading-none font-bold text-body-light dark:text-body-dark;
 		font-feature-settings: 'lnum';
 	}
 

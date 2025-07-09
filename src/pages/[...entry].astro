@@ -68,14 +68,14 @@ const { Content, headings } = await render(entry)
 	#entry > p:first-of-type::first-letter {
 		/* Font size is 2.5 times the text size * 1.625 (line height) */
 		/* Margin top verticaly align the drop cap with the two text lines */
-		@apply float-left mt-[3px] mr-1 text-[calc(16px*1.625*2.5)] sm:text-[calc(18px*1.625*2.5)];
+		@apply float-left mt-[2px] mr-1 text-[calc(16px*1.625*2.5)] sm:mt-[3px] sm:text-[calc(18px*1.625*2.5)];
 	}
 
 	/* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
 	/* Use @supports to discriminate Firefox and olders browsers */
 	@supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
 		#entry > p:first-of-type::first-letter {
-			@apply mb-[-2rem] leading-none;
+			@apply mb-[-30px] leading-none;
 		}
 	}
 
@@ -93,7 +93,7 @@ const { Content, headings } = await render(entry)
 	/* I use a manicule as a list marker, in the future I'll use "indent hanging"
      but it's not supported in Chrome yet */
 	#entry > ul {
-		@apply my-5 list-none indent-0 md:indent-[-27.58px];
+		@apply my-5 list-none indent-0 sm:indent-[-27.58px];
 	}
 
 	#entry > ul > li::before {
