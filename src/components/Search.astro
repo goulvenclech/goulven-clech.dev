@@ -110,6 +110,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 <div data-blog={JSON.stringify(blogEntriesFormatted)}></div>
 <script>
 	import { Card } from "./card/Card.ts"
+	import { EmptyState } from "./card/EmptyState.ts"
 	import type { ClientBlogEntries } from "./Search.astro"
 	import type { BlogEntry } from "src/utils"
 
@@ -161,8 +162,6 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		return sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 	}
 
-	// Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
-	customElements.define("search-card", Card as any)
 	// Okay, here we go 🧙
 	// Get blog data and DOM elements
 	const blogData = document.querySelector("[data-blog]")?.getAttribute("data-blog")
@@ -208,20 +207,18 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		// Clear existing results
 		output!.innerHTML = ""
 
+		// Show empty state if no results
+		if (filteredEntries.length === 0) {
+			const emptyState = new EmptyState().setMessage("No entries found...")
+			output!.appendChild(emptyState)
+			return
+		}
+
 		// Create document fragment for performance
 		const fragment = document.createDocumentFragment()
 
 		filteredEntries.forEach((entry) => {
-			const searchCard = document.createElement("search-card")
-			searchCard.setAttribute("title", entry.title)
-			searchCard.setAttribute("id", entry.id)
-			searchCard.setAttribute("date", entry.date)
-			searchCard.setAttribute("tags", entry.tags.length > 0 ? entry.tags.join(", ") : "No tags")
-			searchCard.setAttribute("abstract", entry.abstract)
-			searchCard.setAttribute("image", entry.image ? entry.image.src : "")
-			searchCard.setAttribute("imageDark", entry.imageDark ? entry.imageDark.src : "")
-			searchCard.setAttribute("imageAlt", entry.imageAlt)
-			searchCard.setAttribute("isPublished", entry.isPublished.toString())
+			const searchCard = new Card().fromBlogEntry(entry)
 			fragment.appendChild(searchCard)
 		})
 

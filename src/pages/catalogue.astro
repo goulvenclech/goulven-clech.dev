@@ -1,5 +1,5 @@
 ---
-import ReviewCardSkeleton from "$components/catalogue/ReviewCardSkeleton.astro"
+import CardSkeleton from "$components/card/CardSkeleton.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 
@@ -67,7 +67,7 @@ const pageTitle = "Catalogue"
 		</form>
 
 		<div id="reviews-container">
-			<ReviewCardSkeleton />
+			<CardSkeleton />
 		</div>
 		<button id="load-more" class="button" type="button"> Load more </button>
 		<side-note>
@@ -83,10 +83,10 @@ const pageTitle = "Catalogue"
 	<script>
 		import type { Emotion } from "./api/catalogue/emotions"
 		import type { Review } from "./api/catalogue/reviews"
-		import { ReviewCard } from "../components/catalogue/ReviewCard"
-		import { ReviewCardSkeleton } from "../components/catalogue/ReviewCardSkeleton"
-		import { ReviewsError } from "../components/catalogue/ReviewsError"
-		import { ReviewsEmpty } from "../components/catalogue/ReviewsEmpty"
+		import { ReviewCard } from "../components/catalogue/ReviewCard.ts"
+		import { CardSkeleton } from "../components/card/CardSkeleton.ts"
+		import { ErrorState } from "../components/card/ErrorState.ts"
+		import { EmptyState } from "../components/card/EmptyState.ts"
 
 		/**
 		 * Sync filter & pagination state to the URL
@@ -172,13 +172,13 @@ const pageTitle = "Catalogue"
 			if (append) {
 				if (loadMoreBtn) {
 					loadMoreBtn.classList.add("hidden")
-					const skeleton = new ReviewCardSkeleton()
+					const skeleton = new CardSkeleton()
 					skeleton.id = "load-more-skeleton"
 					container.appendChild(skeleton)
 				}
 			} else {
 				container.innerHTML = ""
-				container.appendChild(new ReviewCardSkeleton())
+				container.appendChild(new CardSkeleton())
 			}
 
 			// Cancel older fetch (if any)
@@ -211,7 +211,7 @@ const pageTitle = "Catalogue"
 				}
 
 				if (reviews.length === 0 && !append) {
-					container.appendChild(new ReviewsEmpty())
+					container.appendChild(new EmptyState())
 				} else {
 					reviews.forEach((review) => {
 						const reviewCard = new ReviewCard()
@@ -231,7 +231,7 @@ const pageTitle = "Catalogue"
 				if (error.name === "AbortError") return // out-of-date request
 				console.error("Failed to load reviews:", error)
 				container.innerHTML = ""
-				container.appendChild(new ReviewsError())
+				container.appendChild(new ErrorState())
 			}
 		}
 

@@ -1,8 +1,8 @@
 /**
- * A web component to display skeleton loading placeholders for review cards
- * Based on the Astro component design
+ * A generic web component to display skeleton loading placeholders for cards
+ * Can be used for both blog entries and catalogue reviews
  */
-export class ReviewCardSkeleton extends HTMLElement {
+export class CardSkeleton extends HTMLElement {
   private count: number = 3
 
   constructor() {
@@ -41,4 +41,4 @@ export class ReviewCardSkeleton extends HTMLElement {
 }
 
 // Register the component
-customElements.define("review-card-skeleton", ReviewCardSkeleton)
+customElements.define("card-skeleton", CardSkeleton)
