@@ -76,8 +76,8 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 }))
 ---
 
-<form class="mb-5 grid grid-cols-1 gap-5 text-xs sm:grid-cols-2 sm:text-sm">
-	<div class="group col-span-1 flex items-center sm:col-span-2">
+<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:text-sm">
+	<div class="group col-span-2 flex items-center">
 		<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
 		<input
 			id="search-query"
@@ -92,7 +92,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		{importantTags.map((tag) => <option value={tag.value}>{tag.label}</option>)}
 	</select>
 
-	<select id="year-filter" class="col-span-2 border-b-[0.1rem] border-dotted sm:col-span-1">
+	<select id="year-filter" class="border-b-[0.1rem] border-dotted">
 		<option value="" selected>🗂️ All years</option>
 		{sortedYears.map((year) => <option value={year.toString()}>📁 {year}</option>)}
 	</select>
