@@ -1,25 +1,27 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
-import Card from "./Card.astro"
+import Card from "./card/Card.astro"
 import { getImage } from "astro:assets"
-export type clientBlogEntries = typeof blogEntriesFormatted
+import type { BlogEntry } from "src/utils"
+export type ClientBlogEntries = BlogEntry[]
 
 /**
  * A component that show all blog entries and where users can search by typing keywords.
+ * Or filter by tags and years.
  * Only made with Astro and vanilla JS. Could have done this with React or an already made
  * library ? Maybe...But would I've had as much fun? 🤷
  */
 
-// get all blogEntries
+// Get all published blog entries
 const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
 	return isEntryPublished(data.published)
 })
 
-// Sort blog entries by date.
+// Sort blog entries by date
 const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
-// Get optimized images for every blog Cards
+// Get optimized images for every blog card
 // This is needed to use the same image for SSR and CSR Cards
 const images = await Promise.all(
 	blogEntries.map(async ({ id, data }) => ({
@@ -29,6 +31,7 @@ const images = await Promise.all(
 			: "",
 	}))
 )
+
 // Dark version
 const imagesDark = await Promise.all(
 	blogEntries.map(async ({ id, data }) => ({
@@ -39,12 +42,31 @@ const imagesDark = await Promise.all(
 	}))
 )
 
-// Format blog entries to be used in the search script (client side)
+// Extract all tags and years for filter options
+const allTags = new Set<string>()
+const allYears = new Set<number>()
+
+blogEntries.forEach(({ data }) => {
+	data.tags.forEach((tag) => allTags.add(tag))
+	allYears.add(data.date.getFullYear())
+})
+
+const sortedYears = [...allYears].sort((a, b) => b - a)
+
+// Important tags based on your blog content
+const importantTags = [
+	{ value: "web development", label: "💻 Web Development" },
+	{ value: "game development", label: "🎮 Game Development" },
+	{ value: "coffee", label: "☕️ Speciality Coffee" },
+]
+
+// Format blog entries for client-side filtering
 // Reduce the amount of data sent to the client as much as possible
-const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
+const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) => ({
 	id,
 	title: data.title,
 	date: formatDate(data.date),
+	year: data.date.getFullYear(),
 	tags: data.tags,
 	abstract: data.abstract,
 	image: images.find((image) => image.id === id),
@@ -54,23 +76,31 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 }))
 ---
 
-<>
-	<div class="flex items-baseline gap-5">
-		<h2 class="shrink-0" id="last_entries">Blog entries</h2>
-		<div class="mb-5 ml-auto text-xs sm:text-sm">
-			<input
-				id="search"
-				class="peer bg-body-light focus:text-primary dark:bg-body-dark truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
-				placeholder="Search by title or keywords..."
-				type="text"
-			/>
-			<i class="fas fa-search peer-focus:text-primary ml-1.5"></i>
-		</div>
+<form class="mb-5 grid grid-cols-1 gap-5 text-xs sm:grid-cols-2 sm:text-sm">
+	<div class="group col-span-1 flex items-center sm:col-span-2">
+		<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
+		<input
+			id="search-query"
+			class="focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
+			placeholder="Search blog entries by title or keywords..."
+			type="text"
+		/>
 	</div>
-</>
-<!-- By default, output display all blog entries -->
+
+	<select id="tag-filter" class="border-b-[0.1rem] border-dotted">
+		<option value="" selected>🏷️ All topics</option>
+		{importantTags.map((tag) => <option value={tag.value}>{tag.label}</option>)}
+	</select>
+
+	<select id="year-filter" class="col-span-2 border-b-[0.1rem] border-dotted sm:col-span-1">
+		<option value="" selected>🗂️ All years</option>
+		{sortedYears.map((year) => <option value={year.toString()}>📁 {year}</option>)}
+	</select>
+</form>
+
 <div id="output" class="flex flex-col gap-2.5">
 	{
+		/* Default SSR output */
 		blogEntries.map((result) => (
 			<Card entry={result} image={images.find((image) => image.id === result.id)?.src} />
 		))
@@ -79,82 +109,154 @@ const blogEntriesFormatted = blogEntries.map(({ id, data }) => ({
 
 <div data-blog={JSON.stringify(blogEntriesFormatted)}></div>
 <script>
-	import { Card } from "./Card.js"
-	import type { clientBlogEntries } from "./Search.astro"
+	import { Card } from "./card/Card.ts"
+	import type { ClientBlogEntries } from "./Search.astro"
+	import type { BlogEntry } from "src/utils"
+
+	interface FilterState {
+		query: string
+		tag: string
+		year: string
+		sort: "date"
+	}
+
 	/**
-	 * Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
-	 * This SearchCard will be used to display search's results, see ->
-	 * src/components/SearchCard.js
+	 * Enhanced blog search with filtering capabilities
+	 * Supports search queries, tag filtering, year filtering, and sorting
 	 */
-	customElements.define("search-card", Card)
-	// Okay, here we go 🧙
-	// get the HTML elements on which we will interact
-	const blogData = document.querySelector("[data-blog]")?.getAttribute("data-blog")
-	const blogEntries: clientBlogEntries = blogData ? JSON.parse(blogData) : []
-	const input = document.getElementById("search")
-	const output = document.getElementById("output")
-	if (!input || !output || blogEntries.length === 0) {
-		throw new Error("Search component is missing input/output elements.")
-	}
-	// create a search object, that will be used to store the search results
-	const search = {
-		_results: blogEntries,
-		get results() {
-			return this._results
-		},
-		set results(value) {
-			this._results = value
-			applyInput()
-		},
-	}
-	/**
-	 * Update UI with search results
-	 */
-	const applyInput = () => {
-		let fragment = document.createDocumentFragment()
-		search.results.forEach((result) => {
-			// For every result, insert a SearchCard in the output
-			const searchCard = document.createElement("search-card")
-			searchCard.setAttribute("title", result.title)
-			searchCard.setAttribute("id", result.id)
-			searchCard.setAttribute("date", result.date)
-			searchCard.setAttribute("tags", result.tags.length > 0 ? result.tags.join(", ") : "No tags")
-			searchCard.setAttribute("abstract", result.abstract)
-			searchCard.setAttribute("image", result.image ? result.image.src : "")
-			searchCard.setAttribute("imageDark", result.imageDark ? result.imageDark.src : "")
-			searchCard.setAttribute("imageAlt", result.imageAlt)
-			searchCard.setAttribute("isPublished", result.isPublished.toString())
-			fragment.append(searchCard)
-		})
-		output.append(fragment)
-	}
-	// On the first page load, remove the SSR content and display every blog entries
-	output.innerHTML = ""
-	search.results = blogEntries
-	// add an event listener on input, to call applyInput/2 at each search
-	input.addEventListener("input", (event) => {
-		output.innerHTML = ""
-		if (event.target) {
-			const element = event.currentTarget
-			if (element instanceof HTMLInputElement) {
-				const searchKeywords = element.value.toLowerCase().split(" ")
-				if (searchKeywords.length > 0) {
-					// Filter block entries based on their title, abstract & tags
-					// should match every keywords provided by search input !
-					search.results = blogEntries.filter((entry) =>
-						searchKeywords.every(
-							(keyword) =>
-								entry.title.toLowerCase().includes(keyword) ||
-								entry.abstract.toLowerCase().includes(keyword) ||
-								entry.tags.some((tag: string) => tag.toLowerCase().includes(keyword))
-						)
-					)
-				} else {
-					// if no keywords, return every blog entries
-					search.results = blogEntries
-				}
+	function filterBlogEntries(entries: BlogEntry[], filters: FilterState): BlogEntry[] {
+		return entries.filter((entry) => {
+			// Filter by search query
+			if (filters.query) {
+				const searchKeywords = filters.query.toLowerCase().split(" ")
+				const matchesQuery = searchKeywords.every(
+					(keyword) =>
+						entry.title.toLowerCase().includes(keyword) ||
+						entry.abstract.toLowerCase().includes(keyword) ||
+						entry.tags.some((tag) => tag.toLowerCase().includes(keyword))
+				)
+				if (!matchesQuery) return false
 			}
+
+			// Filter by tag
+			if (filters.tag) {
+				const hasTag = entry.tags.some((tag) => tag.toLowerCase() === filters.tag.toLowerCase())
+				if (!hasTag) return false
+			}
+
+			// Filter by year
+			if (filters.year) {
+				if (entry.year !== parseInt(filters.year)) return false
+			}
+
+			return true
+		})
+	}
+
+	// Sort blog entries by date (newest first)
+	export function sortBlogEntries(entries: BlogEntry[]): BlogEntry[] {
+		const sorted = [...entries]
+
+		// Always sort by date (newest first)
+		return sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+	}
+
+	// Use a JS vanilla component because Astro component should only be use SSG (cause ViteJS)
+	customElements.define("search-card", Card as any)
+	// Okay, here we go 🧙
+	// Get blog data and DOM elements
+	const blogData = document.querySelector("[data-blog]")?.getAttribute("data-blog")
+	const blogEntries: ClientBlogEntries = blogData ? JSON.parse(blogData) : []
+
+	const queryInput = document.getElementById("search-query") as HTMLInputElement
+	const tagFilter = document.getElementById("tag-filter") as HTMLSelectElement
+	const yearFilter = document.getElementById("year-filter") as HTMLSelectElement
+	const output = document.getElementById("output")
+
+	if (!queryInput || !tagFilter || !yearFilter || !output || blogEntries.length === 0) {
+		throw new Error("Search component is missing required elements.")
+	}
+
+	// Sync filter state to URL
+	function updateUrl(filters: FilterState) {
+		const params = new URLSearchParams()
+		if (filters.query) params.set("query", filters.query)
+		if (filters.tag) params.set("tag", filters.tag)
+		if (filters.year) params.set("year", filters.year)
+
+		history.replaceState(null, "", `${location.pathname}${params.toString() ? "?" + params : ""}`)
+	}
+
+	// Get current filter values
+	function getFilterState(): FilterState {
+		return {
+			query: queryInput.value.trim(),
+			tag: tagFilter.value,
+			year: yearFilter.value,
+			sort: "date",
 		}
+	}
+
+	// Apply filters and update UI
+	function applyFilters() {
+		const filters = getFilterState()
+		updateUrl(filters)
+
+		let filteredEntries = filterBlogEntries(blogEntries, filters)
+		filteredEntries = sortBlogEntries(filteredEntries)
+
+		// Clear existing results
+		output!.innerHTML = ""
+
+		// Create document fragment for performance
+		const fragment = document.createDocumentFragment()
+
+		filteredEntries.forEach((entry) => {
+			const searchCard = document.createElement("search-card")
+			searchCard.setAttribute("title", entry.title)
+			searchCard.setAttribute("id", entry.id)
+			searchCard.setAttribute("date", entry.date)
+			searchCard.setAttribute("tags", entry.tags.length > 0 ? entry.tags.join(", ") : "No tags")
+			searchCard.setAttribute("abstract", entry.abstract)
+			searchCard.setAttribute("image", entry.image ? entry.image.src : "")
+			searchCard.setAttribute("imageDark", entry.imageDark ? entry.imageDark.src : "")
+			searchCard.setAttribute("imageAlt", entry.imageAlt)
+			searchCard.setAttribute("isPublished", entry.isPublished.toString())
+			fragment.appendChild(searchCard)
+		})
+
+		output!.appendChild(fragment)
+	}
+
+	// Initialize filters from URL
+	function initializeFromUrl() {
+		const params = new URLSearchParams(location.search)
+		const query = params.get("query") || ""
+		const tag = params.get("tag") || ""
+		const year = params.get("year") || ""
+
+		queryInput.value = query
+		tagFilter.value = tag
+		yearFilter.value = year
+
+		applyFilters()
+	}
+
+	// Add event listeners
+	let debounceTimer: number
+	queryInput.addEventListener("input", () => {
+		clearTimeout(debounceTimer)
+		debounceTimer = window.setTimeout(() => {
+			applyFilters()
+		}, 300)
+	})
+
+	tagFilter.addEventListener("change", applyFilters)
+	yearFilter.addEventListener("change", applyFilters)
+
+	// Initialize on page load
+	document.addEventListener("DOMContentLoaded", () => {
+		initializeFromUrl()
 	})
 	// that should do it 🧙
 </script>

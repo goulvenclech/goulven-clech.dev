@@ -39,3 +39,16 @@ export function getMyAge(): number {
   // If my birthday hasn't happened yet this year, I'm still one year younger
   return currentYear - myBirthYear - (myBirthdayThisYear > new Date() ? 1 : 0)
 }
+
+export interface BlogEntry {
+	id: string
+	title: string
+	date: string
+	year: number
+	tags: string[]
+	abstract: string
+	image?: { src: string }
+	imageDark?: { src: string }
+	imageAlt: string
+	isPublished: boolean
+}
