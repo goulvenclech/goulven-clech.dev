@@ -269,7 +269,7 @@
   }
 
   annotation a {
-    @apply text-primary dark:text-primary hover:text-font-light dark:hover:text-font-dark;
+    @apply text-primary dark:text-primary hover:text-font-light dark:hover:text-font-dark decoration-primary dark:decoration-primary hover:decoration-font-light dark:hover:decoration-font-dark;
   }
 
   @media (width >= theme(--breakpoint-xl)) {
@@ -388,7 +388,7 @@
   a,
   button {
     /* decoration has a fixed value, so it doesn't change with the font size */
-    @apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px];
+    @apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] decoration-font-light dark:decoration-font-dark hover:decoration-primary dark:hover:decoration-primary;
   }
 
   /* Remove leading icon for links that have the `card` class */
@@ -399,7 +399,7 @@
 
   a[href^="http://"]::before, a[href^="https://"]::before,
 	a[href^="/about"]::before, a[href^="/catalogue"]::before,
-	a[href^="/notes"]::before,
+	a[href^="/notes"]::before, footer a[href="/"]::before,
 	a[href^="/health"]::before, footer a[href^="/resume"]::before,
 	a[href^="/feed.xml"]::before, button::before {
     content: "\f0c1";
@@ -410,6 +410,12 @@
     display: inline-block;
     @apply not-italic;
   }
+
+	footer a[href="/"]::before {
+		content: "\f015";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
   a[href^="/about"]::before {
     content: "\f05a";

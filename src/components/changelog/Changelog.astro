@@ -14,12 +14,13 @@ const changelogEntriesRaw = await getCollection("changelog")
 
 // Define the structure of a changelog entry
 export interface ChangelogEntry {
-	type: string
+	type?: string
 	date: Date
 	url?: string
 	url_caption?: string
 	name: string
 	description: string
+	is_deprecated?: boolean
 	render?(): any
 }
 
@@ -31,6 +32,7 @@ const changelogEntries: ChangelogEntry[] = changelogEntriesRaw.map((entry) => ({
 	url_caption: entry.data.url_caption,
 	name: entry.data.name,
 	description: entry.data.description,
+	is_deprecated: entry.data.is_deprecated || false,
 	render(): any {
 		return render(entry)
 	},

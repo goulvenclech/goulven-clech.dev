@@ -21,12 +21,13 @@ const changelogCollection = defineCollection({
   loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/changelog" }),
   schema: () =>
     z.object({
-      type: z.string(),
+			type: z.string().optional(),
       date: z.date(),
       url: z.string().optional(),
       url_caption: z.string().default("Read more"),
       name: z.string(),
       description: z.string(),
+			is_deprecated: z.boolean().default(false),
     }),
 })
 const experiencesCollection = defineCollection({

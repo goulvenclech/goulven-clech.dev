@@ -15,9 +15,21 @@ const { Content } = await (entry.render?.() ?? { Content: null })
 
 <li class="my-5 flex flex-row gap-2.5">
 	<div class="changelog grow">
-		<strong>{entry.name}:</strong>
-		<span set:html={entry.description} />
-		{entry.url && <a href={entry.url}>{entry.url_caption}</a>}
+		{
+			entry.is_deprecated ? (
+				<s>
+					<strong>{entry.name}:</strong>
+					<span set:html={entry.description} />
+					{entry.url && <a href={entry.url}>{entry.url_caption}</a>}
+				</s>
+			) : (
+				<>
+					<strong>{entry.name}:</strong>
+					<span set:html={entry.description} />
+					{entry.url && <a href={entry.url}>{entry.url_caption}</a>}
+				</>
+			)
+		}
 		{Content && <Content />}
 	</div>
 </li>
