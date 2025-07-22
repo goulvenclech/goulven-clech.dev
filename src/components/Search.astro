@@ -101,11 +101,20 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 <div id="output" class="flex flex-col gap-2.5">
 	{
 		/* Default SSR output */
-		blogEntries.map((result) => (
-			<Card entry={result} image={images.find((image) => image.id === result.id)?.src} />
-		))
+		blogEntries
+			.slice(0, 5)
+			.map((result) => (
+				<Card entry={result} image={images.find((image) => image.id === result.id)?.src} />
+			))
 	}
 </div>
+<button
+	id="load-more"
+	class={`button mt-0 ${blogEntries.length <= 5 ? "hidden" : ""}`}
+	type="button"
+>
+	Load more
+</button>
 
 <div data-blog={JSON.stringify(blogEntriesFormatted)}></div>
 <script>
@@ -120,6 +129,9 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		year: string
 		sort: "date"
 	}
+
+	const PAGE_SIZE = 5
+	let currentOffset = 0
 
 	/**
 	 * Enhanced blog search with filtering capabilities
@@ -197,32 +209,50 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	}
 
 	// Apply filters and update UI
-	function applyFilters() {
+	function applyFilters(append = false) {
 		const filters = getFilterState()
 		updateUrl(filters)
 
 		let filteredEntries = filterBlogEntries(blogEntries, filters)
 		filteredEntries = sortBlogEntries(filteredEntries)
 
-		// Clear existing results
-		output!.innerHTML = ""
+		const totalResults = filteredEntries.length
+		const displayedEntries = filteredEntries.slice(0, currentOffset + PAGE_SIZE)
+		const hasMoreResults = totalResults > displayedEntries.length
+
+		if (!append) {
+			// Clear existing results for new search
+			output!.innerHTML = ""
+		}
 
 		// Show empty state if no results
 		if (filteredEntries.length === 0) {
 			const emptyState = new EmptyState().setMessage("No entries found...")
 			output!.appendChild(emptyState)
+			const loadMoreButton = document.getElementById("load-more")
+			if (loadMoreButton) loadMoreButton.classList.add("hidden")
 			return
 		}
 
 		// Create document fragment for performance
 		const fragment = document.createDocumentFragment()
 
-		filteredEntries.forEach((entry) => {
+		const entriesToAdd = append
+			? filteredEntries.slice(currentOffset, currentOffset + PAGE_SIZE)
+			: displayedEntries
+
+		entriesToAdd.forEach((entry) => {
 			const searchCard = new Card().fromBlogEntry(entry)
 			fragment.appendChild(searchCard)
 		})
 
 		output!.appendChild(fragment)
+
+		// Show or hide the load more button
+		const loadMoreButton = document.getElementById("load-more")
+		if (loadMoreButton) {
+			loadMoreButton.classList.toggle("hidden", !hasMoreResults)
+		}
 	}
 
 	// Initialize filters from URL
@@ -236,6 +266,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		tagFilter.value = tag
 		yearFilter.value = year
 
+		currentOffset = 0
 		applyFilters()
 	}
 
@@ -244,15 +275,30 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	queryInput.addEventListener("input", () => {
 		clearTimeout(debounceTimer)
 		debounceTimer = window.setTimeout(() => {
+			currentOffset = 0
 			applyFilters()
 		}, 300)
 	})
 
-	tagFilter.addEventListener("change", applyFilters)
-	yearFilter.addEventListener("change", applyFilters)
+	tagFilter.addEventListener("change", () => {
+		currentOffset = 0
+		applyFilters()
+	})
+
+	yearFilter.addEventListener("change", () => {
+		currentOffset = 0
+		applyFilters()
+	})
+
+	// Load more button
+	document.getElementById("load-more")?.addEventListener("click", () => {
+		currentOffset += PAGE_SIZE
+		applyFilters(true)
+	})
 
 	// Initialize on page load
 	document.addEventListener("DOMContentLoaded", () => {
+		currentOffset = 0
 		initializeFromUrl()
 	})
 	// that should do it 🧙
