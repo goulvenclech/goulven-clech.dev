@@ -73,6 +73,7 @@ export default defineConfig({
       CATALOGUE_PASSWORD: envField.string({ context: "client", access: "public" }),
       IGDB_ID: envField.string({ context: "client", access: "public" }),
       IGDB_SECRET: envField.string({ context: "client", access: "public" }),
+      BGG_TOKEN: envField.string({ context: "client", access: "public", default: "" }),
     },
   },
 
