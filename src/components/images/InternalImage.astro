@@ -10,8 +10,8 @@ import type { Marker } from "./Image.astro" // only for typing, no runtime cost
 interface Props {
 	source: any
 	alt: string
-	goodQualityURL: { src: string }
-	imageWidth: number
+	goodQualityURL?: { src: string }
+	width: number
 	height?: number
 	formats?: string[]
 	class?: string
@@ -24,7 +24,7 @@ const {
 	source,
 	alt,
 	goodQualityURL,
-	imageWidth,
+	width,
 	height,
 	formats,
 	class: className = "",
@@ -40,9 +40,11 @@ const {
 			{...rest}
 			src={source.src}
 			alt={alt}
-			data-zoomable
-			data-zoom-src={goodQualityURL.src}
-			width={imageWidth}
+			{...(goodQualityURL && {
+				"data-zoomable": true,
+				"data-zoom-src": goodQualityURL.src,
+			})}
+			width={width}
 			height={height}
 			class={className}
 		/>
@@ -51,10 +53,12 @@ const {
 			{...rest}
 			src={source}
 			alt={alt}
-			data-zoomable
-			data-zoom-src={goodQualityURL.src}
+			{...(goodQualityURL && {
+				"data-zoomable": true,
+				"data-zoom-src": goodQualityURL.src,
+			})}
 			data-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
-			width={imageWidth}
+			width={width}
 			height={height}
 			formats={formats ?? ["webp"]}
 			class={className}

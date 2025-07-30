@@ -219,7 +219,7 @@
   }
 
   .card .card-image img {
-    @apply h-full! w-full! object-cover rounded-none!;
+    @apply h-full! w-full! object-cover rounded-none;
   }
 
 	.legend {
@@ -325,7 +325,7 @@
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply inline-flex items-center justify-center h-3 w-3 text-xs pt-0.75 leading-none font-bold text-body-light dark:text-body-dark;
+		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pt-[2.5px] leading-none font-bold text-body-light dark:text-body-dark;
 		font-feature-settings: 'lnum';
 	}
 

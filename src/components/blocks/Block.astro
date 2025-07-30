@@ -1,6 +1,6 @@
 ---
 import type { ImageMetadata } from "astro"
-import Image from "../images/Image.astro"
+import InternalImage from "../images/InternalImage.astro"
 /**
  * Used to present an something as a card, also a link to that something.
  */
@@ -11,24 +11,47 @@ interface Props {
 	to: string
 }
 
+const width = 500
+const height = 500
+const formats = ["webp", "avif"]
+
 const { image, imageDark, imageAlt = "", to } = Astro.props
 ---
 
 <a href={to} class="card">
-	{
-		image && (
-			<div class="card-image">
-				<Image
-					src={image}
-					srcDark={imageDark ? imageDark : undefined}
-					width={500}
-					height={500}
-					alt={imageAlt}
-					className="w-full h-full"
-				/>
-			</div>
-		)
-	}
+	<div class="card-image">
+		{
+			image &&
+				(!imageDark ? (
+					<InternalImage
+						source={image}
+						alt={imageAlt}
+						width={width}
+						height={height}
+						formats={formats}
+					/>
+				) : (
+					<>
+						<InternalImage
+							source={image}
+							alt={imageAlt}
+							width={width}
+							height={height}
+							formats={formats}
+							class="dark:hidden"
+						/>
+						<InternalImage
+							source={imageDark}
+							alt={imageAlt}
+							width={width}
+							height={height}
+							formats={formats}
+							class="hidden dark:block"
+						/>
+					</>
+				))
+		}
+	</div>
 	<article>
 		<slot />
 	</article>

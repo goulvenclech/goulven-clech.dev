@@ -43,7 +43,6 @@ const {
 	width,
 	height,
 	formats,
-	className,
 	markers = [],
 	defaultWidth = 600 * 2,
 	hideMarkerLegend = false,
@@ -73,7 +72,7 @@ const goodQualityURL = isStringSource
 const imageWidth = isStringSource ? width || defaultWidth : Math.min(src.width, defaultWidth)
 
 // Dark variant setup (only if provided)
-let placeholderURLDark, goodQualityURLDark, imageWidthDark
+let placeholderURLDark, goodQualityURLDark, widthDark
 if (srcDark) {
 	const isStringSourceDark = typeof srcDark === "string"
 	placeholderURLDark = isStringSourceDark
@@ -90,14 +89,12 @@ if (srcDark) {
 	goodQualityURLDark = isStringSourceDark
 		? { src: srcDark }
 		: await getImage({ src: srcDark, width: srcDark.width })
-	imageWidthDark = isStringSourceDark
-		? width || defaultWidth
-		: Math.min(srcDark.width, defaultWidth)
+	widthDark = isStringSourceDark ? width || defaultWidth : Math.min(srcDark.width, defaultWidth)
 }
 ---
 
-<span class={"inline-block " + (className ?? "")}>
-	<span class="relative inline-block">
+<span class="inline-block w-full">
+	<span class="relative inline-block overflow-hidden rounded">
 		{
 			!srcDark ? (
 				<InternalImage
@@ -105,10 +102,9 @@ if (srcDark) {
 					source={src}
 					alt={alt}
 					goodQualityURL={goodQualityURL}
-					imageWidth={imageWidth}
+					width={imageWidth}
 					height={height}
 					formats={formats}
-					class="w-full overflow-hidden rounded"
 					placeholderURL={placeholderURL}
 					markers={markers}
 				/>
@@ -119,10 +115,10 @@ if (srcDark) {
 						source={src}
 						alt={alt}
 						goodQualityURL={goodQualityURL}
-						imageWidth={imageWidth}
+						width={imageWidth}
 						height={height}
 						formats={formats}
-						class="w-full overflow-hidden rounded dark:hidden"
+						class="dark:hidden"
 						placeholderURL={placeholderURL}
 						markers={markers}
 					/>
@@ -131,10 +127,10 @@ if (srcDark) {
 						source={srcDark}
 						alt={alt}
 						goodQualityURL={goodQualityURLDark!}
-						imageWidth={imageWidthDark!}
+						width={widthDark!}
 						height={height}
 						formats={formats}
-						class="hidden w-full overflow-hidden rounded dark:block"
+						class="hidden dark:block"
 						placeholderURL={placeholderURLDark}
 						markers={markers}
 					/>
@@ -153,9 +149,9 @@ if (srcDark) {
 			})
 		}
 	</span>
-	<span class="inline-flex flex-wrap">
-		{
-			!hideMarkerLegend && (
+	{
+		!hideMarkerLegend && (
+			<span class="inline-flex flex-wrap">
 				<slot name="marker-legends">
 					{markers.length > 0 &&
 						markers.map((marker) => {
@@ -163,12 +159,12 @@ if (srcDark) {
 							return (
 								<span class="mr-2.5">
 									<Component>{marker.key}</Component>
-									{marker.legend}
+									<span class="ml-1">{marker.legend}</span>
 								</span>
 							)
 						})}
 				</slot>
-			)
-		}
-	</span>
+			</span>
+		)
+	}
 </span>
