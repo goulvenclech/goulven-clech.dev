@@ -3,6 +3,7 @@ import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
+import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
 
 function getClient(): Client {
@@ -216,6 +217,18 @@ export async function POST({ request }: APIContext): Promise<Response> {
         if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
         break
       }
+      case "BGG": {
+        const game = await fetchBoardGame(Number(source_id))
+        if (!game) return json({ error: "Board game not found" }, 404)
+
+        const year = game.year ?? "??"
+        source_name = `${game.name} (${year})`
+        source_link = `https://boardgamegeek.com/boardgame/${game.id}`
+        meta = buildBggMeta(game)
+        if (game.image) source_img = game.image
+        break
+      }
+
 
       case "TMDB_MOVIE": {
         const movie = await fetchMovie(Number(source_id))
