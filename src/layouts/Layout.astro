@@ -16,6 +16,9 @@ const { title, description, img } = Astro.props
 ---
 
 <BaseLayout title={title} description={description} img={img}>
+	<Fragment slot="head">
+		<slot name="head" />
+	</Fragment>
 	<main>
 		<slot />
 		<Footer />

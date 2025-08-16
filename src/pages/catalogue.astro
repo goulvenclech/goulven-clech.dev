@@ -13,6 +13,17 @@ const pageTitle = "Catalogue"
 	title={pageTitle}
 	description="Where I keep track of books, movies, songs, video games, and other media I consume."
 >
+	<Fragment slot="head">
+		<link
+			rel="alternate"
+			type="text/plain"
+			href="/catalogue.llm"
+			title="Catalogue (LLM/plain-text)"
+		/>
+		<!-- Optionally hint crawlers via robots meta; human visitors won't see this. -->
+		<meta name="robots" content="index,follow" />
+	</Fragment>
+
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
@@ -38,7 +49,7 @@ const pageTitle = "Catalogue"
 			<select id="source-filter" class="border-b-[0.1rem] border-dotted">
 				<option value="" selected>⭐ everything</option>
 				<option value="IGDB">🎮 video games</option>
-                                <option value="BGG">🎲 board games</option>
+				<option value="BGG">🎲 board games</option>
 				<option value="TMDB_MOVIE">🎬 movies</option>
 				<option value="TMDB_TV">📺 shows</option>
 				<option value="SPOTIFY">💿 albums</option>
@@ -72,10 +83,25 @@ const pageTitle = "Catalogue"
 		</div>
 		<button id="load-more" class="button" type="button"> Load more </button>
 		<side-note>
-                        Images and datas are fetched from <a href="https://igdb.com/"><abbr title="The Internet Game Database">IGDB</abbr></a> for video games, <a href="https://boardgamegeek.com"><abbr title="Board Game Geek">BGG</abbr></a> for board games, <a href="https://themoviedb.org/"><abbr title="The Movie DataBase">TMDB</abbr></a> for movies and shows, and <a href="https://spotify.com/">Spotify</a> for albums. Their licenses
+			Images and datas are fetched from <a href="https://igdb.com/"
+				><abbr title="The Internet Game Database">IGDB</abbr></a
+			> for video games, <a href="https://boardgamegeek.com"
+				><abbr title="Board Game Geek">BGG</abbr></a
+			> for board games, <a href="https://themoviedb.org/"
+				><abbr title="The Movie DataBase">TMDB</abbr></a
+			> for movies and shows, and <a href="https://spotify.com/">Spotify</a> for albums. Their licenses
 			apply.
 		</side-note>
 	</section>
+
+	<!-- Non-JS fallback: show a tiny link so text-only agents and no-JS users can reach LLM version -->
+	<noscript>
+		<p class="sr-only">
+			This page has a text-only version for crawlers and LLMs: <a href="/catalogue.llm"
+				>/catalogue.llm</a
+			>
+		</p>
+	</noscript>
 
 	<script>
 		import type { Emotion } from "./api/catalogue/emotions"

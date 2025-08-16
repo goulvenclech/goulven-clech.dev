@@ -34,6 +34,8 @@ const {
 		<meta property="og:type" content="website" />
 		{img && <meta property="og:image" content={img} />}
 		<link rel="icon" href="/favicon.svg" />
+		<!-- Page-specific head additions -->
+		<slot name="head" />
 		<script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
 		></script>
 		<title>{title} — Goulven Clec'h</title>
