@@ -19,46 +19,38 @@ function getClient(): Client {
 async function computeImageFocusY(url: string, bands = 20): Promise<number | null> {
   try {
     const res = await fetch(url)
-    if (!res.ok) return null
+    if (!res.ok) {
+      console.error("Failed to fetch image: ", res.statusText)
+      return null
+    }
     const buffer = Buffer.from(await res.arrayBuffer())
 
     // Resize to a manageable width and convert to grayscale to limit work
-    const base = sharp(buffer).resize({ width: 200 }).greyscale()
-    const metadata = await base.metadata()
-    if (!metadata.height || !metadata.width) return null
+		const base = sharp(buffer).resize({ width: 256 }).greyscale()
 
-    const bandHeight = Math.max(1, Math.floor(metadata.height / bands))
+    const { width, height } = await base.metadata()
+    if (!width || !height) {
+      console.error("Failed to retrieve image metadata")
+      return null
+    }
+
+    const bandHeight = Math.max(1, Math.floor(height / bands))
     let bestBand = 0
     let bestVariance = -1
 
     for (let i = 0; i < bands; i++) {
       const top = i * bandHeight
-      const height = i === bands - 1 ? metadata.height - top : bandHeight
-      const bandBuf = await base
-        .clone()
-        .extract({ left: 0, top, width: metadata.width, height })
-        .raw()
-        .toBuffer()
+      const h = i === bands - 1 ? height - top : bandHeight
 
-      let sum = 0
-      let sumSq = 0
-      for (const v of bandBuf) {
-        sum += v
-        sumSq += v * v
-      }
-      const mean = sum / bandBuf.length
-      const variance = sumSq / bandBuf.length - mean * mean
-
-      if (variance > bestVariance) {
-        bestVariance = variance
-        bestBand = i
-      }
+      const part = await base.clone().extract({ left: 0, top, width, height: h }).toBuffer()
+      const stats = await sharp(part).greyscale().stats()
+      // Sharp exposes directly an estimate of "sharpness" (Laplacian)
+      if (stats.sharpness > bestVariance) { bestVariance = stats.sharpness; bestBand = i; }
     }
-
-    const focus = ((bestBand + 0.5) * bandHeight) / metadata.height
+    const focus = ((bestBand + 0.5) * bandHeight) / height
     return Math.round(focus * 100)
-  } catch (err) {
-    console.error("computeImageFocusY failed", err)
+  } catch (error) {
+    console.error("computeImageFocusY failed", error)
     return null
   }
 }
