@@ -12,53 +12,61 @@ function getClient(): Client {
 }
 
 /**
- * Computes the vertical focus point of an image by comparing pixel variance
- * across horizontal bands. Returns the percentage (0-100) from the top where
- * the most visually "interesting" area lies.
+ * Computes the vertical focus point of an image by scanning a sliding horizontal
+ * window (25px tall, moving down by 5px) and picking the position with the highest
+ * entropy. Returns the percentage (0-100) from the top where the most visually
+ * "interesting" area lies.
  */
-async function computeImageFocusY(url: string, bands = 10): Promise<number | null> {
+async function computeImageFocusY(url: string): Promise<number | null> {
   try {
-    const res = await fetch(url)
+    const res = await fetch(url);
     if (!res.ok) {
-      console.error("Failed to fetch image: ", res.statusText)
-      return null
+      console.error("Failed to fetch image:", res.statusText);
+      return null;
     }
-    const buffer = Buffer.from(await res.arrayBuffer())
+    const buffer = Buffer.from(await res.arrayBuffer());
 
     // Resize to a manageable width to limit work
-    const base = sharp(buffer)
-      .resize({ width: 256, withoutEnlargement: true })
+    const base = sharp(buffer).resize({ width: 256, withoutEnlargement: true });
 
     // metadata() returns input size; get the resized output dimensions instead
-    const { info } = await base.clone().toBuffer({ resolveWithObject: true })
-    const { width, height } = info
+    const { info } = await base.clone().toBuffer({ resolveWithObject: true });
+    const { width, height } = info;
     if (!width || !height) {
-      console.error("Failed to retrieve image metadata")
-      return null
+      console.error("Failed to retrieve image metadata");
+      return null;
     }
 
-    const bandHeight = Math.max(1, Math.floor(height / bands))
-    let bestBand = 0
-    let bestVariance = -Infinity
+    // Sliding-window parameters (fixed by design choice)
+    const slidingWindowHeight = Math.min(25, height);
+    const slidingStep = 5;
 
-    for (let i = 0; i < bands; i++) {
-      const top = i * bandHeight
-      const h = i === bands - 1 ? height - top : bandHeight
+    let bestTop = 0;
+    let bestEntropy = -Infinity;
 
-      const part = await base.clone().extract({ left: 0, top, width, height: h }).toBuffer()
-      const stats = await sharp(part).greyscale().stats()
-      // Sharp exposes directly an estimate of "sharpness" (Laplacian)
-      if (stats.sharpness > bestVariance) { bestVariance = stats.sharpness; bestBand = i; }
+    // Ensure we also evaluate the last possible window that touches the bottom
+    const lastTop = Math.max(0, height - slidingWindowHeight);
+
+    for (let top = 0; top <= lastTop; top += slidingStep) {
+      // Writing to buffer THEN re-instantiating before stats()
+      const partBuffer = await base
+        .clone()
+        .extract({ left: 0, top, width, height: slidingWindowHeight })
+        .toBuffer();
+
+      const stats = await sharp(partBuffer).greyscale().stats();
+      if (stats.entropy > bestEntropy) {
+        bestEntropy = stats.entropy;
+        bestTop = top;
+      }
     }
-    console.log("BestBand:", bestBand)
-    console.log("bandHeight:", bandHeight)
-    console.log("height:", height)
-    const focus = ((bestBand + 0.5) * bandHeight) / height
-    console.log("focus:", focus)
-    return Math.round(focus * 100)
-  } catch (error) {
-    console.error("computeImageFocusY failed", error)
-    return null
+
+    // In case height < slidingStep, loop above still runs once at top = 0.
+    const focus = (bestTop + slidingWindowHeight / 2) / height;
+    return Math.round(focus * 100);
+  } catch (err) {
+    console.error("Unexpected error while computing image focus:", err);
+    return null;
   }
 }
 
