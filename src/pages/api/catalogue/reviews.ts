@@ -12,31 +12,45 @@ function getClient(): Client {
 }
 
 /**
- * Computes the vertical focus point of an image by comparing entropy across bands.
- * Returns the percentage (0-100) from the top where the most interesting area lies.
+ * Computes the vertical focus point of an image by comparing pixel variance
+ * across horizontal bands. Returns the percentage (0-100) from the top where
+ * the most visually "interesting" area lies.
  */
 async function computeImageFocusY(url: string, bands = 20): Promise<number | null> {
   try {
     const res = await fetch(url)
     if (!res.ok) return null
     const buffer = Buffer.from(await res.arrayBuffer())
-    const img = sharp(buffer)
-    const metadata = await img.metadata()
+
+    // Resize to a manageable width and convert to grayscale to limit work
+    const base = sharp(buffer).resize({ width: 200 }).greyscale()
+    const metadata = await base.metadata()
     if (!metadata.height || !metadata.width) return null
 
-    const bandHeight = Math.floor(metadata.height / bands)
+    const bandHeight = Math.max(1, Math.floor(metadata.height / bands))
     let bestBand = 0
-    let bestEntropy = -1
+    let bestVariance = -1
 
     for (let i = 0; i < bands; i++) {
       const top = i * bandHeight
       const height = i === bands - 1 ? metadata.height - top : bandHeight
-      const stats = await img
+      const bandBuf = await base
         .clone()
         .extract({ left: 0, top, width: metadata.width, height })
-        .stats()
-      if (stats.entropy > bestEntropy) {
-        bestEntropy = stats.entropy
+        .raw()
+        .toBuffer()
+
+      let sum = 0
+      let sumSq = 0
+      for (const v of bandBuf) {
+        sum += v
+        sumSq += v * v
+      }
+      const mean = sum / bandBuf.length
+      const variance = sumSq / bandBuf.length - mean * mean
+
+      if (variance > bestVariance) {
+        bestVariance = variance
         bestBand = i
       }
     }
