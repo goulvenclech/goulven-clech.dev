@@ -5,9 +5,69 @@ import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
+import sharp from "sharp"
 
 function getClient(): Client {
   return createClient({ url: import.meta.env.TURSO_URL, authToken: import.meta.env.TURSO_TOKEN })
+}
+
+/**
+ * Computes the vertical focus point of an image by scanning a sliding horizontal
+ * window (25px tall, moving down by 5px) and picking the position with the highest
+ * entropy. Returns the percentage (0-100) from the top where the most visually
+ * "interesting" area lies.
+ */
+async function computeImageFocusY(url: string): Promise<number | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error("Failed to fetch image:", res.statusText);
+      return null;
+    }
+    const buffer = Buffer.from(await res.arrayBuffer());
+
+    // Resize to a manageable width to limit work
+    const base = sharp(buffer).resize({ width: 256, withoutEnlargement: true });
+
+    // metadata() returns input size; get the resized output dimensions instead
+    const { info } = await base.clone().toBuffer({ resolveWithObject: true });
+    const { width, height } = info;
+    if (!width || !height) {
+      console.error("Failed to retrieve image metadata");
+      return null;
+    }
+
+    // Sliding-window parameters (fixed by design choice)
+    const slidingWindowHeight = Math.min(50, height);
+    const slidingStep = 5;
+
+    let bestTop = 0;
+    let bestEntropy = -Infinity;
+
+    // Ensure we also evaluate the last possible window that touches the bottom
+    const lastTop = Math.max(0, height - slidingWindowHeight);
+
+    for (let top = 0; top <= lastTop; top += slidingStep) {
+      // Writing to buffer THEN re-instantiating before stats()
+      const partBuffer = await base
+        .clone()
+        .extract({ left: 0, top, width, height: slidingWindowHeight })
+        .toBuffer();
+
+      const stats = await sharp(partBuffer).greyscale().stats();
+      if (stats.entropy > bestEntropy) {
+        bestEntropy = stats.entropy;
+        bestTop = top;
+      }
+    }
+
+    // In case height < slidingStep, loop above still runs once at top = 0.
+    const focus = (bestTop + slidingWindowHeight / 2) / height;
+    return Math.round(focus * 100);
+  } catch (err) {
+    console.error("Unexpected error while computing image focus:", err);
+    return null;
+  }
 }
 
 /**
@@ -21,6 +81,7 @@ export interface Review {
   source_name: string
   source_link: string
   source_img: string
+  source_img_focus_y: number | null
   rating: number // 1-5
   emotions: number[] // Emotion IDs
   comment: string
@@ -204,6 +265,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
     let source_link = ""
     let source_img = ""
     let meta = ""
+    let source_img_focus_y: number | null = null
 
     switch (source) {
       case "IGDB": {
@@ -271,19 +333,22 @@ export async function POST({ request }: APIContext): Promise<Response> {
         break
     }
 
+    if (source_img) source_img_focus_y = await computeImageFocusY(source_img)
+
     // Insert row
     const client = getClient()
     await client.execute({
       sql: `INSERT INTO reviews
-            (source, source_id, source_name, source_link, source_img,
+            (source, source_id, source_name, source_link, source_img, source_img_focus_y,
              rating, emotions, comment, meta, inserted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         source,
         source_id,
         source_name,
         source_link,
         source_img,
+        source_img_focus_y,
         rating,
         JSON.stringify(emotions),
         comment,
