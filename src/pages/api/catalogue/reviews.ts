@@ -16,7 +16,7 @@ function getClient(): Client {
  * across horizontal bands. Returns the percentage (0-100) from the top where
  * the most visually "interesting" area lies.
  */
-async function computeImageFocusY(url: string, bands = 20): Promise<number | null> {
+async function computeImageFocusY(url: string, bands = 10): Promise<number | null> {
   try {
     const res = await fetch(url)
     if (!res.ok) {
@@ -25,10 +25,13 @@ async function computeImageFocusY(url: string, bands = 20): Promise<number | nul
     }
     const buffer = Buffer.from(await res.arrayBuffer())
 
-    // Resize to a manageable width and convert to grayscale to limit work
-		const base = sharp(buffer).resize({ width: 256 }).greyscale()
+    // Resize to a manageable width to limit work
+    const base = sharp(buffer)
+      .resize({ width: 256, withoutEnlargement: true })
 
-    const { width, height } = await base.metadata()
+    // metadata() returns input size; get the resized output dimensions instead
+    const { info } = await base.clone().toBuffer({ resolveWithObject: true })
+    const { width, height } = info
     if (!width || !height) {
       console.error("Failed to retrieve image metadata")
       return null
@@ -36,7 +39,7 @@ async function computeImageFocusY(url: string, bands = 20): Promise<number | nul
 
     const bandHeight = Math.max(1, Math.floor(height / bands))
     let bestBand = 0
-    let bestVariance = -1
+    let bestVariance = -Infinity
 
     for (let i = 0; i < bands; i++) {
       const top = i * bandHeight
@@ -47,7 +50,11 @@ async function computeImageFocusY(url: string, bands = 20): Promise<number | nul
       // Sharp exposes directly an estimate of "sharpness" (Laplacian)
       if (stats.sharpness > bestVariance) { bestVariance = stats.sharpness; bestBand = i; }
     }
+    console.log("BestBand:", bestBand)
+    console.log("bandHeight:", bandHeight)
+    console.log("height:", height)
     const focus = ((bestBand + 0.5) * bandHeight) / height
+    console.log("focus:", focus)
     return Math.round(focus * 100)
   } catch (error) {
     console.error("computeImageFocusY failed", error)
