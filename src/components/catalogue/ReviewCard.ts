@@ -44,6 +44,11 @@ export class ReviewCard extends HTMLElement {
       ? this.review.source_img
       : "https://picsum.photos/seed/" + this.review.source_id + "/800"
 
+    const position =
+      typeof this.review.source_img_focus_y === "number"
+        ? ` style="object-position: 50% ${this.review.source_img_focus_y}%"`
+        : ""
+
     const reviewEmotionNames = this.review.emotions
       .map((id) => this.emotionsMap.get(id)?.name)
       .filter((name): name is string => !!name)
@@ -55,7 +60,7 @@ export class ReviewCard extends HTMLElement {
     this.innerHTML = `
       <a href="${url}" target="_blank" rel="noopener" class="card">
         <div class="card-image">
-          <img src="${image}" alt="Cover for ${this.review.source_name || this.review.source_id}" />
+          <img src="${image}" alt="Cover for ${this.review.source_name || this.review.source_id}"${position} />
         </div>
         <article>
           <h3>${this.review.source_name || this.review.source_id}</h3>

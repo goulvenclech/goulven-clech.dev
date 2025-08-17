@@ -5,9 +5,48 @@ import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
+import sharp from "sharp"
 
 function getClient(): Client {
   return createClient({ url: import.meta.env.TURSO_URL, authToken: import.meta.env.TURSO_TOKEN })
+}
+
+/**
+ * Computes the vertical focus point of an image by comparing entropy across bands.
+ * Returns the percentage (0-100) from the top where the most interesting area lies.
+ */
+async function computeImageFocusY(url: string, bands = 20): Promise<number | null> {
+  try {
+    const res = await fetch(url)
+    if (!res.ok) return null
+    const buffer = Buffer.from(await res.arrayBuffer())
+    const img = sharp(buffer)
+    const metadata = await img.metadata()
+    if (!metadata.height || !metadata.width) return null
+
+    const bandHeight = Math.floor(metadata.height / bands)
+    let bestBand = 0
+    let bestEntropy = -1
+
+    for (let i = 0; i < bands; i++) {
+      const top = i * bandHeight
+      const height = i === bands - 1 ? metadata.height - top : bandHeight
+      const stats = await img
+        .clone()
+        .extract({ left: 0, top, width: metadata.width, height })
+        .stats()
+      if (stats.entropy > bestEntropy) {
+        bestEntropy = stats.entropy
+        bestBand = i
+      }
+    }
+
+    const focus = ((bestBand + 0.5) * bandHeight) / metadata.height
+    return Math.round(focus * 100)
+  } catch (err) {
+    console.error("computeImageFocusY failed", err)
+    return null
+  }
 }
 
 /**
@@ -21,6 +60,7 @@ export interface Review {
   source_name: string
   source_link: string
   source_img: string
+  source_img_focus_y: number | null
   rating: number // 1-5
   emotions: number[] // Emotion IDs
   comment: string
@@ -204,6 +244,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
     let source_link = ""
     let source_img = ""
     let meta = ""
+    let source_img_focus_y: number | null = null
 
     switch (source) {
       case "IGDB": {
@@ -271,19 +312,22 @@ export async function POST({ request }: APIContext): Promise<Response> {
         break
     }
 
+    if (source_img) source_img_focus_y = await computeImageFocusY(source_img)
+
     // Insert row
     const client = getClient()
     await client.execute({
       sql: `INSERT INTO reviews
-            (source, source_id, source_name, source_link, source_img,
+            (source, source_id, source_name, source_link, source_img, source_img_focus_y,
              rating, emotions, comment, meta, inserted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         source,
         source_id,
         source_name,
         source_link,
         source_img,
+        source_img_focus_y,
         rating,
         JSON.stringify(emotions),
         comment,
