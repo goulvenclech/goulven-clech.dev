@@ -38,7 +38,7 @@ async function computeImageFocusY(url: string): Promise<number | null> {
     }
 
     // Sliding-window parameters (fixed by design choice)
-    const slidingWindowHeight = Math.min(25, height);
+    const slidingWindowHeight = Math.min(50, height);
     const slidingStep = 5;
 
     let bestTop = 0;
