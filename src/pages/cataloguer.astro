@@ -50,10 +50,29 @@ const pageTitle = "Cataloguer"
 					</div>
 				</fieldset>
 				<button type="submit" class="button col-span-2"> Submit Review </button>
-			</form>
-		</section>
-	</section>
-	<script>
+                        </form>
+                </section>
+       </section>
+       <div
+               id="focus-modal"
+               class="fixed inset-0 z-10 hidden place-items-center bg-black/70"
+       >
+               <div class="flex max-h-[70vh] flex-col gap-4 rounded bg-white p-4 dark:bg-neutral-900">
+                       <div class="relative max-h-[60vh] overflow-hidden">
+                               <img id="focus-image" class="block max-h-[60vh]" alt="" />
+                               <div
+                                       id="focus-rect"
+                                       class="pointer-events-none absolute inset-x-0 border-2 border-sky-500"
+                                       style="height:40%;top:50%;transform:translateY(-50%);"></div>
+                       </div>
+                       <input id="focus-range" type="range" min="0" max="100" value="50" />
+                       <div class="flex justify-end gap-2">
+                               <button type="button" id="focus-cancel">Cancel</button>
+                               <button type="button" id="focus-confirm" class="button">Use focus</button>
+                       </div>
+               </div>
+       </div>
+       <script>
 		import type { Emotion } from "./api/catalogue/emotions"
 
 		// If server-side fetch failed, try to fetch emotions client-side
@@ -86,12 +105,63 @@ const pageTitle = "Cataloguer"
 			}
 		}
 
-		document.addEventListener("DOMContentLoaded", loadEmotions)
+               document.addEventListener("DOMContentLoaded", loadEmotions)
 
-		// Form validation
-		const form = document.querySelector("form")
-		form?.addEventListener("submit", async (event) => {
-			event.preventDefault() // stay on page
+               async function pickFocus(imgSrc: string, initial: number | null): Promise<number | null> {
+                       const modal = document.getElementById("focus-modal") as HTMLDivElement
+                       const img = modal.querySelector("#focus-image") as HTMLImageElement
+                       const rect = modal.querySelector("#focus-rect") as HTMLDivElement
+                       const range = modal.querySelector("#focus-range") as HTMLInputElement
+                       const confirm = modal.querySelector("#focus-confirm") as HTMLButtonElement
+                       const cancel = modal.querySelector("#focus-cancel") as HTMLButtonElement
+
+                       return new Promise((resolve) => {
+                               img.src = imgSrc
+                               range.value = String(initial ?? 50)
+                               rect.style.top = range.value + "%"
+
+                               function update() {
+                                       rect.style.top = range.value + "%"
+                               }
+
+                               function onImageClick(event: MouseEvent) {
+                                       const bounds = img.getBoundingClientRect()
+                                       const y = ((event.clientY - bounds.top) / bounds.height) * 100
+                                       range.value = String(Math.round(y))
+                                       update()
+                               }
+
+                               function clean() {
+                                       range.removeEventListener("input", update)
+                                       img.removeEventListener("click", onImageClick)
+                                       confirm.removeEventListener("click", onConfirm)
+                                       cancel.removeEventListener("click", onCancel)
+                                       modal.classList.add("hidden")
+                               }
+
+                               function onConfirm() {
+                                       clean()
+                                       resolve(Number(range.value))
+                               }
+
+                               function onCancel() {
+                                       clean()
+                                       resolve(null)
+                               }
+
+                               range.addEventListener("input", update)
+                               img.addEventListener("click", onImageClick)
+                               confirm.addEventListener("click", onConfirm)
+                               cancel.addEventListener("click", onCancel)
+
+                               modal.classList.remove("hidden")
+                       })
+               }
+
+               // Form validation
+               const form = document.querySelector("form")
+               form?.addEventListener("submit", async (event) => {
+                       event.preventDefault() // stay on page
 
 			// Check if the form is valid
 			const data = new FormData(form)
@@ -105,15 +175,34 @@ const pageTitle = "Cataloguer"
 				return
 			}
 
-			const payload = {
-				password: data.get("password"),
-				date: data.get("date"),
-				source: data.get("source"),
-				source_id: data.get("source_id"),
-				rating: Number(data.get("rating")),
-				emotions,
-				comment: data.get("comment") ?? "",
-			}
+                        const payload = {
+                                password: data.get("password"),
+                                date: data.get("date"),
+                                source: data.get("source"),
+                                source_id: data.get("source_id"),
+                                rating: Number(data.get("rating")),
+                                emotions,
+                                comment: data.get("comment") ?? "",
+                        }
+
+                        const imgRes = await fetch("/api/catalogue/image", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                        source: payload.source,
+                                        source_id: payload.source_id,
+                                }),
+                        })
+
+                        if (!imgRes.ok) {
+                                alert("Cannot load image for focus selection")
+                                return
+                        }
+
+                        const { source_img, source_img_focus_y } = await imgRes.json()
+                        const focus = await pickFocus(source_img, source_img_focus_y)
+                        if (focus === null) return
+                        ;(payload as any).focus_y = focus
 
 			try {
 				const res = await fetch("/api/catalogue/reviews", {

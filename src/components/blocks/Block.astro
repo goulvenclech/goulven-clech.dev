@@ -1,6 +1,6 @@
 ---
 import type { ImageMetadata } from "astro"
-import InternalImage from "../images/InternalImage.astro"
+import Image from "../images/Image.astro"
 /**
  * Used to present an something as a card, also a link to that something.
  */
@@ -23,20 +23,15 @@ const { image, imageDark, imageAlt = "", to, imageFocusY } = Astro.props
 		style={typeof imageFocusY === "number" ? `--image-focus-y: ${imageFocusY}%` : undefined}
 	>
 		{
-			image &&
-				(!imageDark ? (
-					<InternalImage source={image} alt={imageAlt} formats={formats} />
-				) : (
-					<>
-						<InternalImage source={image} alt={imageAlt} formats={formats} class="dark:hidden" />
-						<InternalImage
-							source={imageDark}
-							alt={imageAlt}
-							formats={formats}
-							class="hidden dark:block"
-						/>
-					</>
-				))
+                        image &&
+                                (!imageDark ? (
+                                        <Image src={image} alt={imageAlt} formats={formats} />
+                                ) : (
+                                        <>
+                                                <Image src={image} alt={imageAlt} formats={formats} class="dark:hidden" />
+                                                <Image src={imageDark} alt={imageAlt} formats={formats} class="hidden dark:block" />
+                                        </>
+                                ))
 		}
 	</div>
 	<article>

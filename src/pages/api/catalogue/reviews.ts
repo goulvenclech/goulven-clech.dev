@@ -180,6 +180,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
       rating,
       emotions,
       comment = "",
+      focus_y,
     }: {
       date?: string
       source: string
@@ -187,6 +188,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
       rating: number
       emotions: number[]
       comment?: string
+      focus_y?: number
     } = body
 
     const isValid =
@@ -206,7 +208,10 @@ export async function POST({ request }: APIContext): Promise<Response> {
     let source_link = ""
     let source_img = ""
     let meta = ""
-    let source_img_focus_y: number | null = null
+    let source_img_focus_y: number | null =
+      typeof focus_y === "number" && focus_y >= 0 && focus_y <= 100
+        ? Math.round(focus_y)
+        : null
 
     switch (source) {
       case "IGDB": {
@@ -274,7 +279,8 @@ export async function POST({ request }: APIContext): Promise<Response> {
         break
     }
 
-    if (source_img) source_img_focus_y = await computeImageFocusY(source_img)
+    if (source_img && source_img_focus_y === null)
+      source_img_focus_y = await computeImageFocusY(source_img)
 
     // Insert row
     const client = getClient()
