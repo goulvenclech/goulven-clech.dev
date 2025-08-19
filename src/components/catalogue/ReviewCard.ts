@@ -46,7 +46,7 @@ export class ReviewCard extends HTMLElement {
 
     const position =
       typeof this.review.source_img_focus_y === "number"
-        ? ` style="object-position: 50% ${this.review.source_img_focus_y}%"`
+        ? ` style="--image-focus-y: ${this.review.source_img_focus_y}%"`
         : ""
 
     const reviewEmotionNames = this.review.emotions
