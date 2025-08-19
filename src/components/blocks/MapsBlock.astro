@@ -7,10 +7,11 @@ import Block from "./Block.astro"
  * Used to present a Google Maps Place as a card, also a link to that place.
  */
 interface Props {
-	id: string
+        id: string
+        imageFocusY?: number
 }
 
-const { id } = Astro.props
+const { id, imageFocusY } = Astro.props
 
 /**
  * See docs -> https://developers.google.com/maps/documentation/
@@ -59,12 +60,13 @@ function dayOfWeekAsString(i: number): string {
 ---
 
 <Block
-	image={place.photos?.length
-		? `https://places.googleapis.com/v1/${place.photos[0].name}/media` +
-			`?maxHeightPx=500&key=${import.meta.env.MAPS_TOKEN}`
-		: undefined}
-	imageAlt={place.displayName?.text ? `Photo of ${place.displayName.text}` : "Place photo"}
-	to={place.googleMapsUri}
+        image={place.photos?.length
+                ? `https://places.googleapis.com/v1/${place.photos[0].name}/media` +
+                        `?maxHeightPx=500&key=${import.meta.env.MAPS_TOKEN}`
+                : undefined}
+        imageFocusY={imageFocusY}
+        imageAlt={place.displayName?.text ? `Photo of ${place.displayName.text}` : "Place photo"}
+        to={place.googleMapsUri}
 >
 	<h3 id={place.id} class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1">
 		{place.displayName?.text}

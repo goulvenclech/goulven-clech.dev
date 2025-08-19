@@ -9,28 +9,37 @@ import {
  * Used to present an something as a card, also a link to that something.
  */
 interface Props {
-	image?: ImageMetadata | string
-	imageDark?: ImageMetadata | string
-	imageAlt?: string
-	to: string
+        image?: ImageMetadata | string
+        imageFocusY?: number
+        imageDark?: ImageMetadata | string
+        imageDarkFocusY?: number
+        imageAlt?: string
+        to: string
 }
 
 const width = 500
 const height = 500
 const formats = ["webp", "avif"]
 
-const { image, imageDark, imageAlt = "", to } = Astro.props as Props
+const {
+        image,
+        imageFocusY: imageFocusYProp,
+        imageDark,
+        imageDarkFocusY: imageDarkFocusYProp,
+        imageAlt = "",
+        to,
+} = Astro.props as Props
 
-let imageFocusY: number | null = null
-let imageDarkFocusY: number | null = null
+let imageFocusY: number | null = imageFocusYProp ?? null
+let imageDarkFocusY: number | null = imageDarkFocusYProp ?? null
 
-if (image) {
+if (image && imageFocusY === null) {
         if (typeof image === "string") imageFocusY = await computeImageFocusYFromUrl(image)
         else if (typeof image === "object" && "fsPath" in image)
                 imageFocusY = await computeImageFocusYFromFile((image as any).fsPath)
 }
 
-if (imageDark) {
+if (imageDark && imageDarkFocusY === null) {
         if (typeof imageDark === "string")
                 imageDarkFocusY = await computeImageFocusYFromUrl(imageDark)
         else if (typeof imageDark === "object" && "fsPath" in imageDark)

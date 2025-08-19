@@ -8,10 +8,11 @@ import Block from "./Block.astro"
  * @param {string} isbn - What's this exciting book's ISBN?
  */
 interface Props {
-	isbn: string
+        isbn: string
+        imageFocusY?: number
 }
 
-const { isbn } = Astro.props
+const { isbn, imageFocusY } = Astro.props
 
 /**
  * Await fetch function, to the Open Library Api
@@ -32,7 +33,11 @@ const result = await userData
 const book = result[`ISBN:${isbn}`]
 ---
 
-<Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
+<Block
+        image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`}
+        imageFocusY={imageFocusY}
+        to={book.info_url}
+>
 	<h3 id={book.details.title} class="my-0 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
 		{book.details.title}
 	</h3>
