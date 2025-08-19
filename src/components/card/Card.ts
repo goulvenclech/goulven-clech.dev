@@ -1,9 +1,5 @@
 /**
  * A TypeScript web component used to present a blog entry as a card in search results.
- * ⚠️ Duplication of src/components/Card.astro ⚠️
- * Sadly, Astro can't SSR web components yet. So this component is used in the
- * CSR search script. And the Card.astro is used for SSR, for example to render
- * the default results (before the script is loaded or if JS is disabled).
  */
 export class Card extends HTMLElement {
   private cardId!: string
