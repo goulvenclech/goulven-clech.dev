@@ -6,21 +6,21 @@ import Block from "./Block.astro"
  * [WORK IN PROGRESS]
  */
 interface Props {
-        id: string
-        name: string
-        brand: string
-        img: string
-        price: string
-        rating: number
-        ratings_total: string
-        imageFocusY?: number
+	id: string
+	name: string
+	brand: string
+	img: string
+	price: string
+	rating: number
+	ratings_total: string
+	imageFocusY?: number
 }
 
 const { id, name, brand, img, price, rating, ratings_total, imageFocusY } = Astro.props
 ---
 
 <Block image={img} imageFocusY={imageFocusY} to={`https://www.amazon.fr/gp/product/${id}/`}>
-	<h3 id={name} class="my-0 line-clamp-2 text-ellipsis leading-relaxed sm:line-clamp-1">
+	<h3 id={name} class="my-0 line-clamp-2 leading-relaxed text-ellipsis sm:line-clamp-1">
 		{name}
 	</h3>
 	<ul class="m-0 flex list-none flex-col p-0">
