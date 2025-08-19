@@ -222,9 +222,9 @@
     @apply h-full! w-full! object-cover rounded-none;
   }
 
-  @media (min-width: 640px) {
+  @media (width <= theme(--breakpoint-sm)) {
     .card .card-image img {
-      object-position: 50% var(--image-focus-y, 50%);
+      object-position: 50% var(--image-focus-y, 50%)
     }
   }
 
