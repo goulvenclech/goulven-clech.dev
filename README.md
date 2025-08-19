@@ -32,7 +32,7 @@ At its heart, this project looks like any Astro project, you can start by readin
 │   ├── assets/
 │   │   └── base.css
 │   ├── components/
-│   │   └── Card.astro
+│   │   └── Component.astro
 │   ├── layouts/
 │   │   └── Layout.astro
 │   ├── pages/
