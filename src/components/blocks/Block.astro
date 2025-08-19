@@ -12,8 +12,6 @@ interface Props {
 	to: string
 }
 
-const width = 750
-const height = 750
 const formats = ["webp", "avif"]
 
 const { image, imageDark, imageAlt = "", to, imageFocusY } = Astro.props
@@ -27,28 +25,13 @@ const { image, imageDark, imageAlt = "", to, imageFocusY } = Astro.props
 		{
 			image &&
 				(!imageDark ? (
-					<InternalImage
-						source={image}
-						alt={imageAlt}
-						width={width}
-						height={height}
-						formats={formats}
-					/>
+					<InternalImage source={image} alt={imageAlt} formats={formats} />
 				) : (
 					<>
-						<InternalImage
-							source={image}
-							alt={imageAlt}
-							width={width}
-							height={height}
-							formats={formats}
-							class="dark:hidden"
-						/>
+						<InternalImage source={image} alt={imageAlt} formats={formats} class="dark:hidden" />
 						<InternalImage
 							source={imageDark}
 							alt={imageAlt}
-							width={width}
-							height={height}
 							formats={formats}
 							class="hidden dark:block"
 						/>
