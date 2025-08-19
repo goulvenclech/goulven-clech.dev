@@ -5,69 +5,10 @@ import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
 import { buildMovieMeta, buildShowMeta, fetchMovie, fetchShow, posterUrl } from "./sources/tmdb"
 import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
-import sharp from "sharp"
+import { computeImageFocusYFromUrl } from "../../../image-focus"
 
 function getClient(): Client {
-  return createClient({ url: import.meta.env.TURSO_URL, authToken: import.meta.env.TURSO_TOKEN })
-}
-
-/**
- * Computes the vertical focus point of an image by scanning a sliding horizontal
- * window (25px tall, moving down by 5px) and picking the position with the highest
- * entropy. Returns the percentage (0-100) from the top where the most visually
- * "interesting" area lies.
- */
-async function computeImageFocusY(url: string): Promise<number | null> {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.error("Failed to fetch image:", res.statusText);
-      return null;
-    }
-    const buffer = Buffer.from(await res.arrayBuffer());
-
-    // Resize to a manageable width to limit work
-    const base = sharp(buffer).resize({ width: 256, withoutEnlargement: true });
-
-    // metadata() returns input size; get the resized output dimensions instead
-    const { info } = await base.clone().toBuffer({ resolveWithObject: true });
-    const { width, height } = info;
-    if (!width || !height) {
-      console.error("Failed to retrieve image metadata");
-      return null;
-    }
-
-    // Sliding-window parameters (fixed by design choice)
-    const slidingWindowHeight = Math.min(50, height);
-    const slidingStep = 5;
-
-    let bestTop = 0;
-    let bestEntropy = -Infinity;
-
-    // Ensure we also evaluate the last possible window that touches the bottom
-    const lastTop = Math.max(0, height - slidingWindowHeight);
-
-    for (let top = 0; top <= lastTop; top += slidingStep) {
-      // Writing to buffer THEN re-instantiating before stats()
-      const partBuffer = await base
-        .clone()
-        .extract({ left: 0, top, width, height: slidingWindowHeight })
-        .toBuffer();
-
-      const stats = await sharp(partBuffer).greyscale().stats();
-      if (stats.entropy > bestEntropy) {
-        bestEntropy = stats.entropy;
-        bestTop = top;
-      }
-    }
-
-    // In case height < slidingStep, loop above still runs once at top = 0.
-    const focus = (bestTop + slidingWindowHeight / 2) / height;
-    return Math.round(focus * 100);
-  } catch (err) {
-    console.error("Unexpected error while computing image focus:", err);
-    return null;
-  }
+	return createClient({ url: import.meta.env.TURSO_URL, authToken: import.meta.env.TURSO_TOKEN })
 }
 
 /**
@@ -75,106 +16,106 @@ async function computeImageFocusY(url: string): Promise<number | null> {
  * See catalogue.astro and cataloguer.astro for usage.
  */
 export interface Review {
-  id: string
-  source: string
-  source_id: string
-  source_name: string
-  source_link: string
-  source_img: string
-  source_img_focus_y: number | null
-  rating: number // 1-5
-  emotions: number[] // Emotion IDs
-  comment: string
-  inserted_at: string // ISO-8601
-  meta: string
+	id: string
+	source: string
+	source_id: string
+	source_name: string
+	source_link: string
+	source_img: string
+	source_img_focus_y: number | null
+	rating: number // 1-5
+	emotions: number[] // Emotion IDs
+	comment: string
+	inserted_at: string // ISO-8601
+	meta: string
 }
 
 /**
  * Raw row as stored in the database.
  */
 interface DbReviewRow extends Omit<Review, "emotions"> {
-  emotions: string // JSON‑encoded array of emotion IDs
+	emotions: string // JSON‑encoded array of emotion IDs
 }
 
 /**
  * Maps a DB row to the public Review shape.
  */
 const mapRow = (row: DbReviewRow): Review => ({
-  ...row,
-  emotions: JSON.parse(row.emotions ?? "[]") as number[],
+	...row,
+	emotions: JSON.parse(row.emotions ?? "[]") as number[],
 })
 
 /**
  * Returns a JSON response with the given status.
  */
 function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
-  const headers: Record<string, string> = { "Content-Type": "application/json" }
-  if (cacheSeconds)
-    headers["Cache-Control"] =
-      `public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
+	const headers: Record<string, string> = { "Content-Type": "application/json" }
+	if (cacheSeconds)
+		headers["Cache-Control"] =
+			`public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
 
-  return new Response(JSON.stringify(payload), { status, headers })
+	return new Response(JSON.stringify(payload), { status, headers })
 }
 
 /**
  * Builds the SELECT query for GET /reviews based on optional filters.
  */
 function buildSelectQuery({
-  search,
-  rating,
-  emotion,
-  source,
-  limit,
-  offset = 0,
-  sort = "date",
+	search,
+	rating,
+	emotion,
+	source,
+	limit,
+	offset = 0,
+	sort = "date",
 }: {
-  search?: string
-  rating?: number
-  emotion?: number
-  source?: string
-  limit: number
-  offset?: number
-  sort?: "date" | "rating"
+	search?: string
+	rating?: number
+	emotion?: number
+	source?: string
+	limit: number
+	offset?: number
+	sort?: "date" | "rating"
 }): { sql: string; args: (string | number)[] } {
-  const clauses: string[] = []
-  const args: (string | number)[] = []
+	const clauses: string[] = []
+	const args: (string | number)[] = []
 
-  if (search) {
-    clauses.push("(source_name LIKE ? OR comment LIKE ? OR meta LIKE ?)")
-    const like = `%${search}%`
-    args.push(like, like, like)
-  }
+	if (search) {
+		clauses.push("(source_name LIKE ? OR comment LIKE ? OR meta LIKE ?)")
+		const like = `%${search}%`
+		args.push(like, like, like)
+	}
 
-  if (typeof rating === "number") {
-    clauses.push("rating = ?")
-    args.push(rating)
-  }
+	if (typeof rating === "number") {
+		clauses.push("rating = ?")
+		args.push(rating)
+	}
 
-  if (typeof emotion === "number") {
-    // Use EXISTS with json_each to check if the emotion id is present in the JSON array
-    clauses.push(`EXISTS (
+	if (typeof emotion === "number") {
+		// Use EXISTS with json_each to check if the emotion id is present in the JSON array
+		clauses.push(`EXISTS (
       SELECT 1
         FROM json_each(reviews.emotions) AS e
        WHERE e.value = ?
     )`)
-    args.push(emotion)
-  }
+		args.push(emotion)
+	}
 
-  if (source) {
-    clauses.push("source = ?")
-    args.push(source)
-  }
+	if (source) {
+		clauses.push("source = ?")
+		args.push(source)
+	}
 
-  let sql = "SELECT * FROM reviews"
-  if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
-  sql +=
-    sort === "rating"
-      ? " ORDER BY rating DESC, inserted_at DESC LIMIT ? OFFSET ?"
-      : " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
+	let sql = "SELECT * FROM reviews"
+	if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
+	sql +=
+		sort === "rating"
+			? " ORDER BY rating DESC, inserted_at DESC LIMIT ? OFFSET ?"
+			: " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
 
-  args.push(limit, offset)
+	args.push(limit, offset)
 
-  return { sql, args }
+	return { sql, args }
 }
 
 export const prerender = false // API routes should not be pre‑rendered
@@ -183,183 +124,183 @@ export const prerender = false // API routes should not be pre‑rendered
  * Retrieves reviews with optional filters.
  */
 export async function GET({ url }: APIContext): Promise<Response> {
-  try {
-    const search = url.searchParams.get("query")?.trim() || undefined
-    const ratingParam = url.searchParams.get("rating")
-    const rating = ratingParam ? Number(ratingParam) : undefined
-    const emotionParam = url.searchParams.get("emotion")
-    const emotion = emotionParam ? Number(emotionParam) : undefined
-    const source = url.searchParams.get("source") || undefined
-    const sortParam = url.searchParams.get("sort") === "rating" ? "rating" : "date"
-    const limitParam = url.searchParams.get("limit")
-    const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
+	try {
+		const search = url.searchParams.get("query")?.trim() || undefined
+		const ratingParam = url.searchParams.get("rating")
+		const rating = ratingParam ? Number(ratingParam) : undefined
+		const emotionParam = url.searchParams.get("emotion")
+		const emotion = emotionParam ? Number(emotionParam) : undefined
+		const source = url.searchParams.get("source") || undefined
+		const sortParam = url.searchParams.get("sort") === "rating" ? "rating" : "date"
+		const limitParam = url.searchParams.get("limit")
+		const limit = limitParam && /^\d+$/.test(limitParam) ? Math.min(Number(limitParam), 100) : 5
 
-    const offsetParam = url.searchParams.get("offset")
-    const offset = offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
+		const offsetParam = url.searchParams.get("offset")
+		const offset = offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
 
-    const { sql, args } = buildSelectQuery({
-      search,
-      rating,
-      emotion,
-      source,
-      limit: limit + 1, // Get one extra row to check for "hasMore"
-      offset,
-      sort: sortParam,
-    })
+		const { sql, args } = buildSelectQuery({
+			search,
+			rating,
+			emotion,
+			source,
+			limit: limit + 1, // Get one extra row to check for "hasMore"
+			offset,
+			sort: sortParam,
+		})
 
-    const client = getClient()
-    const res = await client.execute({ sql, args })
-    const rows = res.rows as unknown as DbReviewRow[]
+		const client = getClient()
+		const res = await client.execute({ sql, args })
+		const rows = res.rows as unknown as DbReviewRow[]
 
-    const hasMore = rows.length > limit
-    const reviews = rows.slice(0, limit).map(mapRow)
+		const hasMore = rows.length > limit
+		const reviews = rows.slice(0, limit).map(mapRow)
 
-    return json({ reviews, hasMore }, 200, 60) // 1 min cache
-  } catch (err) {
-    console.error("GET /reviews failed:", err)
-    return json({ error: "Failed to fetch reviews" }, 500)
-  }
+		return json({ reviews, hasMore }, 200, 60) // 1 min cache
+	} catch (err) {
+		console.error("GET /reviews failed:", err)
+		return json({ error: "Failed to fetch reviews" }, 500)
+	}
 }
 
 /**
  * Inserts a new review.
  */
 export async function POST({ request }: APIContext): Promise<Response> {
-  try {
-    const body = await request.json()
+	try {
+		const body = await request.json()
 
-    // Basic auth
-    if (body?.password !== import.meta.env.CATALOGUE_PASSWORD) return json({ error: "Unauthorized" }, 401)
+		// Basic auth
+		if (body?.password !== import.meta.env.CATALOGUE_PASSWORD)
+			return json({ error: "Unauthorized" }, 401)
 
-    // Validation
-    const {
-      date,
-      source,
-      source_id,
-      rating,
-      emotions,
-      comment = "",
-    }: {
-      date?: string
-      source: string
-      source_id: string
-      rating: number
-      emotions: number[]
-      comment?: string
-    } = body
+		// Validation
+		const {
+			date,
+			source,
+			source_id,
+			rating,
+			emotions,
+			comment = "",
+		}: {
+			date?: string
+			source: string
+			source_id: string
+			rating: number
+			emotions: number[]
+			comment?: string
+		} = body
 
-    const isValid =
-      source &&
-      source_id &&
-      Number.isInteger(rating) &&
-      rating >= 1 &&
-      rating <= 5 &&
-      Array.isArray(emotions) &&
-      emotions.length > 0 &&
-      emotions.length <= 3
+		const isValid =
+			source &&
+			source_id &&
+			Number.isInteger(rating) &&
+			rating >= 1 &&
+			rating <= 5 &&
+			Array.isArray(emotions) &&
+			emotions.length > 0 &&
+			emotions.length <= 3
 
-    if (!isValid) return json({ error: "Bad Request" }, 400)
+		if (!isValid) return json({ error: "Bad Request" }, 400)
 
-    // Enrich source metadata
-    let source_name = ""
-    let source_link = ""
-    let source_img = ""
-    let meta = ""
-    let source_img_focus_y: number | null = null
+		// Enrich source metadata
+		let source_name = ""
+		let source_link = ""
+		let source_img = ""
+		let meta = ""
+		let source_img_focus_y: number | null = null
 
-    switch (source) {
-      case "IGDB": {
-        const game = await fetchGame(Number(source_id))
-        if (!game) return json({ error: "Game not found" }, 404)
+		switch (source) {
+			case "IGDB": {
+				const game = await fetchGame(Number(source_id))
+				if (!game) return json({ error: "Game not found" }, 404)
 
-        const year = new Date(game.first_release_date * 1000).getFullYear()
-        source_name = `${game.name} (${year})`
-        source_link = `https://www.igdb.com/games/${game.slug}`
-        meta = buildIgdbMeta(game)
-        if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
-        break
-      }
-      case "BGG": {
-        const game = await fetchBoardGame(Number(source_id))
-        if (!game) return json({ error: "Board game not found" }, 404)
+				const year = new Date(game.first_release_date * 1000).getFullYear()
+				source_name = `${game.name} (${year})`
+				source_link = `https://www.igdb.com/games/${game.slug}`
+				meta = buildIgdbMeta(game)
+				if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
+				break
+			}
+			case "BGG": {
+				const game = await fetchBoardGame(Number(source_id))
+				if (!game) return json({ error: "Board game not found" }, 404)
 
-        const year = game.year ?? "??"
-        source_name = `${game.name} (${year})`
-        source_link = `https://boardgamegeek.com/boardgame/${game.id}`
-        meta = buildBggMeta(game)
-        if (game.image) source_img = game.image
-        break
-      }
+				const year = game.year ?? "??"
+				source_name = `${game.name} (${year})`
+				source_link = `https://boardgamegeek.com/boardgame/${game.id}`
+				meta = buildBggMeta(game)
+				if (game.image) source_img = game.image
+				break
+			}
 
+			case "TMDB_MOVIE": {
+				const movie = await fetchMovie(Number(source_id))
+				if (!movie) return json({ error: "Movie not found" }, 404)
 
-      case "TMDB_MOVIE": {
-        const movie = await fetchMovie(Number(source_id))
-        if (!movie) return json({ error: "Movie not found" }, 404)
+				const year = movie.release_date ? new Date(movie.release_date).getFullYear() : "??"
+				source_name = `${movie.title} (${year})`
+				source_link = `https://www.themoviedb.org/movie/${movie.id}`
+				meta = buildMovieMeta(movie)
+				if (movie.poster_path) source_img = posterUrl(movie.poster_path)
+				break
+			}
 
-        const year = movie.release_date ? new Date(movie.release_date).getFullYear() : "??"
-        source_name = `${movie.title} (${year})`
-        source_link = `https://www.themoviedb.org/movie/${movie.id}`
-        meta = buildMovieMeta(movie)
-        if (movie.poster_path) source_img = posterUrl(movie.poster_path)
-        break
-      }
+			case "TMDB_TV": {
+				const show = await fetchShow(Number(source_id))
+				if (!show) return json({ error: "Show not found" }, 404)
 
-      case "TMDB_TV": {
-        const show = await fetchShow(Number(source_id))
-        if (!show) return json({ error: "Show not found" }, 404)
+				const year = show.first_air_date ? new Date(show.first_air_date).getFullYear() : "??"
+				source_name = `${show.name} (${year})`
+				source_link = `https://www.themoviedb.org/tv/${show.id}`
+				meta = buildShowMeta(show)
+				if (show.poster_path) source_img = posterUrl(show.poster_path)
+				break
+			}
 
-        const year = show.first_air_date ? new Date(show.first_air_date).getFullYear() : "??"
-        source_name = `${show.name} (${year})`
-        source_link = `https://www.themoviedb.org/tv/${show.id}`
-        meta = buildShowMeta(show)
-        if (show.poster_path) source_img = posterUrl(show.poster_path)
-        break
-      }
+			case "SPOTIFY": {
+				const album = await fetchAlbum(String(source_id))
+				if (!album) return json({ error: "Album not found" }, 404)
 
-      case "SPOTIFY": {
-        const album = await fetchAlbum(String(source_id))
-        if (!album) return json({ error: "Album not found" }, 404)
+				const year = album.release_date?.slice(0, 4) || "??"
+				source_name = `${album.name} (${year})`
+				source_link = album.external_urls.spotify
+				meta = buildAlbumMeta(album)
+				if (album.images?.length) source_img = albumCoverUrl(album)
+				break
+			}
 
-        const year = album.release_date?.slice(0, 4) || "??"
-        source_name = `${album.name} (${year})`
-        source_link = album.external_urls.spotify
-        meta        = buildAlbumMeta(album)
-        if (album.images?.length) source_img = albumCoverUrl(album)
-        break
-      }
+			default:
+				console.error("Unknown source:", source)
+				break
+		}
 
-      default:
-        console.error("Unknown source:", source)
-        break
-    }
+		if (source_img) source_img_focus_y = await computeImageFocusYFromUrl(source_img)
 
-    if (source_img) source_img_focus_y = await computeImageFocusY(source_img)
-
-    // Insert row
-    const client = getClient()
-    await client.execute({
-      sql: `INSERT INTO reviews
+		// Insert row
+		const client = getClient()
+		await client.execute({
+			sql: `INSERT INTO reviews
             (source, source_id, source_name, source_link, source_img, source_img_focus_y,
              rating, emotions, comment, meta, inserted_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      args: [
-        source,
-        source_id,
-        source_name,
-        source_link,
-        source_img,
-        source_img_focus_y,
-        rating,
-        JSON.stringify(emotions),
-        comment,
-        meta,
-        date ? new Date(date).toISOString() : new Date().toISOString(),
-      ],
-    })
+			args: [
+				source,
+				source_id,
+				source_name,
+				source_link,
+				source_img,
+				source_img_focus_y,
+				rating,
+				JSON.stringify(emotions),
+				comment,
+				meta,
+				date ? new Date(date).toISOString() : new Date().toISOString(),
+			],
+		})
 
-    return json({ ok: true }, 201)
-  } catch (err) {
-    console.error("POST /reviews failed:", err)
-    return json({ error: "Server error" }, 500)
-  }
+		return json({ ok: true }, 201)
+	} catch (err) {
+		console.error("POST /reviews failed:", err)
+		return json({ error: "Server error" }, 500)
+	}
 }

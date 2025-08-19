@@ -1,6 +1,10 @@
 ---
 import type { ImageMetadata } from "astro"
 import InternalImage from "../images/InternalImage.astro"
+import {
+        computeImageFocusYFromFile,
+        computeImageFocusYFromUrl,
+} from "../../image-focus"
 /**
  * Used to present an something as a card, also a link to that something.
  */
@@ -15,44 +19,70 @@ const width = 500
 const height = 500
 const formats = ["webp", "avif"]
 
-const { image, imageDark, imageAlt = "", to } = Astro.props
+const { image, imageDark, imageAlt = "", to } = Astro.props as Props
+
+let imageFocusY: number | null = null
+let imageDarkFocusY: number | null = null
+
+if (image) {
+        if (typeof image === "string") imageFocusY = await computeImageFocusYFromUrl(image)
+        else if (typeof image === "object" && "fsPath" in image)
+                imageFocusY = await computeImageFocusYFromFile((image as any).fsPath)
+}
+
+if (imageDark) {
+        if (typeof imageDark === "string")
+                imageDarkFocusY = await computeImageFocusYFromUrl(imageDark)
+        else if (typeof imageDark === "object" && "fsPath" in imageDark)
+                imageDarkFocusY = await computeImageFocusYFromFile(
+                        (imageDark as any).fsPath,
+                )
+}
+
+const imageStyle =
+        imageFocusY !== null ? `object-position: 50% ${imageFocusY}%` : undefined
+const imageDarkStyle =
+        imageDarkFocusY !== null ? `object-position: 50% ${imageDarkFocusY}%` : imageStyle
 ---
 
 <a href={to} class="card">
 	<div class="card-image">
 		{
 			image &&
-				(!imageDark ? (
-					<InternalImage
-						source={image}
-						alt={imageAlt}
-						width={width}
-						height={height}
-						formats={formats}
-					/>
-				) : (
-					<>
-						<InternalImage
-							source={image}
-							alt={imageAlt}
-							width={width}
-							height={height}
-							formats={formats}
-							class="dark:hidden"
-						/>
-						<InternalImage
-							source={imageDark}
-							alt={imageAlt}
-							width={width}
-							height={height}
-							formats={formats}
-							class="hidden dark:block"
-						/>
-					</>
-				))
-		}
-	</div>
-	<article>
-		<slot />
+                                (!imageDark ? (
+                                        <InternalImage
+                                                source={image}
+                                                alt={imageAlt}
+                                                width={width}
+                                                height={height}
+                                                formats={formats}
+                                                style={imageStyle}
+                                        />
+                                ) : (
+                                        <>
+                                                <InternalImage
+                                                        source={image}
+                                                        alt={imageAlt}
+                                                        width={width}
+                                                        height={height}
+                                                        formats={formats}
+                                                        class="dark:hidden"
+                                                        style={imageStyle}
+                                                />
+                                                <InternalImage
+                                                        source={imageDark}
+                                                        alt={imageAlt}
+                                                        width={width}
+                                                        height={height}
+                                                        formats={formats}
+                                                        class="hidden dark:block"
+                                                        style={imageDarkStyle}
+                                                />
+                                        </>
+                                ))
+                }
+        </div>
+        <article>
+                <slot />
 	</article>
 </a>
