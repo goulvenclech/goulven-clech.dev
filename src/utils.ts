@@ -51,4 +51,5 @@ export interface BlogEntry {
 	imageDark?: { src: string }
 	imageAlt: string
 	isPublished: boolean
+  imageFocusY?: number
 }

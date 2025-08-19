@@ -73,6 +73,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	imageDark: imagesDark.find((image) => image.id === id),
 	imageAlt: data.imageAlt,
 	isPublished: isEntryPublished(data.published, true),
+	imageFocusY: typeof data.cardImageFocusY === "number" ? data.cardImageFocusY : undefined,
 }))
 ---
 

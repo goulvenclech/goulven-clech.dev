@@ -14,6 +14,7 @@ export class Card extends HTMLElement {
   private cardImageDark!: string
   private cardImageAlt!: string
   private cardIsPublished!: string
+  private cardImageFocusY!: string
 
   connectedCallback() {
     // Not using a constructor because Search.astro calls this component in fragments,
@@ -26,11 +27,16 @@ export class Card extends HTMLElement {
     this.cardImageDark = this.getAttribute("imageDark") || ""
     this.cardImageAlt = this.getAttribute("imageAlt") || ""
     this.cardIsPublished = this.getAttribute("isPublished") || "true"
+    this.cardImageFocusY = this.getAttribute("imageFocusY") || ""
+
+    // Build optional style attribute for vertical image focus.
+    const imageFocusStyle =
+      this.cardImageFocusY !== "" ? ` style="--image-focus-y: ${this.cardImageFocusY}%"` : ""
 
     const template = document.createElement("template")
     template.innerHTML = `
       <a href="/${this.cardId}" class="card">
-				<div class="card-image">
+				<div class="card-image"${imageFocusStyle}>
 					${
             this.cardImage !== ""
               ? `<img
@@ -77,6 +83,7 @@ export class Card extends HTMLElement {
     imageDark?: { src: string }
     imageAlt: string
     isPublished: boolean
+  imageFocusY?: number
   }): this {
     this.setAttribute("title", entry.title)
     this.setAttribute("id", entry.id)
@@ -87,6 +94,8 @@ export class Card extends HTMLElement {
     this.setAttribute("imageDark", entry.imageDark ? entry.imageDark.src : "")
     this.setAttribute("imageAlt", entry.imageAlt)
     this.setAttribute("isPublished", entry.isPublished.toString())
+    if (typeof entry.imageFocusY === "number")
+      this.setAttribute("imageFocusY", String(entry.imageFocusY))
     return this
   }
 }
