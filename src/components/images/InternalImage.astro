@@ -3,7 +3,7 @@ import { Picture as AstroPicture } from "astro:assets"
 import type { Marker } from "./Image.astro" // only for typing, no runtime cost
 /**
  * Low-level renderer used by Image.astro.
- * Decides between a plain <img> (for external/SVG sources) and <AstroPicture>
+ * Decides between a plain <img> (for SVG sources) and <AstroPicture>
  * (for local raster files) while wiring zoom, placeholder and marker logic.
  * Do not use directly in content – prefer Image.astro.
  */
