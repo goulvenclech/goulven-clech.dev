@@ -49,9 +49,9 @@ if (imageDark && imageDarkFocusY === null) {
 }
 
 const imageStyle =
-        imageFocusY !== null ? `object-position: 50% ${imageFocusY}%` : undefined
+        imageFocusY !== null ? `--image-focus-y: ${imageFocusY}%` : undefined
 const imageDarkStyle =
-        imageDarkFocusY !== null ? `object-position: 50% ${imageDarkFocusY}%` : imageStyle
+        imageDarkFocusY !== null ? `--image-focus-y: ${imageDarkFocusY}%` : imageStyle
 ---
 
 <a href={to} class="card">
