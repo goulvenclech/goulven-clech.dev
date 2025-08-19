@@ -222,6 +222,12 @@
     @apply h-full! w-full! object-cover rounded-none;
   }
 
+  @media (width <= theme(--breakpoint-sm)) {
+    .card .card-image img {
+      object-position: 50% var(--image-focus-y, 50%)
+    }
+  }
+
 	.legend {
 		@apply mx-8 mt-2 text-center text-xs text-pretty italic sm:text-sm;
 	}

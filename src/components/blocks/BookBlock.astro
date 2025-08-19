@@ -2,6 +2,7 @@
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
+import { computeImageFocusY } from "../../imageFocus"
 
 /**
  * Used to present a book as a card, also a link to Google Shopping that book.
@@ -9,9 +10,10 @@ import Block from "./Block.astro"
  */
 interface Props {
 	isbn: string
+	focusY?: number
 }
 
-const { isbn } = Astro.props
+const { isbn, focusY } = Astro.props
 
 /**
  * Await fetch function, to the Open Library Api
@@ -30,10 +32,18 @@ const userData: any = EleventyFetch(
 const result = await userData
 
 const book = result[`ISBN:${isbn}`]
+
+// Cover URL for the book
+const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+
+// Compute focus like MapsBlock, with optional manual override
+const computedFocus = typeof focusY === "number" ? focusY : await computeImageFocusY(coverUrl)
+const imageFocusY: number | undefined =
+	typeof computedFocus === "number" ? computedFocus : undefined
 ---
 
-<Block image={`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} to={book.info_url}>
-	<h3 id={book.details.title} class="my-0 line-clamp-2 text-ellipsis leading-8 sm:line-clamp-1">
+<Block image={coverUrl} to={book.info_url} imageFocusY={imageFocusY}>
+	<h3 id={book.details.title} class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1">
 		{book.details.title}
 	</h3>
 	<ul class="flex flex-col">

@@ -8,43 +8,30 @@ interface Props {
 	image?: ImageMetadata | string
 	imageDark?: ImageMetadata | string
 	imageAlt?: string
+	imageFocusY?: number
 	to: string
 }
 
-const width = 500
-const height = 500
 const formats = ["webp", "avif"]
 
-const { image, imageDark, imageAlt = "", to } = Astro.props
+const { image, imageDark, imageAlt = "", to, imageFocusY } = Astro.props
 ---
 
 <a href={to} class="card">
-	<div class="card-image">
+	<div
+		class="card-image"
+		style={typeof imageFocusY === "number" ? `--image-focus-y: ${imageFocusY}%` : undefined}
+	>
 		{
 			image &&
 				(!imageDark ? (
-					<InternalImage
-						source={image}
-						alt={imageAlt}
-						width={width}
-						height={height}
-						formats={formats}
-					/>
+					<InternalImage source={image} alt={imageAlt} formats={formats} />
 				) : (
 					<>
-						<InternalImage
-							source={image}
-							alt={imageAlt}
-							width={width}
-							height={height}
-							formats={formats}
-							class="dark:hidden"
-						/>
+						<InternalImage source={image} alt={imageAlt} formats={formats} class="dark:hidden" />
 						<InternalImage
 							source={imageDark}
 							alt={imageAlt}
-							width={width}
-							height={height}
 							formats={formats}
 							class="hidden dark:block"
 						/>
