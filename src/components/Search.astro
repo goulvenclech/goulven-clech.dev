@@ -1,7 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
-import Card from "./card/Card.astro"
 import { getImage } from "astro:assets"
 import type { BlogEntry } from "src/utils"
 export type ClientBlogEntries = BlogEntry[]
@@ -102,11 +101,15 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 <div id="output" class="flex flex-col gap-2.5">
 	{
 		/* Default SSR output */
-		blogEntries
-			.slice(0, 5)
-			.map((result) => (
-				<Card entry={result} image={images.find((image) => image.id === result.id)?.src} />
-			))
+		blogEntries.slice(0, 5).map((result) => (
+			<a href={`/blog/${result.id}`}>
+				<span class="font-bold">{result.data.title}</span>
+				<span>
+					${result.data.abstract} —
+					<span class="whitespace-nowrap"> ${formatDate(result.data.date)}</span>
+				</span>
+			</a>
+		))
 	}
 </div>
 <button

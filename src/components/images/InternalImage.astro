@@ -11,7 +11,7 @@ interface Props {
 	source: any
 	alt: string
 	goodQualityURL?: { src: string }
-	width: number
+	width?: number
 	height?: number
 	formats?: string[]
 	class?: string
@@ -58,8 +58,7 @@ const {
 				"data-zoom-src": goodQualityURL.src,
 			})}
 			data-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
-			width={width}
-			height={height}
+			{...(width ? { width: width, height: height } : { inferSize: true })}
 			formats={formats ?? ["webp"]}
 			class={className}
 			style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
