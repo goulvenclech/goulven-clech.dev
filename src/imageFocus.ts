@@ -76,17 +76,12 @@ export async function computeImageFocusY(url: string): Promise<number | null> {
       energyPixels[i] = Math.min(255, Math.round((mag / maxMag) * 255))
     }
 
-    // Optional: write out the gradient magnitude image for visual inspection
-    try {
-      await sharp(energyPixels, { raw: { width, height, channels: 1 } }).toFile(`dist/tmp/${Date.now()}-energy.png`)
-    } catch {}
-
     // Sliding-window parameters
     const slidingWindowHeight = Math.min(50, height)
     const slidingStep = 5
 
-  let bestTop = 0
-  let bestScore = -Infinity
+		let bestTop = 0
+		let bestScore = -Infinity
 
     // Ensure we evaluate the last possible window that touches the bottom
     const lastTop = Math.max(0, height - slidingWindowHeight)

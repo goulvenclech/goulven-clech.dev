@@ -2,7 +2,7 @@
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
-import { computeImageFocusY } from "../../lib/images/focus"
+import { computeImageFocusY } from "../../imageFocus"
 
 /**
  * Used to present a Google Maps Place as a card, also a link to that place.
@@ -60,7 +60,7 @@ function dayOfWeekAsString(i: number): string {
 
 // Build photo URL (if any)
 const photoUrl: string | undefined = place.photos?.length
-	? `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=500&key=${import.meta.env.MAPS_TOKEN}`
+	? `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=750&key=${import.meta.env.MAPS_TOKEN}`
 	: undefined
 
 const computedFocus = photoUrl ? await computeImageFocusY(photoUrl) : null
