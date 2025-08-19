@@ -50,28 +50,38 @@ export interface LocalImageServiceWithPlaceholder extends LocalImageService {
   ) => Promise<string>
 }
 
+// Expose the placeholder generator as a named export to avoid relying on
+// getConfiguredImageService preserving custom methods. Some Astro versions wrap
+// services which can strip non-standard properties.
+export async function generatePlaceholder(
+  src: string,
+  width: number,
+  height: number,
+  quality = 100
+): Promise<string> {
+  const placeholderDimensions = getBitmapDimensions(width, height, quality)
+
+  // HACK: It'd be nice to be able to get a Buffer out from an ESM import or `getImage`, wonder how we could do that..
+  const originalFileBuffer = readFileSync(src)
+
+  const placeholderBuffer = await sharp(originalFileBuffer)
+    .resize(placeholderDimensions.width, placeholderDimensions.height, { fit: "inside" })
+    .toFormat("webp", { quality: 1 })
+    .modulate({
+      brightness: 1,
+      saturation: 1.2,
+    })
+    .blur()
+    .toBuffer({ resolveWithObject: true })
+
+  return `data:image/${placeholderBuffer.info.format};base64,${placeholderBuffer.data.toString(
+    "base64"
+  )}`
+}
+
 const service: LocalImageServiceWithPlaceholder = {
   ...sharpService,
-  generatePlaceholder: async (src: string, width: number, height: number, quality = 100) => {
-    const placeholderDimensions = getBitmapDimensions(width, height, quality)
-
-    // HACK: It'd be nice to be able to get a Buffer out from an ESM import or `getImage`, wonder how we could do that..
-    const originalFileBuffer = readFileSync(src)
-
-    const placeholderBuffer = await sharp(originalFileBuffer)
-      .resize(placeholderDimensions.width, placeholderDimensions.height, { fit: "inside" })
-      .toFormat("webp", { quality: 1 })
-      .modulate({
-        brightness: 1,
-        saturation: 1.2,
-      })
-      .blur()
-      .toBuffer({ resolveWithObject: true })
-
-    return `data:image/${placeholderBuffer.info.format};base64,${placeholderBuffer.data.toString(
-      "base64"
-    )}`
-  },
+  generatePlaceholder,
 }
 
 export default service

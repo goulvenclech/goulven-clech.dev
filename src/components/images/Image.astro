@@ -1,7 +1,7 @@
 ---
 import type { HTMLTag } from "astro/types"
-import { getConfiguredImageService, getImage } from "astro:assets"
-import type { LocalImageServiceWithPlaceholder } from "src/imageService"
+import { getImage } from "astro:assets"
+import { generatePlaceholder } from "../../imageService"
 import InternalImage from "./InternalImage.astro"
 // Types for markers used in the image
 export interface Marker {
@@ -34,7 +34,6 @@ interface Props {
  * If you want to understand this component, you'll need to look at :
  * -> src/imageService.ts
  */
-const imageService = (await getConfiguredImageService()) as LocalImageServiceWithPlaceholder
 
 const {
 	src,
@@ -56,7 +55,7 @@ const placeholderURL = isStringSource
 	: src.format === "svg"
 		? src.src // We don't support SVG placeholders yet
 		: src.fsPath
-			? await imageService.generatePlaceholder(
+			? await generatePlaceholder(
 					src.fsPath,
 					Math.max(src.width, defaultWidth),
 					src.height
@@ -80,7 +79,7 @@ if (srcDark) {
 		: srcDark.format === "svg"
 			? srcDark.src
 			: srcDark.fsPath
-				? await imageService.generatePlaceholder(
+				? await generatePlaceholder(
 						srcDark.fsPath,
 						Math.max(srcDark.width, defaultWidth),
 						srcDark.height
