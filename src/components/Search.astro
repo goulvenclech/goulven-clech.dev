@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
 import { getImage } from "astro:assets"
 import type { BlogEntry } from "src/utils"
+import Block from "./blocks/Block.astro"
 export type ClientBlogEntries = BlogEntry[]
 
 /**
@@ -102,13 +103,17 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	{
 		/* Default SSR output */
 		blogEntries.slice(0, 5).map((result) => (
-			<a href={`/blog/${result.id}`}>
-				<span class="font-bold">{result.data.title}</span>
-				<span>
-					${result.data.abstract} —
-					<span class="whitespace-nowrap"> ${formatDate(result.data.date)}</span>
-				</span>
-			</a>
+			<Block
+				image={result.data.image?.src}
+				imageDark={result.data.image_dark?.src}
+				to={`/blog/${result.id}`}
+			>
+				<h3>{result.data.title}</h3>
+				<p class="line-clamp-4 text-ellipsis sm:line-clamp-3">
+					<span set:html={result.data.abstract} /> —
+					<span class="whitespace-nowrap"> {formatDate(result.data.date)}</span>
+				</p>
+			</Block>
 		))
 	}
 </div>
