@@ -295,6 +295,12 @@ const pageTitle = "Catalogue"
 			try {
 				await loadEmotions()
 
+				// Prevent form submission (which would reload the page)
+				const form = document.querySelector("form")
+				form?.addEventListener("submit", (e) => {
+					e.preventDefault()
+				})
+
 				// Restore state from URL (if any)
 				const params = new URLSearchParams(location.search)
 				const queryInput = document.getElementById("query") as HTMLInputElement
