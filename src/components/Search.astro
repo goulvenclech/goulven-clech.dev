@@ -104,9 +104,10 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		/* Default SSR output */
 		blogEntries.slice(0, 5).map((result) => (
 			<Block
-				image={result.data.image?.src}
-				imageDark={result.data.image_dark?.src}
-				to={`/blog/${result.id}`}
+				image={result.data.image}
+				imageDark={result.data.image_dark}
+				to={`/${result.id}`}
+				imageFocusY={result.data.cardImageFocusY}
 			>
 				<h3>{result.data.title}</h3>
 				<p class="line-clamp-4 text-ellipsis sm:line-clamp-3">
