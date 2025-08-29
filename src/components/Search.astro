@@ -1,7 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate, isEntryPublished } from "src/utils"
-import { getImage } from "astro:assets"
+import { generatePlaceholder } from "src/imageService"
 import type { BlogEntry } from "src/utils"
 import Block from "./blocks/Block.astro"
 export type ClientBlogEntries = BlogEntry[]
@@ -21,25 +21,56 @@ const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({
 // Sort blog entries by date
 const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
-// Get optimized images for every blog card
-// This is needed to use the same image for SSR and CSR Cards
-const images = await Promise.all(
-	blogEntries.map(async ({ id, data }) => ({
-		id,
-		src: data.image
-			? (await getImage({ src: data.image, height: 400, quality: 80, format: "webp" })).src
-			: "",
-	}))
+// Generate placeholders for all images with proper error handling
+const imagePlaceholders = await Promise.all(
+	blogEntries.map(async ({ id, data }) => {
+		let placeholder = ""
+		if (data.image && typeof data.image !== "string" && data.image.format !== "svg") {
+			try {
+				// Try to use fsPath from raw image, fallback to checking various properties
+				const imageWithPath = data.image as any
+				const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
+				if (fsPath && typeof fsPath === "string") {
+					placeholder = await generatePlaceholder(
+						fsPath,
+						Math.max(data.image.width, 600),
+						data.image.height
+					)
+				}
+			} catch (error) {
+				console.warn(`Failed to generate placeholder for image in ${id}:`, error)
+			}
+		}
+		return { id, placeholder }
+	})
 )
 
-// Dark version
-const imagesDark = await Promise.all(
-	blogEntries.map(async ({ id, data }) => ({
-		id,
-		src: data.image_dark
-			? (await getImage({ src: data.image_dark, height: 400, quality: 80, format: "webp" })).src
-			: "",
-	}))
+// Generate placeholders for dark images with proper error handling
+const imageDarkPlaceholders = await Promise.all(
+	blogEntries.map(async ({ id, data }) => {
+		let placeholder = ""
+		if (
+			data.image_dark &&
+			typeof data.image_dark !== "string" &&
+			data.image_dark.format !== "svg"
+		) {
+			try {
+				// Try to use fsPath from raw image, fallback to checking various properties
+				const imageWithPath = data.image_dark as any
+				const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
+				if (fsPath && typeof fsPath === "string") {
+					placeholder = await generatePlaceholder(
+						fsPath,
+						Math.max(data.image_dark.width, 600),
+						data.image_dark.height
+					)
+				}
+			} catch (error) {
+				console.warn(`Failed to generate placeholder for dark image in ${id}:`, error)
+			}
+		}
+		return { id, placeholder }
+	})
 )
 
 // Extract all tags and years for filter options
@@ -69,8 +100,11 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	year: data.date.getFullYear(),
 	tags: data.tags,
 	abstract: data.abstract,
-	image: images.find((image) => image.id === id),
-	imageDark: imagesDark.find((image) => image.id === id),
+	image: data.image ? { src: data.image.src } : undefined,
+	imageDark: data.image_dark ? { src: data.image_dark.src } : undefined,
+	imagePlaceholder: imagePlaceholders.find((placeholder) => placeholder.id === id)?.placeholder,
+	imageDarkPlaceholder: imageDarkPlaceholders.find((placeholder) => placeholder.id === id)
+		?.placeholder,
 	imageAlt: data.imageAlt,
 	isPublished: isEntryPublished(data.published, true),
 	imageFocusY: typeof data.cardImageFocusY === "number" ? data.cardImageFocusY : undefined,

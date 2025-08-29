@@ -219,7 +219,7 @@
   }
 
   .card .card-image img {
-    @apply h-full! w-full! object-cover rounded-none;
+    @apply h-full! w-full! object-cover rounded-none text-transparent;
   }
 
   @media (width <= theme(--breakpoint-sm)) {
