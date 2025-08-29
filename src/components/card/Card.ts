@@ -9,6 +9,8 @@ export class Card extends HTMLElement {
   private cardImage!: string
   private cardImageDark!: string
   private cardImageAlt!: string
+  private cardImagePlaceholder!: string
+  private cardImageDarkPlaceholder!: string
   private cardIsPublished!: string
   private cardImageFocusY!: string
 
@@ -22,6 +24,8 @@ export class Card extends HTMLElement {
     this.cardImage = this.getAttribute("image") || ""
     this.cardImageDark = this.getAttribute("imageDark") || ""
     this.cardImageAlt = this.getAttribute("imageAlt") || ""
+    this.cardImagePlaceholder = this.getAttribute("imagePlaceholder") || ""
+    this.cardImageDarkPlaceholder = this.getAttribute("imageDarkPlaceholder") || ""
     this.cardIsPublished = this.getAttribute("isPublished") || "true"
     this.cardImageFocusY = this.getAttribute("imageFocusY") || ""
 
@@ -39,6 +43,8 @@ export class Card extends HTMLElement {
 								class="${this.cardImageDark ? "block dark:hidden" : "block"}"
 								src="${this.cardImage}"
 								alt="${this.cardImageAlt}"
+								style="background-size: cover; background-image: url(${this.cardImagePlaceholder}); image-rendering: auto;"
+								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 							/>`
               : ``
           }
@@ -48,6 +54,8 @@ export class Card extends HTMLElement {
 								class="hidden dark:block"
 								src="${this.cardImageDark}"
 								alt="${this.cardImageAlt}"
+								style="background-size: cover; background-image: url(${this.cardImageDarkPlaceholder || this.cardImagePlaceholder}); image-rendering: auto;"
+								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
 							/>`
               : ``
           }
@@ -77,6 +85,8 @@ export class Card extends HTMLElement {
     abstract: string
     image?: { src: string }
     imageDark?: { src: string }
+    imagePlaceholder?: string
+    imageDarkPlaceholder?: string
     imageAlt: string
     isPublished: boolean
   imageFocusY?: number
@@ -88,6 +98,8 @@ export class Card extends HTMLElement {
     this.setAttribute("abstract", entry.abstract)
     this.setAttribute("image", entry.image ? entry.image.src : "")
     this.setAttribute("imageDark", entry.imageDark ? entry.imageDark.src : "")
+    this.setAttribute("imagePlaceholder", entry.imagePlaceholder || "")
+    this.setAttribute("imageDarkPlaceholder", entry.imageDarkPlaceholder || "")
     this.setAttribute("imageAlt", entry.imageAlt)
     this.setAttribute("isPublished", entry.isPublished.toString())
     if (typeof entry.imageFocusY === "number")
