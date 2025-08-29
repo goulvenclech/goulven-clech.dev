@@ -61,8 +61,8 @@ const {
 			{...(width ? { width: width, height: height } : { inferSize: true })}
 			formats={formats ?? ["webp"]}
 			class={className}
-			style={`background-size: cover;background-image: url(${placeholderURL});image-rendering:auto;`}
-			onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+			style={`background-size: cover; background-image: url(${placeholderURL}); image-rendering: auto;`}
+			onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.style.fontSize = null; this.style.color = null; this.removeAttribute('onload');"
 		/>
 	)
 }

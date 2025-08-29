@@ -44,7 +44,7 @@ export class Card extends HTMLElement {
 								src="${this.cardImage}"
 								alt="${this.cardImageAlt}"
 								style="background-size: cover; background-image: url(${this.cardImagePlaceholder}); image-rendering: auto;"
-								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.style.fontSize = null; this.style.color = null; this.removeAttribute('onload');"
 							/>`
               : ``
           }
@@ -55,7 +55,7 @@ export class Card extends HTMLElement {
 								src="${this.cardImageDark}"
 								alt="${this.cardImageAlt}"
 								style="background-size: cover; background-image: url(${this.cardImageDarkPlaceholder || this.cardImagePlaceholder}); image-rendering: auto;"
-								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.removeAttribute('onload');"
+								onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.style.fontSize = null; this.style.color = null; this.removeAttribute('onload');"
 							/>`
               : ``
           }
