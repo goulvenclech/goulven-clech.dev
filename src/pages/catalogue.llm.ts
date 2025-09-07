@@ -20,9 +20,11 @@ export async function GET(_context: APIContext): Promise<Response> {
       comment: string | null
     }[]
 
-    // Map numeric rating (1-5) to a short, readable label
+    // Map numeric rating (1-6) to a short, readable label
     const ratingToWord = (rating: number): string => {
       switch (rating) {
+        case 6:
+          return "favorite"
         case 5:
           return "loved it"
         case 4:

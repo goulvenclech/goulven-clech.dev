@@ -16,6 +16,7 @@ export class ReviewCard extends HTMLElement {
     3: "😐 meh'd it",
     4: "😀 liked it",
     5: "😍 loved it",
+    6: "⭐ favorite",
   }
 
   constructor() {

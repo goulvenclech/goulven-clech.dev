@@ -23,7 +23,7 @@ export interface Review {
   source_link: string
   source_img: string
   source_img_focus_y: number | null
-  rating: number // 1-5
+  rating: number // 1-6
   emotions: number[] // Emotion IDs
   comment: string
   inserted_at: string // ISO-8601
@@ -194,7 +194,7 @@ export async function POST({ request }: APIContext): Promise<Response> {
       source_id &&
       Number.isInteger(rating) &&
       rating >= 1 &&
-      rating <= 5 &&
+      rating <= 6 &&
       Array.isArray(emotions) &&
       emotions.length > 0 &&
       emotions.length <= 3
