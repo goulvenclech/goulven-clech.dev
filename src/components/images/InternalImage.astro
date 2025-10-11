@@ -17,6 +17,9 @@ interface Props {
 	class?: string
 	placeholderURL?: string
 	markers?: Marker[]
+	widths?: number[]
+	sizes?: string
+	quality?: number | "low" | "mid" | "high" | "max"
 	[key: string]: any
 }
 
@@ -30,6 +33,9 @@ const {
 	class: className = "",
 	placeholderURL,
 	markers = [],
+	widths,
+	sizes,
+	quality,
 	...rest
 } = Astro.props
 ---
@@ -53,6 +59,9 @@ const {
 			{...rest}
 			src={source}
 			alt={alt}
+			{...(Array.isArray(widths) && widths.length > 0 ? { widths } : {})}
+			{...(typeof sizes === "string" && sizes.length > 0 ? { sizes } : {})}
+			{...(quality !== undefined ? { quality } : {})}
 			{...(goodQualityURL && {
 				"data-zoomable": true,
 				"data-zoom-src": goodQualityURL.src,

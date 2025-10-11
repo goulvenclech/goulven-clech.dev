@@ -1,5 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
+import { getImage } from "astro:assets"
+import type { ImageMetadata } from "astro"
 import { formatDate, isEntryPublished } from "src/utils"
 import { generatePlaceholder } from "src/imageService"
 import type { BlogEntry } from "src/utils"
@@ -21,57 +23,86 @@ const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({
 // Sort blog entries by date
 const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
-// Generate placeholders for all images with proper error handling
-const imagePlaceholders = await Promise.all(
-	blogEntries.map(async ({ id, data }) => {
-		let placeholder = ""
-		if (data.image && typeof data.image !== "string" && data.image.format !== "svg") {
-			try {
-				// Try to use fsPath from raw image, fallback to checking various properties
-				const imageWithPath = data.image as any
-				const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
-				if (fsPath && typeof fsPath === "string") {
-					placeholder = await generatePlaceholder(
-						fsPath,
-						Math.max(data.image.width, 600),
-						data.image.height
-					)
-				}
-			} catch (error) {
-				console.warn(`Failed to generate placeholder for image in ${id}:`, error)
-			}
+const CARD_IMAGE_MAX_WIDTH = 960
+const CARD_IMAGE_QUALITY = 80
+
+type EntryImage = ImageMetadata | string | undefined
+
+async function collectCardImageData(
+	entryImage: EntryImage,
+	id: string,
+	variant: "light" | "dark"
+): Promise<{ placeholder: string; optimizedSrc?: string }> {
+	let placeholder = ""
+	let optimizedSrc: string | undefined
+
+	if (!entryImage) {
+		return { placeholder, optimizedSrc }
+	}
+
+	if (typeof entryImage === "string") {
+		optimizedSrc = entryImage
+		return { placeholder, optimizedSrc }
+	}
+
+	if (entryImage.format === "svg") {
+		optimizedSrc = entryImage.src
+		return { placeholder, optimizedSrc }
+	}
+
+	try {
+		// Try to use fsPath from raw image, fallback to checking various properties
+		const imageWithPath = entryImage as any
+		const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
+		if (fsPath && typeof fsPath === "string") {
+			placeholder = await generatePlaceholder(
+				fsPath,
+				Math.max(entryImage.width, 600),
+				entryImage.height
+			)
 		}
-		return { id, placeholder }
+	} catch (error) {
+		console.warn(`Failed to generate placeholder for ${variant} image in ${id}:`, error)
+	}
+
+	optimizedSrc = entryImage.src
+	try {
+		const targetWidth = Math.min(entryImage.width, CARD_IMAGE_MAX_WIDTH)
+		const targetFormat = entryImage.format === "gif" ? "gif" : "webp"
+		const optimized = await getImage({
+			src: entryImage,
+			width: targetWidth,
+			format: targetFormat,
+			...(targetFormat === "gif" ? {} : { quality: CARD_IMAGE_QUALITY }),
+		})
+		optimizedSrc = optimized.src
+	} catch (error) {
+		console.warn(`Failed to optimize ${variant} image in ${id}:`, error)
+	}
+
+	return { placeholder, optimizedSrc }
+}
+
+const imageAssets = await Promise.all(
+	blogEntries.map(async ({ id, data }) => {
+		const { placeholder, optimizedSrc } = await collectCardImageData(data.image, id, "light")
+		return { id, placeholder, optimizedSrc }
 	})
 )
 
-// Generate placeholders for dark images with proper error handling
-const imageDarkPlaceholders = await Promise.all(
+const imageDarkAssets = await Promise.all(
 	blogEntries.map(async ({ id, data }) => {
-		let placeholder = ""
-		if (
-			data.image_dark &&
-			typeof data.image_dark !== "string" &&
-			data.image_dark.format !== "svg"
-		) {
-			try {
-				// Try to use fsPath from raw image, fallback to checking various properties
-				const imageWithPath = data.image_dark as any
-				const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
-				if (fsPath && typeof fsPath === "string") {
-					placeholder = await generatePlaceholder(
-						fsPath,
-						Math.max(data.image_dark.width, 600),
-						data.image_dark.height
-					)
-				}
-			} catch (error) {
-				console.warn(`Failed to generate placeholder for dark image in ${id}:`, error)
-			}
-		}
-		return { id, placeholder }
+		const { placeholder, optimizedSrc } = await collectCardImageData(
+			data.image_dark,
+			id,
+			"dark"
+		)
+		return { id, placeholder, optimizedSrc }
 	})
 )
+
+const imageAssetMap = new Map(imageAssets.map((asset) => [asset.id, asset]))
+const imageDarkAssetMap = new Map(imageDarkAssets.map((asset) => [asset.id, asset]))
 
 // Extract all tags and years for filter options
 const allTags = new Set<string>()
@@ -93,22 +124,26 @@ const importantTags = [
 
 // Format blog entries for client-side filtering
 // Reduce the amount of data sent to the client as much as possible
-const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) => ({
-	id,
-	title: data.title,
-	date: formatDate(data.date),
-	year: data.date.getFullYear(),
-	tags: data.tags,
-	abstract: data.abstract,
-	image: data.image ? { src: data.image.src } : undefined,
-	imageDark: data.image_dark ? { src: data.image_dark.src } : undefined,
-	imagePlaceholder: imagePlaceholders.find((placeholder) => placeholder.id === id)?.placeholder,
-	imageDarkPlaceholder: imageDarkPlaceholders.find((placeholder) => placeholder.id === id)
-		?.placeholder,
-	imageAlt: data.imageAlt,
-	isPublished: isEntryPublished(data.published, true),
-	imageFocusY: typeof data.cardImageFocusY === "number" ? data.cardImageFocusY : undefined,
-}))
+const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) => {
+	const lightAssets = imageAssetMap.get(id)
+	const darkAssets = imageDarkAssetMap.get(id)
+
+	return {
+		id,
+		title: data.title,
+		date: formatDate(data.date),
+		year: data.date.getFullYear(),
+		tags: data.tags,
+		abstract: data.abstract,
+		image: lightAssets?.optimizedSrc ? { src: lightAssets.optimizedSrc } : undefined,
+		imageDark: darkAssets?.optimizedSrc ? { src: darkAssets.optimizedSrc } : undefined,
+		imagePlaceholder: lightAssets?.placeholder,
+		imageDarkPlaceholder: darkAssets?.placeholder,
+		imageAlt: data.imageAlt,
+		isPublished: isEntryPublished(data.published, true),
+		imageFocusY: typeof data.cardImageFocusY === "number" ? data.cardImageFocusY : undefined,
+	}
+})
 ---
 
 <form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:text-sm">
