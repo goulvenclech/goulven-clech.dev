@@ -41,14 +41,14 @@ const avatarImg = await getImage({
 	userName ? (
 		<a
 			href={userUrl}
-			class="github-inline whitespace-nowrap before:content-none hover:text-primary dark:hover:text-primary print:no-underline print:dark:text-font-light"
+			class="github-inline hover:text-primary dark:hover:text-primary print:dark:text-font-light whitespace-nowrap before:content-none print:no-underline"
 		>
 			<Image
 				src={avatarImg.src}
-				width={24}
-				height={24}
+				width={48}
+				height={48}
 				alt="..."
-				class="mr-1 inline rounded-full print:mr-0 print:hidden"
+				class="mr-1 inline h-6 w-6 rounded-full print:mr-0 print:hidden"
 			/>
 			{userName}
 		</a>
