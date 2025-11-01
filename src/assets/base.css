@@ -54,6 +54,8 @@
   --font-weight-normal: 400;
   --font-weight-bold: 600;
 
+	--radius: 0.5rem;
+
   --font-serif: "EB Garamond", "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
   --font-mono: Iosevka, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",

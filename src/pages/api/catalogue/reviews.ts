@@ -213,7 +213,9 @@ export async function POST({ request }: APIContext): Promise<Response> {
         const game = await fetchGame(Number(source_id))
         if (!game) return json({ error: "Game not found" }, 404)
 
-        const year = new Date(game.first_release_date * 1000).getFullYear()
+        const year = game.first_release_date
+          ? new Date(game.first_release_date * 1000).getFullYear()
+          : "TBD"
         source_name = `${game.name} (${year})`
         source_link = `https://www.igdb.com/games/${game.slug}`
         meta = buildIgdbMeta(game)

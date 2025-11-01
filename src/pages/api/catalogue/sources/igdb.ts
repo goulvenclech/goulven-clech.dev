@@ -66,7 +66,7 @@ export interface IgdbGame {
   id: number
   name: string
   slug: string
-  first_release_date: number // UNIX timestamp (s)
+  first_release_date?: number // UNIX timestamp (s) - optional for unreleased games
   cover?: { image_id: string }
 
   /* extra fields used by buildIgdbMeta */
