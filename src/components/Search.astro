@@ -92,11 +92,7 @@ const imageAssets = await Promise.all(
 
 const imageDarkAssets = await Promise.all(
 	blogEntries.map(async ({ id, data }) => {
-		const { placeholder, optimizedSrc } = await collectCardImageData(
-			data.image_dark,
-			id,
-			"dark"
-		)
+		const { placeholder, optimizedSrc } = await collectCardImageData(data.imageDark, id, "dark")
 		return { id, placeholder, optimizedSrc }
 	})
 )
@@ -117,7 +113,7 @@ const sortedYears = [...allYears].sort((a, b) => b - a)
 
 // Important tags based on your blog content
 const importantTags = [
-	{ value: "web development", label: "💻 Web Development" },
+	{ value: "software engineering", label: "💻 Software Engineering" },
 	{ value: "game development", label: "🎮 Game Development" },
 	{ value: "coffee", label: "☕️ Speciality Coffee" },
 ]
@@ -174,7 +170,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		blogEntries.slice(0, 5).map((result) => (
 			<Block
 				image={result.data.image}
-				imageDark={result.data.image_dark}
+				imageDark={result.data.imageDark}
 				to={`/${result.id}`}
 				imageFocusY={result.data.cardImageFocusY}
 			>

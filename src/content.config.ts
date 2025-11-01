@@ -12,7 +12,7 @@ const blogCollection = defineCollection({
       abstract: z.string(),
       abstract_clean: z.string().optional(),
       image: image().optional(),
-      image_dark: image().optional(),
+      imageDark: image().optional(),
       imageAlt: z.string().default("Cover image"),
       cardImageFocusY: z.number().int().min(0).max(100).optional(),
       published: z.string().default("never"),

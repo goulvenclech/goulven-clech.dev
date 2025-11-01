@@ -2,7 +2,7 @@
   "name": "goulven-clech.dev",
   "description": "My personnal website, made with Astro, TypeScript & Tailwind CSS.",
   "private": true,
-  "version": "1.8.0",
+  "version": "1.8.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/GoulvenC/goulven-clech.dev.git"
