@@ -7,15 +7,19 @@ import { isEntryPublished } from "src/utils"
  * @returns an XML file containing the RSS feed
  */
 export async function GET(context: any) {
-  // get all blogEntries published
-  const blogEntriesRaw = await getCollection("blog", ({ data }) => {
+  const publishedEntries = await getCollection("blog", ({ data }) => {
     return isEntryPublished(data.published, true)
   })
+
+  const sortedEntries = publishedEntries.sort((a, b) =>
+    b.data.date.getTime() - a.data.date.getTime()
+  )
+
   return rss({
     title: "Goulven CLEC'H - Blog",
     description: "I'm a software developer based in Toulouse, France. Welcome to my personal blog!",
     site: context.site,
-    items: blogEntriesRaw.map(({ id, data }) => ({
+    items: sortedEntries.map(({ id, data }) => ({
       title: data.title,
       description: data.abstract,
       pubDate: data.date,
