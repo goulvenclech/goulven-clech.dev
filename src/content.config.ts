@@ -16,6 +16,7 @@ const blogCollection = defineCollection({
       imageAlt: z.string().default("Cover image"),
       cardImageFocusY: z.number().int().min(0).max(100).optional(),
       published: z.string().default("never"),
+      timeMachine: z.string().optional(),
     }),
 })
 const changelogCollection = defineCollection({

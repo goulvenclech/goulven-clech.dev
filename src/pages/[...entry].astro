@@ -37,7 +37,7 @@ const { Content, headings } = await render(entry)
 		</p>
 		{
 			!isEntryPublished(entry.data.published, true) && (
-				<warning-note>
+				<warning-note class="mt-10">
 					<p>
 						You're currently reading a work-in-progress draft. Its content is probably incomplete,
 						and may be updated before public release.
@@ -45,75 +45,85 @@ const { Content, headings } = await render(entry)
 				</warning-note>
 			)
 		}
-	</section>
-
-	{headings.length > 0 && <TableOfContent headings={headings} />}
-
-	<section id="entry">
-		<Content />
-	</section>
-</Layout>
-<style is:global>
-	@reference "$assets/base.css";
-
-	.frame.is-terminal .header {
-		display: none;
-	}
-
-	.expressive-code {
-		@apply my-5;
-	}
-
-	/* Drop cap */
-	#entry > p:first-of-type::first-letter {
-		/* Font size is 2.5 times the text size * 1.625 (line height) */
-		/* Margin top verticaly align the drop cap with the two text lines */
-		@apply float-left mt-[2px] mr-1 text-[calc(16px*1.625*2.5)] sm:mt-[3px] sm:text-[calc(18px*1.625*2.5)];
-	}
-
-	/* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
-	/* Use @supports to discriminate Firefox and olders browsers */
-	@supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
-		#entry > p:first-of-type::first-letter {
-			@apply mb-[-30px] leading-none;
+		{
+			entry.data.timeMachine && (
+				<time-machine class="mt-10">
+					<p>
+						You're currently reading a backdated entry, before my blog creation in 2023. Reason for
+						backdating: « {entry.data.timeMachine} »
+					</p>
+				</time-machine>
+			)
 		}
-	}
 
-	/* If an entry start with a title (so it appear in the TOC)
+		{headings.length > 0 && <TableOfContent headings={headings} />}
+
+		<section id="entry">
+			<Content />
+		</section>
+	</section>
+	<style is:global>
+		@reference "$assets/base.css";
+
+		.frame.is-terminal .header {
+			display: none;
+		}
+
+		.expressive-code {
+			@apply my-5;
+		}
+
+		/* Drop cap */
+		#entry > p:first-of-type::first-letter {
+			/* Font size is 2.5 times the text size * 1.625 (line height) */
+			/* Margin top verticaly align the drop cap with the two text lines */
+			@apply float-left mt-[2px] mr-1 text-[calc(16px*1.625*2.5)] sm:mt-[3px] sm:text-[calc(18px*1.625*2.5)];
+		}
+
+		/* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
+		/* Use @supports to discriminate Firefox and olders browsers */
+		@supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
+			#entry > p:first-of-type::first-letter {
+				@apply mb-[-30px] leading-none;
+			}
+		}
+
+		/* If an entry start with a title (so it appear in the TOC)
     hide it for a better reading flow */
-	#entry h2:first-child {
-		@apply invisible m-0 h-0;
-	}
+		#entry h2:first-child {
+			@apply invisible m-0 h-0;
+		}
 
-	#entry > ul,
-	#entry > ol {
-		@apply list-inside;
-	}
-
-	/* I use a manicule as a list marker, in the future I'll use "indent hanging"
-     but it's not supported in Chrome yet */
-	#entry > ul {
-		@apply my-5 list-none indent-0 sm:indent-[-27.58px];
-	}
-
-	#entry > ul > li::before {
-		content: "☞";
-		@apply mr-2;
-	}
-
-	#entry > ol {
-		@apply mb-5;
-	}
-
-	#entry > ol > li,
-	#entry > ul > li {
-		@apply my-2.5 ml-0;
-	}
-
-	@media screen(sm) {
 		#entry > ul,
 		#entry > ol {
-			@apply list-outside;
+			@apply list-inside;
 		}
-	}
-</style>
+
+		/* I use a manicule as a list marker, in the future I'll use "indent hanging"
+     but it's not supported in Chrome yet */
+		#entry > ul {
+			@apply my-5 list-none indent-0 sm:indent-[-27.58px];
+		}
+
+		#entry > ul > li::before {
+			content: "☞";
+			@apply mr-2;
+		}
+
+		#entry > ol {
+			@apply mb-5;
+		}
+
+		#entry > ol > li,
+		#entry > ul > li {
+			@apply my-2.5 ml-0;
+		}
+
+		@media screen(sm) {
+			#entry > ul,
+			#entry > ol {
+				@apply list-outside;
+			}
+		}
+	</style>
+</Layout>
