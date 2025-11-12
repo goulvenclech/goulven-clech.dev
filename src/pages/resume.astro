@@ -4,6 +4,7 @@ import { getCollection } from "astro:content"
 import ResumeCard from "$components/resume/ResumeCard.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import PrintButton from "$components/controls/PrintButton.astro"
+import { getMyAge, getRemoteWorkYears } from "src/utils"
 /**
  * Misc page with legal notice, changelog, etc.
  */
@@ -42,14 +43,21 @@ educationEntries.sort((a, b) => {
 	<section class="print:mt-0">
 		<h1 class="">Goulven CLEC'H</h1>
 		<p>
-			I am a 27 years old <i>software engineer</i> with extensive experience in <i>Elixir</i>,
+			I am a {getMyAge()} years old <i>software engineer</i> with extensive experience in <i
+				>Elixir</i
+			>,
 			<i>Rust</i>, and <i>JavaScript/TypeScript</i> web ecosystems.
 		</p>
 		<p>
-			Interested in <i>functional programming</i> and <i>software craftsmanship</i>, I want to
-			deliver maintainable and performant software, that solve real-world problems. I'm also
-			passionate about game development, hiking in forests, visiting cute villages, kayaking in
-			rivers, and drinking specialty coffees.
+			Interested in <i>functional programming</i> and <i>software craftsmanship</i>, I aim to
+			deliver maintainable, performant, and useful software. Working remotely for {
+				getRemoteWorkYears()
+			} years, I'm capable of owning projects end-to-end, from product design to infrastructure management,
+			while collaborating effectively with cross-functional teams.
+		</p>
+		<p>
+			Based in Toulouse, France, I'm passionate about software and game development, hiking in
+			forests, visiting cute villages, kayaking in rivers, and drinking specialty coffees.
 		</p>
 		<p class="print:hidden">
 			<ReturnHome /> -
@@ -76,12 +84,10 @@ educationEntries.sort((a, b) => {
 				<strong>French:</strong> Native.
 			</li>
 			<li>
-				<strong>English:</strong> Professional proficiency (C1), and seeking experience in an English-speaking
-				company to reach the next level.
+				<strong>English:</strong> Professional proficiency (C1).
 			</li>
 			<li>
-				<strong>Finnish:</strong> Basic skills (A1), from courses with native speakers and autonomous
-				learning. Seeking experience in a English-speaking Finnish company to reach the next level.
+				<strong>Finnish:</strong> Basic skills (A1), actively learning.
 			</li>
 		</ul>
 	</section>

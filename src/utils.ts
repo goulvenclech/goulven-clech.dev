@@ -40,6 +40,20 @@ export function getMyAge(): number {
   return currentYear - myBirthYear - (myBirthdayThisYear > new Date() ? 1 : 0)
 }
 
+/**
+ * Years of remote work experience since March 2018.
+ * Game Dev Alliance, while not being a professional job, was a true remote work experience
+ * with Erika being in Canada and me in France, where I learned a lot about async collaboration.
+ */
+export function getRemoteWorkYears(): number {
+  const remoteWorkStartYear = 2018
+  const currentYear = new Date().getFullYear()
+  // Started in March (month index 2)
+  const anniversaryThisYear = new Date(currentYear, 2, 1)
+  // If the anniversary hasn't happened yet this year, subtract one year
+  return currentYear - remoteWorkStartYear - (anniversaryThisYear > new Date() ? 1 : 0)
+}
+
 export interface BlogEntry {
 	id: string
 	title: string
