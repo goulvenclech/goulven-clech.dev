@@ -86,7 +86,7 @@ export async function GET(_context: APIContext): Promise<Response> {
     const intro = [
       "# Catalogue",
       "",
-      "Plain-text catalogue of media I’ve consumed. Optimized for crawlers, LLMs, and no-JS readers.",
+      "Plain-text catalogue of media I've consumed. Optimized for crawlers, LLMs, and no-JS readers.",
       "",
       "Sources: Video games (IGDB), Board games (BGG), Movies (TMDB), Shows (TMDB), Albums (Spotify).",
     ].join("\n")

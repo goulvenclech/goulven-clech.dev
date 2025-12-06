@@ -31,8 +31,8 @@ const astroExpressiveCodeOptions = {
     frames: {
       frameBoxShadowCssValue: "0",
     },
-    codeFontFamily: "Iosevka",
-    uiFontFamily: "Iosevka",
+    codeFontFamily: "var(--font-monaspace), ui-monospace, monospace",
+    uiFontFamily: "var(--font-monaspace), ui-monospace, monospace",
     codeFontSize: "14px",
     borderRadius: "0.5rem",
   },
@@ -84,4 +84,58 @@ export default defineConfig({
   adapter: netlify({
     imageCDN: false, // Conflict with our image service
   }),
+
+  experimental: {
+    fonts: [
+      {
+        provider: "local",
+        name: "EB Garamond",
+        cssVariable: "--font-eb-garamond",
+        fallbacks: ["serif"],
+        variants: [
+          {
+            weight: "400 800",
+            style: "normal",
+            src: ["./src/assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2"],
+          },
+          {
+            weight: "400 800",
+            style: "italic",
+            src: ["./src/assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2"],
+          },
+        ],
+      },
+      {
+        provider: "local",
+        name: "Monaspace Neon",
+        cssVariable: "--font-monaspace",
+        fallbacks: ["monospace"],
+        variants: [
+          {
+            weight: "200 800",
+            style: "normal",
+            src: ["./src/assets/fonts/Monaspace Neon/Monaspace Neon Var.woff2"],
+          },
+          {
+            weight: "200 800",
+            style: "italic",
+            src: ["./src/assets/fonts/Monaspace Radon/Monaspace Radon Var.woff2"],
+          },
+        ],
+      },
+      {
+        provider: "local",
+        name: "Abby",
+        cssVariable: "--font-abby",
+        fallbacks: ["cursive"],
+        variants: [
+          {
+            weight: 400,
+            style: "normal",
+            src: ["./src/assets/fonts/Abby/AbbyYOFF.woff2"],
+          },
+        ],
+      },
+    ],
+  },
 })

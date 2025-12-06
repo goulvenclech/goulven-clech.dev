@@ -1,6 +1,7 @@
 ---
 // Global CSS import
 import "$assets/base.css"
+import { Font } from "astro:assets"
 /**
  * Base of our html. Mainly html headers and dark mode inline script.
  * @param {string} title - What is this page about?
@@ -34,6 +35,10 @@ const {
 		<meta property="og:type" content="website" />
 		{img && <meta property="og:image" content={img} />}
 		<link rel="icon" href="/favicon.svg" />
+		<!-- Font declarations from Astro Fonts API -->
+		<Font cssVariable="--font-eb-garamond" preload />
+		<Font cssVariable="--font-monaspace" preload />
+		<Font cssVariable="--font-abby" />
 		<!-- Page-specific head additions -->
 		<slot name="head" />
 		<script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer

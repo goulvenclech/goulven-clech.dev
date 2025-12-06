@@ -52,91 +52,31 @@
 
   --font-weight-*: initial;
   --font-weight-normal: 400;
-  --font-weight-bold: 600;
+  --font-weight-medium: 525;
 
 	--radius: 0.5rem;
 
-  --font-serif: "EB Garamond", "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
+  --font-serif: var(--font-eb-garamond), "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
-  --font-mono: Iosevka, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+  --font-mono: var(--font-monaspace), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
-  --font-goofy: Abby, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  --font-goofy: var(--font-abby), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-@layer utilities {
-  /**
- * FONTS
-  * EB Garamond for core text (paragraph, title, etc.)
-  * Iosevka for the mono text (code, pre, etc.)
-  * Abby for personal annotations (goofy incoming)
- */
-  @font-face {
-    font-family: "EB Garamond";
-    src: url("/EBGaramond/EBGaramond12-Regular.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
 
-  @font-face {
-    font-family: "EB Garamond";
-    src: url("/EBGaramond/EBGaramond12-Italic.woff") format("woff");
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Abby";
-    src: url("/Abby/AbbyYOFF.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Iosevka";
-    src: url("/Iosevka/Iosevka-Regular.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Iosevka";
-    src: url("/Iosevka/Iosevka-Italic.woff2") format("woff2");
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Iosevka";
-    src: url("/Iosevka/Iosevka-Bold.woff2") format("woff2");
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Iosevka";
-    src: url("/Iosevka/Iosevka-BoldItalic.woff2") format("woff2");
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-  }
-
-  /**
-  * BASE LAYER
-  * See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
-  */
-}
-
+/**
+* BASE LAYER
+* See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
+*/
 @layer base {
   body {
     @apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light font-serif text-sm sm:text-base;
     font-feature-settings: "liga", "clig", "onum";
+  }
+
+  i, em {
+    font-feature-settings: "liga", "clig", "dlig", "onum";
   }
 
   main {
@@ -153,7 +93,7 @@
   h1,
   h2 {
     @apply mt-10 mb-5;
-    font-feature-settings: "liga", "clig", "onum", "ss01";
+    font-feature-settings: "liga", "clig", "onum";
   }
 
   h1 {
@@ -165,8 +105,8 @@
   }
 
   h3 {
-    @apply font-bold my-5;
-		font-feature-settings: "liga", "clig", "onum", "ss01";
+    @apply font-medium my-5;
+		font-feature-settings: "liga", "clig", "onum";
   }
 
   abbr,
@@ -235,14 +175,14 @@
 	}
 
   .button {
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-bold whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
+    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-medium whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
   }
 
   li code,
   p code,
 	side-note code {
     overflow-wrap: break-word;
-    @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-[0.125rem] font-mono text-[13px] sm:text-[15px];
+    @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
   }
 
 	table {
@@ -255,7 +195,7 @@
   }
 
   th {
-    @apply whitespace-nowrap font-bold ;
+    @apply whitespace-nowrap font-medium ;
   }
 
   side-note,
@@ -288,7 +228,7 @@
   }
 
 	.badge {
-		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 pt-1 text-xs sm:text-sm;
+		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 text-xs sm:text-sm;
 	}
 
 	draft-section,
@@ -317,7 +257,7 @@
 	draft-section::before,
 	side-note.draft::before {
   content: "Draft";
-  @apply absolute -top-3 left-4 text-xs bg-alt-dark text-body-light rounded px-1 pt-0.5;
+  @apply absolute -top-3 left-4 text-xs bg-alt-dark text-body-light rounded px-1;
 	}
 
 	.dark draft-section::before,
@@ -327,7 +267,7 @@
 
 	warning-note::before {
 		content: "Warning";
-		@apply absolute -top-3 left-4 text-xs bg-primary text-body-light rounded px-1 pt-0.5;
+		@apply absolute -top-3 left-4 text-xs bg-primary text-body-light rounded px-1;
 	}
 
 	.dark warning-note::before {
@@ -336,7 +276,7 @@
 
 	time-machine::before {
 		content: "Time Machine";
-		@apply absolute -top-3 left-4 text-xs bg-info text-body-light rounded px-1 pt-0.5;
+		@apply absolute -top-3 left-4 text-xs bg-info text-body-light rounded px-1;
 	}
 
 	.dark time-machine::before {
@@ -347,7 +287,7 @@
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pt-[2.5px] leading-none font-bold text-body-light dark:text-body-dark;
+		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pt-[2.5px] leading-none font-medium text-body-light dark:text-body-dark;
 		font-feature-settings: 'lnum';
 	}
 
@@ -574,11 +514,21 @@
     }
   }
 
-  /*
+	/*
 		MISC
 	*/
   /* See -> https://github.com/expressive-code/expressive-code/issues/292 */
   .expressive-code :nth-child(1 of .ec-line) .code {
     padding-inline-end: 20px !important;
+  }
+
+  /*
+    Use Monaspace Radon (cursive style) for code comments.
+    We use a separate font (Radon) instead of stylistic sets since we load fonts locally.
+    We target italic spans which are typically comments in syntax highlighting.
+  */
+  .expressive-code .ec-line span[style*="font-style:italic"],
+  .expressive-code .ec-line span[style*="font-style: italic"] {
+    font-style: italic;
   }
 }
