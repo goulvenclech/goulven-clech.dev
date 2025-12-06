@@ -19,9 +19,9 @@ experiencesEntries.sort((a, b) => {
 	// if both have an end date, sort by end date (most recent first)
 	if (a.data.end_date && b.data.end_date) {
 		return b.data.end_date.getTime() - a.data.end_date.getTime()
-		// if both don't have an end date, sort by start date (oldest first)
+		// if both don't have an end date, sort by start date (most recent first)
 	} else if (!a.data.end_date && !b.data.end_date) {
-		return a.data.start_date.getTime() - b.data.start_date.getTime()
+		return b.data.start_date.getTime() - a.data.start_date.getTime()
 		// if one has an end date and the other doesn't
 	} else {
 		return a.data.end_date ? 1 : -1

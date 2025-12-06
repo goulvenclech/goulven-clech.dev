@@ -77,15 +77,24 @@ const { Content, headings } = await render(entry)
 		#entry > p:first-of-type::first-letter {
 			/* Font size is 2.5 times the text size * 1.625 (line height) */
 			/* Margin top verticaly align the drop cap with the two text lines */
-			@apply float-left mt-[2px] mr-1 text-[calc(16px*1.625*2.5)] sm:mt-[3px] sm:text-[calc(18px*1.625*2.5)];
+			@apply float-left mt-px mr-1 -mb-3 text-[calc(16px*1.625*2.5)] leading-none italic sm:text-[calc(18px*1.625*2.5)];
+			/* Let's be fancy with some OpenType features */
+			font-feature-settings: "ss01", "ss02", "ss03", "ss04", "ss05", "swsh";
 		}
 
-		/* Fix for Chrome and Safari — don't ask why I need this, I'll cry */
-		/* Use @supports to discriminate Firefox and olders browsers */
-		@supports (initial-letter: 5) or (-webkit-initial-letter: 5) {
+		/* Don't ask why those browser-specific hacks, I'll cry */
+		/* Fix for Chrome — use @supports to discriminate Firefox */
+		@supports (initial-letter: 5) {
 			#entry > p:first-of-type::first-letter {
-				@apply mb-[-30px] leading-none;
+				@apply mt-[-11px];
 			}
+		}
+
+		/* Safari only — :nth-child(1 of X) syntax is Safari-only */
+		_::-webkit-full-page-media,
+		_:future,
+		:root #entry > p:first-of-type::first-letter {
+			@apply mt-[-11px];
 		}
 
 		/* If an entry start with a title (so it appear in the TOC)

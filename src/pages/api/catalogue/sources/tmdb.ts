@@ -87,7 +87,7 @@ export async function fetchShow(id: number): Promise<TmdbShow | null> {
 }
 
 export function posterUrl(path: string, size = "w500"): string {
-  // TMDB’s static image host uses /t/p/<size>/<file_path> :contentReference[oaicite:0]{index=0}
+  // TMDB's static image host uses /t/p/<size>/<file_path> :contentReference[oaicite:0]{index=0}
   return `https://image.tmdb.org/t/p/${size}${path}`
 }
 

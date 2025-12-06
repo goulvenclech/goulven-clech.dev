@@ -21,7 +21,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@11ty/eleventy-fetch": "^5.1.0",
+    "@11ty/eleventy-fetch": "^5.1.1",
     "@astrojs/check": "^0.9.6",
     "@astrojs/netlify": "^6.6.3",
     "@astrojs/rss": "^4.0.14",
@@ -40,7 +40,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^24.10.1",
     "@types/semver": "^7.7.1",
-    "astro": "^5.16.3",
+    "astro": "^5.16.4",
     "astro-expressive-code": "^0.41.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
