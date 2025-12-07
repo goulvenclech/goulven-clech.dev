@@ -7,19 +7,16 @@ import { getMyAge } from "src/utils"
  * Home page of my personal website, so I have to make a good first impression 💅
  * Contains a short introduction and the latest blog entries.
  */
-
-// Page title use in Hero & Metadata
-const pageTitle = "Hello"
 ---
 
-<Layout title={pageTitle}>
+<Layout title="Hello">
 	<section>
-		<h1>Hello<span>✌</span></h1>
+		<h1>Hello<span class="ml-1.5 inline-block rotate-6 font-normal">✌</span></h1>
 		<p>
 			I'm <GithubInline user="35667800" />, a {getMyAge()} yo software developer based in Toulouse, France.
 		</p>
 		<p>
-			Mainly working in the <i>Elixir</i>, <i>Rust</i>, and <i>TypeScript</i> web ecosystems, I'm currently
+			Mainly working in the <i>Elixir</i>, <i>Rust</i>, and <i>TypeScript</i> ecosystems, I'm currently
 			the lead developer of
 			<a href="https://encheres-immo.com">Enchères Immo</a>, a real estate auction platform, and the
 			co-creator of <a href="https://github.com/bruits">Bruits</a>, a <i>Rust</i>-focused open
@@ -36,11 +33,3 @@ const pageTitle = "Hello"
 		<Search />
 	</section>
 </Layout>
-<style>
-	@reference "$assets/base.css";
-
-	h1 span {
-		@apply ml-1.5 inline-block font-normal;
-		transform: rotate(5deg);
-	}
-</style>
