@@ -287,7 +287,7 @@
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pt-[2.5px] leading-none font-medium text-body-light dark:text-body-dark;
+		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pb-px leading-none font-medium text-body-light dark:text-body-dark;
 		font-feature-settings: 'lnum';
 	}
 
