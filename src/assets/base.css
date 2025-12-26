@@ -353,8 +353,9 @@
     @apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] decoration-font-light dark:decoration-font-dark hover:decoration-primary dark:hover:decoration-primary;
   }
 
-  /* Remove leading icon for links that have the `card` class */
-  a.card::before {
+  /* Remove leading icon for links that have the `card` or `no-icon` class */
+  a.card::before,
+  a.no-icon::before {
     content: none !important;
     padding-right: 0;
   }
@@ -383,6 +384,10 @@
     content: "\f05a";
     font-weight: 900;
     font-family: "Font Awesome 6 Free";
+  }
+
+	a[href^="/catalogue/wrapped"]::before {
+    content: none !important;
   }
 
   a[href^="/catalogue"]::before {

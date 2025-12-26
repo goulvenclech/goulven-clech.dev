@@ -1,0 +1,385 @@
+---
+import ReturnHome from "$components/controls/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+import { createClient, type Client } from "@libsql/client"
+
+const pageTitle = "My catalogue wrapped"
+const YEAR = 2025
+const START_DATE = `${YEAR}-01-01T00:00:00.000Z`
+const END_DATE = `${YEAR + 1}-01-01T00:00:00.000Z`
+
+const client = createClient({
+	url: import.meta.env.TURSO_URL,
+	authToken: import.meta.env.TURSO_TOKEN,
+})
+
+interface RatingStats {
+	total: number
+	favorites: number
+	loved: number
+	liked: number
+}
+
+interface EmotionStat {
+	id: number
+	emoji: string
+	name: string
+	count: number
+}
+
+interface ReviewThumbnail {
+	source_name: string
+	source_img: string
+	source_img_focus_y: number | null
+	source_link: string
+	rating: number
+}
+
+const RATING_EMOJI: Record<number, string> = {
+	6: "⭐",
+	5: "😍",
+	4: "😀",
+}
+
+type MediaSource = "IGDB" | "BGG" | "TMDB_MOVIE" | "TMDB_TV" | "SPOTIFY" | null
+
+async function getRatingStats(db: Client, source: MediaSource = null): Promise<RatingStats> {
+	const sourceClause = source ? "AND source = ?" : ""
+	const args = source ? [START_DATE, END_DATE, source] : [START_DATE, END_DATE]
+
+	const result = await db.execute({
+		sql: `SELECT rating, COUNT(*) as count FROM reviews
+		      WHERE inserted_at >= ? AND inserted_at < ? ${sourceClause}
+		      GROUP BY rating`,
+		args,
+	})
+
+	const counts = new Map<number, number>()
+	for (const row of result.rows as unknown as { rating: number; count: number }[]) {
+		counts.set(row.rating, row.count)
+	}
+
+	const total = [...counts.values()].reduce((sum, c) => sum + c, 0)
+	return {
+		total,
+		favorites: counts.get(6) ?? 0,
+		loved: counts.get(5) ?? 0,
+		liked: counts.get(4) ?? 0,
+	}
+}
+
+function formatRatingBreakdown(stats: RatingStats, forOverview = false): string {
+	const parts: string[] = []
+	if (stats.favorites > 0)
+		parts.push(`${stats.favorites} favorite${stats.favorites > 1 ? "s" : ""} ⭐`)
+	if (stats.loved > 0) parts.push(`${stats.loved} loved 😍`)
+	if (stats.liked > 0) parts.push(`and ${stats.liked} liked 😀`)
+	if (parts.length === 0) return ""
+	const joined = parts.join(", ")
+	return forOverview ? `, including ${joined}` : `Including ${joined}`
+}
+
+async function getTopEmotions(
+	db: Client,
+	source: MediaSource = null,
+	limit = 3
+): Promise<EmotionStat[]> {
+	const sourceClause = source ? "AND r.source = ?" : ""
+	const args = source ? [START_DATE, END_DATE, source, limit] : [START_DATE, END_DATE, limit]
+
+	const result = await db.execute({
+		sql: `SELECT e.id, e.emoji, e.name, COUNT(*) as count
+		      FROM reviews r, json_each(r.emotions) AS je
+		      JOIN emotions e ON e.id = je.value
+		      WHERE r.inserted_at >= ? AND r.inserted_at < ? ${sourceClause}
+		      GROUP BY e.id
+		      HAVING count > 1
+		      ORDER BY count DESC
+		      LIMIT ?`,
+		args,
+	})
+
+	return result.rows as unknown as EmotionStat[]
+}
+
+function formatEmotions(emotions: EmotionStat[]): string {
+	if (emotions.length === 0) return ""
+	return ` And mostly felt ${emotions.map((e) => `<i>${e.name}</i>`).join(", ")}.`
+}
+
+async function getPositiveReviews(db: Client, source: MediaSource): Promise<ReviewThumbnail[]> {
+	const result = await db.execute({
+		sql: `SELECT source_name, source_img, source_img_focus_y, source_link, rating
+		      FROM reviews
+		      WHERE inserted_at >= ? AND inserted_at < ?
+		        AND source = ?
+		        AND rating >= 4
+		      ORDER BY rating DESC, inserted_at DESC`,
+		args: [START_DATE, END_DATE, source],
+	})
+	return result.rows as unknown as ReviewThumbnail[]
+}
+
+const overallStats = await getRatingStats(client)
+const videoGameStats = await getRatingStats(client, "IGDB")
+const boardGameStats = await getRatingStats(client, "BGG")
+const movieStats = await getRatingStats(client, "TMDB_MOVIE")
+const showStats = await getRatingStats(client, "TMDB_TV")
+const albumStats = await getRatingStats(client, "SPOTIFY")
+
+const [
+	overallEmotionsChart,
+	gameEmotions,
+	boardGameEmotions,
+	movieEmotions,
+	showEmotions,
+	albumEmotions,
+	gameReviews,
+	boardGameReviews,
+	movieReviews,
+	showReviews,
+	albumReviews,
+] = await Promise.all([
+	getTopEmotions(client, null, 10),
+	getTopEmotions(client, "IGDB"),
+	getTopEmotions(client, "BGG"),
+	getTopEmotions(client, "TMDB_MOVIE"),
+	getTopEmotions(client, "TMDB_TV"),
+	getTopEmotions(client, "SPOTIFY"),
+	getPositiveReviews(client, "IGDB"),
+	getPositiveReviews(client, "BGG"),
+	getPositiveReviews(client, "TMDB_MOVIE"),
+	getPositiveReviews(client, "TMDB_TV"),
+	getPositiveReviews(client, "SPOTIFY"),
+])
+
+const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
+const BAR_WIDTH = 40
+const BAR_GAP = 12
+const CHART_HEIGHT = 120
+const CHART_PADDING = 12
+const CHART_WIDTH =
+	overallEmotionsChart.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PADDING * 2
+---
+
+<Layout title={pageTitle} description="A look back at all the media I experienced in 2025.">
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			As 2025 comes to an end, it's time to look back at the new reviews I added in my
+			<a href="/catalogue">catalogue</a>, and see what stood out the most!
+		</p>
+		<p>
+			<ReturnHome />
+		</p>
+	</section>
+
+	<section>
+		<h2>Overview</h2>
+		<p>
+			In 2025, I added <strong>{overallStats.total} reviews</strong>{
+				formatRatingBreakdown(overallStats, true)
+			}. Here are the top emotions I felt this year:
+		</p>
+
+		{
+			overallEmotionsChart.length > 0 && (
+				<svg
+					viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT + 40}`}
+					class="my-5 w-full max-w-full"
+					role="img"
+					aria-label="Bar chart of top emotions felt this year"
+				>
+					{overallEmotionsChart.map((emotion, i) => {
+						const barHeight = (emotion.count / maxEmotionCount) * CHART_HEIGHT
+						const x = CHART_PADDING + i * (BAR_WIDTH + BAR_GAP)
+						const y = CHART_HEIGHT - barHeight + 24
+						return (
+							<g>
+								<title>
+									{emotion.name} ({emotion.count})
+								</title>
+								<text x={x + BAR_WIDTH / 2} y={y - 4} text-anchor="middle" font-size="18">
+									{emotion.emoji}
+								</text>
+								<rect
+									x={x}
+									y={y}
+									width={BAR_WIDTH}
+									height={barHeight}
+									rx="4"
+									class="fill-primary"
+								/>
+								<text
+									x={x + BAR_WIDTH / 2}
+									y={y + 16}
+									text-anchor="middle"
+									class="fill-body-light text-xs font-medium"
+								>
+									{emotion.count}
+								</text>
+							</g>
+						)
+					})}
+				</svg>
+			)
+		}
+
+		<h2>{videoGameStats.total} Video games</h2>
+		<p>
+			{formatRatingBreakdown(videoGameStats)}.<Fragment set:html={formatEmotions(gameEmotions)} />
+		</p>
+		<div class="grid grid-cols-4 gap-2">
+			{
+				gameReviews.map((r) => (
+					<a
+						href={r.source_link}
+						target="_blank"
+						rel="noopener"
+						class="no-icon relative aspect-3/4 overflow-hidden rounded"
+					>
+						<img
+							src={r.source_img}
+							alt={r.source_name}
+							class="h-full w-full object-cover"
+							style={
+								r.source_img_focus_y != null
+									? `object-position: center ${r.source_img_focus_y}%`
+									: undefined
+							}
+						/>
+						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+							{RATING_EMOJI[r.rating]}
+						</span>
+					</a>
+				))
+			}
+		</div>
+
+		<h2>{boardGameStats.total} Board games</h2>
+		<p>
+			{formatRatingBreakdown(boardGameStats)}.<Fragment
+				set:html={formatEmotions(boardGameEmotions)}
+			/>
+		</p>
+		<div class="grid grid-cols-4 gap-2">
+			{
+				boardGameReviews.map((r) => (
+					<a
+						href={r.source_link}
+						target="_blank"
+						rel="noopener"
+						class="no-icon relative aspect-3/4 overflow-hidden rounded"
+					>
+						<img
+							src={r.source_img}
+							alt={r.source_name}
+							class="h-full w-full object-cover"
+							style={
+								r.source_img_focus_y != null
+									? `object-position: center ${r.source_img_focus_y}%`
+									: undefined
+							}
+						/>
+						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+							{RATING_EMOJI[r.rating]}
+						</span>
+					</a>
+				))
+			}
+		</div>
+
+		<h2>{movieStats.total} Movies</h2>
+		<p>
+			{formatRatingBreakdown(movieStats)}.<Fragment set:html={formatEmotions(movieEmotions)} />
+		</p>
+		<div class="grid grid-cols-4 gap-2">
+			{
+				movieReviews.map((r) => (
+					<a
+						href={r.source_link}
+						target="_blank"
+						rel="noopener"
+						class="no-icon relative aspect-3/4 overflow-hidden rounded"
+					>
+						<img
+							src={r.source_img}
+							alt={r.source_name}
+							class="h-full w-full object-cover"
+							style={
+								r.source_img_focus_y != null
+									? `object-position: center ${r.source_img_focus_y}%`
+									: undefined
+							}
+						/>
+						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+							{RATING_EMOJI[r.rating]}
+						</span>
+					</a>
+				))
+			}
+		</div>
+
+		<h2>{showStats.total} Shows</h2>
+		<p>
+			{formatRatingBreakdown(showStats)}.<Fragment set:html={formatEmotions(showEmotions)} />
+		</p>
+		<div class="grid grid-cols-4 gap-2">
+			{
+				showReviews.map((r) => (
+					<a
+						href={r.source_link}
+						target="_blank"
+						rel="noopener"
+						class="no-icon relative aspect-3/4 overflow-hidden rounded"
+					>
+						<img
+							src={r.source_img}
+							alt={r.source_name}
+							class="h-full w-full object-cover"
+							style={
+								r.source_img_focus_y != null
+									? `object-position: center ${r.source_img_focus_y}%`
+									: undefined
+							}
+						/>
+						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+							{RATING_EMOJI[r.rating]}
+						</span>
+					</a>
+				))
+			}
+		</div>
+
+		<h2>{albumStats.total} Albums</h2>
+		<p>
+			{formatRatingBreakdown(albumStats)}.<Fragment set:html={formatEmotions(albumEmotions)} />
+		</p>
+		<div class="grid grid-cols-4 gap-2">
+			{
+				albumReviews.map((r) => (
+					<a
+						href={r.source_link}
+						target="_blank"
+						rel="noopener"
+						class="no-icon relative aspect-3/4 overflow-hidden rounded"
+					>
+						<img
+							src={r.source_img}
+							alt={r.source_name}
+							class="h-full w-full object-cover"
+							style={
+								r.source_img_focus_y != null
+									? `object-position: center ${r.source_img_focus_y}%`
+									: undefined
+							}
+						/>
+						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+							{RATING_EMOJI[r.rating]}
+						</span>
+					</a>
+				))
+			}
+		</div>
+	</section>
+</Layout>
