@@ -1,0 +1,56 @@
+---
+interface Emotion {
+	emoji: string
+	name: string
+	count: number
+}
+
+interface Props {
+	emotions: Emotion[]
+	maxCount: number
+	class?: string
+}
+
+const { emotions, maxCount, class: className } = Astro.props
+
+const BAR_WIDTH = 40
+const BAR_GAP = 12
+const CHART_HEIGHT = 120
+const CHART_PADDING = 12
+
+const chartWidth = emotions.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PADDING * 2
+---
+
+<svg
+	viewBox={`0 0 ${chartWidth} ${CHART_HEIGHT + 40}`}
+	class:list={["my-5 w-full max-w-full", className]}
+	role="img"
+	aria-label="Bar chart of top emotions felt this year"
+>
+	{
+		emotions.map((emotion, i) => {
+			const barHeight = (emotion.count / maxCount) * CHART_HEIGHT
+			const x = CHART_PADDING + i * (BAR_WIDTH + BAR_GAP)
+			const y = CHART_HEIGHT - barHeight + 24
+			return (
+				<g>
+					<title>
+						{emotion.name} ({emotion.count})
+					</title>
+					<text x={x + BAR_WIDTH / 2} y={y - 4} text-anchor="middle" font-size="18">
+						{emotion.emoji}
+					</text>
+					<rect x={x} y={y} width={BAR_WIDTH} height={barHeight} rx="4" class="fill-primary" />
+					<text
+						x={x + BAR_WIDTH / 2}
+						y={y + 16}
+						text-anchor="middle"
+						class="fill-body-light text-xs font-medium"
+					>
+						{emotion.count}
+					</text>
+				</g>
+			)
+		})
+	}
+</svg>

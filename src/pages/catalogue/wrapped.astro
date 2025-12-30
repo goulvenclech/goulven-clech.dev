@@ -1,4 +1,5 @@
 ---
+import EmotionChart from "$components/catalogue/EmotionChart.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 import { createClient, type Client } from "@libsql/client"
@@ -153,13 +154,13 @@ const [
 	getPositiveReviews(client, "SPOTIFY"),
 ])
 
+const MOBILE_EMOTION_COUNT = 7
+const DESKTOP_EMOTION_COUNT = 10
+
+const mobileEmotions = overallEmotionsChart.slice(0, MOBILE_EMOTION_COUNT)
+const desktopEmotions = overallEmotionsChart.slice(0, DESKTOP_EMOTION_COUNT)
+
 const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
-const BAR_WIDTH = 40
-const BAR_GAP = 12
-const CHART_HEIGHT = 120
-const CHART_PADDING = 12
-const CHART_WIDTH =
-	overallEmotionsChart.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PADDING * 2
 ---
 
 <Layout title={pageTitle} description="A look back at all the media I experienced in 2025.">
@@ -184,44 +185,14 @@ const CHART_WIDTH =
 
 		{
 			overallEmotionsChart.length > 0 && (
-				<svg
-					viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT + 40}`}
-					class="my-5 w-full max-w-full"
-					role="img"
-					aria-label="Bar chart of top emotions felt this year"
-				>
-					{overallEmotionsChart.map((emotion, i) => {
-						const barHeight = (emotion.count / maxEmotionCount) * CHART_HEIGHT
-						const x = CHART_PADDING + i * (BAR_WIDTH + BAR_GAP)
-						const y = CHART_HEIGHT - barHeight + 24
-						return (
-							<g>
-								<title>
-									{emotion.name} ({emotion.count})
-								</title>
-								<text x={x + BAR_WIDTH / 2} y={y - 4} text-anchor="middle" font-size="18">
-									{emotion.emoji}
-								</text>
-								<rect
-									x={x}
-									y={y}
-									width={BAR_WIDTH}
-									height={barHeight}
-									rx="4"
-									class="fill-primary"
-								/>
-								<text
-									x={x + BAR_WIDTH / 2}
-									y={y + 16}
-									text-anchor="middle"
-									class="fill-body-light text-xs font-medium"
-								>
-									{emotion.count}
-								</text>
-							</g>
-						)
-					})}
-				</svg>
+				<>
+					<EmotionChart emotions={mobileEmotions} maxCount={maxEmotionCount} class="sm:hidden" />
+					<EmotionChart
+						emotions={desktopEmotions}
+						maxCount={maxEmotionCount}
+						class="hidden sm:block"
+					/>
+				</>
 			)
 		}
 
@@ -229,7 +200,7 @@ const CHART_WIDTH =
 		<p>
 			{formatRatingBreakdown(videoGameStats)}.<Fragment set:html={formatEmotions(gameEmotions)} />
 		</p>
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
 				gameReviews.map((r) => (
 					<a
@@ -262,7 +233,7 @@ const CHART_WIDTH =
 				set:html={formatEmotions(boardGameEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
 				boardGameReviews.map((r) => (
 					<a
@@ -293,7 +264,7 @@ const CHART_WIDTH =
 		<p>
 			{formatRatingBreakdown(movieStats)}.<Fragment set:html={formatEmotions(movieEmotions)} />
 		</p>
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
 				movieReviews.map((r) => (
 					<a
@@ -324,7 +295,7 @@ const CHART_WIDTH =
 		<p>
 			{formatRatingBreakdown(showStats)}.<Fragment set:html={formatEmotions(showEmotions)} />
 		</p>
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
 				showReviews.map((r) => (
 					<a
@@ -355,7 +326,7 @@ const CHART_WIDTH =
 		<p>
 			{formatRatingBreakdown(albumStats)}.<Fragment set:html={formatEmotions(albumEmotions)} />
 		</p>
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
 				albumReviews.map((r) => (
 					<a
