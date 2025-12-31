@@ -13,7 +13,7 @@ const { caption, source, className } = Astro.props
 ---
 
 <figure class={"my-5 " + (className ?? "")}>
-	<div class="gallery-grid grid gap-2.5">
+	<div class="gallery-grid grid gap-2.5 gap-y-1">
 		<slot />
 	</div>
 	{

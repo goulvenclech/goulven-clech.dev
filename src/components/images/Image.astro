@@ -55,11 +55,7 @@ const placeholderURL = isStringSource
 	: src.format === "svg"
 		? src.src // We don't support SVG placeholders yet
 		: src.fsPath
-			? await generatePlaceholder(
-					src.fsPath,
-					Math.max(src.width, defaultWidth),
-					src.height
-				)
+			? await generatePlaceholder(src.fsPath, Math.max(src.width, defaultWidth), src.height)
 			: src.src
 
 const goodQualityURL = isStringSource
@@ -149,7 +145,7 @@ if (srcDark) {
 		}
 	</span>
 	{
-		!hideMarkerLegend && (
+		!hideMarkerLegend && markers.length > 0 && (
 			<span class="inline-flex flex-wrap">
 				<slot name="marker-legends">
 					{markers.length > 0 &&
