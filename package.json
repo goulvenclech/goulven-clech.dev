@@ -18,17 +18,25 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "prettier --check . && astro check && tsc --noEmit",
+    "check:astro": "astro check --minimumSeverity warning",
+    "check:format": "prettier --check .",
+    "check:types": "tsc --noEmit",
+    "format": "prettier --write .",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@11ty/eleventy-fetch": "^5.1.1",
     "@astrojs/check": "^0.9.6",
-    "@astrojs/netlify": "^6.6.3",
-    "@astrojs/rss": "^4.0.14",
+    "@astrojs/netlify": "^6.6.4",
+    "@astrojs/rss": "^4.0.15",
     "@libsql/client": "^0.15.15",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
-    "fast-xml-parser": "^5.3.2",
+    "fast-xml-parser": "^5.3.3",
     "medium-zoom": "^1.1.0",
     "playwright": "^1.57.0",
     "rehype-mermaid": "^3.0.0",
@@ -36,16 +44,20 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.3.12",
-    "@tailwindcss/vite": "^4.1.17",
-    "@types/node": "^24.10.1",
+    "@astrojs/mdx": "^4.3.13",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^24.10.9",
     "@types/semver": "^7.7.1",
-    "astro": "^5.16.4",
-    "astro-expressive-code": "^0.41.3",
+    "@vitest/coverage-v8": "^3.2.4",
+    "astro": "^5.16.11",
+    "astro-expressive-code": "^0.41.6",
+    "happy-dom": "^18.0.1",
+    "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "semver": "^7.7.3",
-    "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3"
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }
