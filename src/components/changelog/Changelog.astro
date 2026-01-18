@@ -51,7 +51,7 @@ const changelogEntriesSorted = changelogEntries.reduce(
 		acc[year][month].push(entry)
 		return acc
 	},
-	{} as Record<number, Record<number, ChangelogEntry[]>>
+	{} as Record<number, Record<number, ChangelogEntry[]>>,
 )
 
 // Sort by date (year → month) and flatten into consecutive months
@@ -66,7 +66,7 @@ const changelogMonthsSorted = Object.entries(changelogEntriesSorted)
 				year: Number(year),
 				month: Number(month),
 				entries,
-			}))
+			})),
 	)
 ---
 
@@ -74,7 +74,9 @@ const changelogMonthsSorted = Object.entries(changelogEntriesSorted)
 	{
 		changelogMonthsSorted.map(({ year, month, entries }, i) => {
 			const prevYear = i > 0 ? changelogMonthsSorted[i - 1].year : null
-			const monthName = new Date(0, month).toLocaleString("default", { month: "long" })
+			const monthName = new Date(0, month).toLocaleString("default", {
+				month: "long",
+			})
 			const title = prevYear !== year ? `${monthName} ${year}` : monthName
 			return (
 				<>

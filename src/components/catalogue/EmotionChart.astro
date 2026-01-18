@@ -18,7 +18,8 @@ const BAR_GAP = 12
 const CHART_HEIGHT = 120
 const CHART_PADDING = 12
 
-const chartWidth = emotions.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PADDING * 2
+const chartWidth =
+	emotions.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PADDING * 2
 ---
 
 <svg
@@ -37,10 +38,22 @@ const chartWidth = emotions.length * (BAR_WIDTH + BAR_GAP) - BAR_GAP + CHART_PAD
 					<title>
 						{emotion.name} ({emotion.count})
 					</title>
-					<text x={x + BAR_WIDTH / 2} y={y - 4} text-anchor="middle" font-size="18">
+					<text
+						x={x + BAR_WIDTH / 2}
+						y={y - 4}
+						text-anchor="middle"
+						font-size="18"
+					>
 						{emotion.emoji}
 					</text>
-					<rect x={x} y={y} width={BAR_WIDTH} height={barHeight} rx="4" class="fill-primary" />
+					<rect
+						x={x}
+						y={y}
+						width={BAR_WIDTH}
+						height={barHeight}
+						rx="4"
+						class="fill-primary"
+					/>
 					<text
 						x={x + BAR_WIDTH / 2}
 						y={y + 16}

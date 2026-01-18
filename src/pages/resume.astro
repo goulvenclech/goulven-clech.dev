@@ -43,21 +43,23 @@ educationEntries.sort((a, b) => {
 	<section class="print:mt-0">
 		<h1 class="">Goulven CLEC'H</h1>
 		<p>
-			I am a {getMyAge()} years old <i>software engineer</i> with extensive experience in <i
-				>Elixir</i
-			>,
-			<i>Rust</i>, and <i>TypeScript</i> ecosystems, mainly in startups and open source environments.
+			I am a {getMyAge()} years old <i>software engineer</i> with extensive experience
+			in <i>Elixir</i>,
+			<i>Rust</i>, and <i>TypeScript</i> ecosystems, mainly in startups and open source
+			environments.
 		</p>
 		<p>
-			Interested in <i>functional programming</i> and <i>software craftsmanship</i>, I aim to
-			deliver maintainable, performant, and useful software. Working remotely for {
-				getRemoteWorkYears()
-			} years, I'm capable of owning projects end-to-end, from product design to infrastructure management,
-			while collaborating effectively with cross-functional teams.
+			Interested in <i>functional programming</i> and <i
+				>software craftsmanship</i
+			>, I aim to deliver maintainable, performant, and useful software. Working
+			remotely for {getRemoteWorkYears()} years, I'm capable of owning projects end-to-end,
+			from product design to infrastructure management, while collaborating effectively
+			with cross-functional teams.
 		</p>
 		<p>
-			Based in Toulouse, France, I'm also passionate about game development, hiking in forests,
-			visiting cute villages, kayaking in rivers, and drinking specialty coffees.
+			Based in Toulouse, France, I'm also passionate about game development,
+			hiking in forests, visiting cute villages, kayaking in rivers, and
+			drinking specialty coffees.
 		</p>
 		<p class="print:hidden">
 			<ReturnHome /> -
@@ -65,12 +67,18 @@ educationEntries.sort((a, b) => {
 			<a href="mailto:goulven.clech@protonmail.com">Contact me</a>
 		</p>
 		<p class="hidden print:block">
-			Contact me at <a href="mailto:goulven.clech@protonmail.com">goulven.clech@protonmail.com</a>
+			Contact me at <a href="mailto:goulven.clech@protonmail.com"
+				>goulven.clech@protonmail.com</a
+			>
 		</p>
 	</section>
 	<section>
 		<h2 class="mb-2.5" id="last_entries">Experiences</h2>
-		{experiencesEntries.map((experience) => <ResumeCard experience={experience} />)}
+		{
+			experiencesEntries.map((experience) => (
+				<ResumeCard experience={experience} />
+			))
+		}
 	</section>
 	<section>
 		<h2 class="mb-2.5" id="education">Education</h2>

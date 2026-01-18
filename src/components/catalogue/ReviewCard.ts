@@ -6,59 +6,59 @@ import type { Emotion } from "../../pages/api/catalogue/emotions"
  * A web component to display a review card
  */
 export class ReviewCard extends HTMLElement {
-  private review: Review | null = null
-  private emotionsMap: Map<number, Emotion> = new Map()
+	private review: Review | null = null
+	private emotionsMap: Map<number, Emotion> = new Map()
 
-  // Rating emojis mapping
-  private static readonly ratingEmojis: { [key: number]: string } = {
-    1: "😡 hated it",
-    2: "🙁 disliked it",
-    3: "😐 meh'd it",
-    4: "😀 liked it",
-    5: "😍 loved it",
-    6: "⭐ favorite",
-  }
+	// Rating emojis mapping
+	private static readonly ratingEmojis: { [key: number]: string } = {
+		1: "😡 hated it",
+		2: "🙁 disliked it",
+		3: "😐 meh'd it",
+		4: "😀 liked it",
+		5: "😍 loved it",
+		6: "⭐ favorite",
+	}
 
-  constructor() {
-    super()
-  }
+	constructor() {
+		super()
+	}
 
-  /**
-   * Set the review data and emotions map for the card
-   */
-  setReviewData(review: Review, emotionsMap: Map<number | string, Emotion>) {
-    this.review = review
-    this.emotionsMap = emotionsMap as Map<number, Emotion>
-    this.render()
-    return this
-  }
+	/**
+	 * Set the review data and emotions map for the card
+	 */
+	setReviewData(review: Review, emotionsMap: Map<number | string, Emotion>) {
+		this.review = review
+		this.emotionsMap = emotionsMap as Map<number, Emotion>
+		this.render()
+		return this
+	}
 
-  /**
-   * Render the review card
-   */
-  private render() {
-    if (!this.review) return
+	/**
+	 * Render the review card
+	 */
+	private render() {
+		if (!this.review) return
 
-    const url = this.review.source_link || "#"
-    const date = formatDate(new Date(this.review.inserted_at))
-    const image = this.review.source_img
-      ? this.review.source_img
-      : "https://picsum.photos/seed/" + this.review.source_id + "/800"
+		const url = this.review.source_link || "#"
+		const date = formatDate(new Date(this.review.inserted_at))
+		const image = this.review.source_img
+			? this.review.source_img
+			: "https://picsum.photos/seed/" + this.review.source_id + "/800"
 
-    const position =
-      typeof this.review.source_img_focus_y === "number"
-        ? ` style="--image-focus-y: ${this.review.source_img_focus_y}%"`
-        : ""
+		const position =
+			typeof this.review.source_img_focus_y === "number"
+				? ` style="--image-focus-y: ${this.review.source_img_focus_y}%"`
+				: ""
 
-    const reviewEmotionNames = this.review.emotions
-      .map((id) => this.emotionsMap.get(id)?.name)
-      .filter((name): name is string => !!name)
-      .map((name) => `<i>${name}</i>`)
-      .join(", ")
+		const reviewEmotionNames = this.review.emotions
+			.map((id) => this.emotionsMap.get(id)?.name)
+			.filter((name): name is string => !!name)
+			.map((name) => `<i>${name}</i>`)
+			.join(", ")
 
-    const emotionsText = reviewEmotionNames || "various emotions"
+		const emotionsText = reviewEmotionNames || "various emotions"
 
-    this.innerHTML = `
+		this.innerHTML = `
       <a href="${url}" target="_blank" rel="noopener" class="card">
         <div class="card-image">
           <img src="${image}" alt="Cover for ${this.review.source_name || this.review.source_id}"${position} />
@@ -70,7 +70,7 @@ export class ReviewCard extends HTMLElement {
         </article>
       </a>
     `
-  }
+	}
 }
 
 // Register the component

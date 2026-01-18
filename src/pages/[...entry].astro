@@ -39,8 +39,8 @@ const { Content, headings } = await render(entry)
 			!isEntryPublished(entry.data.published, true) && (
 				<warning-note class="mt-10">
 					<p>
-						You're currently reading a work-in-progress draft. Its content is probably incomplete,
-						and may be updated before public release.
+						You're currently reading a work-in-progress draft. Its content is
+						probably incomplete, and may be updated before public release.
 					</p>
 				</warning-note>
 			)
@@ -49,8 +49,8 @@ const { Content, headings } = await render(entry)
 			entry.data.timeMachine && (
 				<time-machine class="mt-10">
 					<p>
-						You're currently reading a backdated entry, before my blog creation in 2023. Reason for
-						backdating: « {entry.data.timeMachine} »
+						You're currently reading a backdated entry, before my blog creation
+						in 2023. Reason for backdating: « {entry.data.timeMachine} »
 					</p>
 				</time-machine>
 			)

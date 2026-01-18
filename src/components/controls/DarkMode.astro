@@ -8,7 +8,9 @@
  */
 ---
 
-<button name="darkMode" class="hover:text-primary dark:hover:text-primary ml-auto"></button>
+<button
+	name="darkMode"
+	class="hover:text-primary dark:hover:text-primary ml-auto"></button>
 
 <script>
 	// Get the button element above (can be multiple)
@@ -107,7 +109,11 @@
 	}
 
 	// At page load, init the button icon to reflect the current theme
-	if (buttons) changeIcon((localStorage.getItem("color-theme") as Theme) || "system", buttons)
+	if (buttons)
+		changeIcon(
+			(localStorage.getItem("color-theme") as Theme) || "system",
+			buttons,
+		)
 </script>
 <style>
 	@reference "$assets/base.css";

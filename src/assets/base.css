@@ -20,212 +20,216 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --text-*: initial;
-  --text-xs: 14px;
-  --text-xs--line-height: 20px;
-  --text-sm: 16px;
-  --text-sm--line-height: 24px;
-  --text-base: 18px;
-  --text-base--line-height: 28px;
-  --text-lg: 20px;
-  --text-lg--line-height: 28px;
-  --text-xl: 24px;
-  --text-xl--line-height: 28px;
-  --text-2xl: 30px;
-  --text-2xl--line-height: 28px;
+	--text-*: initial;
+	--text-xs: 14px;
+	--text-xs--line-height: 20px;
+	--text-sm: 16px;
+	--text-sm--line-height: 24px;
+	--text-base: 18px;
+	--text-base--line-height: 28px;
+	--text-lg: 20px;
+	--text-lg--line-height: 28px;
+	--text-xl: 24px;
+	--text-xl--line-height: 28px;
+	--text-2xl: 30px;
+	--text-2xl--line-height: 28px;
 
-  --color-*: initial;
-  --color-font-light: #262421;
-  --color-font-dark: #e8e8e8;
+	--color-*: initial;
+	--color-font-light: #262421;
+	--color-font-dark: #e8e8e8;
 
-  --color-body-light: #fff;
-  --color-body-dark: #1c1e26;
+	--color-body-light: #fff;
+	--color-body-dark: #1c1e26;
 
-  --color-alt-light: #f4f4f5;
-  --color-alt-dark: #2e303e;
+	--color-alt-light: #f4f4f5;
+	--color-alt-dark: #2e303e;
 
-  --color-primary: #e95678;
+	--color-primary: #e95678;
 
 	--color-success: oklch(59.6% 0.145 163.225);
 	--color-warning: oklch(70.5% 0.213 47.604);
 	--color-info: oklch(54.6% 0.245 262.881);
 
-  --font-weight-*: initial;
-  --font-weight-normal: 400;
-  --font-weight-medium: 525;
+	--font-weight-*: initial;
+	--font-weight-normal: 400;
+	--font-weight-medium: 525;
 
 	--radius: 0.5rem;
 
-  --font-serif: var(--font-eb-garamond), "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
-    Times, serif;
-  --font-mono: var(--font-monaspace), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  --font-goofy: var(--font-abby), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+	--font-serif:
+		var(--font-eb-garamond), "Source Serif 4", ui-serif, Georgia, Cambria,
+		"Times New Roman", Times, serif;
+	--font-mono:
+		var(--font-monaspace), ui-monospace, SFMono-Regular, Menlo, Monaco,
+		Consolas, "Liberation Mono", "Courier New", monospace;
+	--font-goofy:
+		var(--font-abby), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-
 
 /**
 * BASE LAYER
 * See -> https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
 */
 @layer base {
-  body {
-    @apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light font-serif text-sm sm:text-base;
-    font-feature-settings: "liga", "clig", "onum";
-  }
+	body {
+		@apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark print:bg-body-light print:text-font-light print:dark:bg-body-light print:dark:text-font-light font-serif text-sm sm:text-base;
+		font-feature-settings: "liga", "clig", "onum";
+	}
 
-  i, em {
-    font-feature-settings: "liga", "clig", "dlig", "onum";
-  }
+	i,
+	em {
+		font-feature-settings: "liga", "clig", "dlig", "onum";
+	}
 
-  main {
-    @apply mx-auto max-w-[590px] px-4 sm:px-0;
-  }
+	main {
+		@apply mx-auto max-w-[590px] px-4 sm:px-0;
+	}
 
-  /*
+	/*
     TYPOGRAPHY
   */
-  p {
-    @apply relative my-5 text-sm sm:text-base;
-  }
+	p {
+		@apply relative my-5 text-sm sm:text-base;
+	}
 
-  h1,
-  h2 {
-    @apply mt-10 mb-5;
-    font-feature-settings: "liga", "clig", "onum";
-  }
-
-  h1 {
-    @apply text-xl text-pretty sm:text-2xl;
-  }
-
-  h2 {
-    @apply text-lg text-pretty sm:text-xl;
-  }
-
-  h3 {
-    @apply font-medium my-5;
+	h1,
+	h2 {
+		@apply mt-10 mb-5;
 		font-feature-settings: "liga", "clig", "onum";
-  }
+	}
 
-  abbr,
-  strong {
-    @apply font-normal not-italic no-underline;
-  }
+	h1 {
+		@apply text-xl text-pretty sm:text-2xl;
+	}
 
-  abbr {
-    font-feature-settings: "c2sc";
-    @apply uppercase;
-  }
+	h2 {
+		@apply text-lg text-pretty sm:text-xl;
+	}
 
-  i abbr {
-    font-feature-settings: "c2sc";
-    @apply uppercase italic;
-  }
+	h3 {
+		@apply my-5 font-medium;
+		font-feature-settings: "liga", "clig", "onum";
+	}
 
-  strong {
-    font-feature-settings: "smcp";
-  }
+	abbr,
+	strong {
+		@apply font-normal not-italic no-underline;
+	}
 
-  u {
-    @apply decoration-primary underline decoration-[1.5px] underline-offset-2;
-  }
+	abbr {
+		font-feature-settings: "c2sc";
+		@apply uppercase;
+	}
 
-  s {
-    @apply decoration-primary line-through decoration-[1.5px] underline-offset-4;
-  }
+	i abbr {
+		font-feature-settings: "c2sc";
+		@apply uppercase italic;
+	}
 
-  /*
+	strong {
+		font-feature-settings: "smcp";
+	}
+
+	u {
+		@apply decoration-primary underline decoration-[1.5px] underline-offset-2;
+	}
+
+	s {
+		@apply decoration-primary line-through decoration-[1.5px] underline-offset-4;
+	}
+
+	/*
     BASE COMPONENTS
   */
-  section {
-    @apply my-10 sm:my-14;
-  }
+	section {
+		@apply my-10 sm:my-14;
+	}
 
-  /* app.css ou directives @apply */
-  .card {
-    @apply hover:bg-alt-light hover:text-font-light dark:hover:bg-alt-dark dark:hover:text-font-dark relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline sm:flex-row;
-  }
+	/* app.css ou directives @apply */
+	.card {
+		@apply hover:bg-alt-light hover:text-font-light dark:hover:bg-alt-dark dark:hover:text-font-dark relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline sm:flex-row;
+	}
 
-  .card article {
-    @apply m-5 min-w-0 p-0 sm:pl-[150px];
-  }
+	.card article {
+		@apply m-5 min-w-0 p-0 sm:pl-[150px];
+	}
 
-	.card h3, .card p {
+	.card h3,
+	.card p {
 		@apply my-0;
 	}
 
-  .card .card-image {
-    @apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-[150px] sm:flex-none sm:object-cover;
-  }
+	.card .card-image {
+		@apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-[150px] sm:flex-none sm:object-cover;
+	}
 
-  .card .card-image img {
-    @apply h-full! w-full! object-cover rounded-none text-transparent;
-  }
+	.card .card-image img {
+		@apply h-full! w-full! rounded-none object-cover text-transparent;
+	}
 
-  @media (width <= theme(--breakpoint-sm)) {
-    .card .card-image img {
-      object-position: 50% var(--image-focus-y, 50%)
-    }
-  }
+	@media (width <= theme(--breakpoint-sm)) {
+		.card .card-image img {
+			object-position: 50% var(--image-focus-y, 50%);
+		}
+	}
 
 	.legend {
 		@apply mx-8 mt-2 text-center text-xs text-pretty italic sm:text-sm;
 	}
 
-  .button {
-    @apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-medium whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
-  }
+	.button {
+		@apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-medium whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
+	}
 
-  li code,
-  p code,
+	li code,
+	p code,
 	side-note code {
-    overflow-wrap: break-word;
-    @apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
-  }
+		overflow-wrap: break-word;
+		@apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
+	}
 
 	table {
-    @apply w-full table-auto text-xs sm:text-sm border-separate border-spacing-y-2.5 -my-2.5 border-spacing-x-5 -mx-5;
-  }
+		@apply -mx-5 -my-2.5 w-full table-auto border-separate border-spacing-x-5 border-spacing-y-2.5 text-xs sm:text-sm;
+	}
 
-  th,
-  td {
-    @apply text-left align-top;
-  }
+	th,
+	td {
+		@apply text-left align-top;
+	}
 
-  th {
-    @apply whitespace-nowrap font-medium ;
-  }
+	th {
+		@apply font-medium whitespace-nowrap;
+	}
 
-  side-note,
-  annotation {
-    @apply my-5 block px-8 text-xs leading-snug;
-  }
+	side-note,
+	annotation {
+		@apply my-5 block px-8 text-xs leading-snug;
+	}
 
-  side-note p {
-    @apply text-xs leading-snug;
-  }
+	side-note p {
+		@apply text-xs leading-snug;
+	}
 
-  side-note code {
-    @apply text-[13px];
-  }
+	side-note code {
+		@apply text-[13px];
+	}
 
-  annotation {
-    @apply font-goofy text-primary leading-normal;
-    transform: rotate(-1deg);
-  }
+	annotation {
+		@apply font-goofy text-primary leading-normal;
+		transform: rotate(-1deg);
+	}
 
-  annotation a {
-    @apply text-primary dark:text-primary hover:text-font-light dark:hover:text-font-dark decoration-primary dark:decoration-primary hover:decoration-font-light dark:hover:decoration-font-dark;
-  }
+	annotation a {
+		@apply text-primary dark:text-primary hover:text-font-light dark:hover:text-font-dark decoration-primary dark:decoration-primary hover:decoration-font-light dark:hover:decoration-font-dark;
+	}
 
-  @media (width >= theme(--breakpoint-xl)) {
-    side-note,
-    annotation {
-      @apply relative float-right clear-right mt-0 mr-[-350px] w-[350px];
-    }
-  }
+	@media (width >= theme(--breakpoint-xl)) {
+		side-note,
+		annotation {
+			@apply relative float-right clear-right mt-0 mr-[-350px] w-[350px];
+		}
+	}
 
 	.badge {
 		@apply bg-alt-dark dark:bg-alt-light text-font-dark dark:text-font-light rounded-full px-2 text-xs sm:text-sm;
@@ -235,10 +239,11 @@
 	side-note.draft,
 	time-machine,
 	warning-note {
-		@apply border block border-dashed rounded relative py-5;
+		@apply relative block rounded border border-dashed py-5;
 	}
 
-	draft-section, side-note.draft {
+	draft-section,
+	side-note.draft {
 		@apply border-alt-dark dark:border-alt-light;
 	}
 
@@ -250,24 +255,26 @@
 		@apply border-info;
 	}
 
-	draft-section, warning-note, time-machine {
-		@apply py-0 px-5 mx-0 sm:-mx-5 my-5;
+	draft-section,
+	warning-note,
+	time-machine {
+		@apply mx-0 my-5 px-5 py-0 sm:-mx-5;
 	}
 
 	draft-section::before,
 	side-note.draft::before {
-  content: "Draft";
-  @apply absolute -top-3 left-4 text-xs bg-alt-dark text-body-light rounded px-1;
+		content: "Draft";
+		@apply bg-alt-dark text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
 	}
 
 	.dark draft-section::before,
 	.dark side-note.draft::before {
-  @apply bg-alt-light  text-body-dark;
+		@apply bg-alt-light text-body-dark;
 	}
 
 	warning-note::before {
 		content: "Warning";
-		@apply absolute -top-3 left-4 text-xs bg-primary text-body-light rounded px-1;
+		@apply bg-primary text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
 	}
 
 	.dark warning-note::before {
@@ -276,7 +283,7 @@
 
 	time-machine::before {
 		content: "Time Machine";
-		@apply absolute -top-3 left-4 text-xs bg-info text-body-light rounded px-1;
+		@apply bg-info text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
 	}
 
 	.dark time-machine::before {
@@ -287,8 +294,8 @@
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply inline-flex items-center justify-center h-3.5 w-3.5 text-xs pb-px leading-none font-medium text-body-light dark:text-body-dark;
-		font-feature-settings: 'lnum';
+		@apply text-body-light dark:text-body-dark inline-flex h-3.5 w-3.5 items-center justify-center pb-px text-xs leading-none font-medium;
+		font-feature-settings: "lnum";
 	}
 
 	marker-primary {
@@ -307,72 +314,77 @@
 		@apply bg-info [clip-path:polygon(25%_0,75%_0,100%_50%,75%_100%,25%_100%,0_50%)];
 	}
 
-  /*
+	/*
 		FORM
 	*/
 
-  input,
-  select,
-  textarea {
-    @apply focus:text-primary overflow-hidden border-b-[0.1rem] border-dotted outline-hidden placeholder:truncate;
-  }
+	input,
+	select,
+	textarea {
+		@apply focus:text-primary overflow-hidden border-b-[0.1rem] border-dotted outline-hidden placeholder:truncate;
+	}
 
-  input,
-  select {
-    @apply truncate;
-  }
+	input,
+	select {
+		@apply truncate;
+	}
 
-  input {
-    @apply col-span-2;
-  }
-  label {
-    @apply rounded-full border-[0.1rem] border-dotted px-2.5 py-1.5 text-xs sm:text-sm;
-  }
-  label:has(input:checked) {
-    @apply border-primary text-primary;
-  }
+	input {
+		@apply col-span-2;
+	}
+	label {
+		@apply rounded-full border-[0.1rem] border-dotted px-2.5 py-1.5 text-xs sm:text-sm;
+	}
+	label:has(input:checked) {
+		@apply border-primary text-primary;
+	}
 
-  select,
-  optgroup,
-  option {
-    @apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark;
-  }
+	select,
+	optgroup,
+	option {
+		@apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark;
+	}
 
-  /*	Fix for select element in dark mode on Windows.
+	/*	Fix for select element in dark mode on Windows.
 	See -> https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme */
-  select {
-    color-scheme: light dark;
-  }
+	select {
+		color-scheme: light dark;
+	}
 
-  /*
+	/*
     LINKS
   */
-  a,
-  button {
-    /* decoration has a fixed value, so it doesn't change with the font size */
-    @apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px] decoration-font-light dark:decoration-font-dark hover:decoration-primary dark:hover:decoration-primary;
-  }
+	a,
+	button {
+		/* decoration has a fixed value, so it doesn't change with the font size */
+		@apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary decoration-font-light dark:decoration-font-dark hover:decoration-primary dark:hover:decoration-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px];
+	}
 
-  /* Remove leading icon for links that have the `card` or `no-icon` class */
-  a.card::before,
-  a.no-icon::before {
-    content: none !important;
-    padding-right: 0;
-  }
+	/* Remove leading icon for links that have the `card` or `no-icon` class */
+	a.card::before,
+	a.no-icon::before {
+		content: none !important;
+		padding-right: 0;
+	}
 
-  a[href^="http://"]::before, a[href^="https://"]::before,
-	a[href^="/about"]::before, a[href^="/catalogue"]::before,
-	a[href^="/notes"]::before, footer a[href="/"]::before,
-	a[href^="/health"]::before, footer a[href^="/resume"]::before,
-	a[href^="/feed.xml"]::before, button::before {
-    content: "\f0c1";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    font-size: 0.65rem;
-    padding-right: 0.2rem;
-    display: inline-block;
-    @apply not-italic;
-  }
+	a[href^="http://"]::before,
+	a[href^="https://"]::before,
+	a[href^="/about"]::before,
+	a[href^="/catalogue"]::before,
+	a[href^="/notes"]::before,
+	footer a[href="/"]::before,
+	a[href^="/health"]::before,
+	footer a[href^="/resume"]::before,
+	a[href^="/feed.xml"]::before,
+	button::before {
+		content: "\f0c1";
+		font-family: "Font Awesome 6 Free";
+		font-weight: 900;
+		font-size: 0.65rem;
+		padding-right: 0.2rem;
+		display: inline-block;
+		@apply not-italic;
+	}
 
 	footer a[href="/"]::before {
 		content: "\f015";
@@ -380,118 +392,115 @@
 		font-family: "Font Awesome 6 Free";
 	}
 
-  a[href^="/about"]::before {
-    content: "\f05a";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	a[href^="/about"]::before {
+		content: "\f05a";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
 	a[href^="/catalogue/wrapped"]::before {
-    content: none !important;
-  }
+		content: none !important;
+	}
 
-  a[href^="/catalogue"]::before {
-    content: "\f02d";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	a[href^="/catalogue"]::before {
+		content: "\f02d";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
-	  a[href^="/notes"]::before {
-    content: "\f02d";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	a[href^="/notes"]::before {
+		content: "\f02d";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
-  a[href^="/health"]::before {
-    content: "\f004";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	a[href^="/health"]::before {
+		content: "\f004";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
-  footer a[href^="/resume"]::before {
-    content: "\f2bd";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	footer a[href^="/resume"]::before {
+		content: "\f2bd";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
-  a[href^="/feed.xml"]::before {
-    content: "\f09e";
-    font-weight: 900;
-    font-family: "Font Awesome 6 Free";
-  }
+	a[href^="/feed.xml"]::before {
+		content: "\f09e";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
 
-  a[href^="https://www.youtube.com/"]::before, a[href^="https://youtu.be/"]::before
-  {
-    content: "\f167";
-    font-weight: 400;
-    font-family: "Font Awesome 6 Brands";
-  }
+	a[href^="https://www.youtube.com/"]::before,
+	a[href^="https://youtu.be/"]::before {
+		content: "\f167";
+		font-weight: 400;
+		font-family: "Font Awesome 6 Brands";
+	}
 
-  a[href^="https://en.wikipedia.org/"]::before, a[href^="https://fr.wikipedia.org/"]::before
-  {
-    content: "\f266";
-    font-weight: 400;
-    font-family: "Font Awesome 6 Brands";
-  }
+	a[href^="https://en.wikipedia.org/"]::before,
+	a[href^="https://fr.wikipedia.org/"]::before {
+		content: "\f266";
+		font-weight: 400;
+		font-family: "Font Awesome 6 Brands";
+	}
 
-  a[href^="https://www.instagram.com/"]::before
-  {
-    content: "\f16d";
-    font-weight: 400;
-    font-family: "Font Awesome 6 Brands";
-  }
+	a[href^="https://www.instagram.com/"]::before {
+		content: "\f16d";
+		font-weight: 400;
+		font-family: "Font Awesome 6 Brands";
+	}
 
-  a[href^="https://github.com/"]::before
-  {
-    content: "\f09b";
-    font-weight: 400;
-    font-family: "Font Awesome 6 Brands";
-  }
+	a[href^="https://github.com/"]::before {
+		content: "\f09b";
+		font-weight: 400;
+		font-family: "Font Awesome 6 Brands";
+	}
 
-  a[href^="https://www.linkedin.com/"]::before
-  {
-    content: "\f08c";
-    font-weight: 400;
-    font-family: "Font Awesome 6 Brands";
-  }
+	a[href^="https://www.linkedin.com/"]::before {
+		content: "\f08c";
+		font-weight: 400;
+		font-family: "Font Awesome 6 Brands";
+	}
 
-  a[href^="mailto"]::after {
-    content: "\f1d8";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    font-size: 0.65rem;
-    padding-left: 0.15rem;
-    color: inherit;
-    display: inline-block;
-  }
+	a[href^="mailto"]::after {
+		content: "\f1d8";
+		font-family: "Font Awesome 6 Free";
+		font-weight: 900;
+		font-size: 0.65rem;
+		padding-left: 0.15rem;
+		color: inherit;
+		display: inline-block;
+	}
 
-  button#toTop::before {
-    content: "\f148";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    padding-left: 0.15rem;
-    /* Flip horizontally */
-    transform: scaleX(-1);
-  }
+	button#toTop::before {
+		content: "\f148";
+		font-family: "Font Awesome 6 Free";
+		font-weight: 900;
+		padding-left: 0.15rem;
+		/* Flip horizontally */
+		transform: scaleX(-1);
+	}
 
-  @keyframes pulse {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+	@keyframes pulse {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 
-  /*
+	/*
     LISTS
   */
 
-  ol li {
-    @apply ml-4 list-decimal p-0;
-  }
+	ol li {
+		@apply ml-4 list-decimal p-0;
+	}
 
-  /*
+	/*
     Use ol li::before { content: none;} to remove the default marker.
     Then we add our own style using the ::marker pseudo-element.
 
@@ -505,35 +514,35 @@
     ::marker is not supported in Safari so I can't use `list-none` or nothing will be displayed.
     That's why li::before { content: none;}, `list-decimal` serve as a fallback for Safari.
   */
-  ol li::before {
-    content: none;
-  }
+	ol li::before {
+		content: none;
+	}
 
-  ol li::marker {
-    content: counters(list-item, ".") "\a0\a0";
-  }
+	ol li::marker {
+		content: counters(list-item, ".") "\a0\a0";
+	}
 
-  @media (width >= theme(--breakpoint-sm)) {
-    ol li {
-      @apply ml-0;
-    }
-  }
+	@media (width >= theme(--breakpoint-sm)) {
+		ol li {
+			@apply ml-0;
+		}
+	}
 
 	/*
 		MISC
 	*/
-  /* See -> https://github.com/expressive-code/expressive-code/issues/292 */
-  .expressive-code :nth-child(1 of .ec-line) .code {
-    padding-inline-end: 20px !important;
-  }
+	/* See -> https://github.com/expressive-code/expressive-code/issues/292 */
+	.expressive-code :nth-child(1 of .ec-line) .code {
+		padding-inline-end: 20px !important;
+	}
 
-  /*
+	/*
     Use Monaspace Radon (cursive style) for code comments.
     We use a separate font (Radon) instead of stylistic sets since we load fonts locally.
     We target italic spans which are typically comments in syntax highlighting.
   */
-  .expressive-code .ec-line span[style*="font-style:italic"],
-  .expressive-code .ec-line span[style*="font-style: italic"] {
-    font-style: italic;
-  }
+	.expressive-code .ec-line span[style*="font-style:italic"],
+	.expressive-code .ec-line span[style*="font-style: italic"] {
+		font-style: italic;
+	}
 }

@@ -41,8 +41,11 @@ const {
 		<Font cssVariable="--font-abby" />
 		<!-- Page-specific head additions -->
 		<slot name="head" />
-		<script is:inline src="https://kit.fontawesome.com/3977585fab.js" crossorigin="anonymous" defer
-		></script>
+		<script
+			is:inline
+			src="https://kit.fontawesome.com/3977585fab.js"
+			crossorigin="anonymous"
+			defer></script>
 		<title>{title} — Goulven Clec'h</title>
 	</head>
 	<body>
@@ -56,7 +59,9 @@ const {
 			 */
 			// Get theme from local storage and/or browser media queries (system).
 			const theme = localStorage.getItem("color-theme")
-			const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+			const isSystemDark = window.matchMedia(
+				"(prefers-color-scheme: dark)",
+			).matches
 
 			// If local theme is "dark" or "system" and system is dark -> apply dark mode to document.
 			if (theme === "dark" || (theme === "system" && isSystemDark)) {
@@ -124,7 +129,9 @@ const {
 				if (!zoomed) return
 
 				const rect = zoomed.getBoundingClientRect()
-				const markers = JSON.parse(event.target.dataset.markers || "[]") as Array<{
+				const markers = JSON.parse(
+					event.target.dataset.markers || "[]",
+				) as Array<{
 					top: number
 					left: number
 					key: string

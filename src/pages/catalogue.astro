@@ -27,8 +27,9 @@ const pageTitle = "Catalogue"
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			Where I keep track of books, movies, songs, video games, and other media I consume. Keep in
-			mind that this is a personal catalogue, incomplete and biased.
+			Where I keep track of books, movies, songs, video games, and other media I
+			consume. Keep in mind that this is a personal catalogue, incomplete and
+			biased.
 		</p>
 		<p>
 			<ReturnHome /> - <a href="/2025/catalogue-astro-turso">Learn more</a> - <a
@@ -62,7 +63,10 @@ const pageTitle = "Catalogue"
 				<option value="" selected>🎭 all emotions</option>
 			</select>
 
-			<select id="sort-filter" class="col-span-2 border-b-[0.1rem] border-dotted sm:col-span-1">
+			<select
+				id="sort-filter"
+				class="col-span-2 border-b-[0.1rem] border-dotted sm:col-span-1"
+			>
 				<option value="date" selected>🗓️ by date</option>
 				<option value="rating">😍 by rating</option>
 			</select>
@@ -93,16 +97,16 @@ const pageTitle = "Catalogue"
 				><abbr title="Board Game Geek">BGG</abbr></a
 			> for board games, <a href="https://themoviedb.org/"
 				><abbr title="The Movie DataBase">TMDB</abbr></a
-			> for movies and shows, and <a href="https://spotify.com/">Spotify</a> for albums. Their licenses
-			apply.
+			> for movies and shows, and <a href="https://spotify.com/">Spotify</a> for albums.
+			Their licenses apply.
 		</side-note>
 	</section>
 
 	<!-- Non-JS fallback: show a tiny link so text-only agents and no-JS users can reach LLM version -->
 	<noscript>
 		<p class="sr-only">
-			This page has a text-only version for crawlers and LLMs: <a href="/catalogue.llm"
-				>/catalogue.llm</a
+			This page has a text-only version for crawlers and LLMs: <a
+				href="/catalogue.llm">/catalogue.llm</a
 			>
 		</p>
 	</noscript>
@@ -130,9 +134,14 @@ const pageTitle = "Catalogue"
 			if (filters.rating) params.set("rating", filters.rating)
 			if (filters.source) params.set("source", filters.source)
 			if (filters.emotion) params.set("emotion", filters.emotion)
-			if (filters.sort && filters.sort !== "date") params.set("sort", filters.sort)
+			if (filters.sort && filters.sort !== "date")
+				params.set("sort", filters.sort)
 
-			history.replaceState(null, "", `${location.pathname}${params.toString() ? "?" + params : ""}`)
+			history.replaceState(
+				null,
+				"",
+				`${location.pathname}${params.toString() ? "?" + params : ""}`,
+			)
 		}
 
 		// Fetch and display emotions, and populate the map
@@ -147,9 +156,13 @@ const pageTitle = "Catalogue"
 			try {
 				const response = await fetch("/api/catalogue/emotions")
 				if (!response.ok)
-					throw new Error(`HTTP ${response.status} ${response.statusText}:  ${response.text()}`)
+					throw new Error(
+						`HTTP ${response.status} ${response.statusText}:  ${response.text()}`,
+					)
 				const emotions: Emotion[] = await response.json()
-				const sortedEmotions = [...emotions].sort((a, b) => a.name.localeCompare(b.name))
+				const sortedEmotions = [...emotions].sort((a, b) =>
+					a.name.localeCompare(b.name),
+				)
 				// Build <option> elements
 				sortedEmotions.forEach((emotion: Emotion) => {
 					allEmotionsMap.set(emotion.id, emotion)
@@ -172,10 +185,18 @@ const pageTitle = "Catalogue"
 		// Get current filter values from the form
 		function getFilterValues() {
 			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
-			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
-			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
-			const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
+			const ratingFilter = document.getElementById(
+				"rating-filter",
+			) as HTMLSelectElement | null
+			const sourceFilter = document.getElementById(
+				"source-filter",
+			) as HTMLSelectElement
+			const emotionsFilter = document.getElementById(
+				"emotions-filter",
+			) as HTMLSelectElement
+			const sortFilter = document.getElementById(
+				"sort-filter",
+			) as HTMLSelectElement
 
 			return {
 				query: queryInput?.value || "",
@@ -217,7 +238,8 @@ const pageTitle = "Catalogue"
 			if (filters.rating) params.append("rating", filters.rating)
 			if (filters.source) params.append("source", filters.source)
 			if (filters.emotion) params.append("emotion", filters.emotion)
-			if (filters.sort && filters.sort !== "date") params.append("sort", filters.sort)
+			if (filters.sort && filters.sort !== "date")
+				params.append("sort", filters.sort)
 			params.set("limit", String(PAGE_SIZE))
 			params.set("offset", String(currentOffset))
 			const url = `/api/catalogue/reviews${params.toString() ? "?" + params.toString() : ""}`
@@ -225,7 +247,9 @@ const pageTitle = "Catalogue"
 			try {
 				const response = await fetch(url, { signal: inflight.signal })
 				if (!response.ok)
-					throw new Error(`HTTP ${response.status} ${response.statusText}:  ${response.text()}`)
+					throw new Error(
+						`HTTP ${response.status} ${response.statusText}:  ${response.text()}`,
+					)
 				const { reviews, hasMore } = (await response.json()) as {
 					reviews: Review[]
 					hasMore: boolean
@@ -265,10 +289,18 @@ const pageTitle = "Catalogue"
 		// Add event listeners to form controls to trigger filtering
 		function setupFilterListeners() {
 			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
-			const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
-			const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
-			const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
+			const ratingFilter = document.getElementById(
+				"rating-filter",
+			) as HTMLSelectElement | null
+			const sourceFilter = document.getElementById(
+				"source-filter",
+			) as HTMLSelectElement
+			const emotionsFilter = document.getElementById(
+				"emotions-filter",
+			) as HTMLSelectElement
+			const sortFilter = document.getElementById(
+				"sort-filter",
+			) as HTMLSelectElement
 
 			// Use input event for text search with small delay
 			let debounceTimer: number | undefined
@@ -285,7 +317,7 @@ const pageTitle = "Catalogue"
 				el?.addEventListener("change", () => {
 					currentOffset = 0
 					loadReviews()
-				})
+				}),
 			)
 
 			// Load‑more button
@@ -308,14 +340,25 @@ const pageTitle = "Catalogue"
 				// Restore state from URL (if any)
 				const params = new URLSearchParams(location.search)
 				const queryInput = document.getElementById("query") as HTMLInputElement
-				const ratingFilter = document.getElementById("rating-filter") as HTMLSelectElement | null
-				const sourceFilter = document.getElementById("source-filter") as HTMLSelectElement
-				const emotionsFilter = document.getElementById("emotions-filter") as HTMLSelectElement
-				const sortFilter = document.getElementById("sort-filter") as HTMLSelectElement
+				const ratingFilter = document.getElementById(
+					"rating-filter",
+				) as HTMLSelectElement | null
+				const sourceFilter = document.getElementById(
+					"source-filter",
+				) as HTMLSelectElement
+				const emotionsFilter = document.getElementById(
+					"emotions-filter",
+				) as HTMLSelectElement
+				const sortFilter = document.getElementById(
+					"sort-filter",
+				) as HTMLSelectElement
 				if (params.has("query")) queryInput.value = params.get("query") ?? ""
-				if (params.has("rating") && ratingFilter) ratingFilter.value = params.get("rating") ?? ""
-				if (params.has("source")) sourceFilter.value = params.get("source") ?? ""
-				if (params.has("emotion")) emotionsFilter.value = params.get("emotion") ?? ""
+				if (params.has("rating") && ratingFilter)
+					ratingFilter.value = params.get("rating") ?? ""
+				if (params.has("source"))
+					sourceFilter.value = params.get("source") ?? ""
+				if (params.has("emotion"))
+					emotionsFilter.value = params.get("emotion") ?? ""
 				if (params.has("sort")) sortFilter.value = params.get("sort") ?? "date"
 				currentOffset = 0
 				await loadReviews()
@@ -331,30 +374,32 @@ const pageTitle = "Catalogue"
 		 *	🔄 Sync IGDB covers
 		 * </button>
 		 */
-		document.getElementById("sync-igdb")?.addEventListener("click", async (e) => {
-			e.preventDefault()
+		document
+			.getElementById("sync-igdb")
+			?.addEventListener("click", async (e) => {
+				e.preventDefault()
 
-			const password = prompt("Catalogue password ?")
-			if (!password) return
+				const password = prompt("Catalogue password ?")
+				if (!password) return
 
-			try {
-				const res = await fetch("/api/catalogue/reviews", {
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ password, task: "syncIGDB" }),
-				})
+				try {
+					const res = await fetch("/api/catalogue/reviews", {
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ password, task: "syncIGDB" }),
+					})
 
-				const json = await res.json()
-				if (res.ok && json.ok) {
-					alert(`✅ ${json.updated} review(s) updated.`)
-					await loadReviews()
-				} else {
-					alert(`❌ ${json.error ?? res.status}`)
+					const json = await res.json()
+					if (res.ok && json.ok) {
+						alert(`✅ ${json.updated} review(s) updated.`)
+						await loadReviews()
+					} else {
+						alert(`❌ ${json.error ?? res.status}`)
+					}
+				} catch (err) {
+					console.error(err)
+					alert("❌ Network or server error.")
 				}
-			} catch (err) {
-				console.error(err)
-				alert("❌ Network or server error.")
-			}
-		})
+			})
 	</script>
 </Layout>

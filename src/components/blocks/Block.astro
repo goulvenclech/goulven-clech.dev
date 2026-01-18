@@ -27,16 +27,24 @@ let placeholderURLDark: string | undefined
 if (image && typeof image !== "string" && image.format !== "svg") {
 	// Use fsPath if available (for local images), fallback to src
 	const imagePath = (image as any).fsPath || image.src
-	if (imagePath && typeof imagePath === "string" && !imagePath.startsWith("http")) {
+	if (
+		imagePath &&
+		typeof imagePath === "string" &&
+		!imagePath.startsWith("http")
+	) {
 		try {
 			placeholderURL = await generatePlaceholder(
 				imagePath,
 				Math.max(image.width, 600),
-				image.height
+				image.height,
 			)
 		} catch (error) {
 			// If placeholder generation fails, continue without placeholder
-			console.warn("Failed to generate placeholder for image:", imagePath, error)
+			console.warn(
+				"Failed to generate placeholder for image:",
+				imagePath,
+				error,
+			)
 		}
 	}
 }
@@ -44,16 +52,24 @@ if (image && typeof image !== "string" && image.format !== "svg") {
 if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
 	// Use fsPath if available (for local images), fallback to src
 	const imageDarkPath = (imageDark as any).fsPath || imageDark.src
-	if (imageDarkPath && typeof imageDarkPath === "string" && !imageDarkPath.startsWith("http")) {
+	if (
+		imageDarkPath &&
+		typeof imageDarkPath === "string" &&
+		!imageDarkPath.startsWith("http")
+	) {
 		try {
 			placeholderURLDark = await generatePlaceholder(
 				imageDarkPath,
 				Math.max(imageDark.width, 600),
-				imageDark.height
+				imageDark.height,
 			)
 		} catch (error) {
 			// If placeholder generation fails, continue without placeholder
-			console.warn("Failed to generate placeholder for dark image:", imageDarkPath, error)
+			console.warn(
+				"Failed to generate placeholder for dark image:",
+				imageDarkPath,
+				error,
+			)
 		}
 	}
 }
@@ -62,7 +78,9 @@ if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
 <a href={to} class="card">
 	<div
 		class="card-image"
-		style={typeof imageFocusY === "number" ? `--image-focus-y: ${imageFocusY}%` : undefined}
+		style={typeof imageFocusY === "number"
+			? `--image-focus-y: ${imageFocusY}%`
+			: undefined}
 	>
 		{
 			image &&

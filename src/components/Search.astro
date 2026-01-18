@@ -16,12 +16,17 @@ export type ClientBlogEntries = BlogEntry[]
  */
 
 // Get all published blog entries
-const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection("blog", ({ data }) => {
-	return isEntryPublished(data.published)
-})
+const blogEntriesRaw: CollectionEntry<"blog">[] = await getCollection(
+	"blog",
+	({ data }) => {
+		return isEntryPublished(data.published)
+	},
+)
 
 // Sort blog entries by date
-const blogEntries = blogEntriesRaw.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const blogEntries = blogEntriesRaw.sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime(),
+)
 
 const CARD_IMAGE_MAX_WIDTH = 960
 const CARD_IMAGE_QUALITY = 80
@@ -31,7 +36,7 @@ type EntryImage = ImageMetadata | string | undefined
 async function collectCardImageData(
 	entryImage: EntryImage,
 	id: string,
-	variant: "light" | "dark"
+	variant: "light" | "dark",
 ): Promise<{ placeholder: string; optimizedSrc?: string }> {
 	let placeholder = ""
 	let optimizedSrc: string | undefined
@@ -53,16 +58,22 @@ async function collectCardImageData(
 	try {
 		// Try to use fsPath from raw image, fallback to checking various properties
 		const imageWithPath = entryImage as any
-		const fsPath = imageWithPath.fsPath || imageWithPath.filepath || imageWithPath.file?.fsPath
+		const fsPath =
+			imageWithPath.fsPath ||
+			imageWithPath.filepath ||
+			imageWithPath.file?.fsPath
 		if (fsPath && typeof fsPath === "string") {
 			placeholder = await generatePlaceholder(
 				fsPath,
 				Math.max(entryImage.width, 600),
-				entryImage.height
+				entryImage.height,
 			)
 		}
 	} catch (error) {
-		console.warn(`Failed to generate placeholder for ${variant} image in ${id}:`, error)
+		console.warn(
+			`Failed to generate placeholder for ${variant} image in ${id}:`,
+			error,
+		)
 	}
 
 	optimizedSrc = entryImage.src
@@ -85,20 +96,30 @@ async function collectCardImageData(
 
 const imageAssets = await Promise.all(
 	blogEntries.map(async ({ id, data }) => {
-		const { placeholder, optimizedSrc } = await collectCardImageData(data.image, id, "light")
+		const { placeholder, optimizedSrc } = await collectCardImageData(
+			data.image,
+			id,
+			"light",
+		)
 		return { id, placeholder, optimizedSrc }
-	})
+	}),
 )
 
 const imageDarkAssets = await Promise.all(
 	blogEntries.map(async ({ id, data }) => {
-		const { placeholder, optimizedSrc } = await collectCardImageData(data.imageDark, id, "dark")
+		const { placeholder, optimizedSrc } = await collectCardImageData(
+			data.imageDark,
+			id,
+			"dark",
+		)
 		return { id, placeholder, optimizedSrc }
-	})
+	}),
 )
 
 const imageAssetMap = new Map(imageAssets.map((asset) => [asset.id, asset]))
-const imageDarkAssetMap = new Map(imageDarkAssets.map((asset) => [asset.id, asset]))
+const imageDarkAssetMap = new Map(
+	imageDarkAssets.map((asset) => [asset.id, asset]),
+)
 
 // Extract all tags and years for filter options
 const allTags = new Set<string>()
@@ -120,26 +141,35 @@ const importantTags = [
 
 // Format blog entries for client-side filtering
 // Reduce the amount of data sent to the client as much as possible
-const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) => {
-	const lightAssets = imageAssetMap.get(id)
-	const darkAssets = imageDarkAssetMap.get(id)
+const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
+	({ id, data }) => {
+		const lightAssets = imageAssetMap.get(id)
+		const darkAssets = imageDarkAssetMap.get(id)
 
-	return {
-		id,
-		title: data.title,
-		date: formatDate(data.date),
-		year: data.date.getFullYear(),
-		tags: data.tags,
-		abstract: data.abstract,
-		image: lightAssets?.optimizedSrc ? { src: lightAssets.optimizedSrc } : undefined,
-		imageDark: darkAssets?.optimizedSrc ? { src: darkAssets.optimizedSrc } : undefined,
-		imagePlaceholder: lightAssets?.placeholder,
-		imageDarkPlaceholder: darkAssets?.placeholder,
-		imageAlt: data.imageAlt,
-		isPublished: isEntryPublished(data.published, true),
-		imageFocusY: typeof data.cardImageFocusY === "number" ? data.cardImageFocusY : undefined,
-	}
-})
+		return {
+			id,
+			title: data.title,
+			date: formatDate(data.date),
+			year: data.date.getFullYear(),
+			tags: data.tags,
+			abstract: data.abstract,
+			image: lightAssets?.optimizedSrc
+				? { src: lightAssets.optimizedSrc }
+				: undefined,
+			imageDark: darkAssets?.optimizedSrc
+				? { src: darkAssets.optimizedSrc }
+				: undefined,
+			imagePlaceholder: lightAssets?.placeholder,
+			imageDarkPlaceholder: darkAssets?.placeholder,
+			imageAlt: data.imageAlt,
+			isPublished: isEntryPublished(data.published, true),
+			imageFocusY:
+				typeof data.cardImageFocusY === "number"
+					? data.cardImageFocusY
+					: undefined,
+		}
+	},
+)
 ---
 
 <form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:text-sm">
@@ -160,7 +190,11 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 
 	<select id="year-filter" class="border-b-[0.1rem] border-dotted">
 		<option value="" selected>🗂️ All years</option>
-		{sortedYears.map((year) => <option value={year.toString()}>📁 {year}</option>)}
+		{
+			sortedYears.map((year) => (
+				<option value={year.toString()}>📁 {year}</option>
+			))
+		}
 	</select>
 </form>
 
@@ -212,7 +246,10 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	 * Enhanced blog search with filtering capabilities
 	 * Supports search queries, tag filtering, year filtering, and sorting
 	 */
-	function filterBlogEntries(entries: BlogEntry[], filters: FilterState): BlogEntry[] {
+	function filterBlogEntries(
+		entries: BlogEntry[],
+		filters: FilterState,
+	): BlogEntry[] {
 		return entries.filter((entry) => {
 			// Filter by search query
 			if (filters.query) {
@@ -221,14 +258,16 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 					(keyword) =>
 						entry.title.toLowerCase().includes(keyword) ||
 						entry.abstract.toLowerCase().includes(keyword) ||
-						entry.tags.some((tag) => tag.toLowerCase().includes(keyword))
+						entry.tags.some((tag) => tag.toLowerCase().includes(keyword)),
 				)
 				if (!matchesQuery) return false
 			}
 
 			// Filter by tag
 			if (filters.tag) {
-				const hasTag = entry.tags.some((tag) => tag.toLowerCase() === filters.tag.toLowerCase())
+				const hasTag = entry.tags.some(
+					(tag) => tag.toLowerCase() === filters.tag.toLowerCase(),
+				)
 				if (!hasTag) return false
 			}
 
@@ -246,12 +285,16 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		const sorted = [...entries]
 
 		// Always sort by date (newest first)
-		return sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+		return sorted.sort(
+			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+		)
 	}
 
 	// Okay, here we go 🧙
 	// Get blog data and DOM elements
-	const blogData = document.querySelector("[data-blog]")?.getAttribute("data-blog")
+	const blogData = document
+		.querySelector("[data-blog]")
+		?.getAttribute("data-blog")
 	const blogEntries: ClientBlogEntries = blogData ? JSON.parse(blogData) : []
 
 	const queryInput = document.getElementById("search-query") as HTMLInputElement
@@ -259,7 +302,13 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 	const yearFilter = document.getElementById("year-filter") as HTMLSelectElement
 	const output = document.getElementById("output")
 
-	if (!queryInput || !tagFilter || !yearFilter || !output || blogEntries.length === 0) {
+	if (
+		!queryInput ||
+		!tagFilter ||
+		!yearFilter ||
+		!output ||
+		blogEntries.length === 0
+	) {
 		throw new Error("Search component is missing required elements.")
 	}
 
@@ -270,7 +319,11 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(({ id, data }) =
 		if (filters.tag) params.set("tag", filters.tag)
 		if (filters.year) params.set("year", filters.year)
 
-		history.replaceState(null, "", `${location.pathname}${params.toString() ? "?" + params : ""}`)
+		history.replaceState(
+			null,
+			"",
+			`${location.pathname}${params.toString() ? "?" + params : ""}`,
+		)
 	}
 
 	// Get current filter values

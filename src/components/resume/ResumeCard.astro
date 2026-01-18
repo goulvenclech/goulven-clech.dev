@@ -11,8 +11,14 @@ interface Props {
 
 function format_date(start_date: Date, end_date?: Date) {
 	// Format the date to be more human readable
-	const formated_start_date = start_date.toLocaleString("en-GB", { month: "long", year: "numeric" })
-	const formated_end_date = end_date?.toLocaleString("en-GB", { month: "long", year: "numeric" })
+	const formated_start_date = start_date.toLocaleString("en-GB", {
+		month: "long",
+		year: "numeric",
+	})
+	const formated_end_date = end_date?.toLocaleString("en-GB", {
+		month: "long",
+		year: "numeric",
+	})
 	// If there is no end date, we are still working there
 	if (!end_date) return `${formated_start_date} - Present`
 	// If the start and end date are the same, we only work there for one month
@@ -29,7 +35,9 @@ const { experience } = Astro.props
 const { Content } = await render(experience)
 ---
 
-<article class="resume-card print:page-break-avoid my-5 flex flex-col gap-1.5 pb-2.5">
+<article
+	class="resume-card print:page-break-avoid my-5 flex flex-col gap-1.5 pb-2.5"
+>
 	<div class="flex flex-row justify-between">
 		<h3 class="my-0" set:html={experience.data.company} />
 		<span>

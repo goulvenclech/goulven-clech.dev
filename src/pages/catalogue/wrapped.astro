@@ -44,7 +44,10 @@ const RATING_EMOJI: Record<number, string> = {
 
 type MediaSource = "IGDB" | "BGG" | "TMDB_MOVIE" | "TMDB_TV" | "SPOTIFY" | null
 
-async function getRatingStats(db: Client, source: MediaSource = null): Promise<RatingStats> {
+async function getRatingStats(
+	db: Client,
+	source: MediaSource = null,
+): Promise<RatingStats> {
 	const sourceClause = source ? "AND source = ?" : ""
 	const args = source ? [START_DATE, END_DATE, source] : [START_DATE, END_DATE]
 
@@ -56,7 +59,10 @@ async function getRatingStats(db: Client, source: MediaSource = null): Promise<R
 	})
 
 	const counts = new Map<number, number>()
-	for (const row of result.rows as unknown as { rating: number; count: number }[]) {
+	for (const row of result.rows as unknown as {
+		rating: number
+		count: number
+	}[]) {
 		counts.set(row.rating, row.count)
 	}
 
@@ -69,10 +75,15 @@ async function getRatingStats(db: Client, source: MediaSource = null): Promise<R
 	}
 }
 
-function formatRatingBreakdown(stats: RatingStats, forOverview = false): string {
+function formatRatingBreakdown(
+	stats: RatingStats,
+	forOverview = false,
+): string {
 	const parts: string[] = []
 	if (stats.favorites > 0)
-		parts.push(`${stats.favorites} favorite${stats.favorites > 1 ? "s" : ""} ⭐`)
+		parts.push(
+			`${stats.favorites} favorite${stats.favorites > 1 ? "s" : ""} ⭐`,
+		)
 	if (stats.loved > 0) parts.push(`${stats.loved} loved 😍`)
 	if (stats.liked > 0) parts.push(`and ${stats.liked} liked 😀`)
 	if (parts.length === 0) return ""
@@ -83,10 +94,12 @@ function formatRatingBreakdown(stats: RatingStats, forOverview = false): string 
 async function getTopEmotions(
 	db: Client,
 	source: MediaSource = null,
-	limit = 3
+	limit = 3,
 ): Promise<EmotionStat[]> {
 	const sourceClause = source ? "AND r.source = ?" : ""
-	const args = source ? [START_DATE, END_DATE, source, limit] : [START_DATE, END_DATE, limit]
+	const args = source
+		? [START_DATE, END_DATE, source, limit]
+		: [START_DATE, END_DATE, limit]
 
 	const result = await db.execute({
 		sql: `SELECT e.id, e.emoji, e.name, COUNT(*) as count
@@ -108,7 +121,10 @@ function formatEmotions(emotions: EmotionStat[]): string {
 	return ` And mostly felt ${emotions.map((e) => `<i>${e.name}</i>`).join(", ")}.`
 }
 
-async function getPositiveReviews(db: Client, source: MediaSource): Promise<ReviewThumbnail[]> {
+async function getPositiveReviews(
+	db: Client,
+	source: MediaSource,
+): Promise<ReviewThumbnail[]> {
 	const result = await db.execute({
 		sql: `SELECT source_name, source_img, source_img_focus_y, source_link, rating
 		      FROM reviews
@@ -163,11 +179,15 @@ const desktopEmotions = overallEmotionsChart.slice(0, DESKTOP_EMOTION_COUNT)
 const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 ---
 
-<Layout title={pageTitle} description="A look back at all the media I experienced in 2025.">
+<Layout
+	title={pageTitle}
+	description="A look back at all the media I experienced in 2025."
+>
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			As 2025 comes to an end, it's time to look back at the new reviews I added in my
+			As 2025 comes to an end, it's time to look back at the new reviews I added
+			in my
 			<a href="/catalogue">catalogue</a>, and see what stood out the most!
 		</p>
 		<p>
@@ -186,7 +206,11 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 		{
 			overallEmotionsChart.length > 0 && (
 				<>
-					<EmotionChart emotions={mobileEmotions} maxCount={maxEmotionCount} class="sm:hidden" />
+					<EmotionChart
+						emotions={mobileEmotions}
+						maxCount={maxEmotionCount}
+						class="sm:hidden"
+					/>
 					<EmotionChart
 						emotions={desktopEmotions}
 						maxCount={maxEmotionCount}
@@ -198,7 +222,9 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 
 		<h2>{videoGameStats.total} Video games</h2>
 		<p>
-			{formatRatingBreakdown(videoGameStats)}.<Fragment set:html={formatEmotions(gameEmotions)} />
+			{formatRatingBreakdown(videoGameStats)}.<Fragment
+				set:html={formatEmotions(gameEmotions)}
+			/>
 		</p>
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
@@ -262,7 +288,9 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 
 		<h2>{movieStats.total} Movies</h2>
 		<p>
-			{formatRatingBreakdown(movieStats)}.<Fragment set:html={formatEmotions(movieEmotions)} />
+			{formatRatingBreakdown(movieStats)}.<Fragment
+				set:html={formatEmotions(movieEmotions)}
+			/>
 		</p>
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
@@ -293,7 +321,9 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 
 		<h2>{showStats.total} Shows</h2>
 		<p>
-			{formatRatingBreakdown(showStats)}.<Fragment set:html={formatEmotions(showEmotions)} />
+			{formatRatingBreakdown(showStats)}.<Fragment
+				set:html={formatEmotions(showEmotions)}
+			/>
 		</p>
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{
@@ -324,7 +354,9 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 
 		<h2>{albumStats.total} Albums</h2>
 		<p>
-			{formatRatingBreakdown(albumStats)}.<Fragment set:html={formatEmotions(albumEmotions)} />
+			{formatRatingBreakdown(albumStats)}.<Fragment
+				set:html={formatEmotions(albumEmotions)}
+			/>
 		</p>
 		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
 			{

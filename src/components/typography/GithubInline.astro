@@ -27,7 +27,11 @@ const userData: any = EleventyFetch(`https://api.github.com/user/${user}`, {
 
 // Got what what we needed 💰 See response format ->
 // https://docs.github.com/en/rest/users/users#get-a-user
-const { name: userName, avatar_url: avatarUrl, html_url: userUrl } = await userData
+const {
+	name: userName,
+	avatar_url: avatarUrl,
+	html_url: userUrl,
+} = await userData
 
 // Optimize image size and quality
 const avatarImg = await getImage({

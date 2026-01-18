@@ -24,7 +24,7 @@ const userData: any = EleventyFetch(
 	{
 		duration: "1d",
 		type: "json",
-	}
+	},
 )
 
 // Got what what we needed 💰 See response format ->
@@ -37,13 +37,17 @@ const book = result[`ISBN:${isbn}`]
 const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
 
 // Compute focus like MapsBlock, with optional manual override
-const computedFocus = typeof focusY === "number" ? focusY : await computeImageFocusY(coverUrl)
+const computedFocus =
+	typeof focusY === "number" ? focusY : await computeImageFocusY(coverUrl)
 const imageFocusY: number | undefined =
 	typeof computedFocus === "number" ? computedFocus : undefined
 ---
 
 <Block image={coverUrl} to={book.info_url} imageFocusY={imageFocusY}>
-	<h3 id={book.details.title} class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1">
+	<h3
+		id={book.details.title}
+		class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1"
+	>
 		{book.details.title}
 	</h3>
 	<ul class="flex flex-col">
@@ -51,7 +55,9 @@ const imageFocusY: number | undefined =
 			By {book.details.authors.map((author: any) => author.name).join(" & ")}
 		</li>
 		<li>
-			{book.details.publishers.join(" & ")} ({new Date(book.details.publish_date).getFullYear()})
+			{book.details.publishers.join(" & ")} ({
+				new Date(book.details.publish_date).getFullYear()
+			})
 		</li>
 		<li>
 			ISBN: {book.details.isbn_13}

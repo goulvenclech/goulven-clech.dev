@@ -55,7 +55,11 @@ const placeholderURL = isStringSource
 	: src.format === "svg"
 		? src.src // We don't support SVG placeholders yet
 		: src.fsPath
-			? await generatePlaceholder(src.fsPath, Math.max(src.width, defaultWidth), src.height)
+			? await generatePlaceholder(
+					src.fsPath,
+					Math.max(src.width, defaultWidth),
+					src.height,
+				)
 			: src.src
 
 const goodQualityURL = isStringSource
@@ -64,7 +68,9 @@ const goodQualityURL = isStringSource
 			src: src,
 			width: src.width,
 		})
-const imageWidth = isStringSource ? width || defaultWidth : Math.min(src.width, defaultWidth)
+const imageWidth = isStringSource
+	? width || defaultWidth
+	: Math.min(src.width, defaultWidth)
 
 // Dark variant setup (only if provided)
 let placeholderURLDark, goodQualityURLDark, widthDark
@@ -78,13 +84,15 @@ if (srcDark) {
 				? await generatePlaceholder(
 						srcDark.fsPath,
 						Math.max(srcDark.width, defaultWidth),
-						srcDark.height
+						srcDark.height,
 					)
 				: srcDark.src
 	goodQualityURLDark = isStringSourceDark
 		? { src: srcDark }
 		: await getImage({ src: srcDark, width: srcDark.width })
-	widthDark = isStringSourceDark ? width || defaultWidth : Math.min(srcDark.width, defaultWidth)
+	widthDark = isStringSourceDark
+		? width || defaultWidth
+		: Math.min(srcDark.width, defaultWidth)
 }
 ---
 
@@ -137,7 +145,10 @@ if (srcDark) {
 			markers.map((marker) => {
 				const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
 				return (
-					<Component class="absolute" style={`top: ${marker.top}%; left: ${marker.left}%;`}>
+					<Component
+						class="absolute"
+						style={`top: ${marker.top}%; left: ${marker.left}%;`}
+					>
 						{marker.key}
 					</Component>
 				)
@@ -150,7 +161,8 @@ if (srcDark) {
 				<slot name="marker-legends">
 					{markers.length > 0 &&
 						markers.map((marker) => {
-							const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+							const Component =
+								`marker-${marker.variant ?? "primary"}` as HTMLTag
 							return (
 								<span class="mr-2.5">
 									<Component>{marker.key}</Component>

@@ -22,7 +22,6 @@ At its heart, this project looks like any Astro project, you can start by readin
 
 - [Custom image service](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/imageService.ts): retrieved from [Erika's blog](https://erika.florist/), gain performance and display a placeholder during image loading.
 
-
 ## Project Structure
 
 ```

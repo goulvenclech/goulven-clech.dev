@@ -9,28 +9,30 @@ const pageTitle = "My health"
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			Some tools to maintain good habits. I don't want to obsess over my health, but I do want to
-			stay healthy enough to fully enjoy life.
+			Some tools to maintain good habits. I don't want to obsess over my health,
+			but I do want to stay healthy enough to fully enjoy life.
 		</p>
 		<p>
-			Based on the strongest scientific literature, there are several habits that can significantly
-			improve my health: daily physical activity, regular sleep schedules, a balanced diet,<sup
-				>1</sup
-			> no tobacco, little to none alcohol,<sup>2</sup> avoiding air pollution,<sup>3</sup> reducing
-			UV exposure, up-to-date vaccinations and screenings, quality social relationships, and managing
-			stress. Everything else tends to be marginal, marketing scams, or not relevant for me.<side-note
+			Based on the strongest scientific literature, there are several habits
+			that can significantly improve my health: daily physical activity, regular
+			sleep schedules, a balanced diet,<sup>1</sup> no tobacco, little to none alcohol,<sup
+				>2</sup
+			> avoiding air pollution,<sup>3</sup> reducing UV exposure, up-to-date vaccinations
+			and screenings, quality social relationships, and managing stress. Everything
+			else tends to be marginal, marketing scams, or not relevant for me.<side-note
 				class="xl:-mt-16"
-				>1 — A diverse and mostly plant-based diet, with enough protein, fiber, and healthy fats. I
-				don't want to avoid all salty, processed, and sugary foods as long as they stay occasional.
-				And I don't believe in strict diets that are hard to maintain, guilt-inducing, and often not
-				backed by science.</side-note
+				>1 — A diverse and mostly plant-based diet, with enough protein, fiber,
+				and healthy fats. I don't want to avoid all salty, processed, and sugary
+				foods as long as they stay occasional. And I don't believe in strict
+				diets that are hard to maintain, guilt-inducing, and often not backed by
+				science.</side-note
 			><side-note
-				>2 — I don't smoke, but I do drink alcohol occasionally—usually just a glass of wine in
-				social settings, or lonkero after sauna.</side-note
+				>2 — I don't smoke, but I do drink alcohol occasionally—usually just a
+				glass of wine in social settings, or lonkero after sauna.</side-note
 			><side-note
-				>3 — I currently live in Toulouse, France, which has a good to moderate air quality. But I
-				plan to move to Helsinki, Finland, in the near future, which has excellent to good air
-				quality.</side-note
+				>3 — I currently live in Toulouse, France, which has a good to moderate
+				air quality. But I plan to move to Helsinki, Finland, in the near
+				future, which has excellent to good air quality.</side-note
 			>
 		</p>
 		<ReturnHome />
@@ -38,14 +40,17 @@ const pageTitle = "My health"
 	<section>
 		<h2>Daily tracking</h2>
 		<p>
-			My daily steps, sleep, and energy levels—tracked with my Galaxy Watch Ultra and Samsung Health
-			app. I want to walk at least 9k steps a day, sleep 7 hours or more, and keep my energy above
-			75%. Weekly averages are more important than daily values.
+			My daily steps, sleep, and energy levels—tracked with my Galaxy Watch
+			Ultra and Samsung Health app. I want to walk at least 9k steps a day,
+			sleep 7 hours or more, and keep my energy above 75%. Weekly averages are
+			more important than daily values.
 		</p>
 		<div id="health-container">
 			<p>Loading...</p>
 		</div>
-		<button id="load-more" class="button hidden" type="button">Load previous month</button>
+		<button id="load-more" class="button hidden" type="button"
+			>Load previous month</button
+		>
 	</section>
 	<script>
 		import type { Day as ApiDay } from "./api/health/health"
@@ -65,7 +70,11 @@ const pageTitle = "My health"
 			}
 
 			const now = new Date()
-			const targetDate = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1)
+			const targetDate = new Date(
+				now.getFullYear(),
+				now.getMonth() - monthOffset,
+				1,
+			)
 			const year = targetDate.getFullYear()
 			const month = targetDate.getMonth() + 1
 

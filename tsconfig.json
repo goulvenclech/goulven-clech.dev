@@ -1,15 +1,15 @@
 {
-  "extends": "astro/tsconfigs/strict",
+	"extends": "astro/tsconfigs/strict",
 	"include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "moduleResolution": "Bundler",
-    "types": ["astro/env"],
-    "paths": {
-      "$components/*": ["src/components/*"],
-      "$layouts/*": ["src/layouts/*"],
-      "$assets/*": ["src/assets/*"]
-    }
-  }
+	"exclude": ["dist"],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"moduleResolution": "Bundler",
+		"types": ["astro/env"],
+		"paths": {
+			"$components/*": ["src/components/*"],
+			"$layouts/*": ["src/layouts/*"],
+			"$assets/*": ["src/assets/*"]
+		}
+	}
 }

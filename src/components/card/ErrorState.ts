@@ -3,27 +3,27 @@
  * Can be used for both blog entries and catalogue reviews
  */
 export class ErrorState extends HTMLElement {
-  private message: string = "An error occurred..."
+	private message: string = "An error occurred..."
 
-  constructor() {
-    super()
-    this.render()
-  }
+	constructor() {
+		super()
+		this.render()
+	}
 
-  /**
-   * Set a custom message for the error state
-   */
-  setMessage(message: string) {
-    this.message = message
-    this.render()
-    return this
-  }
+	/**
+	 * Set a custom message for the error state
+	 */
+	setMessage(message: string) {
+		this.message = message
+		this.render()
+		return this
+	}
 
-  /**
-   * Render the error state
-   */
-  private render() {
-    this.innerHTML = `
+	/**
+	 * Render the error state
+	 */
+	private render() {
+		this.innerHTML = `
       <div class="h-[153.25px] w-full flex items-center justify-center gap-1.5 text-primary rounded">
         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-6 w-6 pb-1" viewBox="0 0 512 512">
           <!-- Icon from Font Awesome 5 Solid by Dave Gandy - https://creativecommons.org/licenses/by/4.0/ -->
@@ -32,7 +32,7 @@ export class ErrorState extends HTMLElement {
         <p>${this.message}</p>
       </div>
     `
-  }
+	}
 }
 
 // Register the component

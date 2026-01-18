@@ -16,11 +16,19 @@ interface Props {
 	focusY?: number
 }
 
-const { id, name, brand, img, price, rating, ratings_total, focusY } = Astro.props
+const { id, name, brand, img, price, rating, ratings_total, focusY } =
+	Astro.props
 ---
 
-<Block image={img} to={`https://www.amazon.fr/gp/product/${id}/`} imageFocusY={focusY}>
-	<h3 id={name} class="my-0 line-clamp-2 leading-relaxed text-ellipsis sm:line-clamp-1">
+<Block
+	image={img}
+	to={`https://www.amazon.fr/gp/product/${id}/`}
+	imageFocusY={focusY}
+>
+	<h3
+		id={name}
+		class="my-0 line-clamp-2 leading-relaxed text-ellipsis sm:line-clamp-1"
+	>
 		{name}
 	</h3>
 	<ul class="m-0 flex list-none flex-col p-0">
@@ -31,7 +39,11 @@ const { id, name, brand, img, price, rating, ratings_total, focusY } = Astro.pro
 			{price}
 		</li>
 		<li>
-			{[...Array(Math.round(rating))].map(() => <i class="fas fa-star text-xs" />)} ({ratings_total}
+			{
+				[...Array(Math.round(rating))].map(() => (
+					<i class="fas fa-star text-xs" />
+				))
+			} ({ratings_total}
 			reviews)
 		</li>
 	</ul>

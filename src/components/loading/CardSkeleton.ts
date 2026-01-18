@@ -3,31 +3,31 @@
  * Can be used for both blog entries and catalogue reviews
  */
 export class CardSkeleton extends HTMLElement {
-  private count: number = 3
+	private count: number = 3
 
-  constructor() {
-    super()
-    this.render()
-  }
+	constructor() {
+		super()
+		this.render()
+	}
 
-  /**
-   * Set the number of skeleton cards to display
-   */
-  setCount(count: number) {
-    this.count = count
-    this.render()
-    return this
-  }
+	/**
+	 * Set the number of skeleton cards to display
+	 */
+	setCount(count: number) {
+		this.count = count
+		this.render()
+		return this
+	}
 
-  /**
-   * Render the skeleton cards
-   */
-  private render() {
-    this.innerHTML = "" // Clear existing content
+	/**
+	 * Render the skeleton cards
+	 */
+	private render() {
+		this.innerHTML = "" // Clear existing content
 
-    // Create the specified number of skeleton cards
-    for (let i = 0; i < this.count; i++) {
-      this.innerHTML += `
+		// Create the specified number of skeleton cards
+		for (let i = 0; i < this.count; i++) {
+			this.innerHTML += `
         <div
           class="my-5 flex animate-pulse flex-col gap-5 sm:flex-row"
           style="animation-delay: ${i * 0.66}s"
@@ -36,8 +36,8 @@ export class CardSkeleton extends HTMLElement {
           <article class="bg-alt-light dark:bg-alt-dark h-[153.25px] w-full min-w-0 rounded p-0"></article>
         </div>
       `
-    }
-  }
+		}
+	}
 }
 
 // Register the component
