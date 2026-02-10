@@ -1,4 +1,4 @@
-import { defineConfig, envField } from "astro/config"
+import { defineConfig, envField, fontProviders } from "astro/config"
 import mdx from "@astrojs/mdx"
 import remarkGfm from "remark-gfm"
 import astroExpressiveCode, { ExpressiveCodeTheme } from "astro-expressive-code"
@@ -93,6 +93,11 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()],
+		resolve: {
+			alias: {
+				$assets: new URL("./src/assets", import.meta.url).pathname,
+			},
+		},
 	},
 
 	adapter: netlify({
@@ -102,59 +107,71 @@ export default defineConfig({
 	experimental: {
 		fonts: [
 			{
-				provider: "local",
+				provider: fontProviders.local(),
 				name: "EB Garamond",
 				cssVariable: "--font-eb-garamond",
 				fallbacks: ["serif"],
-				variants: [
-					{
-						weight: "400 800",
-						style: "normal",
-						src: [
-							"./src/assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2",
-						],
-					},
-					{
-						weight: "400 800",
-						style: "italic",
-						src: [
-							"./src/assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2",
-						],
-					},
-				],
+				weights: ["400 800"],
+				styles: ["normal", "italic"],
+				options: {
+					variants: [
+						{
+							weight: "400 800",
+							style: "normal",
+							src: [
+								"./src/assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2",
+							],
+						},
+						{
+							weight: "400 800",
+							style: "italic",
+							src: [
+								"./src/assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2",
+							],
+						},
+					],
+				},
 			},
 			{
-				provider: "local",
+				provider: fontProviders.local(),
 				name: "Monaspace Neon",
 				cssVariable: "--font-monaspace",
 				fallbacks: ["monospace"],
-				variants: [
-					{
-						weight: "200 800",
-						style: "normal",
-						src: ["./src/assets/fonts/Monaspace Neon/Monaspace Neon Var.woff2"],
-					},
-					{
-						weight: "200 800",
-						style: "italic",
-						src: [
-							"./src/assets/fonts/Monaspace Radon/Monaspace Radon Var.woff2",
-						],
-					},
-				],
+				weights: ["200 800"],
+				styles: ["normal", "italic"],
+				options: {
+					variants: [
+						{
+							weight: "200 800",
+							style: "normal",
+							src: [
+								"./src/assets/fonts/Monaspace Neon/Monaspace Neon Var.woff2",
+							],
+						},
+						{
+							weight: "200 800",
+							style: "italic",
+							src: [
+								"./src/assets/fonts/Monaspace Radon/Monaspace Radon Var.woff2",
+							],
+						},
+					],
+				},
 			},
 			{
-				provider: "local",
+				provider: fontProviders.local(),
 				name: "Abby",
 				cssVariable: "--font-abby",
 				fallbacks: ["cursive"],
-				variants: [
-					{
-						weight: 400,
-						style: "normal",
-						src: ["./src/assets/fonts/Abby/AbbyYOFF.woff2"],
-					},
-				],
+				options: {
+					variants: [
+						{
+							weight: 400,
+							style: "normal",
+							src: ["./src/assets/fonts/Abby/AbbyYOFF.woff2"],
+						},
+					],
+				},
 			},
 		],
 	},

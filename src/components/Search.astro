@@ -230,65 +230,14 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 	import { Card } from "./card/Card.ts"
 	import { EmptyState } from "./card/EmptyState.ts"
 	import type { ClientBlogEntries } from "./Search.astro"
-	import type { BlogEntry } from "src/utils"
-
-	interface FilterState {
-		query: string
-		tag: string
-		year: string
-		sort: "date"
-	}
+	import {
+		filterBlogEntries,
+		sortBlogEntries,
+		type FilterState,
+	} from "./search/searchUtils.ts"
 
 	const PAGE_SIZE = 5
 	let currentOffset = 0
-
-	/**
-	 * Enhanced blog search with filtering capabilities
-	 * Supports search queries, tag filtering, year filtering, and sorting
-	 */
-	function filterBlogEntries(
-		entries: BlogEntry[],
-		filters: FilterState,
-	): BlogEntry[] {
-		return entries.filter((entry) => {
-			// Filter by search query
-			if (filters.query) {
-				const searchKeywords = filters.query.toLowerCase().split(" ")
-				const matchesQuery = searchKeywords.every(
-					(keyword) =>
-						entry.title.toLowerCase().includes(keyword) ||
-						entry.abstract.toLowerCase().includes(keyword) ||
-						entry.tags.some((tag) => tag.toLowerCase().includes(keyword)),
-				)
-				if (!matchesQuery) return false
-			}
-
-			// Filter by tag
-			if (filters.tag) {
-				const hasTag = entry.tags.some(
-					(tag) => tag.toLowerCase() === filters.tag.toLowerCase(),
-				)
-				if (!hasTag) return false
-			}
-
-			// Filter by year
-			if (filters.year) {
-				if (entry.year !== parseInt(filters.year)) return false
-			}
-
-			return true
-		})
-	}
-
-	// Sort blog entries by date (newest first)
-	export function sortBlogEntries(entries: BlogEntry[]): BlogEntry[] {
-		const sorted = [...entries]
-
-		// Always sort by date (newest first)
-		return sorted.sort(
-			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-		)
-	}
 
 	// Okay, here we go 🧙
 	// Get blog data and DOM elements
