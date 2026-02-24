@@ -83,7 +83,7 @@
 	}
 
 	main {
-		@apply mx-auto max-w-[590px] px-4 sm:px-0;
+		@apply mx-auto max-w-147.5 px-4 sm:px-0;
 	}
 
 	/*
@@ -152,7 +152,7 @@
 	}
 
 	.card article {
-		@apply m-5 min-w-0 p-0 sm:pl-[150px];
+		@apply m-5 min-w-0 p-0 sm:pl-37.5;
 	}
 
 	.card h3,
@@ -161,7 +161,7 @@
 	}
 
 	.card .card-image {
-		@apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-[150px] sm:flex-none sm:object-cover;
+		@apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-37.5 sm:flex-none sm:object-cover;
 	}
 
 	.card .card-image img {
@@ -227,7 +227,7 @@
 	@media (width >= theme(--breakpoint-xl)) {
 		side-note,
 		annotation {
-			@apply relative float-right clear-right mt-0 mr-[-350px] w-[350px];
+			@apply relative float-right clear-right mt-0 -mr-87.5 w-87.5;
 		}
 	}
 

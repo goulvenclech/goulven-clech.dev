@@ -1,0 +1,43 @@
+---
+import ReturnHome from "$components/controls/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+
+const pageTitle = "Friends"
+---
+
+<Layout title={pageTitle}>
+	<Fragment slot="head">
+		<script is:inline type="module" src="https://unpkg.com/graphgarden-web"
+		></script>
+	</Fragment>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			Explore my and my friends' websites as a graph, powered by <a
+				href="https://github.com/bruits/graphgarden">GraphGarden</a
+			>.
+		</p>
+		<ReturnHome />
+	</section>
+	<section>
+		<graph-garden style="width: 100%; height: 600px;" edge-size="2000"
+		></graph-garden>
+	</section>
+</Layout>
+
+<style>
+	@reference "$assets/base.css";
+
+	graph-garden {
+		display: block;
+		--gg-local-node-color: var(--color-primary);
+		--gg-internal-edge-color: var(--color-primary);
+		--gg-friend-node-color: #2563eb;
+		--gg-friend-edge-color: #2563eb;
+		--gg-label-color: var(--color-font);
+	}
+
+	.dark graph-garden {
+		--gg-label-color: var(--color-font-dark);
+	}
+</style>

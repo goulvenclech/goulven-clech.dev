@@ -17,6 +17,11 @@ export default defineConfig({
 			"$components/": new URL("./src/components/", import.meta.url).pathname,
 			"$layouts/": new URL("./src/layouts/", import.meta.url).pathname,
 			"$assets/": new URL("./src/assets/", import.meta.url).pathname,
+			"astro:content": new URL(
+				"./tests/__mocks__/astro-content.ts",
+				import.meta.url,
+			).pathname,
+			"src/": new URL("./src/", import.meta.url).pathname,
 		},
 	},
 })
