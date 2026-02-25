@@ -151,6 +151,7 @@ interface GraphGardenResponse {
 		readonly description: string
 		readonly language: string
 	}
+	readonly friends: readonly string[]
 	readonly nodes: ReadonlyArray<{
 		readonly url: string
 		readonly title: string
@@ -184,7 +185,7 @@ describe("GET handler", () => {
 
 		expect(response.status).toBe(200)
 		expect(response.headers.get("Content-Type")).toBe("application/json")
-		expect(data.version).toBe("0.1.0")
+		expect(data.version).toBe("0.2.0")
 		expect(data.generated_at).toBeDefined()
 		expect(data.base_url).toBeDefined()
 		expect(data.site.title).toBeDefined()
@@ -225,6 +226,16 @@ describe("GET handler", () => {
 		)
 		expect(edge).toBeDefined()
 		expect(edge!.type).toBe("internal")
+	})
+
+	it("includes friends array with expected URLs", async () => {
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		expect(data.friends).toContain("https://aureliendossantos.com")
+		expect(data.friends).toContain("https://erika.florist")
+		expect(data.friends).toContain("https://bruits.org")
 	})
 
 	it("is prerendered at build time", () => {

@@ -26,6 +26,7 @@ interface GraphGardenFile {
 		readonly description: string
 		readonly language: string
 	}
+	readonly friends: readonly string[]
 	readonly nodes: readonly GraphGardenNode[]
 	readonly edges: readonly GraphGardenEdge[]
 }
@@ -261,7 +262,7 @@ export async function GET(context: APIContext) {
 	}
 
 	const graphGardenFile: GraphGardenFile = {
-		version: "0.1.0",
+		version: "0.2.0",
 		generated_at: new Date().toISOString(),
 		base_url: baseUrl,
 		site: {
@@ -270,6 +271,7 @@ export async function GET(context: APIContext) {
 				"I'm a software developer based in Toulouse, France. Welcome to my personal website!",
 			language: "en",
 		},
+		friends: FRIENDS.map((url) => url.replace(/\/$/, "")),
 		nodes: [...nodeMap.values()],
 		edges,
 	}
