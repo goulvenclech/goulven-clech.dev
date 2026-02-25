@@ -139,6 +139,10 @@
 		@apply decoration-primary line-through decoration-[1.5px] underline-offset-4;
 	}
 
+	blockquote {
+		@apply border-alt-light dark:border-alt-dark border-l-4 pl-5 italic;
+	}
+
 	/*
     BASE COMPONENTS
   */
