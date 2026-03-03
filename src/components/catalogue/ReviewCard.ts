@@ -1,4 +1,5 @@
 import { formatDate } from "../../utils"
+import { ratingText } from "./reviewUtils"
 import type { Review } from "../../pages/api/catalogue/reviews"
 import type { Emotion } from "../../pages/api/catalogue/emotions"
 
@@ -8,16 +9,6 @@ import type { Emotion } from "../../pages/api/catalogue/emotions"
 export class ReviewCard extends HTMLElement {
 	private review: Review | null = null
 	private emotionsMap: Map<number, Emotion> = new Map()
-
-	// Rating emojis mapping
-	private static readonly ratingEmojis: { [key: number]: string } = {
-		1: "😡 hated it",
-		2: "🙁 disliked it",
-		3: "😐 meh'd it",
-		4: "😀 liked it",
-		5: "😍 loved it",
-		6: "⭐ favorite",
-	}
 
 	constructor() {
 		super()
@@ -65,7 +56,7 @@ export class ReviewCard extends HTMLElement {
         </div>
         <article>
           <h3>${this.review.source_name || this.review.source_id}</h3>
-          <p><span>${ReviewCard.ratingEmojis[this.review.rating]}, and felt ${emotionsText}.</span></p>
+          <p><span>${ratingText(this.review.rating, this.review.source)}, felt ${emotionsText}.</span></p>
           <p>« ${this.review.comment} » — <span class="whitespace-nowrap">${date}</span></p>
         </article>
       </a>

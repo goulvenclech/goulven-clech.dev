@@ -11,6 +11,7 @@ import {
 } from "./sources/tmdb"
 import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
+import { fetchBook, bookCoverUrl, buildBookMeta } from "./sources/openlibrary"
 import { computeImageFocusY } from "../../../imageFocus"
 
 function getClient(): Client {
@@ -286,6 +287,18 @@ export async function POST({ request }: APIContext): Promise<Response> {
 				source_link = album.external_urls.spotify
 				meta = buildAlbumMeta(album)
 				if (album.images?.length) source_img = albumCoverUrl(album)
+				break
+			}
+
+			case "OPENLIBRARY": {
+				const book = await fetchBook(String(source_id))
+				if (!book) return json({ error: "Book not found" }, 404)
+
+				const year = book.publishYear ?? "??"
+				source_name = `${book.title} (${year})`
+				source_link = `https://openlibrary.org/books/${source_id}`
+				meta = buildBookMeta(book)
+				if (book.coverOlid) source_img = bookCoverUrl(book.coverOlid)
 				break
 			}
 

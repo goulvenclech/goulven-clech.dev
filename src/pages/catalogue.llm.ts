@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
+import { ratingText } from "../components/catalogue/reviewUtils"
 
 export const prerender = false
 
@@ -20,26 +21,6 @@ export async function GET(_context: APIContext): Promise<Response> {
 			comment: string | null
 		}[]
 
-		// Map numeric rating (1-6) to a short, readable label
-		const ratingToWord = (rating: number): string => {
-			switch (rating) {
-				case 6:
-					return "favorite"
-				case 5:
-					return "loved it"
-				case 4:
-					return "liked it"
-				case 3:
-					return "meh'd it"
-				case 2:
-					return "disliked it"
-				case 1:
-					return "hated it"
-				default:
-					return String(rating)
-			}
-		}
-
 		// Group rows by source
 		const groups = rows.reduce(
 			(acc, r) => {
@@ -50,7 +31,14 @@ export async function GET(_context: APIContext): Promise<Response> {
 		)
 
 		// Desired display order of groups
-		const sourceOrder = ["IGDB", "BGG", "TMDB_MOVIE", "TMDB_TV", "SPOTIFY"]
+		const sourceOrder = [
+			"IGDB",
+			"BGG",
+			"TMDB_MOVIE",
+			"TMDB_TV",
+			"SPOTIFY",
+			"OPENLIBRARY",
+		]
 
 		// Human-friendly headers for each group
 		const sourceHeader = (source: string): string => {
@@ -65,6 +53,8 @@ export async function GET(_context: APIContext): Promise<Response> {
 					return "## Shows (TMDB)"
 				case "SPOTIFY":
 					return "## Albums (Spotify)"
+				case "OPENLIBRARY":
+					return "## Books (Open Library)"
 				default:
 					return source
 			}
@@ -77,7 +67,7 @@ export async function GET(_context: APIContext): Promise<Response> {
 			const lines = items
 				.map((r) => {
 					const comment = r.comment ? ` « ${r.comment} »;` : ";"
-					return `${r.source_name} — ${ratingToWord(r.rating)}${comment}`
+					return `${r.source_name} — ${ratingText(r.rating, r.source)}${comment}`
 				})
 				.join("\n\n")
 			sections.push(`${sourceHeader(src)}\n\n${lines}`)
@@ -88,7 +78,7 @@ export async function GET(_context: APIContext): Promise<Response> {
 			"",
 			"Plain-text catalogue of media I've consumed. Optimized for crawlers, LLMs, and no-JS readers.",
 			"",
-			"Sources: Video games (IGDB), Board games (BGG), Movies (TMDB), Shows (TMDB), Albums (Spotify).",
+			"Sources: Video games (IGDB), Board games (BGG), Movies (TMDB), Shows (TMDB), Albums (Spotify), Books (Open Library).",
 		].join("\n")
 
 		const body = [intro, sections.join("\n\n\n")].filter(Boolean).join("\n\n")

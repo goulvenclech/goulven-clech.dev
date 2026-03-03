@@ -22,32 +22,9 @@ At its heart, this project looks like any Astro project, you can start by readin
 
 - [Custom image service](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/imageService.ts): retrieved from [Erika's blog](https://erika.florist/), gain performance and display a placeholder during image loading.
 
-## Project Structure
+## Philosophy
 
-```
-/
-├── src/
-│   ├── content/ -> Sub repository
-│   ├── assets/
-│   │   └── base.css
-│   ├── components/
-│   │   └── Component.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── pages/
-│   │   └── index.astro
-│   ├── env.d.ts
-│   └── [...utils].ts
-├── public/
-│   └── Iosevka-Regular.woff2
-├── [... config files]
-├── README.md
-└── package.json
-```
-
-`pages/` contains every page of this blog as `.astro` files.
-
-`layouts/` and `components/` contains every web component as `.astro`` files.
+_Work in progress_.
 
 ## Commands
 
