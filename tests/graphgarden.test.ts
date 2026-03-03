@@ -24,9 +24,11 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.mock("node:path", async (importOriginal) => {
 	const actual = await importOriginal<typeof import("node:path")>()
+	const mockJoin = (...args: string[]) => args.join("/")
 	return {
 		...actual,
-		join: (...args: string[]) => args.join("/"),
+		default: { ...actual, join: mockJoin },
+		join: mockJoin,
 	}
 })
 
