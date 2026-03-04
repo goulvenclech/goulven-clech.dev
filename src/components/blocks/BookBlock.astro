@@ -43,7 +43,13 @@ const imageFocusY: number | undefined =
 	typeof computedFocus === "number" ? computedFocus : undefined
 ---
 
-<Block image={coverUrl} to={book.info_url} imageFocusY={imageFocusY}>
+<Block
+	image={coverUrl}
+	to={book.info_url}
+	imageFocusY={imageFocusY}
+	imageWidth={600}
+	imageHeight={900}
+>
 	<h3
 		id={book.details.title}
 		class="my-0 line-clamp-2 leading-8 text-ellipsis sm:line-clamp-1"

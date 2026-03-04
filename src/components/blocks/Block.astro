@@ -10,6 +10,8 @@ interface Props {
 	imageDark?: ImageMetadata | string
 	imageAlt?: string
 	imageFocusY?: number
+	imageWidth?: number
+	imageHeight?: number
 	to: string
 }
 
@@ -18,7 +20,15 @@ const cardImageWidths = [320, 480, 640, 960]
 const cardImageSizes = "(max-width: 640px) 100vw, 150px"
 const cardImageQuality = 80
 
-const { image, imageDark, imageAlt = "", to, imageFocusY } = Astro.props
+const {
+	image,
+	imageDark,
+	imageAlt = "",
+	to,
+	imageFocusY,
+	imageWidth,
+	imageHeight,
+} = Astro.props
 
 // Generate placeholders for images like in Image.astro
 let placeholderURL: string | undefined
@@ -93,6 +103,8 @@ if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
 						sizes={cardImageSizes}
 						quality={cardImageQuality}
 						placeholderURL={placeholderURL}
+						width={imageWidth}
+						height={imageHeight}
 					/>
 				) : (
 					<>
@@ -105,6 +117,8 @@ if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
 							quality={cardImageQuality}
 							class="dark:hidden"
 							placeholderURL={placeholderURL}
+							width={imageWidth}
+							height={imageHeight}
 						/>
 						<InternalImage
 							source={imageDark}
@@ -115,6 +129,8 @@ if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
 							quality={cardImageQuality}
 							class="hidden dark:block"
 							placeholderURL={placeholderURLDark}
+							width={imageWidth}
+							height={imageHeight}
 						/>
 					</>
 				))

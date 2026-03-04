@@ -1,5 +1,6 @@
 ---
 import Block from "./Block.astro"
+import { parseAmazonImageSize } from "./amazonUtils"
 
 /**
  * Used to present an Amazon product as a card, also a link that product.
@@ -18,12 +19,17 @@ interface Props {
 
 const { id, name, brand, img, price, rating, ratings_total, focusY } =
 	Astro.props
+
+const imageDimensions = parseAmazonImageSize(img)
+const AMAZON_FALLBACK_SIZE = 1500
 ---
 
 <Block
 	image={img}
 	to={`https://www.amazon.fr/gp/product/${id}/`}
 	imageFocusY={focusY}
+	imageWidth={imageDimensions?.width ?? AMAZON_FALLBACK_SIZE}
+	imageHeight={imageDimensions?.height ?? AMAZON_FALLBACK_SIZE}
 >
 	<h3
 		id={name}

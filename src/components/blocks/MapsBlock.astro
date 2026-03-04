@@ -3,6 +3,7 @@
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
 import { computeImageFocusY } from "../../imageFocus"
+import { getClosedDays, scaleToMaxHeight } from "./mapsUtils"
 
 /**
  * Used to present a Google Maps Place as a card, also a link to that place.
@@ -36,48 +37,45 @@ const openingHoursDisplay = isClosedPermanent
 		? getClosedDays(place.regularOpeningHours.periods)
 		: "No opening hours available."
 
-/**
- * Return a human sentence listing the closed days.
- */
-function getClosedDays(periods: any): string {
-	if (!Array.isArray(periods)) return "Unknown opening days."
-	const openedDays = periods
-		.map((p: any) => p.open?.day)
-		.filter((d: number) => d !== undefined)
+// Build photo URL and compute served dimensions from API metadata.
+// The Places API response includes widthPx/heightPx for each photo.
+// We request maxHeightPx=750, so scale accordingly to avoid inferSize fetches.
+const MAX_HEIGHT = 750
 
-	const closedDays = [0, 1, 2, 3, 4, 5, 6]
-		.filter((d) => !openedDays.includes(d))
-		.map(dayOfWeekAsString)
-		.join(", ")
+let photoUrl: string | undefined
+let imageWidth: number | undefined
+let imageHeight: number | undefined
+let imageFocusY: number | undefined
 
-	return closedDays === "" ? "Open every day." : `Closed on ${closedDays}.`
+try {
+	const photo = place.photos?.[0]
+	if (photo?.name) {
+		photoUrl = `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=${MAX_HEIGHT}&key=${import.meta.env.MAPS_TOKEN}`
+
+		const originalWidth: number | undefined = photo.widthPx
+		const originalHeight: number | undefined = photo.heightPx
+		if (originalWidth && originalHeight) {
+			const scaled = scaleToMaxHeight(originalWidth, originalHeight, MAX_HEIGHT)
+			imageWidth = scaled.width
+			imageHeight = scaled.height
+		} else {
+			// Never pass a remote URL without explicit dimensions
+			photoUrl = undefined
+		}
+
+		if (photoUrl) {
+			const computedFocus = await computeImageFocusY(photoUrl)
+			if (typeof computedFocus === "number") {
+				imageFocusY = computedFocus
+			}
+		}
+	}
+} catch (error) {
+	console.warn(`Failed to build photo for place ${id}:`, error)
+	photoUrl = undefined
+	imageWidth = undefined
+	imageHeight = undefined
 }
-
-/**
- * Converts a day index (0 = Sunday) to string.
- */
-function dayOfWeekAsString(i: number): string {
-	return (
-		[
-			"sunday",
-			"monday",
-			"tuesday",
-			"wednesday",
-			"thursday",
-			"friday",
-			"saturday",
-		][i] || ""
-	)
-}
-
-// Build photo URL (if any)
-const photoUrl: string | undefined = place.photos?.length
-	? `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=750&key=${import.meta.env.MAPS_TOKEN}`
-	: undefined
-
-const computedFocus = photoUrl ? await computeImageFocusY(photoUrl) : null
-const imageFocusY: number | undefined =
-	typeof computedFocus === "number" ? computedFocus : undefined
 ---
 
 <Block
@@ -87,6 +85,8 @@ const imageFocusY: number | undefined =
 		: "Place photo"}
 	to={place.googleMapsUri}
 	imageFocusY={imageFocusY}
+	imageWidth={imageWidth}
+	imageHeight={imageHeight}
 >
 	<h3
 		id={place.id}
