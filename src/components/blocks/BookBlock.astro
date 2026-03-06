@@ -3,6 +3,7 @@
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "./Block.astro"
 import { computeImageFocusY } from "../../imageFocus"
+import { resolveRedirectChain } from "../../imageUtils"
 
 /**
  * Used to present a book as a card, also a link to Google Shopping that book.
@@ -33,8 +34,10 @@ const result = await userData
 
 const book = result[`ISBN:${isbn}`]
 
-// Cover URL for the book
-const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+// Cover URL for the book — resolve redirects so Astro's image pipeline gets a direct URL
+const coverUrl = await resolveRedirectChain(
+	`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
+)
 
 // Compute focus like MapsBlock, with optional manual override
 const computedFocus =

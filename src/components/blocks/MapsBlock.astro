@@ -50,7 +50,11 @@ let imageFocusY: number | undefined
 try {
 	const photo = place.photos?.[0]
 	if (photo?.name) {
-		photoUrl = `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=${MAX_HEIGHT}&key=${import.meta.env.MAPS_TOKEN}`
+		const photoResponse: any = await EleventyFetch(
+			`https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=${MAX_HEIGHT}&skipHttpRedirect=true&key=${import.meta.env.MAPS_TOKEN}`,
+			{ duration: "1d", type: "json" },
+		)
+		photoUrl = photoResponse.photoUri
 
 		const originalWidth: number | undefined = photo.widthPx
 		const originalHeight: number | undefined = photo.heightPx

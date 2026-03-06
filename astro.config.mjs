@@ -60,6 +60,7 @@ export default defineConfig({
 			"covers.openlibrary.org",
 			"m.media-amazon.com",
 		],
+		remotePatterns: [{ hostname: "**.us.archive.org" }],
 	},
 
 	markdown: {
