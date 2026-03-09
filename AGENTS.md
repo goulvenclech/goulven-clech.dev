@@ -20,5 +20,4 @@ pnpm dev            # dev server with type-checking
 
 - All code, comments, documentation, commit messages, and user-facing output must be in English.
 - Do not create documentation files to explain implementation.
-- Do not alter CI/CD configuration unless explicitly instructed.
 - Do not add external dependencies without justification. Prefer native APIs and existing utilities.

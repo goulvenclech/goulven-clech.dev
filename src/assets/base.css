@@ -206,6 +206,10 @@
 		@apply font-medium whitespace-nowrap;
 	}
 
+	sup + sup {
+		@apply ml-0.5;
+	}
+
 	side-note,
 	annotation {
 		@apply my-5 block px-8 text-xs leading-snug;
