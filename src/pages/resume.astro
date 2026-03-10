@@ -1,42 +1,43 @@
 ---
 import Layout from "$layouts/Layout.astro"
 import { getCollection } from "astro:content"
+import type { CollectionEntry } from "astro:content"
 import ResumeCard from "$components/resume/ResumeCard.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import PrintButton from "$components/controls/PrintButton.astro"
-import { getMyAge, getRemoteWorkYears } from "src/utils"
+import {
+	getMyAge,
+	getRemoteWorkYears,
+	sortExperiencesByDate,
+} from "src/dateUtils"
 /**
- * Misc page with legal notice, changelog, etc.
+ * Résumé page with experiences, education, and languages.
  */
 const pageTitle = "Résumé"
 
 // get all experiences entries
-const experiencesEntries = await getCollection("experiences", ({ data }) => {
-	return data.is_education === false && data.is_draft !== true
-})
+const experiencesEntries = await getCollection(
+	"experiences",
+	({ data }: CollectionEntry<"experiences">) => {
+		return data.is_education === false && data.is_draft !== true
+	},
+)
 
-experiencesEntries.sort((a, b) => {
-	// if both have an end date, sort by end date (most recent first)
-	if (a.data.end_date && b.data.end_date) {
-		return b.data.end_date.getTime() - a.data.end_date.getTime()
-		// if both don't have an end date, sort by start date (most recent first)
-	} else if (!a.data.end_date && !b.data.end_date) {
-		return b.data.start_date.getTime() - a.data.start_date.getTime()
-		// if one has an end date and the other doesn't
-	} else {
-		return a.data.end_date ? 1 : -1
-	}
-})
+experiencesEntries.sort(sortExperiencesByDate)
 
 // get all education entries
-const educationEntries = await getCollection("experiences", ({ data }) => {
-	return data.is_education === true && data.is_draft !== true
-})
+const educationEntries = await getCollection(
+	"experiences",
+	({ data }: CollectionEntry<"experiences">) => {
+		return data.is_education === true && data.is_draft !== true
+	},
+)
 
-educationEntries.sort((a, b) => {
-	// Just sort by start date (most recent first), should be enough
-	return b.data.start_date.getTime() - a.data.start_date.getTime()
-})
+educationEntries.sort(
+	(a: CollectionEntry<"experiences">, b: CollectionEntry<"experiences">) => {
+		return b.data.start_date.getTime() - a.data.start_date.getTime()
+	},
+)
 ---
 
 <Layout title={pageTitle}>
@@ -84,7 +85,6 @@ educationEntries.sort((a, b) => {
 		<h2 class="mb-2.5" id="education">Education</h2>
 		{educationEntries.map((education) => <ResumeCard experience={education} />)}
 	</section>
-	<style is:global></style>
 	<section id="language">
 		<h2>Languages</h2>
 		<ul>

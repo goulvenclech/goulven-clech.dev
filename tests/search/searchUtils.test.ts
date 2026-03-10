@@ -3,7 +3,7 @@ import {
 	filterBlogEntries,
 	sortBlogEntries,
 } from "../../src/components/search/searchUtils"
-import type { BlogEntry } from "../../src/utils"
+import type { BlogEntry } from "../../src/blogUtils"
 
 function mockBlogEntry(overrides: Partial<BlogEntry> = {}): BlogEntry {
 	return {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import type { BlogEntry } from "../../src/utils"
+import type { BlogEntry } from "../../src/blogUtils"
 
 // Import components to trigger customElements.define()
 import { Card } from "../../src/components/card/Card"

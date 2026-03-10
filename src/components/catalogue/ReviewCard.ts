@@ -1,4 +1,4 @@
-import { formatDate } from "../../utils"
+import { formatDate } from "../../dateUtils"
 import { ratingText } from "./reviewUtils"
 import type { Review } from "../../pages/api/catalogue/reviews"
 import type { Emotion } from "../../pages/api/catalogue/emotions"

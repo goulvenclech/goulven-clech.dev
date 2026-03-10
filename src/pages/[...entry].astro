@@ -1,7 +1,8 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content"
 import Layout from "$layouts/Layout.astro"
-import { formatDate, isEntryPublished } from "src/utils"
+import { formatDate } from "src/dateUtils"
+import { isEntryPublished } from "src/blogUtils"
 
 import TableOfContent from "$components/TableOfContent.astro"
 /**

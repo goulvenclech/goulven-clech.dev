@@ -1,5 +1,3 @@
-import semver from "semver"
-
 /**
  * Return date in the format DD Month YYYY.
  */
@@ -9,26 +7,6 @@ export function formatDate(date: Date): string {
 		month: "long",
 		year: "numeric",
 	})
-}
-
-/**
- * Determines whether an entry should be shown.
- */
-export function isEntryPublished(
-	published: string,
-	strict: boolean = false,
-): boolean {
-	if (import.meta.env.PROD || strict) {
-		// In strict mode or in production, we filter out "never", "draft" and versions higher than the current version.
-		return (
-			published !== "never" &&
-			published !== "draft" &&
-			semver.lte(published, import.meta.env.npm_package_version)
-		)
-	} else {
-		// In non-strict mode, only "never" entries are filtered out.
-		return published !== "never"
-	}
 }
 
 /**
@@ -61,18 +39,39 @@ export function getRemoteWorkYears(): number {
 	)
 }
 
-export interface BlogEntry {
-	id: string
-	title: string
-	date: string
-	year: number
-	tags: string[]
-	abstract: string
-	image?: { src: string }
-	imageDark?: { src: string }
-	imageAlt: string
-	imagePlaceholder?: string
-	imageDarkPlaceholder?: string
-	isPublished: boolean
-	imageFocusY?: number
+/**
+ * Format a date range as a human-readable string (e.g. "January 2020 - March 2021").
+ */
+export function formatDateRange(startDate: Date, endDate?: Date): string {
+	const formattedStart = startDate.toLocaleString("en-GB", {
+		month: "long",
+		year: "numeric",
+	})
+	const formattedEnd = endDate?.toLocaleString("en-GB", {
+		month: "long",
+		year: "numeric",
+	})
+	if (!endDate) return `${formattedStart} - Present`
+	if (formattedStart === formattedEnd) return formattedStart
+	if (startDate.getFullYear() === endDate.getFullYear()) {
+		return `${startDate.toLocaleString("en-GB", { month: "long" })} - ${formattedEnd}`
+	}
+	return `${formattedStart} - ${formattedEnd}`
+}
+
+/**
+ * Sort comparator for experience entries, most recent first.
+ * Entries without an end date (current positions) come before entries with one.
+ */
+export function sortExperiencesByDate(
+	a: { data: { start_date: Date; end_date?: Date } },
+	b: { data: { start_date: Date; end_date?: Date } },
+): number {
+	if (a.data.end_date && b.data.end_date) {
+		return b.data.end_date.getTime() - a.data.end_date.getTime()
+	} else if (!a.data.end_date && !b.data.end_date) {
+		return b.data.start_date.getTime() - a.data.start_date.getTime()
+	} else {
+		return a.data.end_date ? 1 : -1
+	}
 }

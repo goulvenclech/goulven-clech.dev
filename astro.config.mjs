@@ -89,6 +89,10 @@ export default defineConfig({
 				access: "public",
 				default: "",
 			}),
+			TMDB_TOKEN: envField.string({ context: "server", access: "secret" }),
+			TMDB_KEY: envField.string({ context: "server", access: "secret" }),
+			SPOTIFY_ID: envField.string({ context: "server", access: "secret" }),
+			SPOTIFY_SECRET: envField.string({ context: "server", access: "secret" }),
 		},
 	},
 
@@ -106,74 +110,74 @@ export default defineConfig({
 	}),
 
 	experimental: {
-		fonts: [
-			{
-				provider: fontProviders.local(),
-				name: "EB Garamond",
-				cssVariable: "--font-eb-garamond",
-				fallbacks: ["serif"],
-				weights: ["400 800"],
-				styles: ["normal", "italic"],
-				options: {
-					variants: [
-						{
-							weight: "400 800",
-							style: "normal",
-							src: [
-								"./src/assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2",
-							],
-						},
-						{
-							weight: "400 800",
-							style: "italic",
-							src: [
-								"./src/assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2",
-							],
-						},
-					],
-				},
-			},
-			{
-				provider: fontProviders.local(),
-				name: "Monaspace Neon",
-				cssVariable: "--font-monaspace",
-				fallbacks: ["monospace"],
-				weights: ["200 800"],
-				styles: ["normal", "italic"],
-				options: {
-					variants: [
-						{
-							weight: "200 800",
-							style: "normal",
-							src: [
-								"./src/assets/fonts/Monaspace Neon/Monaspace Neon Var.woff2",
-							],
-						},
-						{
-							weight: "200 800",
-							style: "italic",
-							src: [
-								"./src/assets/fonts/Monaspace Radon/Monaspace Radon Var.woff2",
-							],
-						},
-					],
-				},
-			},
-			{
-				provider: fontProviders.local(),
-				name: "Abby",
-				cssVariable: "--font-abby",
-				fallbacks: ["cursive"],
-				options: {
-					variants: [
-						{
-							weight: 400,
-							style: "normal",
-							src: ["./src/assets/fonts/Abby/AbbyYOFF.woff2"],
-						},
-					],
-				},
-			},
-		],
+		rustCompiler: true,
 	},
+
+	fonts: [
+		{
+			provider: fontProviders.local(),
+			name: "EB Garamond",
+			cssVariable: "--font-eb-garamond",
+			fallbacks: ["serif"],
+			weights: ["400 800"],
+			styles: ["normal", "italic"],
+			options: {
+				variants: [
+					{
+						weight: "400 800",
+						style: "normal",
+						src: [
+							"./src/assets/fonts/EB_Garamond/EBGaramond-VariableFont_wght.woff2",
+						],
+					},
+					{
+						weight: "400 800",
+						style: "italic",
+						src: [
+							"./src/assets/fonts/EB_Garamond/EBGaramond-Italic-VariableFont_wght.woff2",
+						],
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: "Monaspace Neon",
+			cssVariable: "--font-monaspace",
+			fallbacks: ["monospace"],
+			weights: ["200 800"],
+			styles: ["normal", "italic"],
+			options: {
+				variants: [
+					{
+						weight: "200 800",
+						style: "normal",
+						src: ["./src/assets/fonts/Monaspace Neon/Monaspace Neon Var.woff2"],
+					},
+					{
+						weight: "200 800",
+						style: "italic",
+						src: [
+							"./src/assets/fonts/Monaspace Radon/Monaspace Radon Var.woff2",
+						],
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: "Abby",
+			cssVariable: "--font-abby",
+			fallbacks: ["cursive"],
+			options: {
+				variants: [
+					{
+						weight: 400,
+						style: "normal",
+						src: ["./src/assets/fonts/Abby/AbbyYOFF.woff2"],
+					},
+				],
+			},
+		},
+	],
 })

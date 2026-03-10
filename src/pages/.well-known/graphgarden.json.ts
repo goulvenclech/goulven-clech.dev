@@ -1,6 +1,6 @@
 import type { APIContext } from "astro"
 import { getCollection } from "astro:content"
-import { isEntryPublished } from "src/utils"
+import { isEntryPublished } from "src/blogUtils"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 

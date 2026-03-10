@@ -1,34 +1,13 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { render } from "astro:content"
+import { formatDateRange } from "src/dateUtils"
 /**
  * An experience card to display in the resume section.
  * @param experience - What's the experience to display?
  */
 interface Props {
 	experience: CollectionEntry<"experiences">
-}
-
-function format_date(start_date: Date, end_date?: Date) {
-	// Format the date to be more human readable
-	const formated_start_date = start_date.toLocaleString("en-GB", {
-		month: "long",
-		year: "numeric",
-	})
-	const formated_end_date = end_date?.toLocaleString("en-GB", {
-		month: "long",
-		year: "numeric",
-	})
-	// If there is no end date, we are still working there
-	if (!end_date) return `${formated_start_date} - Present`
-	// If the start and end date are the same, we only work there for one month
-	if (formated_start_date === formated_end_date) return formated_start_date
-	// If the start and end date are in the same year, we only display the year once
-	if (start_date.getFullYear() === end_date.getFullYear()) {
-		return `${start_date.toLocaleString("en-GB", { month: "long" })} - ${formated_end_date}`
-	}
-	// Else we display the start and end date
-	return `${formated_start_date} - ${formated_end_date}`
 }
 
 const { experience } = Astro.props
@@ -41,7 +20,7 @@ const { Content } = await render(experience)
 	<div class="flex flex-row justify-between">
 		<h3 class="my-0" set:html={experience.data.company} />
 		<span>
-			{format_date(experience.data.start_date, experience.data.end_date)}
+			{formatDateRange(experience.data.start_date, experience.data.end_date)}
 		</span>
 	</div>
 	<Content />
