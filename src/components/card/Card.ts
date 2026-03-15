@@ -69,7 +69,7 @@ export class Card extends HTMLElement {
 						${this.cardIsPublished === "false" ? `<span class="badge">Draft</span>` : ``}
           </h3>
           <p class="text-ellipsis line-clamp-4 sm:line-clamp-3">
-            ${this.cardAbstract} —<span class="whitespace-nowrap"> ${this.cardDate}</span>
+            ${this.cardAbstract} –<span class="whitespace-nowrap"> ${this.cardDate}</span>
           </p>
         </article>
       </a>

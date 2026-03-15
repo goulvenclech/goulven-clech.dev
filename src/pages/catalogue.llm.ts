@@ -67,7 +67,7 @@ export async function GET(_context: APIContext): Promise<Response> {
 			const lines = items
 				.map((r) => {
 					const comment = r.comment ? ` « ${r.comment} »;` : ";"
-					return `${r.source_name} — ${ratingText(r.rating, r.source)}${comment}`
+					return `${r.source_name} – ${ratingText(r.rating, r.source)}${comment}`
 				})
 				.join("\n\n")
 			sections.push(`${sourceHeader(src)}\n\n${lines}`)

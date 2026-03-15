@@ -57,7 +57,7 @@ export class ReviewCard extends HTMLElement {
         <article>
           <h3>${this.review.source_name || this.review.source_id}</h3>
           <p><span>${ratingText(this.review.rating, this.review.source)}, felt ${emotionsText}.</span></p>
-          <p>« ${this.review.comment} » — <span class="whitespace-nowrap">${date}</span></p>
+          <p>« ${this.review.comment} » –<span class="whitespace-nowrap">${date}</span></p>
         </article>
       </a>
     `
