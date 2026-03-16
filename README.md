@@ -14,6 +14,8 @@ At its heart, this project looks like any Astro project, you can start by readin
 
 - [Catalogue](https://goulven-clech.dev/catalogue): personal media log with full-text search, multi-criteria filters (source, emotions, rating) and paginated loading. Powered by Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database.
 
+- [Friends](https://goulven-clech.dev/friends): interactive graph visualization of my and my friends' websites, powered by [GraphGarden](https://github.com/bruits/graphgarden).
+
 - [Table of contents](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/TableOfContent.astro): using Astro and MDX, generate a table of contents based on the headings. With nested lists.
 
 - [Open Library](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/BookBlock.astro) & [Google Maps](https://github.com/goulvenclech/goulven-clech.dev/blob/master/src/components/blocks/MapsBlock.astro) blocks: nicely displays API results in blog entries.

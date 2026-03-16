@@ -381,6 +381,7 @@
 	a[href^="/catalogue"]::before,
 	a[href^="/notes"]::before,
 	footer a[href="/"]::before,
+	a[href^="/friends"]::before,
 	a[href^="/health"]::before,
 	footer a[href^="/resume"]::before,
 	a[href^="/feed.xml"]::before,
@@ -418,6 +419,12 @@
 
 	a[href^="/notes"]::before {
 		content: "\f02d";
+		font-weight: 900;
+		font-family: "Font Awesome 6 Free";
+	}
+
+	a[href^="/friends"]::before {
+		content: "\f542";
 		font-weight: 900;
 		font-family: "Font Awesome 6 Free";
 	}
