@@ -174,14 +174,19 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 ---
 
 <form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:text-sm">
-	<div class="group col-span-2 flex items-center">
-		<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
-		<input
-			id="search-query"
-			class="focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
-			placeholder="Search blog entries by title or keywords..."
-			type="text"
-		/>
+	<div class="col-span-2 flex items-center gap-3">
+		<div class="group flex flex-1 items-center">
+			<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
+			<input
+				id="search-query"
+				class="focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
+				placeholder="Search blog entries by title or keywords..."
+				type="text"
+			/>
+		</div>
+		<reset-button
+			defaults='{"search-query":"","tag-filter":"","year-filter":""}'
+		></reset-button>
 	</div>
 
 	<select id="tag-filter" class="border-b-[0.1rem] border-dotted">
@@ -230,6 +235,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 <script>
 	import { Card } from "./card/Card.ts"
 	import { EmptyState } from "./card/EmptyState.ts"
+	import "./controls/ResetButton.ts"
 	import type { ClientBlogEntries } from "./Search.astro"
 	import {
 		filterBlogEntries,
@@ -368,6 +374,14 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 		applyFilters()
 	})
 
+	queryInput
+		.closest("form")
+		?.querySelector("reset-button")
+		?.addEventListener("reset-filters", () => {
+			currentOffset = 0
+			applyFilters()
+		})
+
 	// Load more button
 	document.getElementById("load-more")?.addEventListener("click", () => {
 		currentOffset += PAGE_SIZE
@@ -378,6 +392,10 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 	document.addEventListener("DOMContentLoaded", () => {
 		currentOffset = 0
 		initializeFromUrl()
+		// Programmatic .value= doesn't fire events, notify ResetButton
+		queryInput
+			.closest("form")
+			?.dispatchEvent(new Event("change", { bubbles: true }))
 	})
 	// that should do it 🧙
 </script>

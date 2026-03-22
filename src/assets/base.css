@@ -489,6 +489,11 @@
 		display: inline-block;
 	}
 
+	reset-button button::before {
+		content: "\f2ea";
+		font-size: 0.55rem;
+	}
+
 	button#toTop::before {
 		content: "\f148";
 		font-family: "Font Awesome 6 Free";

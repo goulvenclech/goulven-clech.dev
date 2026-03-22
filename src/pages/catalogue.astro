@@ -40,14 +40,19 @@ const pageTitle = "Catalogue"
 	</section>
 	<section>
 		<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:grid-cols-3 sm:text-sm">
-			<div class="group col-span-2 flex items-center sm:col-span-3">
-				<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
-				<input
-					id="query"
-					type="text"
-					placeholder="Search by title, author, keywords, etc."
-					class="group-has-focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
-				/>
+			<div class="col-span-2 flex items-center gap-3 sm:col-span-3">
+				<div class="group flex flex-1 items-center">
+					<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
+					<input
+						id="query"
+						type="text"
+						placeholder="Search by title, author, keywords, etc."
+						class="group-has-focus:text-primary w-full truncate overflow-hidden border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
+					/>
+				</div>
+				<reset-button
+					defaults='{"query":"","rating-filter":"","source-filter":"","emotions-filter":"","sort-filter":"date"}'
+				></reset-button>
 			</div>
 
 			<select id="source-filter" class="border-b-[0.1rem] border-dotted">
@@ -120,6 +125,7 @@ const pageTitle = "Catalogue"
 		import { CardSkeleton } from "../components/card/CardSkeleton.ts"
 		import { ErrorState } from "../components/card/ErrorState.ts"
 		import { EmptyState } from "../components/card/EmptyState.ts"
+		import "../components/controls/ResetButton.ts"
 
 		/**
 		 * Sync filter & pagination state to the URL
@@ -322,6 +328,15 @@ const pageTitle = "Catalogue"
 				}),
 			)
 
+			// Reset button
+			queryInput
+				?.closest("form")
+				?.querySelector("reset-button")
+				?.addEventListener("reset-filters", () => {
+					currentOffset = 0
+					loadReviews()
+				})
+
 			// Load‑more button
 			document.getElementById("load-more")?.addEventListener("click", () => {
 				currentOffset += PAGE_SIZE
@@ -362,6 +377,8 @@ const pageTitle = "Catalogue"
 				if (params.has("emotion"))
 					emotionsFilter.value = params.get("emotion") ?? ""
 				if (params.has("sort")) sortFilter.value = params.get("sort") ?? "date"
+				// Programmatic .value= doesn't fire events, notify ResetButton
+				form?.dispatchEvent(new Event("change", { bubbles: true }))
 				currentOffset = 0
 				await loadReviews()
 				setupFilterListeners()

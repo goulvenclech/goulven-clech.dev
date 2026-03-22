@@ -13,7 +13,6 @@ pnpm dev            # dev server with type-checking
 ## Keep in mind
 
 - The main [README](./README.md) describes notable features and project philosophy, the submodule [README](./src/content/README) describes content-specific conventions.
-- Astro components in `.astro` files, client-side interactive components in `.ts` files.
 - The project historically had no tests. All new features must include unit tests on observable behavior, and pre-existing features should be progressively covered when touched.
 
 ## Agent Guardrails
