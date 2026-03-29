@@ -1,0 +1,40 @@
+---
+import { formatDate } from "src/dateUtils"
+
+interface Props {
+	title: string
+	abstract: string
+	date: Date
+	isAprilCools: boolean
+	isPublished: boolean
+	timeMachine?: string
+}
+
+const { title, abstract, date, isAprilCools, isPublished, timeMachine } =
+	Astro.props
+
+let abstractHtml = abstract
+if (isAprilCools) {
+	abstractHtml += ` This is an <a href="https://www.aprilcools.club/">April Cools'</a> entry!`
+}
+if (timeMachine) {
+	abstractHtml += ` ${timeMachine}`
+}
+---
+
+<h1>{title}</h1>
+<p set:html={abstractHtml} />
+<p>
+	{formatDate(date)} –
+	<a href="/">Goulven CLEC'H</a>
+</p>
+{
+	!isPublished && (
+		<warning-note class="mt-10">
+			<p>
+				You're currently reading a work-in-progress draft. Its content is
+				probably incomplete, and may be updated before public release.
+			</p>
+		</warning-note>
+	)
+}

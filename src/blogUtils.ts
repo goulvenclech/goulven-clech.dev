@@ -20,6 +20,25 @@ export function isEntryPublished(
 	}
 }
 
+/**
+ * Returns true if the given entry is the first April entry of its year
+ */
+export function isFirstAprilEntry(
+	entry: { id: string; date: Date },
+	allEntries: { id: string; date: Date }[],
+): boolean {
+	if (entry.date.getUTCMonth() !== 3) return false
+
+	const year = entry.date.getUTCFullYear()
+	const aprilEntries = allEntries
+		.filter(
+			(e) => e.date.getUTCMonth() === 3 && e.date.getUTCFullYear() === year,
+		)
+		.sort((a, b) => a.date.getTime() - b.date.getTime())
+
+	return aprilEntries[0]?.id === entry.id
+}
+
 export interface BlogEntry {
 	id: string
 	title: string

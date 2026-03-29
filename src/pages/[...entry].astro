@@ -1,8 +1,8 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content"
 import Layout from "$layouts/Layout.astro"
-import { formatDate } from "src/dateUtils"
-import { isEntryPublished } from "src/blogUtils"
+import { isEntryPublished, isFirstAprilEntry } from "src/blogUtils"
+import EntryHeader from "$components/EntryHeader.astro"
 
 import TableOfContent from "$components/TableOfContent.astro"
 /**
@@ -12,15 +12,23 @@ import TableOfContent from "$components/TableOfContent.astro"
 export async function getStaticPaths() {
 	const blogEntries: CollectionEntry<"blog">[] = await getCollection("blog")
 
+	const allEntries = blogEntries.map((e) => ({ id: e.id, date: e.data.date }))
+
 	return blogEntries.map((entry) => ({
 		params: {
 			entry: entry.id,
 		},
-		props: { entry },
+		props: {
+			entry,
+			isAprilCools: isFirstAprilEntry(
+				{ id: entry.id, date: entry.data.date },
+				allEntries,
+			),
+		},
 	}))
 }
 
-const { entry } = Astro.props
+const { entry, isAprilCools } = Astro.props
 const { Content, headings } = await render(entry)
 ---
 
@@ -30,33 +38,14 @@ const { Content, headings } = await render(entry)
 	img={entry.data.image?.src}
 >
 	<section>
-		<h1>{entry.data.title}</h1>
-		<p set:html={entry.data.abstract} />
-		<p>
-			{formatDate(entry.data.date)} –
-			<a href="/">Goulven CLEC'H</a>
-		</p>
-		{
-			!isEntryPublished(entry.data.published, true) && (
-				<warning-note class="mt-10">
-					<p>
-						You're currently reading a work-in-progress draft. Its content is
-						probably incomplete, and may be updated before public release.
-					</p>
-				</warning-note>
-			)
-		}
-		{
-			entry.data.timeMachine && (
-				<time-machine class="mt-10">
-					<p>
-						You're currently reading a backdated entry, before my blog creation
-						in 2023. Reason for backdating: « {entry.data.timeMachine} »
-					</p>
-				</time-machine>
-			)
-		}
-
+		<EntryHeader
+			title={entry.data.title}
+			abstract={entry.data.abstract}
+			date={entry.data.date}
+			isAprilCools={isAprilCools}
+			isPublished={isEntryPublished(entry.data.published, true)}
+			timeMachine={entry.data.timeMachine}
+		/>
 		{headings.length > 0 && <TableOfContent headings={headings} />}
 
 		<section id="entry">

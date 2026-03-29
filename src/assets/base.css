@@ -245,7 +245,6 @@
 
 	draft-section,
 	side-note.draft,
-	time-machine,
 	warning-note {
 		@apply relative block rounded border border-dashed py-5;
 	}
@@ -259,13 +258,8 @@
 		@apply border-primary;
 	}
 
-	time-machine {
-		@apply border-info;
-	}
-
 	draft-section,
-	warning-note,
-	time-machine {
+	warning-note {
 		@apply mx-0 my-5 px-5 py-0 sm:-mx-5;
 	}
 
@@ -286,15 +280,6 @@
 	}
 
 	.dark warning-note::before {
-		@apply text-body-dark;
-	}
-
-	time-machine::before {
-		content: "Time Machine";
-		@apply bg-info text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
-	}
-
-	.dark time-machine::before {
 		@apply text-body-dark;
 	}
 
