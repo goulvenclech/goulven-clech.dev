@@ -1,4 +1,4 @@
-import type { BlogEntry } from "src/blogUtils"
+import type { BlogEntry } from "$src/blogUtils"
 
 export interface FilterState {
 	query: string

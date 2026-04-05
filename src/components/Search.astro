@@ -2,10 +2,10 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 import { getImage } from "astro:assets"
 import type { ImageMetadata } from "astro"
-import { formatDate } from "src/dateUtils"
-import { isEntryPublished } from "src/blogUtils"
-import { generatePlaceholder } from "src/imageService"
-import type { BlogEntry } from "src/blogUtils"
+import { formatDate } from "$src/dateUtils"
+import { isEntryPublished } from "$src/blogUtils"
+import { generatePlaceholder } from "$src/imageService"
+import type { BlogEntry } from "$src/blogUtils"
 import Block from "./blocks/Block.astro"
 export type ClientBlogEntries = BlogEntry[]
 

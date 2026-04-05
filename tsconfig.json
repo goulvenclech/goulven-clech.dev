@@ -3,13 +3,13 @@
 	"include": [".astro/types.d.ts", "**/*", "src/pages/.well-known/**/*"],
 	"exclude": ["dist"],
 	"compilerOptions": {
-		"baseUrl": ".",
 		"moduleResolution": "Bundler",
 		"types": ["astro/env"],
 		"paths": {
-			"$components/*": ["src/components/*"],
-			"$layouts/*": ["src/layouts/*"],
-			"$assets/*": ["src/assets/*"]
+			"$src/*": ["./src/*"],
+			"$components/*": ["./src/components/*"],
+			"$layouts/*": ["./src/layouts/*"],
+			"$assets/*": ["./src/assets/*"]
 		}
 	}
 }

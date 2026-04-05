@@ -1,5 +1,5 @@
 ---
-import { formatDate } from "src/dateUtils"
+import { formatDate } from "$src/dateUtils"
 
 interface Props {
 	title: string
@@ -15,7 +15,7 @@ const { title, abstract, date, isAprilCools, isPublished, timeMachine } =
 
 let abstractHtml = abstract
 if (isAprilCools) {
-	abstractHtml += ` This is an <a href="https://www.aprilcools.club/">April Cools'</a> entry!`
+	abstractHtml += ` This is an <a href="https://www.aprilcools.club/">April Cools'</a> entry, sincere content I spent way too much effort on, outside my usual domain.`
 }
 if (timeMachine) {
 	abstractHtml += ` ${timeMachine}`

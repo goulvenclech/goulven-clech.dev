@@ -1,6 +1,6 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
-import { isEntryPublished } from "src/blogUtils"
+import { isEntryPublished } from "$src/blogUtils"
 /**
  * Generate an RSS feed of all published blog entries.
  * @param context Astro context object
