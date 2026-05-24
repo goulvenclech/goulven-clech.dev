@@ -1,13 +1,15 @@
 ---
+// TODO: rethink this component. The avatar is nice, but is it worth depending more on the GitHub
+// API for that? and wouldn't linking to people's own site or blog be friendlier?
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
-import { getImage, Image } from "astro:assets"
+import { getImage } from "astro:assets"
 /**
  * Take a Github User ID, and render a link to this user account, with their avatar and name.
  * @param {string} user - What is the user's GitHub ID?
  */
 interface Props {
-	user: string
+  user: string
 }
 
 const { user } = Astro.props
@@ -18,51 +20,36 @@ const { user } = Astro.props
  * See -> https://docs.github.com/en/rest/overview/other-authentication-methods#via-personal-access-tokens
  */
 const userData: any = EleventyFetch(`https://api.github.com/user/${user}`, {
-	duration: "1d",
-	type: "json",
-	headers: {
-		Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
-	},
+  duration: "1d",
+  type: "json",
+  headers: {
+    Authorization: "Bearer " + import.meta.env.GITHUB_TOKEN,
+  },
 })
 
 // Got what what we needed 💰 See response format ->
 // https://docs.github.com/en/rest/users/users#get-a-user
 const {
-	name: userName,
-	avatar_url: avatarUrl,
-	html_url: userUrl,
+  name: userName,
+  avatar_url: avatarUrl,
+  html_url: userUrl,
 } = await userData
 
 // Optimize image size and quality
 const avatarImg = await getImage({
-	src: avatarUrl,
-	width: 24 * 2, // Displayed at 24px multiplied by the density
-	height: 24 * 2,
+  src: avatarUrl,
+  width: 24 * 2, // Displayed at 24px multiplied by the density
+  height: 24 * 2,
 })
 ---
 
 {
-	userName ? (
-		<a
-			href={userUrl}
-			class="github-inline hover:text-primary dark:hover:text-primary print:dark:text-font-light whitespace-nowrap before:content-none print:no-underline"
-		>
-			<Image
-				src={avatarImg.src}
-				width={48}
-				height={48}
-				alt="..."
-				class="mr-1 inline h-6 w-6 rounded-full print:mr-0 print:hidden"
-			/>
-			{userName}
-		</a>
-	) : (
-		<span class="text-font-light">Error</span>
-	)
+  userName ? (
+    // Keep <a>, <img> and {userName} on a single line: any whitespace between
+    // them becomes a text node inside the anchor and inherits the dotted underline.
+    // prettier-ignore
+    <a href={userUrl} class="github-inline no-icon hover:text-primary dark:hover:text-primary print:dark:text-font-light whitespace-nowrap print:no-underline"><img src={avatarImg.src} width="48" height="48" alt="" loading="lazy" decoding="async" class="inline h-6 w-6 rounded-full print:mr-0 mr-1 print:hidden" />{userName.trim()}</a>
+  ) : (
+    <span class="text-font-light">[unknown GitHub user]</span>
+  )
 }
-<style>
-	/* Remove link symbol, set by base.css */
-	.github-inline::before {
-		content: "";
-	}
-</style>
