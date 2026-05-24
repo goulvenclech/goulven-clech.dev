@@ -3,10 +3,8 @@ import CardSkeleton from "$components/card/CardSkeleton.astro"
 import ReturnHome from "$components/controls/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 
-/**
- * Catalogue page
- */
 const pageTitle = "Catalogue"
+const canonical = new URL("/catalogue", Astro.site).href
 ---
 
 <Layout
@@ -14,13 +12,13 @@ const pageTitle = "Catalogue"
 	description="Where I keep track of books, movies, songs, video games, and other media I consume."
 >
 	<Fragment slot="head">
+		<link rel="canonical" href={canonical} />
 		<link
 			rel="alternate"
-			type="text/plain"
-			href="/catalogue.llm"
-			title="Catalogue (LLM/plain-text)"
+			type="text/markdown"
+			href="/catalogue.md"
+			title="Catalogue (Markdown / LLM-friendly)"
 		/>
-		<!-- Optionally hint crawlers via robots meta; human visitors won't see this. -->
 		<meta name="robots" content="index,follow" />
 	</Fragment>
 
@@ -109,11 +107,10 @@ const pageTitle = "Catalogue"
 		</side-note>
 	</section>
 
-	<!-- Non-JS fallback: show a tiny link so text-only agents and no-JS users can reach LLM version -->
 	<noscript>
 		<p class="sr-only">
-			This page has a text-only version for crawlers and LLMs: <a
-				href="/catalogue.llm">/catalogue.llm</a
+			Markdown version for crawlers, LLMs, and no-JS readers: <a
+				href="/catalogue.md">/catalogue.md</a
 			>
 		</p>
 	</noscript>

@@ -13,6 +13,7 @@ import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
 import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
 import { fetchBook, bookCoverUrl, buildBookMeta } from "./sources/openlibrary"
 import { computeImageFocusY } from "../../../imageFocus"
+import { buildSelectQuery } from "./reviewQueries"
 
 function getClient(): Client {
 	return createClient({
@@ -65,67 +66,6 @@ function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
 			`public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
 
 	return new Response(JSON.stringify(payload), { status, headers })
-}
-
-/**
- * Builds the SELECT query for GET /reviews based on optional filters.
- */
-function buildSelectQuery({
-	search,
-	rating,
-	emotion,
-	source,
-	limit,
-	offset = 0,
-	sort = "date",
-}: {
-	search?: string
-	rating?: number
-	emotion?: number
-	source?: string
-	limit: number
-	offset?: number
-	sort?: "date" | "rating"
-}): { sql: string; args: (string | number)[] } {
-	const clauses: string[] = []
-	const args: (string | number)[] = []
-
-	if (search) {
-		clauses.push("(source_name LIKE ? OR comment LIKE ? OR meta LIKE ?)")
-		const like = `%${search}%`
-		args.push(like, like, like)
-	}
-
-	if (typeof rating === "number") {
-		clauses.push("rating = ?")
-		args.push(rating)
-	}
-
-	if (typeof emotion === "number") {
-		// Use EXISTS with json_each to check if the emotion id is present in the JSON array
-		clauses.push(`EXISTS (
-      SELECT 1
-        FROM json_each(reviews.emotions) AS e
-       WHERE e.value = ?
-    )`)
-		args.push(emotion)
-	}
-
-	if (source) {
-		clauses.push("source = ?")
-		args.push(source)
-	}
-
-	let sql = "SELECT * FROM reviews"
-	if (clauses.length) sql += ` WHERE ${clauses.join(" AND ")}`
-	sql +=
-		sort === "rating"
-			? " ORDER BY rating DESC, inserted_at DESC LIMIT ? OFFSET ?"
-			: " ORDER BY inserted_at DESC LIMIT ? OFFSET ?"
-
-	args.push(limit, offset)
-
-	return { sql, args }
 }
 
 export const prerender = false // API routes should not be pre‑rendered
