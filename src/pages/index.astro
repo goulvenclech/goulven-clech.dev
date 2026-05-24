@@ -7,9 +7,20 @@ import { getMyAge } from "$src/dateUtils"
  * Home page of my personal website, so I have to make a good first impression 💅
  * Contains a short introduction and the latest blog entries.
  */
+const canonical = new URL("/", Astro.site).href
 ---
 
 <Layout title="Hello">
+	<Fragment slot="head">
+		<link rel="canonical" href={canonical} />
+		<link
+			rel="alternate"
+			type="text/markdown"
+			href="/index.md"
+			title="Home (Markdown / LLM-friendly)"
+		/>
+		<meta name="robots" content="index,follow" />
+	</Fragment>
 	<section>
 		<h1>
 			Hello<span class="ml-1.5 inline-block rotate-6 font-normal">✌</span>
@@ -43,4 +54,11 @@ import { getMyAge } from "$src/dateUtils"
 	<section>
 		<Search />
 	</section>
+	<noscript>
+		<p>
+			Markdown version for crawlers, LLMs, and no-JS readers: <a
+				href="/index.md">/index.md</a
+			>
+		</p>
+	</noscript>
 </Layout>

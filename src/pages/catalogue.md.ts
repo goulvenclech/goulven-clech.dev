@@ -99,7 +99,7 @@ const ratingLegend = "1=hated, 2=disliked, 3=meh, 4=liked, 5=loved, 6=favorite"
 const sourceLegend =
 	"IGDB (games), BGG (board games), TMDB_MOVIE (movies), TMDB_TV (shows), SPOTIFY (albums), OPENLIBRARY (books)"
 
-function renderApiDoc(emotions: EmotionRow[]): string {
+function renderApiDoc(emotions: EmotionRow[], site: string): string {
 	const emotionList = emotions.length
 		? emotions.map((e) => `${e.id}:${e.emoji} ${e.name}`).join(", ")
 		: "(none defined)"
@@ -120,8 +120,8 @@ function renderApiDoc(emotions: EmotionRow[]): string {
 		`Emotions (id:emoji name): ${emotionList}`,
 		"",
 		"Examples:",
-		"- /catalogue.md?rating=6&sort=date",
-		"- /catalogue.md?source=TMDB_MOVIE&emotion=3&limit=25",
+		`- ${site}/catalogue.md?rating=6&sort=date`,
+		`- ${site}/catalogue.md?source=TMDB_MOVIE&emotion=3&limit=25`,
 	].join("\n")
 }
 
@@ -168,8 +168,10 @@ export function renderReviewLine(
 	return `${row.source_name} — ${rating}${feltClause}${commentClause}`
 }
 
-export async function GET({ url }: APIContext): Promise<Response> {
+export async function GET(context: APIContext): Promise<Response> {
 	try {
+		const { url } = context
+		const site = context.site!.origin
 		const { filters, limit, offset } = parseQuery(url)
 
 		const client = createClient({
@@ -210,10 +212,10 @@ export async function GET({ url }: APIContext): Promise<Response> {
 			"",
 			"Where I keep track of books, movies, songs, video games, and other media I consume. Keep in mind that this is a personal catalogue, incomplete and biased.",
 			"",
-			"Markdown twin of /catalogue, optimized for crawlers, LLMs, and no-JS readers. See also /2025/catalogue-astro-turso (how this catalogue is built) and /catalogue/wrapped (yearly recap).",
+			`Markdown twin of ${site}/catalogue, optimized for crawlers, LLMs, and no-JS readers. See also ${site}/2025/catalogue-astro-turso (how this catalogue is built) and ${site}/catalogue/wrapped (yearly recap).`,
 		].join("\n")
 
-		const apiDoc = renderApiDoc(emotions)
+		const apiDoc = renderApiDoc(emotions, site)
 
 		const resultsHeader = "## Results"
 		const filterLine = renderFilterSummary(filters, emotionsById)
@@ -229,12 +231,12 @@ export async function GET({ url }: APIContext): Promise<Response> {
 		const paginationLines: string[] = []
 		if (hasMore) {
 			const nextQs = buildQueryString(filters, limit, offset + limit)
-			paginationLines.push(`Next page: /catalogue.md${nextQs}`)
+			paginationLines.push(`Next page: ${site}/catalogue.md${nextQs}`)
 		}
 		if (offset > 0) {
 			const prevOffset = Math.max(0, offset - limit)
 			const prevQs = buildQueryString(filters, limit, prevOffset)
-			paginationLines.push(`Previous page: /catalogue.md${prevQs}`)
+			paginationLines.push(`Previous page: ${site}/catalogue.md${prevQs}`)
 		}
 
 		const resultsBlock = [
@@ -253,7 +255,7 @@ export async function GET({ url }: APIContext): Promise<Response> {
 			headers: {
 				"Content-Type": "text/markdown; charset=utf-8",
 				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
-				Link: '<https://goulven-clech.dev/catalogue>; rel="canonical"',
+				Link: `<${site}/catalogue>; rel="canonical"`,
 			},
 		})
 	} catch (err) {
