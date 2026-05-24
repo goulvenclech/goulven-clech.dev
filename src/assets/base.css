@@ -13,7 +13,7 @@
   (See -> https://tailwindcss.com/docs/functions-and-directives#apply )
 
   Specific styling for each component is done in the component's file. Using TailwindCSS.
-  (Example -> src/components/controls/ToTop.astro )
+  (Example -> src/components/footer/ToTop.astro )
 */
 @import "tailwindcss";
 

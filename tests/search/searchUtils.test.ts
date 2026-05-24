@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest"
 import {
 	filterBlogEntries,
 	sortBlogEntries,
-} from "../../src/components/search/searchUtils"
+} from "../../src/components/home/searchUtils"
 import type { BlogEntry } from "../../src/blogUtils"
 
 function mockBlogEntry(overrides: Partial<BlogEntry> = {}): BlogEntry {

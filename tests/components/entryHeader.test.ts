@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest"
 import { experimental_AstroContainer as AstroContainer } from "astro/container"
-import EntryHeader from "../../src/components/EntryHeader.astro"
+import EntryHeader from "../../src/components/blog/EntryHeader.astro"
 
 describe("EntryHeader", () => {
 	function defaultProps() {

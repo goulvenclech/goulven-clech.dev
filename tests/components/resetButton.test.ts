@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest"
-import { ResetButton } from "../../src/components/controls/ResetButton"
+import { ResetButton } from "../../src/components/ResetButton"
 
 /** Helper: build a form with controls and a reset-button inside it */
 function createForm(

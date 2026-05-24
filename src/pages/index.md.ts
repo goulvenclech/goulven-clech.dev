@@ -4,7 +4,7 @@ import { isEntryPublished, type BlogEntry } from "../blogUtils"
 import {
 	filterBlogEntries,
 	sortBlogEntries,
-} from "../components/search/searchUtils"
+} from "../components/home/searchUtils"
 import { formatDate, getMyAge } from "../dateUtils"
 
 export const prerender = false

@@ -1,6 +1,6 @@
 ---
-import CardSkeleton from "$components/card/CardSkeleton.astro"
-import ReturnHome from "$components/controls/ReturnHome.astro"
+import CardSkeleton from "$components/CardSkeleton.astro"
+import ReturnHome from "$components/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 
 const pageTitle = "Catalogue"
@@ -119,10 +119,10 @@ const canonical = new URL("/catalogue", Astro.site).href
 		import type { Emotion } from "./api/catalogue/emotions"
 		import type { Review } from "./api/catalogue/reviews"
 		import { ReviewCard } from "../components/catalogue/ReviewCard.ts"
-		import { CardSkeleton } from "../components/card/CardSkeleton.ts"
-		import { ErrorState } from "../components/card/ErrorState.ts"
-		import { EmptyState } from "../components/card/EmptyState.ts"
-		import "../components/controls/ResetButton.ts"
+		import { CardSkeleton } from "../components/CardSkeleton.ts"
+		import { ErrorState } from "../components/ErrorState.ts"
+		import { EmptyState } from "../components/EmptyState.ts"
+		import "../components/ResetButton.ts"
 
 		/**
 		 * Sync filter & pagination state to the URL

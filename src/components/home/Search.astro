@@ -6,7 +6,7 @@ import { formatDate } from "$src/dateUtils"
 import { isEntryPublished } from "$src/blogUtils"
 import { generatePlaceholder } from "$src/imageService"
 import type { BlogEntry } from "$src/blogUtils"
-import Block from "./blocks/Block.astro"
+import Block from "../Block.astro"
 export type ClientBlogEntries = BlogEntry[]
 
 /**
@@ -233,15 +233,15 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 
 <div data-blog={JSON.stringify(blogEntriesFormatted)}></div>
 <script>
-	import { Card } from "./card/Card.ts"
-	import { EmptyState } from "./card/EmptyState.ts"
-	import "./controls/ResetButton.ts"
+	import { Card } from "./Card.ts"
+	import { EmptyState } from "../EmptyState.ts"
+	import "../ResetButton.ts"
 	import type { ClientBlogEntries } from "./Search.astro"
 	import {
 		filterBlogEntries,
 		sortBlogEntries,
 		type FilterState,
-	} from "./search/searchUtils.ts"
+	} from "./searchUtils.ts"
 
 	const PAGE_SIZE = 5
 	let currentOffset = 0
