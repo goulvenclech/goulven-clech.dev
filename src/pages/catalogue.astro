@@ -123,6 +123,11 @@ const canonical = new URL("/catalogue", Astro.site).href
 		import { ErrorState } from "../components/ErrorState.ts"
 		import { EmptyState } from "../components/EmptyState.ts"
 		import "../components/ResetButton.ts"
+		import {
+			buildReviewParams,
+			toQueryString,
+			filtersFromUrl,
+		} from "../components/catalogue/catalogueFilters"
 
 		/**
 		 * Sync filter & pagination state to the URL
@@ -134,19 +139,27 @@ const canonical = new URL("/catalogue", Astro.site).href
 		let inflight: AbortController | null = null
 
 		function updateUrlNow(filters: ReturnType<typeof getFilterValues>) {
-			const params = new URLSearchParams()
-			if (filters.query) params.set("query", filters.query)
-			if (filters.rating) params.set("rating", filters.rating)
-			if (filters.source) params.set("source", filters.source)
-			if (filters.emotion) params.set("emotion", filters.emotion)
-			if (filters.sort && filters.sort !== "date")
-				params.set("sort", filters.sort)
-
+			const params = buildReviewParams(filters)
 			history.replaceState(
 				null,
 				"",
-				`${location.pathname}${params.toString() ? "?" + params : ""}`,
+				`${location.pathname}${toQueryString(params)}`,
 			)
+		}
+
+		// rating is nullable: the control is hidden, only reachable via URL param.
+		function getFilterElements() {
+			return {
+				query: document.getElementById("query") as HTMLInputElement,
+				rating: document.getElementById(
+					"rating-filter",
+				) as HTMLSelectElement | null,
+				source: document.getElementById("source-filter") as HTMLSelectElement,
+				emotion: document.getElementById(
+					"emotions-filter",
+				) as HTMLSelectElement,
+				sort: document.getElementById("sort-filter") as HTMLSelectElement,
+			}
 		}
 
 		// Fetch and display emotions, and populate the map
@@ -189,26 +202,13 @@ const canonical = new URL("/catalogue", Astro.site).href
 
 		// Get current filter values from the form
 		function getFilterValues() {
-			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById(
-				"rating-filter",
-			) as HTMLSelectElement | null
-			const sourceFilter = document.getElementById(
-				"source-filter",
-			) as HTMLSelectElement
-			const emotionsFilter = document.getElementById(
-				"emotions-filter",
-			) as HTMLSelectElement
-			const sortFilter = document.getElementById(
-				"sort-filter",
-			) as HTMLSelectElement
-
+			const elements = getFilterElements()
 			return {
-				query: queryInput?.value || "",
-				rating: ratingFilter?.value || "", // Still usable from the URL
-				source: sourceFilter?.value || "",
-				emotion: emotionsFilter?.value || "",
-				sort: sortFilter?.value || "date",
+				query: elements.query?.value || "",
+				rating: elements.rating?.value || "", // Still usable from the URL
+				source: elements.source?.value || "",
+				emotion: elements.emotion?.value || "",
+				sort: elements.sort?.value || "date",
 			}
 		}
 
@@ -238,16 +238,11 @@ const canonical = new URL("/catalogue", Astro.site).href
 			inflight?.abort()
 			inflight = new AbortController()
 
-			const params = new URLSearchParams()
-			if (filters.query) params.append("query", filters.query)
-			if (filters.rating) params.append("rating", filters.rating)
-			if (filters.source) params.append("source", filters.source)
-			if (filters.emotion) params.append("emotion", filters.emotion)
-			if (filters.sort && filters.sort !== "date")
-				params.append("sort", filters.sort)
-			params.set("limit", String(PAGE_SIZE))
-			params.set("offset", String(currentOffset))
-			const url = `/api/catalogue/reviews${params.toString() ? "?" + params.toString() : ""}`
+			const params = buildReviewParams(filters, {
+				limit: PAGE_SIZE,
+				offset: currentOffset,
+			})
+			const url = `/api/catalogue/reviews${toQueryString(params)}`
 
 			try {
 				const response = await fetch(url, { signal: inflight.signal })
@@ -293,23 +288,11 @@ const canonical = new URL("/catalogue", Astro.site).href
 
 		// Add event listeners to form controls to trigger filtering
 		function setupFilterListeners() {
-			const queryInput = document.getElementById("query") as HTMLInputElement
-			const ratingFilter = document.getElementById(
-				"rating-filter",
-			) as HTMLSelectElement | null
-			const sourceFilter = document.getElementById(
-				"source-filter",
-			) as HTMLSelectElement
-			const emotionsFilter = document.getElementById(
-				"emotions-filter",
-			) as HTMLSelectElement
-			const sortFilter = document.getElementById(
-				"sort-filter",
-			) as HTMLSelectElement
+			const elements = getFilterElements()
 
 			// Use input event for text search with small delay
 			let debounceTimer: number | undefined
-			queryInput?.addEventListener("input", () => {
+			elements.query?.addEventListener("input", () => {
 				clearTimeout(debounceTimer)
 				debounceTimer = setTimeout(() => {
 					currentOffset = 0
@@ -318,15 +301,20 @@ const canonical = new URL("/catalogue", Astro.site).href
 			})
 
 			// Unified change handling
-			;[ratingFilter, sourceFilter, emotionsFilter, sortFilter].forEach((el) =>
-				el?.addEventListener("change", () => {
+			;[
+				elements.rating,
+				elements.source,
+				elements.emotion,
+				elements.sort,
+			].forEach((element) =>
+				element?.addEventListener("change", () => {
 					currentOffset = 0
 					loadReviews()
 				}),
 			)
 
 			// Reset button
-			queryInput
+			elements.query
 				?.closest("form")
 				?.querySelector("reset-button")
 				?.addEventListener("reset-filters", () => {
@@ -352,28 +340,17 @@ const canonical = new URL("/catalogue", Astro.site).href
 				})
 
 				// Restore state from URL (if any)
-				const params = new URLSearchParams(location.search)
-				const queryInput = document.getElementById("query") as HTMLInputElement
-				const ratingFilter = document.getElementById(
-					"rating-filter",
-				) as HTMLSelectElement | null
-				const sourceFilter = document.getElementById(
-					"source-filter",
-				) as HTMLSelectElement
-				const emotionsFilter = document.getElementById(
-					"emotions-filter",
-				) as HTMLSelectElement
-				const sortFilter = document.getElementById(
-					"sort-filter",
-				) as HTMLSelectElement
-				if (params.has("query")) queryInput.value = params.get("query") ?? ""
-				if (params.has("rating") && ratingFilter)
-					ratingFilter.value = params.get("rating") ?? ""
-				if (params.has("source"))
-					sourceFilter.value = params.get("source") ?? ""
-				if (params.has("emotion"))
-					emotionsFilter.value = params.get("emotion") ?? ""
-				if (params.has("sort")) sortFilter.value = params.get("sort") ?? "date"
+				const urlFilters = filtersFromUrl(new URLSearchParams(location.search))
+				const elements = getFilterElements()
+				if (urlFilters.query !== undefined)
+					elements.query.value = urlFilters.query
+				if (urlFilters.rating !== undefined && elements.rating)
+					elements.rating.value = urlFilters.rating
+				if (urlFilters.source !== undefined)
+					elements.source.value = urlFilters.source
+				if (urlFilters.emotion !== undefined)
+					elements.emotion.value = urlFilters.emotion
+				if (urlFilters.sort !== undefined) elements.sort.value = urlFilters.sort
 				// Programmatic .value= doesn't fire events, notify ResetButton
 				form?.dispatchEvent(new Event("change", { bubbles: true }))
 				currentOffset = 0
