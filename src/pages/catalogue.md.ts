@@ -1,17 +1,17 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
-import { ratingText, sourceNouns } from "../components/catalogue/reviewUtils"
+import { ratingText } from "../components/catalogue/reviewUtils"
 import {
 	buildCountQuery,
 	buildSelectQuery,
+	MAX_LIMIT,
+	parseReviewQuery,
 	type ReviewFilters,
 } from "./api/catalogue/reviewQueries"
 
 export const prerender = false
 
 const DEFAULT_LIMIT = 20
-const MAX_LIMIT = 100
-const VALID_SOURCES = Object.keys(sourceNouns)
 
 export interface DbReviewRow {
 	source: string
@@ -26,52 +26,6 @@ export interface EmotionRow {
 	id: number
 	emoji: string
 	name: string
-}
-
-export interface ParsedQuery {
-	filters: ReviewFilters
-	limit: number
-	offset: number
-}
-
-export function parseQuery(url: URL): ParsedQuery {
-	const params = url.searchParams
-
-	const search = params.get("query")?.trim() || undefined
-
-	const ratingParam = params.get("rating")
-	const ratingNum = ratingParam ? Number(ratingParam) : NaN
-	const rating =
-		Number.isInteger(ratingNum) && ratingNum >= 1 && ratingNum <= 6
-			? ratingNum
-			: undefined
-
-	const emotionParam = params.get("emotion")
-	const emotionNum = emotionParam ? Number(emotionParam) : NaN
-	const emotion = Number.isInteger(emotionNum) ? emotionNum : undefined
-
-	const sourceParam = params.get("source") || undefined
-	const source =
-		sourceParam && VALID_SOURCES.includes(sourceParam) ? sourceParam : undefined
-
-	const sort: "date" | "rating" =
-		params.get("sort") === "rating" ? "rating" : "date"
-
-	const limitParam = params.get("limit")
-	const limit =
-		limitParam && /^\d+$/.test(limitParam)
-			? Math.min(Math.max(Number(limitParam), 1), MAX_LIMIT)
-			: DEFAULT_LIMIT
-
-	const offsetParam = params.get("offset")
-	const offset =
-		offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
-
-	return {
-		filters: { search, rating, emotion, source, sort },
-		limit,
-		offset,
-	}
 }
 
 /** Omits defaults so paginated URLs stay short. */
@@ -172,7 +126,7 @@ export async function GET(context: APIContext): Promise<Response> {
 	try {
 		const { url } = context
 		const site = context.site!.origin
-		const { filters, limit, offset } = parseQuery(url)
+		const { filters, limit, offset } = parseReviewQuery(url, DEFAULT_LIMIT)
 
 		const client = createClient({
 			url: import.meta.env.TURSO_URL,

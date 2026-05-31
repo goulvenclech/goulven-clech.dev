@@ -2,7 +2,7 @@ import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
 import { computeImageFocusY } from "../../../imageFocus"
-import { buildSelectQuery } from "./reviewQueries"
+import { buildSelectQuery, parseReviewQuery } from "./reviewQueries"
 import { sourceResolvers } from "./sourceResolver"
 
 function getClient(): Client {
@@ -68,32 +68,12 @@ export async function GET(
 	client: Client = getClient(),
 ): Promise<Response> {
 	try {
-		const search = url.searchParams.get("query")?.trim() || undefined
-		const ratingParam = url.searchParams.get("rating")
-		const rating = ratingParam ? Number(ratingParam) : undefined
-		const emotionParam = url.searchParams.get("emotion")
-		const emotion = emotionParam ? Number(emotionParam) : undefined
-		const source = url.searchParams.get("source") || undefined
-		const sortParam =
-			url.searchParams.get("sort") === "rating" ? "rating" : "date"
-		const limitParam = url.searchParams.get("limit")
-		const limit =
-			limitParam && /^\d+$/.test(limitParam)
-				? Math.min(Number(limitParam), 100)
-				: 5
-
-		const offsetParam = url.searchParams.get("offset")
-		const offset =
-			offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
+		const { filters, limit, offset } = parseReviewQuery(url, 5)
 
 		const { sql, args } = buildSelectQuery({
-			search,
-			rating,
-			emotion,
-			source,
+			...filters,
 			limit: limit + 1, // Get one extra row to check for "hasMore"
 			offset,
-			sort: sortParam,
 		})
 
 		const res = await client.execute({ sql, args })

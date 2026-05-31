@@ -1,9 +1,65 @@
+import { sourceNouns } from "../../../components/catalogue/reviewUtils"
+
 export interface ReviewFilters {
 	search?: string
 	rating?: number
 	emotion?: number
 	source?: string
 	sort?: "date" | "rating"
+}
+
+export const MAX_LIMIT = 100
+const VALID_SOURCES = Object.keys(sourceNouns)
+
+export interface ParsedReviewQuery {
+	filters: ReviewFilters
+	limit: number
+	offset: number
+}
+
+/** Invalid filters degrade to `undefined` so a malformed URL is unfiltered, never a failed query. */
+export function parseReviewQuery(
+	url: URL,
+	defaultLimit: number,
+): ParsedReviewQuery {
+	const params = url.searchParams
+
+	const search = params.get("query")?.trim() || undefined
+
+	const ratingParam = params.get("rating")
+	const ratingNum = ratingParam ? Number(ratingParam) : NaN
+	const rating =
+		Number.isInteger(ratingNum) && ratingNum >= 1 && ratingNum <= 6
+			? ratingNum
+			: undefined
+
+	// Emotion IDs are a dynamic DB set, so only non-integers are rejected; validating existence would cost a query.
+	const emotionParam = params.get("emotion")
+	const emotionNum = emotionParam ? Number(emotionParam) : NaN
+	const emotion = Number.isInteger(emotionNum) ? emotionNum : undefined
+
+	const sourceParam = params.get("source") || undefined
+	const source =
+		sourceParam && VALID_SOURCES.includes(sourceParam) ? sourceParam : undefined
+
+	const sort: "date" | "rating" =
+		params.get("sort") === "rating" ? "rating" : "date"
+
+	const limitParam = params.get("limit")
+	const limit =
+		limitParam && /^\d+$/.test(limitParam)
+			? Math.min(Math.max(Number(limitParam), 1), MAX_LIMIT)
+			: defaultLimit
+
+	const offsetParam = params.get("offset")
+	const offset =
+		offsetParam && /^\d+$/.test(offsetParam) ? Number(offsetParam) : 0
+
+	return {
+		filters: { search, rating, emotion, source, sort },
+		limit,
+		offset,
+	}
 }
 
 function buildWhereClause(filters: ReviewFilters): {

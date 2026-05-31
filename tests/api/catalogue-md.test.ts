@@ -2,17 +2,19 @@ import { describe, expect, it } from "vitest"
 import {
 	buildCountQuery,
 	buildSelectQuery,
+	parseReviewQuery,
 	type ReviewFilters,
 } from "../../src/pages/api/catalogue/reviewQueries"
 import {
 	buildQueryString,
-	parseQuery,
 	renderReviewLine,
 	type DbReviewRow,
 	type EmotionRow,
 } from "../../src/pages/catalogue.md"
 
 const urlOf = (qs: string) => new URL(`http://localhost:4321/catalogue.md${qs}`)
+
+const parseQuery = (url: URL) => parseReviewQuery(url, 20)
 
 describe("buildSelectQuery", () => {
 	it("returns LIMIT/OFFSET-only query when no filters are set", () => {
@@ -124,6 +126,13 @@ describe("parseQuery", () => {
 		expect(parseQuery(urlOf("?rating=0")).filters.rating).toBeUndefined()
 		expect(parseQuery(urlOf("?rating=7")).filters.rating).toBeUndefined()
 		expect(parseQuery(urlOf("?rating=abc")).filters.rating).toBeUndefined()
+	})
+
+	it("keeps any well-formed emotion id but drops non-integers", () => {
+		expect(parseQuery(urlOf("?emotion=99999")).filters.emotion).toBe(99999)
+		expect(parseQuery(urlOf("?emotion=3")).filters.emotion).toBe(3)
+		expect(parseQuery(urlOf("?emotion=abc")).filters.emotion).toBeUndefined()
+		expect(parseQuery(urlOf("?emotion=3.5")).filters.emotion).toBeUndefined()
 	})
 
 	it("rejects unknown sources but accepts the canonical set", () => {

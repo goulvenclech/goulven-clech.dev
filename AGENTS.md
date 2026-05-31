@@ -18,7 +18,7 @@ pnpm dev            # dev server with type-checking
 ## Quality Guidelines
 
 - Write idiomatic, easy-to-maintain TypeScript/Astro. Avoid duplication, prefer clarity over cleverness, and small focused functions over dark magic.
-- Prefer self-documenting code first. Expressive names over cryptic abbreviations, straightforward logic over hidden state or surprising side effects. Comments explain *why* (intent, invariants, trade-offs), not *how*, and should never be decorative.
+- Prefer self-documenting code first. Expressive names over cryptic abbreviations, straightforward logic over hidden state or surprising side effects. Comments explain _why_ (intent, invariants, trade-offs), not _how_, and should never be decorative.
 - Tests assert observable behavior (inputs/outputs, effects), not implementation details. Keep them deterministic and isolated from global state.
 - Absence is a value, not a failure: return `T | null` from lookups, `undefined` for optional inputs, and consume it with `?.`/`??`. Reserve `throw` and `!` for what should never happen (missing env/config, input that must not pass silently).
 - Validate input where it enters: Zod for content frontmatter ([`src/content.config.ts`](./src/content.config.ts)), manual checks for URL params and request bodies. Surface failures at the boundary (SSR handler → 500, client script → fallback UI), not deep in utilities.

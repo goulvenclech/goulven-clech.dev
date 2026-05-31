@@ -114,6 +114,44 @@ describe("GET /api/catalogue/reviews", () => {
 		)
 		expect(res.status).toBe(500)
 	})
+
+	async function runQuery(qs: string) {
+		const client = createMockDbClient({ "FROM reviews": [dbRow] })
+		await GET(createEndpointContext(`/api/catalogue/reviews${qs}`), client)
+		return vi.mocked(client.execute).mock.calls[0][0] as unknown as {
+			sql: string
+			args: unknown[]
+		}
+	}
+
+	it.each([
+		{ name: "non-numeric rating", qs: "?rating=abc", clause: "rating = ?" },
+		{
+			name: "non-numeric emotion",
+			qs: "?emotion=abc",
+			clause: "json_each(reviews.emotions)",
+		},
+		{ name: "unknown source", qs: "?source=BOGUS", clause: "source = ?" },
+	])(
+		"ignores an invalid $name instead of filtering on it",
+		async ({ qs, clause }) => {
+			const stmt = await runQuery(qs)
+			expect(stmt.sql).not.toContain(clause)
+			expect(
+				stmt.args.some((a) => typeof a === "number" && Number.isNaN(a)),
+			).toBe(false)
+		},
+	)
+
+	it("keeps valid filters and never lets NaN reach the query args", async () => {
+		const stmt = await runQuery("?rating=4&emotion=2&source=IGDB")
+		expect(stmt.sql).toContain("rating = ?")
+		expect(stmt.sql).toContain("json_each(reviews.emotions)")
+		expect(stmt.sql).toContain("source = ?")
+		expect(stmt.args).toContain(4)
+		expect(stmt.args).toContain(2)
+		expect(stmt.args).toContain("IGDB")
+	})
 })
 
 describe("POST /api/catalogue/reviews", () => {
