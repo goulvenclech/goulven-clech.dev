@@ -1,18 +1,18 @@
 ---
 import EmotionChart from "$components/catalogue/EmotionChart.astro"
+import ReviewThumbnailGrid, {
+	type ReviewThumbnail,
+} from "$components/catalogue/ReviewThumbnailGrid.astro"
 import ReturnHome from "$components/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
-import { createClient, type Client } from "@libsql/client"
+import { getClient, type Client } from "$src/db"
 
 const pageTitle = "My catalogue wrapped"
 const YEAR = 2025
 const START_DATE = `${YEAR}-01-01T00:00:00.000Z`
 const END_DATE = `${YEAR + 1}-01-01T00:00:00.000Z`
 
-const client = createClient({
-	url: import.meta.env.TURSO_URL,
-	authToken: import.meta.env.TURSO_TOKEN,
-})
+const client = getClient()
 
 interface RatingStats {
 	total: number
@@ -26,20 +26,6 @@ interface EmotionStat {
 	emoji: string
 	name: string
 	count: number
-}
-
-interface ReviewThumbnail {
-	source_name: string
-	source_img: string
-	source_img_focus_y: number | null
-	source_link: string
-	rating: number
-}
-
-const RATING_EMOJI: Record<number, string> = {
-	6: "⭐",
-	5: "😍",
-	4: "😀",
 }
 
 type MediaSource = "IGDB" | "BGG" | "TMDB_MOVIE" | "TMDB_TV" | "SPOTIFY" | null
@@ -226,32 +212,7 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 				set:html={formatEmotions(gameEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-			{
-				gameReviews.map((r) => (
-					<a
-						href={r.source_link}
-						target="_blank"
-						rel="noopener"
-						class="no-icon relative aspect-3/4 overflow-hidden rounded"
-					>
-						<img
-							src={r.source_img}
-							alt={r.source_name}
-							class="h-full w-full object-cover"
-							style={
-								r.source_img_focus_y != null
-									? `object-position: center ${r.source_img_focus_y}%`
-									: undefined
-							}
-						/>
-						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
-							{RATING_EMOJI[r.rating]}
-						</span>
-					</a>
-				))
-			}
-		</div>
+		<ReviewThumbnailGrid reviews={gameReviews} />
 
 		<h2>{boardGameStats.total} Board games</h2>
 		<p>
@@ -259,32 +220,7 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 				set:html={formatEmotions(boardGameEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-			{
-				boardGameReviews.map((r) => (
-					<a
-						href={r.source_link}
-						target="_blank"
-						rel="noopener"
-						class="no-icon relative aspect-3/4 overflow-hidden rounded"
-					>
-						<img
-							src={r.source_img}
-							alt={r.source_name}
-							class="h-full w-full object-cover"
-							style={
-								r.source_img_focus_y != null
-									? `object-position: center ${r.source_img_focus_y}%`
-									: undefined
-							}
-						/>
-						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
-							{RATING_EMOJI[r.rating]}
-						</span>
-					</a>
-				))
-			}
-		</div>
+		<ReviewThumbnailGrid reviews={boardGameReviews} />
 
 		<h2>{movieStats.total} Movies</h2>
 		<p>
@@ -292,32 +228,7 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 				set:html={formatEmotions(movieEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-			{
-				movieReviews.map((r) => (
-					<a
-						href={r.source_link}
-						target="_blank"
-						rel="noopener"
-						class="no-icon relative aspect-3/4 overflow-hidden rounded"
-					>
-						<img
-							src={r.source_img}
-							alt={r.source_name}
-							class="h-full w-full object-cover"
-							style={
-								r.source_img_focus_y != null
-									? `object-position: center ${r.source_img_focus_y}%`
-									: undefined
-							}
-						/>
-						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
-							{RATING_EMOJI[r.rating]}
-						</span>
-					</a>
-				))
-			}
-		</div>
+		<ReviewThumbnailGrid reviews={movieReviews} />
 
 		<h2>{showStats.total} Shows</h2>
 		<p>
@@ -325,32 +236,7 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 				set:html={formatEmotions(showEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-			{
-				showReviews.map((r) => (
-					<a
-						href={r.source_link}
-						target="_blank"
-						rel="noopener"
-						class="no-icon relative aspect-3/4 overflow-hidden rounded"
-					>
-						<img
-							src={r.source_img}
-							alt={r.source_name}
-							class="h-full w-full object-cover"
-							style={
-								r.source_img_focus_y != null
-									? `object-position: center ${r.source_img_focus_y}%`
-									: undefined
-							}
-						/>
-						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
-							{RATING_EMOJI[r.rating]}
-						</span>
-					</a>
-				))
-			}
-		</div>
+		<ReviewThumbnailGrid reviews={showReviews} />
 
 		<h2>{albumStats.total} Albums</h2>
 		<p>
@@ -358,31 +244,6 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 				set:html={formatEmotions(albumEmotions)}
 			/>
 		</p>
-		<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-			{
-				albumReviews.map((r) => (
-					<a
-						href={r.source_link}
-						target="_blank"
-						rel="noopener"
-						class="no-icon relative aspect-3/4 overflow-hidden rounded"
-					>
-						<img
-							src={r.source_img}
-							alt={r.source_name}
-							class="h-full w-full object-cover"
-							style={
-								r.source_img_focus_y != null
-									? `object-position: center ${r.source_img_focus_y}%`
-									: undefined
-							}
-						/>
-						<span class="absolute top-1 right-1 text-lg drop-shadow-md">
-							{RATING_EMOJI[r.rating]}
-						</span>
-					</a>
-				))
-			}
-		</div>
+		<ReviewThumbnailGrid reviews={albumReviews} />
 	</section>
 </Layout>

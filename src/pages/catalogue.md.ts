@@ -1,5 +1,5 @@
 import type { APIContext } from "astro"
-import { createClient } from "@libsql/client"
+import { getClient } from "$src/db"
 import { ratingText } from "../components/catalogue/reviewUtils"
 import {
 	buildCountQuery,
@@ -128,10 +128,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		const site = context.site!.origin
 		const { filters, limit, offset } = parseReviewQuery(url, DEFAULT_LIMIT)
 
-		const client = createClient({
-			url: import.meta.env.TURSO_URL,
-			authToken: import.meta.env.TURSO_TOKEN,
-		})
+		const client = getClient()
 
 		const { sql: selectSql, args: selectArgs } = buildSelectQuery({
 			...filters,

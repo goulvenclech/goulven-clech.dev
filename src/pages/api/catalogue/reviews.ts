@@ -1,16 +1,9 @@
 import type { APIContext } from "astro"
-import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
+import { getClient } from "$src/db"
 import { computeImageFocusY } from "../../../imageFocus"
 import { buildSelectQuery, parseReviewQuery } from "./reviewQueries"
 import { sourceResolvers } from "./sourceResolver"
-
-function getClient(): Client {
-	return createClient({
-		url: import.meta.env.TURSO_URL,
-		authToken: import.meta.env.TURSO_TOKEN,
-	})
-}
 
 /**
  * A review helps me keep track of my feelings about a book, movie, or other media.

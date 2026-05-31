@@ -1,13 +1,5 @@
 import type { APIContext } from "astro"
-import { createClient } from "@libsql/client"
-import type { Client } from "@libsql/client"
-
-function getClient(): Client {
-	return createClient({
-		url: import.meta.env.TURSO_URL,
-		authToken: import.meta.env.TURSO_TOKEN,
-	})
-}
+import { getClient } from "$src/db"
 
 export interface Day {
 	date: string // ISO yyyy-mm-dd

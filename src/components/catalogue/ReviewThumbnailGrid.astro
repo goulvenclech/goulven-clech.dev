@@ -1,0 +1,45 @@
+---
+export interface ReviewThumbnail {
+	source_name: string
+	source_img: string
+	source_img_focus_y: number | null
+	source_link: string
+	rating: number
+}
+
+interface Props {
+	reviews: ReviewThumbnail[]
+}
+
+const { reviews } = Astro.props
+
+// Only ratings ≥ 4 reach this grid.
+const RATING_EMOJI: Record<number, string> = { 6: "⭐", 5: "😍", 4: "😀" }
+---
+
+<div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
+	{
+		reviews.map((r) => (
+			<a
+				href={r.source_link}
+				target="_blank"
+				rel="noopener"
+				class="no-icon relative aspect-3/4 overflow-hidden rounded"
+			>
+				<img
+					src={r.source_img}
+					alt={r.source_name}
+					class="h-full w-full object-cover"
+					style={
+						r.source_img_focus_y != null
+							? `object-position: center ${r.source_img_focus_y}%`
+							: undefined
+					}
+				/>
+				<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+					{RATING_EMOJI[r.rating]}
+				</span>
+			</a>
+		))
+	}
+</div>

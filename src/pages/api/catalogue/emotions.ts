@@ -1,5 +1,5 @@
 import type { APIContext } from "astro"
-import { createClient } from "@libsql/client"
+import { getClient } from "$src/db"
 
 export const prerender = false // API routes should not be pre-rendered
 
@@ -12,10 +12,7 @@ export interface Emotion {
 
 export async function GET(_context: APIContext): Promise<Response> {
 	try {
-		const client = createClient({
-			url: import.meta.env.TURSO_URL,
-			authToken: import.meta.env.TURSO_TOKEN,
-		})
+		const client = getClient()
 
 		const emotions = await client.execute(
 			"SELECT * FROM emotions WHERE is_deleted = false",
