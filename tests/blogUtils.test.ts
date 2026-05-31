@@ -1,7 +1,12 @@
-import { describe, it, expect, vi, afterEach } from "vitest"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { isEntryPublished, isFirstAprilEntry } from "../src/blogUtils"
 
 describe("isEntryPublished", () => {
+	beforeEach(() => {
+		// Re-stub per test: afterEach's unstubAllEnvs() also clears the global setup stub.
+		vi.stubEnv("npm_package_version", "1.9.0")
+	})
+
 	afterEach(() => {
 		vi.unstubAllEnvs()
 	})
@@ -11,8 +16,33 @@ describe("isEntryPublished", () => {
 		expect(isEntryPublished("never", true)).toBe(false)
 	})
 
+	it("shows 'draft' entries in non-strict mode", () => {
+		expect(isEntryPublished("draft")).toBe(true)
+	})
+
 	it("filters out 'draft' entries in strict mode", () => {
 		expect(isEntryPublished("draft", true)).toBe(false)
+	})
+
+	it("shows entries at or below the current version in strict mode", () => {
+		expect(isEntryPublished("1.8.0", true)).toBe(true)
+		expect(isEntryPublished("1.9.0", true)).toBe(true)
+	})
+
+	it("hides entries above the current version in strict mode", () => {
+		expect(isEntryPublished("1.10.0", true)).toBe(false)
+	})
+
+	it("applies strict gating in production without the strict flag", () => {
+		vi.stubEnv("PROD", true)
+		expect(isEntryPublished("draft")).toBe(false)
+		expect(isEntryPublished("1.8.0")).toBe(true)
+		expect(isEntryPublished("1.10.0")).toBe(false)
+	})
+
+	it("throws on an invalid version string in strict mode", () => {
+		// Surface typos loudly rather than silently publishing.
+		expect(() => isEntryPublished("not-a-version", true)).toThrow()
 	})
 })
 
