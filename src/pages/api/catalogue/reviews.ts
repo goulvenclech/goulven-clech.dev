@@ -1,19 +1,9 @@
 import type { APIContext } from "astro"
 import { createClient } from "@libsql/client"
 import type { Client } from "@libsql/client"
-import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
-import {
-	buildMovieMeta,
-	buildShowMeta,
-	fetchMovie,
-	fetchShow,
-	posterUrl,
-} from "./sources/tmdb"
-import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
-import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
-import { fetchBook, bookCoverUrl, buildBookMeta } from "./sources/openlibrary"
 import { computeImageFocusY } from "../../../imageFocus"
 import { buildSelectQuery } from "./reviewQueries"
+import { sourceResolvers } from "./sourceResolver"
 
 function getClient(): Client {
 	return createClient({
@@ -73,7 +63,10 @@ export const prerender = false // API routes should not be pre‑rendered
 /**
  * Retrieves reviews with optional filters.
  */
-export async function GET({ url }: APIContext): Promise<Response> {
+export async function GET(
+	{ url }: APIContext,
+	client: Client = getClient(),
+): Promise<Response> {
 	try {
 		const search = url.searchParams.get("query")?.trim() || undefined
 		const ratingParam = url.searchParams.get("rating")
@@ -103,7 +96,6 @@ export async function GET({ url }: APIContext): Promise<Response> {
 			sort: sortParam,
 		})
 
-		const client = getClient()
 		const res = await client.execute({ sql, args })
 		const rows = res.rows as unknown as DbReviewRow[]
 
@@ -120,7 +112,10 @@ export async function GET({ url }: APIContext): Promise<Response> {
 /**
  * Inserts a new review.
  */
-export async function POST({ request }: APIContext): Promise<Response> {
+export async function POST(
+	{ request }: APIContext,
+	client: Client = getClient(),
+): Promise<Response> {
 	try {
 		const body = await request.json()
 
@@ -157,100 +152,16 @@ export async function POST({ request }: APIContext): Promise<Response> {
 
 		if (!isValid) return json({ error: "Bad Request" }, 400)
 
-		// Enrich source metadata
-		let source_name = ""
-		let source_link = ""
-		let source_img = ""
-		let meta = ""
-		let source_img_focus_y: number | null = null
+		const resolver = sourceResolvers[source]
+		if (!resolver) return json({ error: "Unsupported source" }, 400)
 
-		switch (source) {
-			case "IGDB": {
-				const game = await fetchGame(Number(source_id))
-				if (!game) return json({ error: "Game not found" }, 404)
+		const resolved = await resolver(source_id)
+		if (!resolved) return json({ error: "Not found" }, 404)
 
-				const year = game.first_release_date
-					? new Date(game.first_release_date * 1000).getFullYear()
-					: "TBD"
-				source_name = `${game.name} (${year})`
-				source_link = `https://www.igdb.com/games/${game.slug}`
-				meta = buildIgdbMeta(game)
-				if (game.cover?.image_id) source_img = coverUrl(game.cover.image_id)
-				break
-			}
-			case "BGG": {
-				const game = await fetchBoardGame(Number(source_id))
-				if (!game) return json({ error: "Board game not found" }, 404)
+		const source_img_focus_y = resolved.source_img
+			? await computeImageFocusY(resolved.source_img)
+			: null
 
-				const year = game.year ?? "??"
-				source_name = `${game.name} (${year})`
-				source_link = `https://boardgamegeek.com/boardgame/${game.id}`
-				meta = buildBggMeta(game)
-				if (game.image) source_img = game.image
-				break
-			}
-
-			case "TMDB_MOVIE": {
-				const movie = await fetchMovie(Number(source_id))
-				if (!movie) return json({ error: "Movie not found" }, 404)
-
-				const year = movie.release_date
-					? new Date(movie.release_date).getFullYear()
-					: "??"
-				source_name = `${movie.title} (${year})`
-				source_link = `https://www.themoviedb.org/movie/${movie.id}`
-				meta = buildMovieMeta(movie)
-				if (movie.poster_path) source_img = posterUrl(movie.poster_path)
-				break
-			}
-
-			case "TMDB_TV": {
-				const show = await fetchShow(Number(source_id))
-				if (!show) return json({ error: "Show not found" }, 404)
-
-				const year = show.first_air_date
-					? new Date(show.first_air_date).getFullYear()
-					: "??"
-				source_name = `${show.name} (${year})`
-				source_link = `https://www.themoviedb.org/tv/${show.id}`
-				meta = buildShowMeta(show)
-				if (show.poster_path) source_img = posterUrl(show.poster_path)
-				break
-			}
-
-			case "SPOTIFY": {
-				const album = await fetchAlbum(String(source_id))
-				if (!album) return json({ error: "Album not found" }, 404)
-
-				const year = album.release_date?.slice(0, 4) || "??"
-				source_name = `${album.name} (${year})`
-				source_link = album.external_urls.spotify
-				meta = buildAlbumMeta(album)
-				if (album.images?.length) source_img = albumCoverUrl(album)
-				break
-			}
-
-			case "OPENLIBRARY": {
-				const book = await fetchBook(String(source_id))
-				if (!book) return json({ error: "Book not found" }, 404)
-
-				const year = book.publishYear ?? "??"
-				source_name = `${book.title} (${year})`
-				source_link = `https://openlibrary.org/books/${source_id}`
-				meta = buildBookMeta(book)
-				if (book.coverOlid) source_img = bookCoverUrl(book.coverOlid)
-				break
-			}
-
-			default:
-				console.error("Unknown source:", source)
-				break
-		}
-
-		if (source_img) source_img_focus_y = await computeImageFocusY(source_img)
-
-		// Insert row
-		const client = getClient()
 		await client.execute({
 			sql: `INSERT INTO reviews
             (source, source_id, source_name, source_link, source_img, source_img_focus_y,
@@ -259,14 +170,14 @@ export async function POST({ request }: APIContext): Promise<Response> {
 			args: [
 				source,
 				source_id,
-				source_name,
-				source_link,
-				source_img,
+				resolved.source_name,
+				resolved.source_link,
+				resolved.source_img,
 				source_img_focus_y,
 				rating,
 				JSON.stringify(emotions),
 				comment,
-				meta,
+				resolved.meta,
 				date ? new Date(date).toISOString() : new Date().toISOString(),
 			],
 		})

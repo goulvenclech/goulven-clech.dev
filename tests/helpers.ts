@@ -1,5 +1,6 @@
 import { vi, expect } from "vitest"
 import type { APIContext } from "astro"
+import type { Client } from "@libsql/client"
 
 export function createMockAPIContext(
 	overrides: Partial<APIContext> = {},
@@ -83,12 +84,14 @@ export function expectCacheHeaders(response: Response, maxAge: number): void {
 	expect(cacheControl).toContain(`max-age=${maxAge}`)
 }
 
-// Avoids hitting real database in tests
+// Avoids hitting real database in tests; returns rows whose pattern is a
+// substring of the executed SQL.
 export function createMockDbClient(
 	mockResults: Record<string, unknown[]> = {},
-) {
+): Client {
 	return {
-		execute: vi.fn(async (sql: string) => {
+		execute: vi.fn(async (stmt: string | { sql: string; args?: unknown[] }) => {
+			const sql = typeof stmt === "string" ? stmt : stmt.sql
 			for (const [pattern, rows] of Object.entries(mockResults)) {
 				if (sql.includes(pattern)) {
 					return { rows }
@@ -98,7 +101,7 @@ export function createMockDbClient(
 		}),
 		batch: vi.fn(async () => []),
 		close: vi.fn(),
-	}
+	} as unknown as Client
 }
 
 export const sampleReview = {

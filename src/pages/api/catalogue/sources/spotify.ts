@@ -5,14 +5,15 @@
 const TOKEN_URL = "https://accounts.spotify.com/api/token"
 const API = "https://api.spotify.com/v1"
 
-const ID = import.meta.env.SPOTIFY_ID as string | undefined
-const SECRET = import.meta.env.SPOTIFY_SECRET as string | undefined
-if (!ID || !SECRET) throw new Error("Missing SPOTIFY_ID / SPOTIFY_SECRET")
-
 let tokenCache: { value: string; expires: number } | null = null
 
 async function getToken(): Promise<string> {
 	if (tokenCache && Date.now() < tokenCache.expires) return tokenCache.value
+
+	// Read credentials lazily so importing this module stays side-effect-free.
+	const ID = import.meta.env.SPOTIFY_ID as string | undefined
+	const SECRET = import.meta.env.SPOTIFY_SECRET as string | undefined
+	if (!ID || !SECRET) throw new Error("Missing SPOTIFY_ID / SPOTIFY_SECRET")
 
 	const res = await fetch(TOKEN_URL, {
 		method: "POST",
