@@ -24,6 +24,9 @@ pnpm-debug.log*
 # Cache
 .cache/
 
+# test coverage
+coverage/
+
 # macOS-specific files
 .DS_Store
 

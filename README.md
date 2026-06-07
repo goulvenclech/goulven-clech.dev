@@ -18,16 +18,16 @@ That tension between exploration and durability is what shapes the project. The 
 
 At its heart, this project looks like any Astro project, you can start by reading my entry « [Launching a blog with Astro](https://goulven-clech.dev/2023/launching-blog-astro) ». But, little by little, I added some original features that might interest you, here are the main ones:
 
-- [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/Search.astro): made with Astro and Web Components only, with full-text search, multi-criteria filters (category, year), pagination, and reset button. Should be commented and tested enough to be easily copied and adapted to your needs.
+- [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/home/Search.astro): made with Astro and Web Components only, with full-text search, multi-criteria filters (category, year), pagination, and reset button. Should be commented and tested enough to be easily copied and adapted to your needs.
 
 - [Catalogue](https://goulven-clech.dev/catalogue): personal media log with full-text search, multi-criteria filters (source, emotions, rating), pagination, and reset button. Powered by Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database. See [this entry](https://goulven-clech.dev/2025/catalogue-astro-turso) for the full story and technical details.
 
 - [Friends](https://goulven-clech.dev/friends): interactive graph visualisation of my and my friends' websites, powered by [GraphGarden](https://github.com/bruits/graphgarden).
 
-- [Table of contents](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/TableOfContent.astro): using Astro and MDX, generate a table of contents based on the headings. With nested lists.
+- [Table of contents](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/blog/TableOfContent.astro): using Astro and MDX, generate a table of contents based on the headings. With nested lists.
 
 - [Open Library](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/blocks/BookBlock.astro) & [Google Maps](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/blocks/MapsBlock.astro) blocks: nicely displays API results in blog entries.
 
-- [Dark mode](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/controls/DarkMode.astro): toggle between light, dark, and system colour schemes. Use local storage to persist the user's choice.
+- [Dark mode](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/footer/DarkMode.astro): toggle between light, dark, and system colour schemes. Use local storage to persist the user's choice.
 
 - [Custom image service](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/imageService.ts): retrieved from [Erika's blog](https://erika.florist/), gain performance and display a placeholder during image loading.

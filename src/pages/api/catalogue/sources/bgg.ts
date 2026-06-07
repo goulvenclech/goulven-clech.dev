@@ -27,6 +27,15 @@ export interface BggGame {
 	mechanics: string[]
 }
 
+/** Only the fields we read; other API attributes are ignored. */
+interface BggRawItem {
+	id: string | number
+	name: BggLink | BggLink[]
+	yearpublished?: { value: string | number }
+	image?: string
+	link?: BggLink | BggLink[]
+}
+
 export async function fetchBoardGame(id: number): Promise<BggGame | null> {
 	const headers: HeadersInit = {}
 	if (import.meta.env.BGG_TOKEN) {
@@ -34,13 +43,16 @@ export async function fetchBoardGame(id: number): Promise<BggGame | null> {
 	}
 	const res = await fetch(`${BGG_API}/thing?id=${id}&stats=1`, { headers })
 	if (!res.ok) return null
-	const xml = await res.text()
-	const data = parser.parse(xml)
-	const item = data?.items?.item
+	const data = parser.parse(await res.text())
+	return parseBggItem(data?.items?.item)
+}
+
+/** fast-xml-parser yields an object for one node and an array for many, hence the coercion. */
+export function parseBggItem(item: BggRawItem | undefined): BggGame | null {
 	if (!item) return null
 
 	const names = Array.isArray(item.name) ? item.name : [item.name]
-	const primary = names.find((n: any) => n.type === "primary")
+	const primary = names.find((n) => n.type === "primary")
 	const name = primary?.value || names[0]?.value || ""
 
 	const links = item.link
@@ -48,26 +60,19 @@ export async function fetchBoardGame(id: number): Promise<BggGame | null> {
 			? item.link
 			: [item.link]
 		: []
+	const linkValues = (type: string) =>
+		links.filter((l) => l.type === type).map((l) => l.value)
 
-	const game: BggGame = {
+	return {
 		id: Number(item.id),
 		name,
 		year: item.yearpublished ? Number(item.yearpublished.value) : undefined,
 		image: item.image,
-		designers: links
-			.filter((l: any) => l.type === "boardgamedesigner")
-			.map((l: any) => l.value),
-		publishers: links
-			.filter((l: any) => l.type === "boardgamepublisher")
-			.map((l: any) => l.value),
-		categories: links
-			.filter((l: any) => l.type === "boardgamecategory")
-			.map((l: any) => l.value),
-		mechanics: links
-			.filter((l: any) => l.type === "boardgamemechanic")
-			.map((l: any) => l.value),
+		designers: linkValues("boardgamedesigner"),
+		publishers: linkValues("boardgamepublisher"),
+		categories: linkValues("boardgamecategory"),
+		mechanics: linkValues("boardgamemechanic"),
 	}
-	return game
 }
 
 export function buildBggMeta(game: BggGame): string {

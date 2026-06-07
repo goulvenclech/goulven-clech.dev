@@ -17,7 +17,7 @@ import sharp from "sharp"
  * A custom LocalImageService based on Sharp, fully retrieved from my friend Erika's blog
  * See -> https://github.com/Princesseuh/erika.florist
  */
-function getBitmapDimensions(
+export function getBitmapDimensions(
 	imgWidth: number,
 	imgHeight: number,
 	pixelTarget: number,
