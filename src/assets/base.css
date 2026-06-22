@@ -187,8 +187,7 @@
 	}
 
 	li code,
-	p code,
-	side-note code {
+	p code {
 		overflow-wrap: break-word;
 		@apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
 	}
@@ -220,7 +219,8 @@
 	}
 
 	side-note code {
-		@apply text-[13px];
+		overflow-wrap: break-word;
+		@apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[11px];
 	}
 
 	annotation {
