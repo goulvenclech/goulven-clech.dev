@@ -115,7 +115,7 @@ function renderIntro(site: string): string {
 		"",
 		`Mainly working in Elixir, Rust, and TypeScript ecosystems, I'm currently a senior backend engineer at Remote, the global HR platform. I also co-founded Bruits, an open source collective building Sampo and Maudit. Learn more on my [résumé](${site}/resume).`,
 		"",
-		"Interested in functional programming and software craftsmanship, I blog my journey to building maintainable, performant, and useful software. But I also love talking about game development and speciality coffee.",
+		"Interested in software craftsmanship and systems reliability, I blog my journey to building maintainable, performant, and useful software. But I also love talking about game development and speciality coffee.",
 		"",
 		`Markdown twin of ${site}/, optimized for crawlers, LLMs, and no-JS readers. Other entry points: ${site}/llms.txt (site map), ${site}/catalogue.md (media log), ${site}/feed.xml (RSS).`,
 	].join("\n")

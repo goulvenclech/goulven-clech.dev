@@ -10,9 +10,9 @@ Some entries may cite text, images or resources from external sources: their ori
 
 This is my digital garden, where I'm the gardener and the main visitor.
 
-It's a place to experiment freely: with technology, with ideas, with how things can be built. At the same time, it's a long-term archive of my growth, both technical and personal.
+It's a place to experiment freely: with technology, with ideas, with how things can be built. At the same time, it's a long-term archive of my growth, both technical and personal... with the secret hope that it might be useful to others too.
 
-That tension between exploration and durability is what shapes the project. The codebase should be kept typed, tested, and well-organised. The content should be honest, open, and useful. Simplicity and reliability are what let the garden keep growing.
+That tension between exploration and durability shapes the project. The codebase should be kept typed, tested, and well-organised. The content should be kept typed, tested, and well-organised. The content should be honest, open, and useful. Simplicity and reliability are what let the garden keep growing.
 
 ## Notable features
 
