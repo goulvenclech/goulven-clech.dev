@@ -98,9 +98,9 @@ export default defineConfig({
 		imageCDN: false, // Conflict with our image service
 	}),
 
-	experimental: {
-		rustCompiler: true,
-	},
+	// "true" preserves whitespace between inline elements; the "jsx" default
+	// strips it, breaking spacing around our inline typography.
+	compressHTML: true,
 
 	fonts: [
 		{
