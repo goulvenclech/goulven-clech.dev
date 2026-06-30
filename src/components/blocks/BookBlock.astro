@@ -8,13 +8,15 @@ import { resolveRedirectChain } from "../../imageUtils"
 /**
  * Used to present a book as a card, also a link to Google Shopping that book.
  * @param {string} isbn - What's this exciting book's ISBN?
+ * @param {string} authors - Override the authors returned by the Open Library API.
  */
 interface Props {
 	isbn: string
 	focusY?: number
+	authors?: string
 }
 
-const { isbn, focusY } = Astro.props
+const { isbn, focusY, authors } = Astro.props
 
 /**
  * Await fetch function, to the Open Library Api
@@ -61,7 +63,10 @@ const imageFocusY: number | undefined =
 	</h3>
 	<ul class="flex flex-col">
 		<li>
-			By {book.details.authors.map((author: any) => author.name).join(" & ")}
+			By {
+				authors ??
+					book.details.authors.map((author: any) => author.name).join(" & ")
+			}
 		</li>
 		<li>
 			{book.details.publishers.join(" & ")} ({
@@ -69,7 +74,9 @@ const imageFocusY: number | undefined =
 			})
 		</li>
 		<li>
-			ISBN: {book.details.isbn_13}
+			<abbr title="International Standard Book Number">ISBN</abbr>: {
+				book.details.isbn_13
+			}
 		</li>
 	</ul>
 </Block>

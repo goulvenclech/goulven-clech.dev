@@ -111,7 +111,7 @@ const { Content, headings } = await render(entry)
 			@apply my-2.5 ml-0;
 		}
 
-		@media screen(sm) {
+		@media (width >= theme(--breakpoint-sm)) {
 			#entry > ul,
 			#entry > ol {
 				@apply list-outside;
