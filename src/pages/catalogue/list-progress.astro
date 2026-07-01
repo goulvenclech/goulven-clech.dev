@@ -1,0 +1,101 @@
+---
+import ReturnHome from "$components/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+import { getClient } from "$src/db"
+import { computeListProgress, type ListEntry } from "$src/listProgress"
+import listData from "$src/data/letterboxd-list.json"
+
+const pageTitle = "List progress"
+const LIST_NAME = "Movies everyone should watch at least once"
+const LIST_URL =
+	"https://letterboxd.com/fcbarcelona/list/movies-everyone-should-watch-at-least-once/"
+
+const entries = listData as unknown as ListEntry[]
+
+const client = getClient()
+const result = await client.execute(
+	"SELECT source_id FROM reviews WHERE source = 'TMDB_MOVIE'",
+)
+const seenIds = new Set(
+	(result.rows as unknown as { source_id: string }[]).map((row) =>
+		Number(row.source_id),
+	),
+)
+
+const progress = computeListProgress(entries, seenIds)
+
+const filmUrl = (slug: string) => `https://letterboxd.com/film/${slug}/`
+const label = (entry: ListEntry) =>
+	entry.year ? `${entry.name} (${entry.year})` : (entry.name ?? entry.slug)
+---
+
+<Layout
+	title={pageTitle}
+	description={`Tracking my catalogue against the "${LIST_NAME}" Letterboxd list.`}
+>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			How much of the <a href={LIST_URL}>{LIST_NAME}</a> Letterboxd list I've watched,
+			matched against my <a href="/catalogue">catalogue</a> by TMDB id.
+		</p>
+		<p>
+			<ReturnHome />
+		</p>
+	</section>
+
+	<section>
+		<p>
+			<strong>{progress.seenCount} / {progress.total}</strong> watched ({
+				progress.percent
+			}%).
+		</p>
+		<div
+			class="my-4 h-4 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
+			role="progressbar"
+			aria-valuenow={progress.percent}
+			aria-valuemin={0}
+			aria-valuemax={100}
+		>
+			<div
+				class="h-full rounded-full bg-green-600"
+				style={`width: ${progress.percent}%`}
+			>
+			</div>
+		</div>
+		{
+			progress.untracked.length > 0 && (
+				<p class="text-sm opacity-70">
+					{progress.untracked.length} entries are TV series or have no TMDB
+					movie link, so they aren't tracked.
+				</p>
+			)
+		}
+	</section>
+
+	<section>
+		<h2>Still to watch ({progress.unseen.length})</h2>
+		<ul class="grid list-none grid-cols-1 gap-x-6 gap-y-1 pl-0 sm:grid-cols-2">
+			{
+				progress.unseen.map((entry) => (
+					<li>
+						<a href={filmUrl(entry.slug)}>{label(entry)}</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section>
+		<h2>Watched ({progress.seen.length})</h2>
+		<ul class="grid list-none grid-cols-1 gap-x-6 gap-y-1 pl-0 sm:grid-cols-2">
+			{
+				progress.seen.map((entry) => (
+					<li>
+						✓ <a href={filmUrl(entry.slug)}>{label(entry)}</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</Layout>
