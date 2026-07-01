@@ -30,5 +30,8 @@ coverage/
 # macOS-specific files
 .DS_Store
 
+# local script output (exports, dumps…)
+scripts/output/
+
 # misc
 .tool-versions
