@@ -1,0 +1,121 @@
+{
+	"id": "pokemon-marathon",
+	"title": "Marathon Pokémon",
+	"description": "A mainline Pokémon marathon with my friend Erika. Usually the most modern version of each generation; I play one version per gen, Erika the other.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Pok%C3%A9mon_(video_game_series)",
+	"entries": [
+		{
+			"id": 1512,
+			"name": "Pokémon Yellow",
+			"year": 1998,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pih.jpg",
+			"link": "https://www.igdb.com/games/pokemon-yellow-version-special-pikachu-edition"
+		},
+		{
+			"id": 1559,
+			"name": "Pokémon FireRed & LeafGreen",
+			"year": 2004,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1ziq.jpg",
+			"link": "https://www.igdb.com/games/pokemon-firered-version"
+		},
+		{
+			"id": 1517,
+			"name": "Pokémon Emerald",
+			"year": 2004,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zhr.jpg",
+			"link": "https://www.igdb.com/games/pokemon-emerald-version"
+		},
+		{
+			"id": 1519,
+			"name": "Pokémon Platinum",
+			"year": 2008,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8gvp.jpg",
+			"link": "https://www.igdb.com/games/pokemon-platinum-version"
+		},
+		{
+			"id": 1556,
+			"name": "Pokémon HeartGold & SoulSilver",
+			"year": 2009,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z57.jpg",
+			"link": "https://www.igdb.com/games/pokemon-heartgold-version"
+		},
+		{
+			"id": 1521,
+			"name": "Pokémon Black & White",
+			"year": 2010,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z1x.jpg",
+			"link": "https://www.igdb.com/games/pokemon-black-version"
+		},
+		{
+			"id": 8284,
+			"name": "Pokémon Black 2 & White 2",
+			"year": 2012,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z8d.jpg",
+			"link": "https://www.igdb.com/games/pokemon-black-version-2"
+		},
+		{
+			"id": 2286,
+			"name": "Pokémon X & Y",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z8y.jpg",
+			"link": "https://www.igdb.com/games/pokemon-x"
+		},
+		{
+			"id": 6898,
+			"name": "Pokémon Alpha Sapphire & Omega Ruby",
+			"year": 2014,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co56ef.jpg",
+			"link": "https://www.igdb.com/games/pokemon-alpha-sapphire"
+		},
+		{
+			"id": 36792,
+			"name": "Pokémon Ultra Sun & Ultra Moon",
+			"year": 2017,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zjs.jpg",
+			"link": "https://www.igdb.com/games/pokemon-ultra-sun"
+		},
+		{
+			"id": 102873,
+			"name": "Pokémon Let's Go, Eevee! & Pikachu!",
+			"year": 2018,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zjz.jpg",
+			"link": "https://www.igdb.com/games/pokemon-lets-go-eevee"
+		},
+		{
+			"id": 37382,
+			"name": "Pokémon Sword & Shield",
+			"year": 2019,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zk2.jpg",
+			"link": "https://www.igdb.com/games/pokemon-sword"
+		},
+		{
+			"id": 144051,
+			"name": "Pokémon Brilliant Diamond & Shining Pearl",
+			"year": 2021,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3b9t.jpg",
+			"link": "https://www.igdb.com/games/pokemon-brilliant-diamond"
+		},
+		{
+			"id": 144054,
+			"name": "Pokémon Legends: Arceus",
+			"year": 2022,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3d03.jpg",
+			"link": "https://www.igdb.com/games/pokemon-legends-arceus"
+		},
+		{
+			"id": 191931,
+			"name": "Pokémon Scarlet & Violet",
+			"year": 2022,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5sfi.jpg",
+			"link": "https://www.igdb.com/games/pokemon-scarlet"
+		},
+		{
+			"id": 288327,
+			"name": "Pokémon Legends: Z-A",
+			"year": 2025,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co9wzc.jpg",
+			"link": "https://www.igdb.com/games/pokemon-legends-z-a"
+		}
+	]
+}

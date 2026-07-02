@@ -1,0 +1,29 @@
+{
+	"id": "pokemon-marathon",
+	"title": "Marathon Pokémon",
+	"description": "A mainline Pokémon marathon with my friend Erika. Usually the most modern version of each generation; I play one version per gen, Erika the other.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Pok%C3%A9mon_(video_game_series)",
+	"games": [
+		["Pokémon Yellow", "Pokémon Yellow", 1998],
+		["Pokémon FireRed & LeafGreen", "Pokémon FireRed", 2004],
+		["Pokémon Emerald", "Pokémon Emerald", 2004],
+		["Pokémon Platinum", "Pokémon Platinum", 2008],
+		["Pokémon HeartGold & SoulSilver", "Pokémon HeartGold", 2009],
+		["Pokémon Black & White", "Pokémon Black", 2010],
+		["Pokémon Black 2 & White 2", "Pokémon Black 2", 2012],
+		["Pokémon X & Y", "Pokémon X", 2013],
+		["Pokémon Alpha Sapphire & Omega Ruby", "Pokémon Alpha Sapphire", 2014],
+		["Pokémon Ultra Sun & Ultra Moon", "Pokémon Ultra Sun", 2017],
+		["Pokémon Let's Go, Eevee! & Pikachu!", "Pokémon Let's Go Eevee", 2018],
+		["Pokémon Sword & Shield", "Pokémon Sword", 2019],
+		[
+			"Pokémon Brilliant Diamond & Shining Pearl",
+			"Pokémon Brilliant Diamond",
+			2021
+		],
+		["Pokémon Legends: Arceus", "Pokémon Legends Arceus", 2022],
+		["Pokémon Scarlet & Violet", "Pokémon Scarlet", 2022],
+		["Pokémon Legends: Z-A", "Pokémon Legends Z-A", 2025]
+	]
+}

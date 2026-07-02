@@ -1,0 +1,43 @@
+{
+	"id": "zelda-marathon",
+	"title": "Marathon Zelda",
+	"description": "A Legend of Zelda marathon with my friend Erika. Usually the most modern version of each game, though I keep a remake and its original apart when they differ enough to matter.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda",
+	"games": [
+		["The Legend of Zelda", "The Legend of Zelda", 1986],
+		["Zelda II: The Adventure of Link", "Zelda II The Adventure of Link", 1987],
+		["A Link to the Past", "The Legend of Zelda A Link to the Past", 1991],
+		["Link: The Faces of Evil", "Link The Faces of Evil", 1993],
+		["Zelda: The Wand of Gamelon", "Zelda The Wand of Gamelon", 1993],
+		["Zelda's Adventure", "Zelda's Adventure", 1994],
+		["Link's Awakening DX", "The Legend of Zelda Link's Awakening DX", 1998],
+		["Oracle of Seasons", "The Legend of Zelda Oracle of Seasons", 2001],
+		["Oracle of Ages", "The Legend of Zelda Oracle of Ages", 2001],
+		[
+			"Four Swords Adventures",
+			"The Legend of Zelda Four Swords Adventures",
+			2004
+		],
+		["The Minish Cap", "The Legend of Zelda The Minish Cap", 2004],
+		["Phantom Hourglass", "The Legend of Zelda Phantom Hourglass", 2007],
+		["Spirit Tracks", "The Legend of Zelda Spirit Tracks", 2009],
+		["Ocarina of Time 3D", "The Legend of Zelda Ocarina of Time 3D", 2011],
+		["The Wind Waker HD", "The Legend of Zelda The Wind Waker HD", 2013],
+		[
+			"A Link Between Worlds",
+			"The Legend of Zelda A Link Between Worlds",
+			2013
+		],
+		["Majora's Mask 3D", "The Legend of Zelda Majora's Mask 3D", 2015],
+		["Tri Force Heroes", "The Legend of Zelda Tri Force Heroes", 2015],
+		["Twilight Princess HD", "The Legend of Zelda Twilight Princess HD", 2016],
+		["Breath of the Wild", "The Legend of Zelda Breath of the Wild", 2017],
+		["Link's Awakening (2019)", "The Legend of Zelda Link's Awakening", 2019],
+		["Skyward Sword HD", "The Legend of Zelda Skyward Sword HD", 2021],
+		["Zelda 2 Redux", "Zelda 2 Redux", 2021],
+		["The Legend of Zelda Redux", "The Legend of Zelda Redux", 2022],
+		["Tears of the Kingdom", "The Legend of Zelda Tears of the Kingdom", 2023],
+		["Echoes of Wisdom", "The Legend of Zelda Echoes of Wisdom", 2024]
+	]
+}

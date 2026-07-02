@@ -1,0 +1,373 @@
+{
+	"id": "mario-marathon",
+	"title": "Marathon Mario",
+	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs. Not started yet.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Mario_(franchise)",
+	"entries": [
+		{
+			"id": 141959,
+			"name": "Donkey Kong",
+			"year": 1983,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co9ck5.jpg",
+			"link": "https://www.igdb.com/games/donkey-kong--1"
+		},
+		{
+			"id": 358,
+			"name": "Super Mario Bros.",
+			"year": 1985,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co6pib.jpg",
+			"link": "https://www.igdb.com/games/super-mario-bros"
+		},
+		{
+			"id": 1066,
+			"name": "Super Mario Bros.: The Lost Levels",
+			"year": 1986,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co23bj.jpg",
+			"link": "https://www.igdb.com/games/super-mario-bros-the-lost-levels"
+		},
+		{
+			"id": 1067,
+			"name": "Super Mario Bros. 2",
+			"year": 1988,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co7yq7.jpg",
+			"link": "https://www.igdb.com/games/super-mario-bros-2"
+		},
+		{
+			"id": 1068,
+			"name": "Super Mario Bros. 3",
+			"year": 1988,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co7ozx.jpg",
+			"link": "https://www.igdb.com/games/super-mario-bros-3"
+		},
+		{
+			"id": 1069,
+			"name": "Super Mario Land",
+			"year": 1989,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co7o14.jpg",
+			"link": "https://www.igdb.com/games/super-mario-land"
+		},
+		{
+			"id": 178104,
+			"name": "Super Mario World",
+			"year": 1991,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4az5.jpg",
+			"link": "https://www.igdb.com/games/super-mario-world--2"
+		},
+		{
+			"id": 1071,
+			"name": "Super Mario Land 2",
+			"year": 1992,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co7gxg.jpg",
+			"link": "https://www.igdb.com/games/super-mario-land-2-6-golden-coins"
+		},
+		{
+			"id": 1072,
+			"name": "Wario Land: Super Mario Land 3",
+			"year": 1994,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co216h.jpg",
+			"link": "https://www.igdb.com/games/wario-land-super-mario-land-3"
+		},
+		{
+			"id": 1073,
+			"name": "Yoshi's Island",
+			"year": 1995,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2kn9.jpg",
+			"link": "https://www.igdb.com/games/super-mario-world-2-yoshi-s-island"
+		},
+		{
+			"id": 5418,
+			"name": "Super Mario RPG",
+			"year": 1996,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5r6p.jpg",
+			"link": "https://www.igdb.com/games/super-mario-rpg-legend-of-the-seven-stars"
+		},
+		{
+			"id": 1074,
+			"name": "Super Mario 64",
+			"year": 1996,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co721v.jpg",
+			"link": "https://www.igdb.com/games/super-mario-64"
+		},
+		{
+			"id": 3213,
+			"name": "Yoshi's Story",
+			"year": 1997,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co260t.jpg",
+			"link": "https://www.igdb.com/games/yoshi-s-story"
+		},
+		{
+			"id": 1697,
+			"name": "Wario Land II",
+			"year": 1998,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4qfz.jpg",
+			"link": "https://www.igdb.com/games/wario-land-ii"
+		},
+		{
+			"id": 1698,
+			"name": "Wario Land 3",
+			"year": 2000,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4qgc.jpg",
+			"link": "https://www.igdb.com/games/wario-land-3"
+		},
+		{
+			"id": 1699,
+			"name": "Wario Land 4",
+			"year": 2001,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wpx.jpg",
+			"link": "https://www.igdb.com/games/wario-land-4"
+		},
+		{
+			"id": 3340,
+			"name": "Paper Mario",
+			"year": 2000,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1qda.jpg",
+			"link": "https://www.igdb.com/games/paper-mario"
+		},
+		{
+			"id": 2485,
+			"name": "Luigi's Mansion",
+			"year": 2001,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wr1.jpg",
+			"link": "https://www.igdb.com/games/luigi-s-mansion"
+		},
+		{
+			"id": 1075,
+			"name": "Super Mario Sunshine",
+			"year": 2002,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob8q1.jpg",
+			"link": "https://www.igdb.com/games/super-mario-sunshine"
+		},
+		{
+			"id": 3351,
+			"name": "Mario & Luigi: Superstar Saga",
+			"year": 2003,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/coba9f.jpg",
+			"link": "https://www.igdb.com/games/mario-luigi-superstar-saga"
+		},
+		{
+			"id": 3349,
+			"name": "Paper Mario: The Thousand-Year Door",
+			"year": 2004,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co25us.jpg",
+			"link": "https://www.igdb.com/games/paper-mario-the-thousand-year-door"
+		},
+		{
+			"id": 18329,
+			"name": "Yoshi Touch & Go",
+			"year": 2005,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2hg9.jpg",
+			"link": "https://www.igdb.com/games/yoshi-touch-and-go"
+		},
+		{
+			"id": 3364,
+			"name": "Mario & Luigi: Partners in Time",
+			"year": 2005,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/coba41.jpg",
+			"link": "https://www.igdb.com/games/mario-luigi-partners-in-time"
+		},
+		{
+			"id": 20497,
+			"name": "Super Princess Peach",
+			"year": 2005,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wsg.jpg",
+			"link": "https://www.igdb.com/games/super-princess-peach"
+		},
+		{
+			"id": 1076,
+			"name": "New Super Mario Bros.",
+			"year": 2006,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21rm.jpg",
+			"link": "https://www.igdb.com/games/new-super-mario-bros"
+		},
+		{
+			"id": 20601,
+			"name": "Yoshi's Island DS",
+			"year": 2006,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4wgl.jpg",
+			"link": "https://www.igdb.com/games/yoshis-island-ds"
+		},
+		{
+			"id": 1077,
+			"name": "Super Mario Galaxy",
+			"year": 2007,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21ro.jpg",
+			"link": "https://www.igdb.com/games/super-mario-galaxy"
+		},
+		{
+			"id": 2191,
+			"name": "Super Paper Mario",
+			"year": 2007,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/coba44.jpg",
+			"link": "https://www.igdb.com/games/super-paper-mario"
+		},
+		{
+			"id": 1702,
+			"name": "Wario Land: Shake It!",
+			"year": 2008,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wnw.jpg",
+			"link": "https://www.igdb.com/games/wario-land-shake-it"
+		},
+		{
+			"id": 3363,
+			"name": "Mario & Luigi: Bowser's Inside Story",
+			"year": 2009,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21vr.jpg",
+			"link": "https://www.igdb.com/games/mario-luigi-bowser-s-inside-story"
+		},
+		{
+			"id": 2178,
+			"name": "New Super Mario Bros. Wii",
+			"year": 2009,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21tj.jpg",
+			"link": "https://www.igdb.com/games/new-super-mario-bros-wii"
+		},
+		{
+			"id": 1078,
+			"name": "Super Mario Galaxy 2",
+			"year": 2010,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21tl.jpg",
+			"link": "https://www.igdb.com/games/super-mario-galaxy-2"
+		},
+		{
+			"id": 1079,
+			"name": "Super Mario 3D Land",
+			"year": 2011,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobab1.jpg",
+			"link": "https://www.igdb.com/games/super-mario-3d-land"
+		},
+		{
+			"id": 1080,
+			"name": "New Super Mario Bros. 2",
+			"year": 2012,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobaah.jpg",
+			"link": "https://www.igdb.com/games/new-super-mario-bros-2"
+		},
+		{
+			"id": 2171,
+			"name": "New Super Mario Bros. U",
+			"year": 2012,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21ts.jpg",
+			"link": "https://www.igdb.com/games/new-super-mario-bros-u"
+		},
+		{
+			"id": 3350,
+			"name": "Paper Mario: Sticker Star",
+			"year": 2012,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1tfp.jpg",
+			"link": "https://www.igdb.com/games/paper-mario-sticker-star"
+		},
+		{
+			"id": 2173,
+			"name": "New Super Luigi U",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21tt.jpg",
+			"link": "https://www.igdb.com/games/new-super-luigi-u"
+		},
+		{
+			"id": 2476,
+			"name": "Luigi's Mansion: Dark Moon",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3vjj.jpg",
+			"link": "https://www.igdb.com/games/luigi-s-mansion-dark-moon"
+		},
+		{
+			"id": 3365,
+			"name": "Mario & Luigi: Dream Team",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4ahq.jpg",
+			"link": "https://www.igdb.com/games/mario-luigi-dream-team"
+		},
+		{
+			"id": 7337,
+			"name": "Captain Toad: Treasure Tracker",
+			"year": 2014,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co213z.jpg",
+			"link": "https://www.igdb.com/games/captain-toad-treasure-tracker"
+		},
+		{
+			"id": 4591,
+			"name": "Yoshi's New Island",
+			"year": 2014,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob8pz.jpg",
+			"link": "https://www.igdb.com/games/yoshi-s-new-island"
+		},
+		{
+			"id": 7343,
+			"name": "Yoshi's Woolly World",
+			"year": 2015,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob88e.jpg",
+			"link": "https://www.igdb.com/games/yoshis-woolly-world"
+		},
+		{
+			"id": 11195,
+			"name": "Mario & Luigi: Paper Jam",
+			"year": 2015,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4ahr.jpg",
+			"link": "https://www.igdb.com/games/mario-and-luigi-paper-jam"
+		},
+		{
+			"id": 18169,
+			"name": "Paper Mario: Color Splash",
+			"year": 2016,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/coba8x.jpg",
+			"link": "https://www.igdb.com/games/paper-mario-color-splash"
+		},
+		{
+			"id": 26758,
+			"name": "Super Mario Odyssey",
+			"year": 2017,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1mxf.jpg",
+			"link": "https://www.igdb.com/games/super-mario-odyssey"
+		},
+		{
+			"id": 37135,
+			"name": "Yoshi's Crafted World",
+			"year": 2019,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobav7.jpg",
+			"link": "https://www.igdb.com/games/yoshis-crafted-world"
+		},
+		{
+			"id": 109455,
+			"name": "Luigi's Mansion 3",
+			"year": 2019,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co22a9.jpg",
+			"link": "https://www.igdb.com/games/luigis-mansion-3"
+		},
+		{
+			"id": 133923,
+			"name": "Paper Mario: The Origami King",
+			"year": 2020,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob89j.jpg",
+			"link": "https://www.igdb.com/games/paper-mario-the-origami-king"
+		},
+		{
+			"id": 138227,
+			"name": "Super Mario 3D World + Bowser's Fury",
+			"year": 2021,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobb2d.jpg",
+			"link": "https://www.igdb.com/games/super-mario-3d-world-plus-bowsers-fury"
+		},
+		{
+			"id": 254339,
+			"name": "Super Mario Bros. Wonder",
+			"year": 2023,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co6nnl.jpg",
+			"link": "https://www.igdb.com/games/super-mario-bros-wonder"
+		},
+		{
+			"id": 254340,
+			"name": "Princess Peach: Showtime!",
+			"year": 2024,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobaup.jpg",
+			"link": "https://www.igdb.com/games/princess-peach-showtime"
+		},
+		{
+			"id": 306137,
+			"name": "Mario & Luigi: Brothership",
+			"year": 2024,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8d9a.jpg",
+			"link": "https://www.igdb.com/games/mario-and-luigi-brothership"
+		}
+	]
+}

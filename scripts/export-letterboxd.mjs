@@ -10,37 +10,14 @@
  *   node scripts/export-letterboxd.mjs out.csv       # custom output path (relative to cwd)
  *   node scripts/export-letterboxd.mjs --tv          # export TV shows instead of movies
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 import { createClient } from "@libsql/client"
+import { loadEnv } from "./listConfig.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const projectRoot = resolve(__dirname, "..")
 const outputDir = resolve(__dirname, "output")
-
-/** Minimal .env reader, to avoid a dotenv dependency. */
-function loadEnv() {
-	const env = {}
-	let raw
-	try {
-		raw = readFileSync(resolve(projectRoot, ".env"), "utf8")
-	} catch {
-		return env
-	}
-	for (const line of raw.split("\n")) {
-		const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/)
-		if (!m) continue
-		let val = m[2].trim()
-		if (
-			(val.startsWith('"') && val.endsWith('"')) ||
-			(val.startsWith("'") && val.endsWith("'"))
-		)
-			val = val.slice(1, -1)
-		env[m[1]] = val
-	}
-	return env
-}
 
 /** Escapes a CSV field per RFC 4180 (quote if it contains comma, quote, or newline). */
 function csvField(value) {
