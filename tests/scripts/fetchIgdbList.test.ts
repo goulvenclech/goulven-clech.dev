@@ -7,6 +7,7 @@ import {
 } from "../../scripts/fetch-igdb-list.mjs"
 import zeldaConfig from "../../scripts/list-configs/igdb/zelda-marathon.json"
 import pokemonConfig from "../../scripts/list-configs/igdb/pokemon-marathon.json"
+import marioConfig from "../../scripts/list-configs/igdb/mario-marathon.json"
 
 const game = (id: number, name: string, year: number | null, cover = true) => ({
 	id,
@@ -69,7 +70,7 @@ describe("pickMatch", () => {
 })
 
 describe("list config contract", () => {
-	it.each([zeldaConfig, pokemonConfig])(
+	it.each([zeldaConfig, pokemonConfig, marioConfig])(
 		"$id is a valid IGDB list with games",
 		(config) => {
 			expect(config.source).toBe("IGDB")

@@ -1,0 +1,81 @@
+{
+	"id": "mario-marathon",
+	"title": "Marathon Mario",
+	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs. Not started yet.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Mario_(franchise)",
+	"games": [
+		["Donkey Kong", "Donkey Kong", 1983],
+		["Super Mario Bros.", "Super Mario Bros.", 1985],
+		[
+			"Super Mario Bros.: The Lost Levels",
+			"Super Mario Bros.: The Lost Levels",
+			1986
+		],
+		["Super Mario Bros. 2", "Super Mario Bros. 2", 1988],
+		["Super Mario Bros. 3", "Super Mario Bros. 3", 1988],
+		["Super Mario Land", "Super Mario Land", 1989],
+		["Super Mario World", "Super Mario World", 1991],
+		["Super Mario Land 2", "Super Mario Land 2", 1992],
+		["Wario Land: Super Mario Land 3", "Wario Land: Super Mario Land 3", 1994],
+		["Yoshi's Island", "Yoshi's Island", 1995],
+		["Super Mario RPG", "Super Mario RPG", 1996],
+		["Super Mario 64", "Super Mario 64", 1996],
+		["Yoshi's Story", "Yoshi's Story", 1997],
+		["Wario Land II", "Wario Land II", 1998],
+		["Wario Land 3", "Wario Land 3", 2000],
+		["Wario Land 4", "Wario Land 4", 2001],
+		["Paper Mario", "Paper Mario", 2000],
+		["Luigi's Mansion", "Luigi's Mansion", 2001],
+		["Super Mario Sunshine", "Super Mario Sunshine", 2002],
+		["Mario & Luigi: Superstar Saga", "Mario & Luigi: Superstar Saga", 2003],
+		[
+			"Paper Mario: The Thousand-Year Door",
+			"Paper Mario: The Thousand-Year Door",
+			2004
+		],
+		["Yoshi Touch & Go", "Yoshi Touch & Go", 2005],
+		[
+			"Mario & Luigi: Partners in Time",
+			"Mario & Luigi: Partners in Time",
+			2005
+		],
+		["Super Princess Peach", "Super Princess Peach", 2005],
+		["New Super Mario Bros.", "New Super Mario Bros.", 2006],
+		["Yoshi's Island DS", "Yoshi's Island DS", 2006],
+		["Super Mario Galaxy", "Super Mario Galaxy", 2007],
+		["Super Paper Mario", "Super Paper Mario", 2007],
+		["Wario Land: Shake It!", "Wario Land: Shake It!", 2008],
+		[
+			"Mario & Luigi: Bowser's Inside Story",
+			"Mario & Luigi: Bowser's Inside Story",
+			2009
+		],
+		["New Super Mario Bros. Wii", "New Super Mario Bros. Wii", 2009],
+		["Super Mario Galaxy 2", "Super Mario Galaxy 2", 2010],
+		["Super Mario 3D Land", "Super Mario 3D Land", 2011],
+		["New Super Mario Bros. 2", "New Super Mario Bros. 2", 2012],
+		["New Super Mario Bros. U", "New Super Mario Bros. U", 2012],
+		["Paper Mario: Sticker Star", "Paper Mario: Sticker Star", 2012],
+		["New Super Luigi U", "New Super Luigi U", 2013],
+		["Luigi's Mansion: Dark Moon", "Luigi's Mansion: Dark Moon", 2013],
+		["Mario & Luigi: Dream Team", "Mario & Luigi: Dream Team", 2013],
+		["Captain Toad: Treasure Tracker", "Captain Toad: Treasure Tracker", 2014],
+		["Yoshi's New Island", "Yoshi's New Island", 2014],
+		["Yoshi's Woolly World", "Yoshi's Woolly World", 2015],
+		["Mario & Luigi: Paper Jam", "Mario & Luigi: Paper Jam", 2015],
+		["Paper Mario: Color Splash", "Paper Mario: Color Splash", 2016],
+		["Super Mario Odyssey", "Super Mario Odyssey", 2017],
+		["Yoshi's Crafted World", "Yoshi's Crafted World", 2019],
+		["Luigi's Mansion 3", "Luigi's Mansion 3", 2019],
+		["Paper Mario: The Origami King", "Paper Mario: The Origami King", 2020],
+		[
+			"Super Mario 3D World + Bowser's Fury",
+			"Super Mario 3D World + Bowser's Fury",
+			2021
+		],
+		["Super Mario Bros. Wonder", "Super Mario Bros. Wonder", 2023],
+		["Princess Peach: Showtime!", "Princess Peach: Showtime!", 2024],
+		["Mario & Luigi: Brothership", "Mario & Luigi: Brothership", 2024]
+	]
+}
