@@ -7,9 +7,9 @@
  * candidate whose release year matches and whose name is closest, skipping the
  * fan edits / bundles that pollute search results.
  *
- * Each list is a config at scripts/igdb-lists/<name>.json holding the list
- * metadata plus a `games` array of [display name, IGDB search query, year] —
- * the year disambiguating the many re-releases that share a title. Needs
+ * Each list is a config at scripts/list-configs/igdb/<name>.json holding the
+ * list metadata plus a `games` array of [display name, IGDB search query, year]
+ * — the year disambiguating the many re-releases that share a title. Needs
  * IGDB_ID / IGDB_SECRET in .env (Twitch app credentials).
  *
  * Usage:
@@ -22,7 +22,7 @@ import { dirname, resolve } from "node:path"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
 const outDir = resolve(projectRoot, "src/data/lists")
-const configDir = resolve(__dirname, "igdb-lists")
+const configDir = resolve(__dirname, "list-configs/igdb")
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 

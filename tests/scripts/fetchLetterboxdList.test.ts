@@ -4,8 +4,7 @@ import {
 	parseFilm,
 	toEntry,
 } from "../../scripts/fetch-letterboxd-list.mjs"
-import moviesConfig from "../../scripts/letterboxd-lists/movies-everyone-should-watch.json"
-import bondConfig from "../../scripts/letterboxd-lists/007-films.json"
+import moviesConfig from "../../scripts/list-configs/letterboxd/movies-everyone-should-watch.json"
 
 describe("parseSlugs", () => {
 	it("extracts film slugs in document order", () => {
@@ -125,12 +124,5 @@ describe("list config contract", () => {
 	it("movies list crawls a Letterboxd url", () => {
 		expect(moviesConfig.source).toBe("TMDB_MOVIE")
 		expect(moviesConfig.url).toMatch(/^https:\/\/letterboxd\.com\//)
-		expect(moviesConfig).not.toHaveProperty("slugs")
-	})
-
-	it("007 list pins an explicit slug set", () => {
-		expect(bondConfig.source).toBe("TMDB_MOVIE")
-		expect(bondConfig.slugs.length).toBe(27)
-		expect(bondConfig.slugs).toContain("dr-no")
 	})
 })

@@ -3,13 +3,13 @@
  * Scrape a Letterboxd list into a catalogue to-do list of TMDB movies.
  *
  * Letterboxd exposes the TMDB id on each film page as a body attribute
- * (data-tmdb-id), so we gather film slugs — by crawling a list's pages, or from
- * an explicit `slugs` array — then fetch one film page per slug. No auth, no
- * official TMDB API. Throttled and retried; reruns resume from the existing
- * output so an interrupted (or rate-limited) run can be continued.
+ * (data-tmdb-id), so we crawl a list's pages for film slugs, then fetch one film
+ * page per slug. No auth, no official TMDB API. Throttled and retried; reruns
+ * resume from the existing output so an interrupted run can be continued.
  *
- * Each list is a config at scripts/letterboxd-lists/<name>.json holding the list
- * metadata plus either a `url` (a public list to crawl) or a `slugs` array.
+ * Each list is a config at scripts/list-configs/letterboxd/<name>.json holding
+ * the list metadata and the `url` of the public list to crawl. (For film lists
+ * that aren't a Letterboxd list, use fetch-tmdb-list.mjs instead.)
  *
  * Usage:
  *   node scripts/fetch-letterboxd-list.mjs --list movies-everyone-should-watch
@@ -22,7 +22,7 @@ import { dirname, resolve } from "node:path"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
 const outDir = resolve(projectRoot, "src/data/lists")
-const configDir = resolve(__dirname, "letterboxd-lists")
+const configDir = resolve(__dirname, "list-configs/letterboxd")
 
 // Letterboxd serves a default UA less reliably.
 const USER_AGENT =
@@ -189,22 +189,16 @@ async function main() {
 		)
 		process.exit(1)
 	}
-	const { slugs: explicitSlugs, ...list } = config
-	if (!list.id || (!list.url && !Array.isArray(explicitSlugs))) {
-		console.error(
-			`Config "${listName}.json" needs an id and a url or slugs array`,
-		)
-		process.exit(1)
-	}
-	if (explicitSlugs && !explicitSlugs.every((s) => typeof s === "string")) {
-		console.error(`Config "${listName}.json" slugs must all be strings`)
+	const list = config
+	if (!list.id || !list.url) {
+		console.error(`Config "${listName}.json" needs an id and a url to crawl`)
 		process.exit(1)
 	}
 
 	const outPath = resolve(outDir, `${list.id}.json`)
 	const bySlug = loadBySlug(outPath)
 
-	const slugs = explicitSlugs ?? (await getListSlugs(list.url, delay))
+	const slugs = await getListSlugs(list.url, delay)
 	console.log(`${slugs.length} films; ${bySlug.size} already cached.`)
 
 	let fetched = 0

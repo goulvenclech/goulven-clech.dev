@@ -1,7 +1,7 @@
 {
 	"id": "007-films",
 	"title": "Marathon James Bond",
-	"description": "Every James Bond film, including the two non-EON ones (the 1967 Casino Royale and Never Say Never Again). A solo marathon I picked up after playing 007 First Light.",
+	"description": "Every James Bond film, including the two non-canon ones. A solo marathon I picked up after playing 007 First Light.",
 	"source": "TMDB_MOVIE",
 	"url": "https://en.wikipedia.org/wiki/List_of_James_Bond_films",
 	"entries": [
@@ -9,217 +9,190 @@
 			"id": 646,
 			"name": "Dr. No",
 			"year": 1962,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/7/8/51478-dr-no-0-600-0-900-crop.jpg?v=33233a8230",
-			"link": "https://www.themoviedb.org/movie/646",
-			"slug": "dr-no"
+			"poster": "https://image.tmdb.org/t/p/w500/f9HsemSsBEHN5eoMble1bj6fDxs.jpg",
+			"link": "https://www.themoviedb.org/movie/646"
 		},
 		{
 			"id": 657,
 			"name": "From Russia with Love",
 			"year": 1963,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/nx/m3/w5/qo/nZ4XAOXaNHgyVRmmnlxzkjgVr9u-0-600-0-900-crop.jpg?v=dbea2601c4",
-			"link": "https://www.themoviedb.org/movie/657",
-			"slug": "from-russia-with-love"
+			"poster": "https://image.tmdb.org/t/p/w500/zx4V17FP8oclNvOpTgs2iCCtiYk.jpg",
+			"link": "https://www.themoviedb.org/movie/657"
 		},
 		{
 			"id": 658,
 			"name": "Goldfinger",
 			"year": 1964,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/6/6/51466-goldfinger-0-600-0-900-crop.jpg?v=d076b23468",
-			"link": "https://www.themoviedb.org/movie/658",
-			"slug": "goldfinger"
+			"poster": "https://image.tmdb.org/t/p/w500/3zqmjujYSkgLSrdvvZ9VnDfaDRV.jpg",
+			"link": "https://www.themoviedb.org/movie/658"
 		},
 		{
 			"id": 660,
 			"name": "Thunderball",
 			"year": 1965,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/lo/w4/zh/1s/fNdm3Y4nwpc7HrVPXOaQcktYw9Q-0-600-0-900-crop.jpg?v=f9ad6bb470",
-			"link": "https://www.themoviedb.org/movie/660",
-			"slug": "thunderball"
+			"poster": "https://image.tmdb.org/t/p/w500/wCc4qllaTDsQN8zgGkAgQrKO6N9.jpg",
+			"link": "https://www.themoviedb.org/movie/660"
 		},
 		{
 			"id": 667,
 			"name": "You Only Live Twice",
 			"year": 1967,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/kg/d7/wf/oi/eokdVy0BEliHkXk4vULxhesgx6q-0-600-0-900-crop.jpg?v=487636f51a",
-			"link": "https://www.themoviedb.org/movie/667",
-			"slug": "you-only-live-twice"
+			"poster": "https://image.tmdb.org/t/p/w500/9mvNd43HgTkbfPwX6MF6EoPIMIa.jpg",
+			"link": "https://www.themoviedb.org/movie/667"
 		},
 		{
 			"id": 12208,
 			"name": "Casino Royale",
 			"year": 1967,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/4/4/7/0/1/44701-casino-royale-0-600-0-900-crop.jpg?v=ae56253786",
-			"link": "https://www.themoviedb.org/movie/12208",
-			"slug": "casino-royale-1967"
+			"poster": "https://image.tmdb.org/t/p/w500/9wdw5H018bgIM8bK2HuDvh8BwOh.jpg",
+			"link": "https://www.themoviedb.org/movie/12208"
 		},
 		{
 			"id": 668,
 			"name": "On Her Majesty's Secret Service",
 			"year": 1969,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/5/6/51456-on-her-majestys-secret-service-0-600-0-900-crop.jpg?v=4920d0cd93",
-			"link": "https://www.themoviedb.org/movie/668",
-			"slug": "on-her-majestys-secret-service"
+			"poster": "https://image.tmdb.org/t/p/w500/m3KfbxvqaiAvRJ6MpguA3GuLdDQ.jpg",
+			"link": "https://www.themoviedb.org/movie/668"
 		},
 		{
 			"id": 681,
 			"name": "Diamonds Are Forever",
 			"year": 1971,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/4/3/51443-diamonds-are-forever-0-600-0-900-crop.jpg?v=e331061892",
-			"link": "https://www.themoviedb.org/movie/681",
-			"slug": "diamonds-are-forever"
+			"poster": "https://image.tmdb.org/t/p/w500/ooDT0eKrWCxJCsn9JehPkD0QYNj.jpg",
+			"link": "https://www.themoviedb.org/movie/681"
 		},
 		{
 			"id": 253,
 			"name": "Live and Let Die",
 			"year": 1973,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/8/0/3/51803-live-and-let-die-0-600-0-900-crop.jpg?v=9cc5727114",
-			"link": "https://www.themoviedb.org/movie/253",
-			"slug": "live-and-let-die"
+			"poster": "https://image.tmdb.org/t/p/w500/39qkrjqMZs6utwNmihVImC3ghas.jpg",
+			"link": "https://www.themoviedb.org/movie/253"
 		},
 		{
 			"id": 682,
 			"name": "The Man with the Golden Gun",
 			"year": 1974,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/7m/iy/yh/jw/uZgPBBdKpJgLZZkswddRrIlwlw4-0-600-0-900-crop.jpg?v=6720fbdd98",
-			"link": "https://www.themoviedb.org/movie/682",
-			"slug": "the-man-with-the-golden-gun"
+			"poster": "https://image.tmdb.org/t/p/w500/xVkbKwGnBVNQ122GN5bCTMyPbWz.jpg",
+			"link": "https://www.themoviedb.org/movie/682"
 		},
 		{
 			"id": 691,
 			"name": "The Spy Who Loved Me",
 			"year": 1977,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/z5/mu/qe/la/t3LzD4cntRTfGJYtD01jXxaMnd9-0-600-0-900-crop.jpg?v=5b3e7f8b3f",
-			"link": "https://www.themoviedb.org/movie/691",
-			"slug": "the-spy-who-loved-me"
+			"poster": "https://image.tmdb.org/t/p/w500/3ZxHKFxMYvAko680DsRgAZKWcLi.jpg",
+			"link": "https://www.themoviedb.org/movie/691"
 		},
 		{
 			"id": 698,
 			"name": "Moonraker",
 			"year": 1979,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/2/8/51428-moonraker-0-600-0-900-crop.jpg?v=8c58c631a9",
-			"link": "https://www.themoviedb.org/movie/698",
-			"slug": "moonraker"
+			"poster": "https://image.tmdb.org/t/p/w500/6LrJdXNmu5uHOVALZxVYd44Lva0.jpg",
+			"link": "https://www.themoviedb.org/movie/698"
 		},
 		{
 			"id": 699,
 			"name": "For Your Eyes Only",
 			"year": 1981,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/cq/bh/lk/d4/vpuZt2ubjhCJ98WqanAKzzhcTAp-0-600-0-900-crop.jpg?v=74aeb231e8",
-			"link": "https://www.themoviedb.org/movie/699",
-			"slug": "for-your-eyes-only"
+			"poster": "https://image.tmdb.org/t/p/w500/xV4Nnr6DjjERlqNikqDQX8LUgua.jpg",
+			"link": "https://www.themoviedb.org/movie/699"
 		},
 		{
 			"id": 700,
 			"name": "Octopussy",
 			"year": 1983,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/4y/im/bx/yl/mFuNzw2t6A2ukM7rK3ahRZn2I89-0-600-0-900-crop.jpg?v=4da3e88736",
-			"link": "https://www.themoviedb.org/movie/700",
-			"slug": "octopussy"
+			"poster": "https://image.tmdb.org/t/p/w500/yoosZitM9igSk3Sd0sBXIhKlAh1.jpg",
+			"link": "https://www.themoviedb.org/movie/700"
 		},
 		{
 			"id": 36670,
 			"name": "Never Say Never Again",
 			"year": 1983,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/2/7/7/1/1/27711-never-say-never-again-0-600-0-900-crop.jpg?v=f9fcb4fbe0",
-			"link": "https://www.themoviedb.org/movie/36670",
-			"slug": "never-say-never-again"
+			"poster": "https://image.tmdb.org/t/p/w500/zhoAL4o1STGgLbLxJ9r1ijfyHC9.jpg",
+			"link": "https://www.themoviedb.org/movie/36670"
 		},
 		{
 			"id": 707,
 			"name": "A View to a Kill",
 			"year": 1985,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/1/9/51419-a-view-to-a-kill-0-600-0-900-crop.jpg?v=2dccae28ed",
-			"link": "https://www.themoviedb.org/movie/707",
-			"slug": "a-view-to-a-kill"
+			"poster": "https://image.tmdb.org/t/p/w500/arJF829RP9cYvh0NU70dC5TtXSa.jpg",
+			"link": "https://www.themoviedb.org/movie/707"
 		},
 		{
 			"id": 708,
 			"name": "The Living Daylights",
 			"year": 1987,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/1/8/51418-the-living-daylights-0-600-0-900-crop.jpg?v=92994e87bb",
-			"link": "https://www.themoviedb.org/movie/708",
-			"slug": "the-living-daylights"
+			"poster": "https://image.tmdb.org/t/p/w500/1oRlmWX9hewpn2B44wawBjHd7dx.jpg",
+			"link": "https://www.themoviedb.org/movie/708"
 		},
 		{
 			"id": 709,
 			"name": "Licence to Kill",
 			"year": 1989,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/1/7/51417-licence-to-kill-0-600-0-900-crop.jpg?v=cc2302ba9f",
-			"link": "https://www.themoviedb.org/movie/709",
-			"slug": "licence-to-kill"
+			"poster": "https://image.tmdb.org/t/p/w500/8nzJve63EXA79HGAyidZwivZrQ2.jpg",
+			"link": "https://www.themoviedb.org/movie/709"
 		},
 		{
 			"id": 710,
 			"name": "GoldenEye",
 			"year": 1995,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/1/6/51416-goldeneye-0-600-0-900-crop.jpg?v=89d4596d47",
-			"link": "https://www.themoviedb.org/movie/710",
-			"slug": "goldeneye"
+			"poster": "https://image.tmdb.org/t/p/w500/z0ljRnNxIO7CRBhLEO0DvLgAFPR.jpg",
+			"link": "https://www.themoviedb.org/movie/710"
 		},
 		{
 			"id": 714,
 			"name": "Tomorrow Never Dies",
 			"year": 1997,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/5/1/4/1/2/51412-tomorrow-never-dies-0-600-0-900-crop.jpg?v=b693406bab",
-			"link": "https://www.themoviedb.org/movie/714",
-			"slug": "tomorrow-never-dies"
+			"poster": "https://image.tmdb.org/t/p/w500/gZm002w7q9yLOkltxT76TWGfdZX.jpg",
+			"link": "https://www.themoviedb.org/movie/714"
 		},
 		{
 			"id": 36643,
 			"name": "The World Is Not Enough",
 			"year": 1999,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/3j/06/yc/ix/the-world-is-not-enough-original-0-600-0-900-crop.jpg?v=f11e2231bc",
-			"link": "https://www.themoviedb.org/movie/36643",
-			"slug": "the-world-is-not-enough"
+			"poster": "https://image.tmdb.org/t/p/w500/wCb2msgoZPK01WIqry24M4xsM73.jpg",
+			"link": "https://www.themoviedb.org/movie/36643"
 		},
 		{
 			"id": 36669,
 			"name": "Die Another Day",
 			"year": 2002,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/ei/40/d4/qx/qI8c3FABZWxcBzJaIJwHXxywHLR-0-600-0-900-crop.jpg?v=bdab663592",
-			"link": "https://www.themoviedb.org/movie/36669",
-			"slug": "die-another-day"
+			"poster": "https://image.tmdb.org/t/p/w500/bZmGqOhMhaLn8AoFMvFDct4tbrL.jpg",
+			"link": "https://www.themoviedb.org/movie/36669"
 		},
 		{
 			"id": 36557,
 			"name": "Casino Royale",
 			"year": 2006,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/qb/if/j8/jr/zlWBxz2pTA9p45kUTrI8AQiKrHm-0-600-0-900-crop.jpg?v=c06add9fe8",
-			"link": "https://www.themoviedb.org/movie/36557",
-			"slug": "casino-royale-2006"
+			"poster": "https://image.tmdb.org/t/p/w500/lMrxYKKhd4lqRzwUHAy5gcx9PSO.jpg",
+			"link": "https://www.themoviedb.org/movie/36557"
 		},
 		{
 			"id": 10764,
 			"name": "Quantum of Solace",
 			"year": 2008,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/4/5/9/1/8/45918-quantum-of-solace-0-600-0-900-crop.jpg?v=0f9d245225",
-			"link": "https://www.themoviedb.org/movie/10764",
-			"slug": "quantum-of-solace"
+			"poster": "https://image.tmdb.org/t/p/w500/e3DXXLJHGqMx9yYpXsql1XNljmM.jpg",
+			"link": "https://www.themoviedb.org/movie/10764"
 		},
 		{
 			"id": 37724,
 			"name": "Skyfall",
 			"year": 2012,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/5j/ag/wy/k3/bwCC7klDpDcVtEXDK74vDzXLyeF-0-600-0-900-crop.jpg?v=3241094b0a",
-			"link": "https://www.themoviedb.org/movie/37724",
-			"slug": "skyfall"
+			"poster": "https://image.tmdb.org/t/p/w500/d0IVecFQvsGdSbnMAHqiYsNYaJT.jpg",
+			"link": "https://www.themoviedb.org/movie/37724"
 		},
 		{
 			"id": 206647,
 			"name": "Spectre",
 			"year": 2015,
-			"poster": "https://a.ltrbxd.com/resized/sm/upload/z4/ic/gk/3h/1o9prR1gAZdF9KpxH4qneJ3Rglf-0-600-0-900-crop.jpg?v=bee769afd4",
-			"link": "https://www.themoviedb.org/movie/206647",
-			"slug": "spectre-2015"
+			"poster": "https://image.tmdb.org/t/p/w500/zj8ongFhtWNsVlfjOGo8pSr7PQg.jpg",
+			"link": "https://www.themoviedb.org/movie/206647"
 		},
 		{
 			"id": 370172,
 			"name": "No Time to Die",
 			"year": 2021,
-			"poster": "https://a.ltrbxd.com/resized/film-poster/3/0/5/9/6/4/305964-no-time-to-die-0-600-0-900-crop.jpg?v=4651ce5b05",
-			"link": "https://www.themoviedb.org/movie/370172",
-			"slug": "no-time-to-die-2021"
+			"poster": "https://image.tmdb.org/t/p/w500/iUgygt3fscRoKWCV1d0C7FbM9TP.jpg",
+			"link": "https://www.themoviedb.org/movie/370172"
 		}
 	]
 }

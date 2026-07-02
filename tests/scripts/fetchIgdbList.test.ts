@@ -5,8 +5,8 @@ import {
 	coverUrl,
 	pickMatch,
 } from "../../scripts/fetch-igdb-list.mjs"
-import zeldaConfig from "../../scripts/igdb-lists/zelda-marathon.json"
-import pokemonConfig from "../../scripts/igdb-lists/pokemon-marathon.json"
+import zeldaConfig from "../../scripts/list-configs/igdb/zelda-marathon.json"
+import pokemonConfig from "../../scripts/list-configs/igdb/pokemon-marathon.json"
 
 const game = (id: number, name: string, year: number | null, cover = true) => ({
 	id,
