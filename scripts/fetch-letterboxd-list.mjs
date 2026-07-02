@@ -1,40 +1,29 @@
 #!/usr/bin/env node
 /**
- * Scrape a public Letterboxd list into a catalogue to-do list of TMDB movies.
+ * Scrape a Letterboxd list into a catalogue to-do list of TMDB movies.
  *
  * Letterboxd exposes the TMDB id on each film page as a body attribute
- * (data-tmdb-type / data-tmdb-id), so we walk the list's pages for film slugs,
- * then fetch one film page per slug. No auth, no official TMDB API. One request
- * per film, throttled and retried; reruns resume from the existing output so an
- * interrupted (or rate-limited) run can be continued without refetching.
+ * (data-tmdb-id), so we gather film slugs — by crawling a list's pages, or from
+ * an explicit `slugs` array — then fetch one film page per slug. No auth, no
+ * official TMDB API. Throttled and retried; reruns resume from the existing
+ * output so an interrupted (or rate-limited) run can be continued.
+ *
+ * Each list is a config at scripts/letterboxd-lists/<name>.json holding the list
+ * metadata plus either a `url` (a public list to crawl) or a `slugs` array.
  *
  * Usage:
- *   node scripts/fetch-letterboxd-list.mjs                 # → src/data/lists/<LIST.id>.json
- *   node scripts/fetch-letterboxd-list.mjs <list-url>      # scrape a different public list
- *   node scripts/fetch-letterboxd-list.mjs --delay 1000    # ms between film requests (default 700)
+ *   node scripts/fetch-letterboxd-list.mjs --list movies-everyone-should-watch
+ *   node scripts/fetch-letterboxd-list.mjs --list 007-films --delay 1000
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
 const outDir = resolve(projectRoot, "src/data/lists")
+const configDir = resolve(__dirname, "letterboxd-lists")
 
-const DEFAULT_LIST =
-	"https://letterboxd.com/fcbarcelona/list/movies-everyone-should-watch-at-least-once/"
-
-const LIST = {
-	id: "movies-everyone-should-watch",
-	title: "Movies everyone should watch at least once",
-	description:
-		"A Reddit-crowdsourced list of 800 films to see once, compiled on Letterboxd. I like its spread of genres and eras — though it means backfilling and rewatching a fair few classics.",
-	source: "TMDB_MOVIE",
-	url: DEFAULT_LIST,
-}
-const DEFAULT_OUT = resolve(outDir, `${LIST.id}.json`)
-// Path of the earlier flat-array output, still read so reruns can migrate it.
-const LEGACY_OUT = resolve(projectRoot, "src/data/letterboxd-list.json")
 // Letterboxd serves a default UA less reliably.
 const USER_AGENT =
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36"
@@ -133,20 +122,6 @@ async function getListSlugs(listUrl, delay) {
 	return slugs
 }
 
-function parseArgs(argv) {
-	const args = argv.slice(2)
-	const flagValue = (name) => {
-		const i = args.indexOf(name)
-		return i >= 0 ? args[i + 1] : undefined
-	}
-	const listUrl = args.find((a) => !a.startsWith("--") && a.startsWith("http"))
-	const delay = Number(flagValue("--delay"))
-	return {
-		listUrl: listUrl ?? DEFAULT_LIST,
-		delay: Number.isFinite(delay) && delay > 0 ? delay : 700,
-	}
-}
-
 /** A parsed film (or a cached entry) → a catalogue-keyed to-do entry, or null if not a TMDB movie. */
 export function toEntry(slug, film) {
 	const id = film.tmdbId ?? film.id
@@ -161,34 +136,76 @@ export function toEntry(slug, film) {
 	}
 }
 
-/** Load prior entries by slug from the current output, or the legacy flat array to migrate it. */
+/** Prior entries by slug from the current output, so reruns skip fetched films. */
 function loadBySlug(outPath) {
-	for (const path of [outPath, LEGACY_OUT]) {
-		try {
-			const parsed = JSON.parse(readFileSync(path, "utf8"))
-			const rows = Array.isArray(parsed) ? parsed : (parsed.entries ?? [])
-			const bySlug = new Map()
-			for (const row of rows) {
-				const entry = toEntry(row.slug, row)
-				if (entry) bySlug.set(row.slug, entry)
-			}
-			if (bySlug.size) return bySlug
-		} catch {
-			continue
+	try {
+		const { entries = [] } = JSON.parse(readFileSync(outPath, "utf8"))
+		const bySlug = new Map()
+		for (const row of entries) {
+			const entry = toEntry(row.slug, row)
+			if (entry) bySlug.set(row.slug, entry)
 		}
+		return bySlug
+	} catch {
+		return new Map()
 	}
-	return new Map()
+}
+
+/** Names of the available list configs, for the usage hint. */
+function availableConfigs() {
+	try {
+		return readdirSync(configDir)
+			.filter((f) => f.endsWith(".json"))
+			.map((f) => f.replace(/\.json$/, ""))
+	} catch {
+		return []
+	}
 }
 
 async function main() {
-	const { listUrl, delay } = parseArgs(process.argv)
-	const outPath = DEFAULT_OUT
+	const args = process.argv.slice(2)
+	const listArg = args.indexOf("--list")
+	const listName = listArg >= 0 ? args[listArg + 1] : undefined
+	const delayArg = Number(args[args.indexOf("--delay") + 1])
+	const delay = Number.isFinite(delayArg) && delayArg > 0 ? delayArg : 700
 
+	// Keep --list to a bare config name; it becomes a filesystem path below.
+	if (!listName || /[/\\]|\.\./.test(listName)) {
+		console.error(
+			`Usage: node scripts/fetch-letterboxd-list.mjs --list <name>\n` +
+				`Available: ${availableConfigs().join(", ") || "(none)"}`,
+		)
+		process.exit(1)
+	}
+
+	let config
+	try {
+		config = JSON.parse(
+			readFileSync(resolve(configDir, `${listName}.json`), "utf8"),
+		)
+	} catch {
+		console.error(
+			`No config "${listName}". Available: ${availableConfigs().join(", ") || "(none)"}`,
+		)
+		process.exit(1)
+	}
+	const { slugs: explicitSlugs, ...list } = config
+	if (!list.id || (!list.url && !Array.isArray(explicitSlugs))) {
+		console.error(
+			`Config "${listName}.json" needs an id and a url or slugs array`,
+		)
+		process.exit(1)
+	}
+	if (explicitSlugs && !explicitSlugs.every((s) => typeof s === "string")) {
+		console.error(`Config "${listName}.json" slugs must all be strings`)
+		process.exit(1)
+	}
+
+	const outPath = resolve(outDir, `${list.id}.json`)
 	const bySlug = loadBySlug(outPath)
 
-	console.log(`Fetching list slugs from ${listUrl}`)
-	const slugs = await getListSlugs(listUrl, delay)
-	console.log(`Found ${slugs.length} films; ${bySlug.size} already cached.`)
+	const slugs = explicitSlugs ?? (await getListSlugs(list.url, delay))
+	console.log(`${slugs.length} films; ${bySlug.size} already cached.`)
 
 	let fetched = 0
 	let failed = 0
@@ -204,7 +221,7 @@ async function main() {
 			} else {
 				bySlug.set(slug, entry)
 				fetched++
-				writeOutput(outPath, orderBySlugs(slugs, bySlug))
+				writeOutput(outPath, list, orderBySlugs(slugs, bySlug))
 				if (fetched % 25 === 0) console.log(`  fetched ${fetched} new films…`)
 			}
 		} catch (err) {
@@ -215,7 +232,7 @@ async function main() {
 	}
 
 	const entries = orderBySlugs(slugs, bySlug)
-	writeOutput(outPath, entries)
+	writeOutput(outPath, list, entries)
 	console.log(
 		`Wrote ${entries.length} movies to ${outPath}. ` +
 			`${fetched} newly fetched, ${skipped} skipped (tv/no id), ${failed} failed.`,
@@ -227,11 +244,11 @@ function orderBySlugs(slugs, bySlug) {
 	return slugs.map((slug) => bySlug.get(slug)).filter(Boolean)
 }
 
-function writeOutput(outPath, entries) {
+function writeOutput(outPath, list, entries) {
 	mkdirSync(dirname(outPath), { recursive: true })
 	writeFileSync(
 		outPath,
-		JSON.stringify({ ...LIST, entries }, null, "\t") + "\n",
+		JSON.stringify({ ...list, entries }, null, "\t") + "\n",
 	)
 }
 

@@ -5,67 +5,26 @@
  *
  * IGDB has no stable id lookup by name, so we search each title and pick the
  * candidate whose release year matches and whose name is closest, skipping the
- * fan edits / bundles that pollute search results. Configured below for the
- * Zelda marathon; edit LIST and GAMES to build a different IGDB list.
+ * fan edits / bundles that pollute search results.
  *
- * Needs IGDB_ID / IGDB_SECRET in .env (Twitch app credentials).
+ * Each list is a config at scripts/igdb-lists/<name>.json holding the list
+ * metadata plus a `games` array of [display name, IGDB search query, year] —
+ * the year disambiguating the many re-releases that share a title. Needs
+ * IGDB_ID / IGDB_SECRET in .env (Twitch app credentials).
  *
  * Usage:
- *   node scripts/fetch-igdb-list.mjs   # writes src/data/lists/<LIST.id>.json
+ *   node scripts/fetch-igdb-list.mjs --list zelda-marathon
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
 const outDir = resolve(projectRoot, "src/data/lists")
+const configDir = resolve(__dirname, "igdb-lists")
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-
-const LIST = {
-	id: "zelda-marathon",
-	title: "Marathon Zelda",
-	description:
-		"A Legend of Zelda marathon with my friend Erika. Usually the most modern version of each game, though I keep a remake and its original apart when they differ enough to matter.",
-	source: "IGDB",
-	url: "https://en.wikipedia.org/wiki/The_Legend_of_Zelda",
-}
-
-// [display name, IGDB search query, release year]. Year disambiguates the many
-// re-releases sharing a title (Ocarina of Time 1998 vs 3D 2011, etc.).
-const GAMES = [
-	["The Legend of Zelda", "The Legend of Zelda", 1986],
-	["Zelda II: The Adventure of Link", "Zelda II The Adventure of Link", 1987],
-	["A Link to the Past", "The Legend of Zelda A Link to the Past", 1991],
-	["Link: The Faces of Evil", "Link The Faces of Evil", 1993],
-	["Zelda: The Wand of Gamelon", "Zelda The Wand of Gamelon", 1993],
-	["Zelda's Adventure", "Zelda's Adventure", 1994],
-	["Link's Awakening DX", "The Legend of Zelda Link's Awakening DX", 1998],
-	["Oracle of Seasons", "The Legend of Zelda Oracle of Seasons", 2001],
-	["Oracle of Ages", "The Legend of Zelda Oracle of Ages", 2001],
-	[
-		"Four Swords Adventures",
-		"The Legend of Zelda Four Swords Adventures",
-		2004,
-	],
-	["The Minish Cap", "The Legend of Zelda The Minish Cap", 2004],
-	["Phantom Hourglass", "The Legend of Zelda Phantom Hourglass", 2007],
-	["Spirit Tracks", "The Legend of Zelda Spirit Tracks", 2009],
-	["Ocarina of Time 3D", "The Legend of Zelda Ocarina of Time 3D", 2011],
-	["The Wind Waker HD", "The Legend of Zelda The Wind Waker HD", 2013],
-	["A Link Between Worlds", "The Legend of Zelda A Link Between Worlds", 2013],
-	["Majora's Mask 3D", "The Legend of Zelda Majora's Mask 3D", 2015],
-	["Tri Force Heroes", "The Legend of Zelda Tri Force Heroes", 2015],
-	["Twilight Princess HD", "The Legend of Zelda Twilight Princess HD", 2016],
-	["Breath of the Wild", "The Legend of Zelda Breath of the Wild", 2017],
-	["Link's Awakening (2019)", "The Legend of Zelda Link's Awakening", 2019],
-	["Skyward Sword HD", "The Legend of Zelda Skyward Sword HD", 2021],
-	["Zelda 2 Redux", "Zelda 2 Redux", 2021],
-	["The Legend of Zelda Redux", "The Legend of Zelda Redux", 2022],
-	["Tears of the Kingdom", "The Legend of Zelda Tears of the Kingdom", 2023],
-	["Echoes of Wisdom", "The Legend of Zelda Echoes of Wisdom", 2024],
-]
 
 /** Editions and fan projects that share a title but aren't the game we want. */
 const EXCLUDE =
@@ -100,11 +59,11 @@ export function yearOf(game) {
 		: null
 }
 
-/** Strip the series prefix and punctuation so titles compare on their distinctive part. */
+/** Strip series prefixes, the "Version" suffix, and punctuation so titles compare on their distinctive part. */
 export function normalizeName(name) {
 	return name
 		.toLowerCase()
-		.replace(/the legend of zelda/g, "")
+		.replace(/the legend of zelda|version/g, "")
 		.replace(/[^a-z0-9]+/g, " ")
 		.trim()
 }
@@ -153,7 +112,63 @@ async function search(env, token, query) {
 	return res.json()
 }
 
+/** Names of the available list configs, for the usage hint. */
+function availableConfigs() {
+	try {
+		return readdirSync(configDir)
+			.filter((f) => f.endsWith(".json"))
+			.map((f) => f.replace(/\.json$/, ""))
+	} catch {
+		return []
+	}
+}
+
 async function main() {
+	const args = process.argv.slice(2)
+	const listArg = args.indexOf("--list")
+	const listName = listArg >= 0 ? args[listArg + 1] : undefined
+	// Keep --list to a bare config name; it becomes a filesystem path below.
+	if (!listName || /[/\\]|\.\./.test(listName)) {
+		console.error(
+			`Usage: node scripts/fetch-igdb-list.mjs --list <name>\n` +
+				`Available: ${availableConfigs().join(", ") || "(none)"}`,
+		)
+		process.exit(1)
+	}
+
+	let config
+	try {
+		config = JSON.parse(
+			readFileSync(resolve(configDir, `${listName}.json`), "utf8"),
+		)
+	} catch {
+		console.error(
+			`No config "${listName}". Available: ${availableConfigs().join(", ") || "(none)"}`,
+		)
+		process.exit(1)
+	}
+	const { games, ...list } = config
+	if (!list.id || !Array.isArray(games) || games.length === 0) {
+		console.error(
+			`Config "${listName}.json" needs an id and a non-empty games array`,
+		)
+		process.exit(1)
+	}
+	if (
+		!games.every(
+			(g) =>
+				Array.isArray(g) &&
+				g.length === 3 &&
+				typeof g[1] === "string" &&
+				typeof g[2] === "number",
+		)
+	) {
+		console.error(
+			`Config "${listName}.json" games must be [name, query, year] tuples`,
+		)
+		process.exit(1)
+	}
+
 	const env = { ...loadEnv(), ...process.env }
 	if (!env.IGDB_ID || !env.IGDB_SECRET) {
 		console.error("Missing IGDB_ID / IGDB_SECRET (check .env)")
@@ -163,8 +178,9 @@ async function main() {
 
 	const entries = []
 	const misses = []
-	for (const [name, query, year] of GAMES) {
-		const game = pickMatch(await search(env, token, query), name, year)
+	for (const [name, query, year] of games) {
+		// Match on the search query (a specific edition), not the display name.
+		const game = pickMatch(await search(env, token, query), query, year)
 		if (!game) {
 			misses.push(`${name} (${year})`)
 			console.error(`  no match: ${name} (${year})`)
@@ -180,14 +196,14 @@ async function main() {
 		await sleep(260)
 	}
 
-	const outPath = resolve(outDir, `${LIST.id}.json`)
+	const outPath = resolve(outDir, `${list.id}.json`)
 	mkdirSync(outDir, { recursive: true })
 	writeFileSync(
 		outPath,
-		JSON.stringify({ ...LIST, entries }, null, "\t") + "\n",
+		JSON.stringify({ ...list, entries }, null, "\t") + "\n",
 	)
 	console.log(
-		`Wrote ${entries.length}/${GAMES.length} games to ${outPath}` +
+		`Wrote ${entries.length}/${games.length} games to ${outPath}` +
 			(misses.length ? ` (unresolved: ${misses.join(", ")})` : ""),
 	)
 }

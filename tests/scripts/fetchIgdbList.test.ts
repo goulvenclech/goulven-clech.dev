@@ -5,6 +5,8 @@ import {
 	coverUrl,
 	pickMatch,
 } from "../../scripts/fetch-igdb-list.mjs"
+import zeldaConfig from "../../scripts/igdb-lists/zelda-marathon.json"
+import pokemonConfig from "../../scripts/igdb-lists/pokemon-marathon.json"
 
 const game = (id: number, name: string, year: number | null, cover = true) => ({
 	id,
@@ -26,6 +28,10 @@ describe("normalizeName", () => {
 		expect(normalizeName("The Legend of Zelda: Ocarina of Time")).toBe(
 			"ocarina of time",
 		)
+	})
+
+	it("drops the Version suffix so paired titles compare cleanly", () => {
+		expect(normalizeName("Pokémon Black Version 2")).toBe("pok mon black 2")
 	})
 })
 
@@ -60,4 +66,22 @@ describe("pickMatch", () => {
 	it("returns null when nothing survives filtering", () => {
 		expect(pickMatch([], "Anything", 2000)).toBeNull()
 	})
+})
+
+describe("list config contract", () => {
+	it.each([zeldaConfig, pokemonConfig])(
+		"$id is a valid IGDB list with games",
+		(config) => {
+			expect(config.source).toBe("IGDB")
+			expect(typeof config.id).toBe("string")
+			expect(config.games.length).toBeGreaterThan(0)
+			for (const entry of config.games) {
+				expect(entry).toHaveLength(3)
+				const [name, query, year] = entry
+				expect(typeof name).toBe("string")
+				expect(typeof query).toBe("string")
+				expect(typeof year).toBe("number")
+			}
+		},
+	)
 })
