@@ -38,8 +38,10 @@ export interface TodoProgress {
 	percent: number
 }
 
-export type TodoSort = "year-asc" | "year-desc"
-export type TodoStatus = "all" | "done" | "todo"
+export const SORTS = ["year-asc", "year-desc"] as const
+export const STATUSES = ["all", "done", "todo"] as const
+export type TodoSort = (typeof SORTS)[number]
+export type TodoStatus = (typeof STATUSES)[number]
 
 /**
  * Turn a list into grid items. Done entries link to the catalogue filtered to

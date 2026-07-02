@@ -3,6 +3,12 @@
  * values are omitted so a bare URL means "first list, no filters", and only the
  * keys present in the URL are read back.
  */
+import {
+	SORTS,
+	STATUSES,
+	type TodoSort,
+	type TodoStatus,
+} from "$src/catalogueTodo"
 
 export interface TodoFilters {
 	list: string
@@ -18,16 +24,14 @@ const FILTER_KEYS = [
 	"status",
 ] as const satisfies ReadonlyArray<keyof TodoFilters>
 
-export const DEFAULT_SORT = "year-asc"
-export const DEFAULT_STATUS = "all"
-export const SORTS = ["year-asc", "year-desc"]
-export const STATUSES = ["all", "done", "todo"]
+export const DEFAULT_SORT: TodoSort = "year-asc"
+export const DEFAULT_STATUS: TodoStatus = "all"
 
 export interface TodoState {
 	list: string
 	query: string
-	sort: string
-	status: string
+	sort: TodoSort
+	status: TodoStatus
 }
 
 /** Unknown list ids and out-of-range sort/status values fall back to defaults. */
@@ -42,15 +46,19 @@ export function resolveTodoState(
 				? filters.list
 				: (listIds[0] ?? ""),
 		query: filters.query ?? "",
-		sort:
-			filters.sort && SORTS.includes(filters.sort)
-				? filters.sort
-				: DEFAULT_SORT,
-		status:
-			filters.status && STATUSES.includes(filters.status)
-				? filters.status
-				: DEFAULT_STATUS,
+		sort: coerce(filters.sort, SORTS, DEFAULT_SORT),
+		status: coerce(filters.status, STATUSES, DEFAULT_STATUS),
 	}
+}
+
+function coerce<T extends string>(
+	value: string | undefined,
+	allowed: readonly T[],
+	fallback: T,
+): T {
+	return value && (allowed as readonly string[]).includes(value)
+		? (value as T)
+		: fallback
 }
 
 export function buildTodoParams(

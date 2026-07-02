@@ -67,9 +67,9 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			Lists I'm slowly working my way through, tied to my <a href="/catalogue"
+			Lists I'm slowly working my way through for my <a href="/catalogue"
 				>catalogue</a
-			> so I can see what's left to watch and play. Pick one below.
+			>. Pick one below.
 		</p>
 		<p>
 			<ReturnHome />
@@ -141,6 +141,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 		</form>
 
 		<div id="todo-grid" class="grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
+		<empty-state id="todo-empty" hidden></empty-state>
 		<button id="load-more" class="button" type="button" hidden>Load more</button
 		>
 
@@ -158,6 +159,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 
 	<script>
 		import "../../components/ResetButton.ts"
+		import "../../components/EmptyState.ts"
 		import {
 			filterTodoItems,
 			sortTodoItems,
@@ -170,6 +172,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			buildTodoParams,
 			resolveTodoState,
 		} from "../../components/catalogue/todoFilters"
+		import { toQueryString } from "../../components/catalogue/catalogueFilters"
 
 		interface View {
 			id: string
@@ -206,6 +209,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			"status-filter",
 		) as HTMLSelectElement
 		const loadMore = document.getElementById("load-more") as HTMLButtonElement
+		const emptyEl = document.getElementById("todo-empty") as HTMLElement
 
 		let listIndex = 0
 		let shown = PAGE_SIZE
@@ -280,6 +284,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 				sortSelect.value as TodoSort,
 			)
 			grid.replaceChildren(...items.slice(0, shown).map(cardFor))
+			emptyEl.hidden = items.length > 0
 			loadMore.hidden = shown >= items.length
 		}
 
@@ -302,11 +307,10 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 				},
 				{ list: defaultList },
 			)
-			const qs = params.toString()
 			history.replaceState(
 				null,
 				"",
-				`${location.pathname}${qs ? `?${qs}` : ""}`,
+				`${location.pathname}${toQueryString(params)}`,
 			)
 		}
 

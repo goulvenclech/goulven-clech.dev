@@ -12,9 +12,10 @@
  * Usage:
  *   node scripts/fetch-tmdb-list.mjs --list 007-films
  */
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
+import { loadEnv, readListConfig } from "./listConfig.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
@@ -22,29 +23,6 @@ const outDir = resolve(projectRoot, "src/data/lists")
 const configDir = resolve(__dirname, "list-configs/tmdb")
 
 const TMDB_API = "https://api.themoviedb.org/3"
-
-/** Minimal .env reader, to avoid a dotenv dependency. */
-function loadEnv() {
-	const env = {}
-	let raw
-	try {
-		raw = readFileSync(resolve(projectRoot, ".env"), "utf8")
-	} catch {
-		return env
-	}
-	for (const line of raw.split("\n")) {
-		const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/)
-		if (!m) continue
-		let val = m[2].trim()
-		if (
-			(val.startsWith('"') && val.endsWith('"')) ||
-			(val.startsWith("'") && val.endsWith("'"))
-		)
-			val = val.slice(1, -1)
-		env[m[1]] = val
-	}
-	return env
-}
 
 export function posterUrl(path, size = "w500") {
 	return `https://image.tmdb.org/t/p/${size}${path}`
@@ -73,40 +51,9 @@ async function fetchMovie(env, id) {
 	return res.json()
 }
 
-function availableConfigs() {
-	try {
-		return readdirSync(configDir)
-			.filter((f) => f.endsWith(".json"))
-			.map((f) => f.replace(/\.json$/, ""))
-	} catch {
-		return []
-	}
-}
-
 async function main() {
 	const args = process.argv.slice(2)
-	const listArg = args.indexOf("--list")
-	const listName = listArg >= 0 ? args[listArg + 1] : undefined
-	// Keep --list to a bare config name; it becomes a filesystem path below.
-	if (!listName || /[/\\]|\.\./.test(listName)) {
-		console.error(
-			`Usage: node scripts/fetch-tmdb-list.mjs --list <name>\n` +
-				`Available: ${availableConfigs().join(", ") || "(none)"}`,
-		)
-		process.exit(1)
-	}
-
-	let config
-	try {
-		config = JSON.parse(
-			readFileSync(resolve(configDir, `${listName}.json`), "utf8"),
-		)
-	} catch {
-		console.error(
-			`No config "${listName}". Available: ${availableConfigs().join(", ") || "(none)"}`,
-		)
-		process.exit(1)
-	}
+	const { listName, config } = readListConfig(args, configDir)
 	const { movies, ...list } = config
 	if (!list.id || !Array.isArray(movies) || movies.length === 0) {
 		console.error(

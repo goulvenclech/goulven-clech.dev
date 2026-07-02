@@ -15,9 +15,10 @@
  *   node scripts/fetch-letterboxd-list.mjs --list movies-everyone-should-watch
  *   node scripts/fetch-letterboxd-list.mjs --list 007-films --delay 1000
  */
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
+import { readListConfig } from "./listConfig.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
@@ -151,44 +152,12 @@ function loadBySlug(outPath) {
 	}
 }
 
-/** Names of the available list configs, for the usage hint. */
-function availableConfigs() {
-	try {
-		return readdirSync(configDir)
-			.filter((f) => f.endsWith(".json"))
-			.map((f) => f.replace(/\.json$/, ""))
-	} catch {
-		return []
-	}
-}
-
 async function main() {
 	const args = process.argv.slice(2)
-	const listArg = args.indexOf("--list")
-	const listName = listArg >= 0 ? args[listArg + 1] : undefined
 	const delayArg = Number(args[args.indexOf("--delay") + 1])
 	const delay = Number.isFinite(delayArg) && delayArg > 0 ? delayArg : 700
 
-	// Keep --list to a bare config name; it becomes a filesystem path below.
-	if (!listName || /[/\\]|\.\./.test(listName)) {
-		console.error(
-			`Usage: node scripts/fetch-letterboxd-list.mjs --list <name>\n` +
-				`Available: ${availableConfigs().join(", ") || "(none)"}`,
-		)
-		process.exit(1)
-	}
-
-	let config
-	try {
-		config = JSON.parse(
-			readFileSync(resolve(configDir, `${listName}.json`), "utf8"),
-		)
-	} catch {
-		console.error(
-			`No config "${listName}". Available: ${availableConfigs().join(", ") || "(none)"}`,
-		)
-		process.exit(1)
-	}
+	const { listName, config } = readListConfig(args, configDir)
 	const list = config
 	if (!list.id || !list.url) {
 		console.error(`Config "${listName}.json" needs an id and a url to crawl`)
