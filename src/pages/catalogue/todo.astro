@@ -1,0 +1,319 @@
+---
+import ReturnHome from "$components/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+import { ratingLabels } from "$components/catalogue/reviewUtils"
+import { getClient } from "$src/db"
+import {
+	buildTodoItems,
+	computeTodoProgress,
+	type TodoList,
+} from "$src/catalogueTodo"
+
+const pageTitle = "To-do"
+
+const modules = import.meta.glob<{ default: TodoList }>(
+	"/src/data/lists/*.json",
+	{ eager: true },
+)
+const lists = Object.values(modules)
+	.map((module) => module.default)
+	.sort((a, b) => a.title.localeCompare(b.title))
+
+// Latest rating emoji per reviewed id, for each source the lists need.
+const doneBySource = new Map<string, Map<number, string>>()
+try {
+	const client = getClient()
+	for (const source of new Set(lists.map((list) => list.source))) {
+		const result = await client.execute({
+			sql: `SELECT source_id, rating FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
+			args: [source],
+		})
+		const done = new Map<number, string>()
+		for (const row of result.rows as unknown as {
+			source_id: string
+			rating: number
+		}[]) {
+			const id = Number(row.source_id)
+			if (!done.has(id)) done.set(id, ratingLabels[row.rating]?.emoji ?? "")
+		}
+		doneBySource.set(source, done)
+	}
+} catch (error) {
+	// The lists are static, so degrade to "nothing done" rather than 500.
+	console.error("todo: could not load reviews", error)
+}
+
+const views = lists.map((list) => {
+	const items = buildTodoItems(list, doneBySource.get(list.source) ?? new Map())
+	return {
+		title: list.title,
+		description: list.description,
+		url: list.url ?? null,
+		items,
+		progress: computeTodoProgress(items),
+	}
+})
+
+const initial = views[0]
+// Escape "<" so the serialised data can't close the <script> tag early.
+const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
+---
+
+<Layout
+	title={pageTitle}
+	description="Tracking my catalogue against curated to-do lists — films to watch, games to play."
+>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			Lists I'm slowly working my way through, tied to my <a href="/catalogue"
+				>catalogue</a
+			> so I can see what's left to watch and play. Pick one below.
+		</p>
+		<p>
+			<ReturnHome />
+		</p>
+	</section>
+
+	<section>
+		<select
+			id="list-select"
+			class="w-full border-b-[0.1rem] border-dotted text-sm"
+		>
+			{views.map((view, index) => <option value={index}>{view.title}</option>)}
+		</select>
+
+		<p class="mt-3 mb-2 text-sm opacity-80">
+			<span id="list-description">{initial.description}</span>{" "}
+			<a id="list-source-link" href={initial.url ?? "#"}>Source</a>
+		</p>
+
+		<div class="mb-3 flex items-center gap-3 text-xs sm:text-sm">
+			<div
+				id="todo-progressbar"
+				class="bg-alt-light dark:bg-alt-dark h-2 flex-1 overflow-hidden rounded-full"
+				role="progressbar"
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-valuenow={initial.progress.percent}
+			>
+				<div
+					id="todo-bar"
+					class="bg-primary h-full rounded-full"
+					style={`width: ${initial.progress.percent}%`}
+				>
+				</div>
+			</div>
+			<span class="whitespace-nowrap opacity-70">
+				<span id="todo-done">{initial.progress.doneCount}</span>/<span
+					id="todo-total">{initial.progress.total}</span
+				> · <span id="todo-percent">{initial.progress.percent}</span>%
+			</span>
+		</div>
+
+		<form class="mb-5 grid grid-cols-2 gap-5 text-xs sm:text-sm">
+			<div class="col-span-2 flex items-center gap-3">
+				<div class="group flex flex-1 items-center">
+					<i class="fas fa-search group-has-focus:text-primary mr-1.5"></i>
+					<input
+						id="query"
+						type="text"
+						placeholder="Search by title"
+						class="group-has-focus:text-primary w-full truncate border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
+					/>
+				</div>
+				<reset-button
+					defaults='{"query":"","sort-filter":"year-asc","status-filter":"all"}'
+				></reset-button>
+			</div>
+
+			<select id="sort-filter" class="border-b-[0.1rem] border-dotted">
+				<option value="year-asc" selected>🗓️ oldest first</option>
+				<option value="year-desc">🗓️ newest first</option>
+			</select>
+
+			<select id="status-filter" class="border-b-[0.1rem] border-dotted">
+				<option value="all" selected>🎬 all</option>
+				<option value="done">✅ done</option>
+				<option value="todo">◻️ to do</option>
+			</select>
+		</form>
+
+		<div id="todo-grid" class="grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
+		<button id="load-more" class="button" type="button" hidden>Load more</button
+		>
+
+		<noscript>
+			<p>This to-do grid needs JavaScript to filter and sort.</p>
+		</noscript>
+	</section>
+
+	<script
+		type="application/json"
+		id="todo-views"
+		is:inline
+		set:html={viewsJson}
+	/>
+
+	<script>
+		import "../../components/ResetButton.ts"
+		import {
+			filterTodoItems,
+			sortTodoItems,
+			type TodoItem,
+			type TodoProgress,
+			type TodoSort,
+			type TodoStatus,
+		} from "../../catalogueTodo"
+
+		interface View {
+			title: string
+			description: string
+			url: string | null
+			items: TodoItem[]
+			progress: TodoProgress
+		}
+
+		const PAGE_SIZE = 100
+
+		const dataEl = document.getElementById("todo-views")
+		const views: View[] = dataEl ? JSON.parse(dataEl.textContent || "[]") : []
+
+		const listSelect = document.getElementById(
+			"list-select",
+		) as HTMLSelectElement
+		const descriptionEl = document.getElementById("list-description")!
+		const sourceLink = document.getElementById(
+			"list-source-link",
+		) as HTMLAnchorElement
+		const doneEl = document.getElementById("todo-done")!
+		const totalEl = document.getElementById("todo-total")!
+		const percentEl = document.getElementById("todo-percent")!
+		const bar = document.getElementById("todo-bar")!
+		const progressbar = document.getElementById("todo-progressbar")!
+		const grid = document.getElementById("todo-grid") as HTMLDivElement
+		const queryInput = document.getElementById("query") as HTMLInputElement
+		const sortSelect = document.getElementById(
+			"sort-filter",
+		) as HTMLSelectElement
+		const statusSelect = document.getElementById(
+			"status-filter",
+		) as HTMLSelectElement
+		const loadMore = document.getElementById("load-more") as HTMLButtonElement
+
+		let listIndex = 0
+		let shown = PAGE_SIZE
+
+		function label(item: TodoItem): string {
+			return item.year ? `${item.name} (${item.year})` : item.name
+		}
+
+		function placeholderFor(item: TodoItem): HTMLSpanElement {
+			const span = document.createElement("span")
+			span.className =
+				"flex h-full w-full items-center justify-center p-2 text-center text-xs"
+			span.textContent = label(item)
+			return span
+		}
+
+		function cardFor(item: TodoItem): HTMLAnchorElement {
+			const link = document.createElement("a")
+			link.href = item.href
+			link.title = label(item)
+			link.className =
+				"no-icon bg-alt-light relative aspect-3/4 overflow-hidden rounded"
+			if (!item.done) {
+				link.classList.add("opacity-60", "grayscale")
+				link.target = "_blank"
+				link.rel = "noopener"
+			}
+
+			if (item.poster) {
+				const img = document.createElement("img")
+				img.src = item.poster
+				img.alt = item.name
+				img.loading = "lazy"
+				// Drop the referrer to dodge CDN hotlink blocks.
+				img.referrerPolicy = "no-referrer"
+				img.className = "h-full w-full object-cover"
+				img.addEventListener("error", () =>
+					img.replaceWith(placeholderFor(item)),
+				)
+				link.appendChild(img)
+			} else {
+				link.appendChild(placeholderFor(item))
+			}
+
+			if (item.emoji) {
+				const badge = document.createElement("span")
+				badge.className = "absolute top-1 right-1 text-lg drop-shadow-md"
+				badge.textContent = item.emoji
+				link.appendChild(badge)
+			}
+			return link
+		}
+
+		function renderMeta(view: View): void {
+			descriptionEl.textContent = view.description
+			if (view.url) sourceLink.href = view.url
+			sourceLink.hidden = !view.url
+			doneEl.textContent = String(view.progress.doneCount)
+			totalEl.textContent = String(view.progress.total)
+			percentEl.textContent = String(view.progress.percent)
+			bar.style.width = `${view.progress.percent}%`
+			progressbar.setAttribute("aria-valuenow", String(view.progress.percent))
+		}
+
+		function renderGrid(view: View): void {
+			if (!view) return
+			const items = sortTodoItems(
+				filterTodoItems(view.items, {
+					query: queryInput.value,
+					status: statusSelect.value as TodoStatus,
+				}),
+				sortSelect.value as TodoSort,
+			)
+			grid.replaceChildren(...items.slice(0, shown).map(cardFor))
+			loadMore.hidden = shown >= items.length
+		}
+
+		function render(): void {
+			const view = views[listIndex]
+			if (!view) return
+			renderMeta(view)
+			renderGrid(view)
+		}
+
+		listSelect.addEventListener("change", () => {
+			listIndex = Number(listSelect.value)
+			shown = PAGE_SIZE
+			render()
+		})
+
+		let debounce: ReturnType<typeof setTimeout>
+		queryInput.addEventListener("input", () => {
+			clearTimeout(debounce)
+			debounce = setTimeout(() => {
+				shown = PAGE_SIZE
+				renderGrid(views[listIndex])
+			}, 200)
+		})
+		for (const select of [sortSelect, statusSelect]) {
+			select.addEventListener("change", () => {
+				shown = PAGE_SIZE
+				renderGrid(views[listIndex])
+			})
+		}
+		loadMore.addEventListener("click", () => {
+			shown += PAGE_SIZE
+			renderGrid(views[listIndex])
+		})
+		// <reset-button> restores control values without firing input/change.
+		queryInput.form?.addEventListener("reset-filters", () => {
+			shown = PAGE_SIZE
+			renderGrid(views[listIndex])
+		})
+
+		render()
+	</script>
+</Layout>

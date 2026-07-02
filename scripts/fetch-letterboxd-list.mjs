@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Scrape a public Letterboxd list into a JSON array of its films' TMDB ids.
+ * Scrape a public Letterboxd list into a catalogue to-do list of TMDB movies.
  *
  * Letterboxd exposes the TMDB id on each film page as a body attribute
  * (data-tmdb-type / data-tmdb-id), so we walk the list's pages for film slugs,
@@ -9,10 +9,9 @@
  * interrupted (or rate-limited) run can be continued without refetching.
  *
  * Usage:
- *   node scripts/fetch-letterboxd-list.mjs                       # default list → src/data/letterboxd-list.json
- *   node scripts/fetch-letterboxd-list.mjs <list-url>            # a different public list
- *   node scripts/fetch-letterboxd-list.mjs --out path.json       # custom output path (relative to cwd)
- *   node scripts/fetch-letterboxd-list.mjs --delay 1000          # ms between film requests (default 700)
+ *   node scripts/fetch-letterboxd-list.mjs                 # → src/data/lists/<LIST.id>.json
+ *   node scripts/fetch-letterboxd-list.mjs <list-url>      # scrape a different public list
+ *   node scripts/fetch-letterboxd-list.mjs --delay 1000    # ms between film requests (default 700)
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
@@ -20,10 +19,22 @@ import { dirname, resolve } from "node:path"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
+const outDir = resolve(projectRoot, "src/data/lists")
 
 const DEFAULT_LIST =
 	"https://letterboxd.com/fcbarcelona/list/movies-everyone-should-watch-at-least-once/"
-const DEFAULT_OUT = resolve(projectRoot, "src/data/letterboxd-list.json")
+
+const LIST = {
+	id: "movies-everyone-should-watch",
+	title: "Movies everyone should watch at least once",
+	description:
+		"A Reddit-crowdsourced list of 800 films to see once, compiled on Letterboxd. I like its spread of genres and eras — though it means backfilling and rewatching a fair few classics.",
+	source: "TMDB_MOVIE",
+	url: DEFAULT_LIST,
+}
+const DEFAULT_OUT = resolve(outDir, `${LIST.id}.json`)
+// Path of the earlier flat-array output, still read so reruns can migrate it.
+const LEGACY_OUT = resolve(projectRoot, "src/data/letterboxd-list.json")
 // Letterboxd serves a default UA less reliably.
 const USER_AGENT =
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36"
@@ -129,55 +140,73 @@ function parseArgs(argv) {
 		return i >= 0 ? args[i + 1] : undefined
 	}
 	const listUrl = args.find((a) => !a.startsWith("--") && a.startsWith("http"))
-	const out = flagValue("--out")
 	const delay = Number(flagValue("--delay"))
 	return {
 		listUrl: listUrl ?? DEFAULT_LIST,
-		outPath: out ? resolve(process.cwd(), out) : DEFAULT_OUT,
 		delay: Number.isFinite(delay) && delay > 0 ? delay : 700,
 	}
 }
 
-async function main() {
-	const { listUrl, outPath, delay } = parseArgs(process.argv)
-
-	// Resume from any prior run: keep already-fetched films, refetch only the rest.
-	let existing = []
-	try {
-		existing = JSON.parse(readFileSync(outPath, "utf8"))
-	} catch {
-		existing = []
+/** A parsed film (or a cached entry) → a catalogue-keyed to-do entry, or null if not a TMDB movie. */
+export function toEntry(slug, film) {
+	const id = film.tmdbId ?? film.id
+	if (id == null || (film.type != null && film.type !== "movie")) return null
+	return {
+		id,
+		name: film.name,
+		year: film.year,
+		poster: film.poster ?? null,
+		link: `https://www.themoviedb.org/movie/${id}`,
+		slug,
 	}
-	const bySlug = new Map(existing.map((e) => [e.slug, e]))
+}
+
+/** Load prior entries by slug from the current output, or the legacy flat array to migrate it. */
+function loadBySlug(outPath) {
+	for (const path of [outPath, LEGACY_OUT]) {
+		try {
+			const parsed = JSON.parse(readFileSync(path, "utf8"))
+			const rows = Array.isArray(parsed) ? parsed : (parsed.entries ?? [])
+			const bySlug = new Map()
+			for (const row of rows) {
+				const entry = toEntry(row.slug, row)
+				if (entry) bySlug.set(row.slug, entry)
+			}
+			if (bySlug.size) return bySlug
+		} catch {
+			continue
+		}
+	}
+	return new Map()
+}
+
+async function main() {
+	const { listUrl, delay } = parseArgs(process.argv)
+	const outPath = DEFAULT_OUT
+
+	const bySlug = loadBySlug(outPath)
 
 	console.log(`Fetching list slugs from ${listUrl}`)
 	const slugs = await getListSlugs(listUrl, delay)
 	console.log(`Found ${slugs.length} films; ${bySlug.size} already cached.`)
 
-	const entries = []
 	let fetched = 0
 	let failed = 0
+	let skipped = 0
 	for (const slug of slugs) {
-		const cached = bySlug.get(slug)
-		// Refetch entries from an older run that predate a field (e.g. poster).
-		if (cached && "poster" in cached) {
-			entries.push(cached)
-			continue
-		}
+		if (bySlug.has(slug)) continue
 		try {
 			const html = await fetchText(`https://letterboxd.com/film/${slug}/`)
-			const film = parseFilm(html)
-			// Usually a genuinely id-less film; a spike suggests a markup change.
-			if (film.tmdbId == null && film.name != null) {
-				console.warn(`  ${slug}: fetched OK but no TMDB id found`)
+			const entry = toEntry(slug, parseFilm(html))
+			if (!entry) {
+				// A TV entry or a film with no TMDB movie link — not trackable here.
+				skipped++
+			} else {
+				bySlug.set(slug, entry)
+				fetched++
+				writeOutput(outPath, orderBySlugs(slugs, bySlug))
+				if (fetched % 25 === 0) console.log(`  fetched ${fetched} new films…`)
 			}
-			const entry = { slug, ...film }
-			entries.push(entry)
-			bySlug.set(slug, entry)
-			fetched++
-			// Persist incrementally so an interruption loses at most one film.
-			writeOutput(outPath, orderBySlugs(slugs, bySlug))
-			if (fetched % 25 === 0) console.log(`  fetched ${fetched} new films…`)
 		} catch (err) {
 			failed++
 			console.error(`  failed ${slug}: ${err.message}`)
@@ -185,27 +214,25 @@ async function main() {
 		await sleep(delay)
 	}
 
-	const final = orderBySlugs(slugs, bySlug)
-	writeOutput(outPath, final)
-
-	const movies = final.filter((e) => e.type === "movie" && e.tmdbId != null)
-	const tv = final.filter((e) => e.type === "tv")
-	const noId = final.filter((e) => e.tmdbId == null)
+	const entries = orderBySlugs(slugs, bySlug)
+	writeOutput(outPath, entries)
 	console.log(
-		`Wrote ${final.length} films to ${outPath} ` +
-			`(${movies.length} movies with a TMDB id, ${tv.length} tv, ${noId.length} without an id). ` +
-			`${fetched} newly fetched, ${failed} failed.`,
+		`Wrote ${entries.length} movies to ${outPath}. ` +
+			`${fetched} newly fetched, ${skipped} skipped (tv/no id), ${failed} failed.`,
 	)
 }
 
-/** Reorder cached entries to match the list order, dropping any no longer listed. */
+/** Entries in list order, dropping slugs that resolved to nothing. */
 function orderBySlugs(slugs, bySlug) {
 	return slugs.map((slug) => bySlug.get(slug)).filter(Boolean)
 }
 
 function writeOutput(outPath, entries) {
 	mkdirSync(dirname(outPath), { recursive: true })
-	writeFileSync(outPath, JSON.stringify(entries, null, "\t") + "\n", "utf8")
+	writeFileSync(
+		outPath,
+		JSON.stringify({ ...LIST, entries }, null, "\t") + "\n",
+	)
 }
 
 // Only run when invoked directly, so the parse helpers stay importable in tests.

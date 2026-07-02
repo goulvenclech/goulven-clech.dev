@@ -1,0 +1,191 @@
+{
+	"id": "zelda-marathon",
+	"title": "Marathon Zelda",
+	"description": "A Legend of Zelda marathon with my friend Erika. Usually the most modern version of each game, though I keep a remake and its original apart when they differ enough to matter.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda",
+	"entries": [
+		{
+			"id": 1022,
+			"name": "The Legend of Zelda",
+			"year": 1986,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1uii.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda"
+		},
+		{
+			"id": 1025,
+			"name": "Zelda II: The Adventure of Link",
+			"year": 1987,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1uje.jpg",
+			"link": "https://www.igdb.com/games/zelda-ii-the-adventure-of-link"
+		},
+		{
+			"id": 1026,
+			"name": "A Link to the Past",
+			"year": 1991,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3vzn.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-to-the-past"
+		},
+		{
+			"id": 8532,
+			"name": "Link: The Faces of Evil",
+			"year": 1993,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co60ta.jpg",
+			"link": "https://www.igdb.com/games/link-the-faces-of-evil"
+		},
+		{
+			"id": 8533,
+			"name": "Zelda: The Wand of Gamelon",
+			"year": 1993,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co60tx.jpg",
+			"link": "https://www.igdb.com/games/zelda-the-wand-of-gamelon"
+		},
+		{
+			"id": 8534,
+			"name": "Zelda's Adventure",
+			"year": 1994,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wsk.jpg",
+			"link": "https://www.igdb.com/games/zeldas-adventure"
+		},
+		{
+			"id": 1027,
+			"name": "Link's Awakening DX",
+			"year": 1998,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4o47.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-link-s-awakening-dx"
+		},
+		{
+			"id": 1032,
+			"name": "Oracle of Seasons",
+			"year": 2001,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2tw0.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-seasons"
+		},
+		{
+			"id": 1041,
+			"name": "Oracle of Ages",
+			"year": 2001,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2tw1.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-ages"
+		},
+		{
+			"id": 1034,
+			"name": "Four Swords Adventures",
+			"year": 2004,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob9xf.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-four-swords-adventures"
+		},
+		{
+			"id": 1035,
+			"name": "The Minish Cap",
+			"year": 2004,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3nsk.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-minish-cap"
+		},
+		{
+			"id": 1037,
+			"name": "Phantom Hourglass",
+			"year": 2007,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3ocu.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-phantom-hourglass"
+		},
+		{
+			"id": 1038,
+			"name": "Spirit Tracks",
+			"year": 2009,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3oj6.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-spirit-tracks"
+		},
+		{
+			"id": 1039,
+			"name": "Ocarina of Time 3D",
+			"year": 2011,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co600u.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-ocarina-of-time-3d"
+		},
+		{
+			"id": 2276,
+			"name": "The Wind Waker HD",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3ozi.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-wind-waker-hd"
+		},
+		{
+			"id": 2909,
+			"name": "A Link Between Worlds",
+			"year": 2013,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p0j.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-between-worlds"
+		},
+		{
+			"id": 8593,
+			"name": "Majora's Mask 3D",
+			"year": 2015,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob9x9.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-majoras-mask-3d"
+		},
+		{
+			"id": 11194,
+			"name": "Tri Force Heroes",
+			"year": 2015,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p1a.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-tri-force-heroes"
+		},
+		{
+			"id": 18017,
+			"name": "Twilight Princess HD",
+			"year": 2016,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3mqa.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-twilight-princess-hd"
+		},
+		{
+			"id": 7346,
+			"name": "Breath of the Wild",
+			"year": 2017,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p2d.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-breath-of-the-wild"
+		},
+		{
+			"id": 115284,
+			"name": "Link's Awakening (2019)",
+			"year": 2019,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1qve.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-links-awakening--1"
+		},
+		{
+			"id": 143614,
+			"name": "Skyward Sword HD",
+			"year": 2021,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob8lb.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-skyward-sword-hd"
+		},
+		{
+			"id": 195338,
+			"name": "Zelda 2 Redux",
+			"year": 2021,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co6oz0.jpg",
+			"link": "https://www.igdb.com/games/zelda-2-redux"
+		},
+		{
+			"id": 199417,
+			"name": "The Legend of Zelda Redux",
+			"year": 2022,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4zbc.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-redux"
+		},
+		{
+			"id": 119388,
+			"name": "Tears of the Kingdom",
+			"year": 2023,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5vmg.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-tears-of-the-kingdom"
+		},
+		{
+			"id": 306149,
+			"name": "Echoes of Wisdom",
+			"year": 2024,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8d9b.jpg",
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-echoes-of-wisdom"
+		}
+	]
+}

@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest"
-import { parseSlugs, parseFilm } from "../../scripts/fetch-letterboxd-list.mjs"
+import {
+	parseSlugs,
+	parseFilm,
+	toEntry,
+} from "../../scripts/fetch-letterboxd-list.mjs"
 
 describe("parseSlugs", () => {
 	it("extracts film slugs in document order", () => {
@@ -72,5 +76,45 @@ describe("parseFilm", () => {
 		const film = parseFilm(html)
 		expect(film.name).toBe("Fast & Furious")
 		expect(film.year).toBeNull()
+	})
+})
+
+describe("toEntry", () => {
+	it("builds a to-do entry with a TMDB link from a movie", () => {
+		expect(
+			toEntry("psycho", {
+				type: "movie",
+				tmdbId: 539,
+				name: "Psycho",
+				year: 1960,
+				poster: "p.jpg",
+			}),
+		).toEqual({
+			id: 539,
+			name: "Psycho",
+			year: 1960,
+			poster: "p.jpg",
+			link: "https://www.themoviedb.org/movie/539",
+			slug: "psycho",
+		})
+	})
+
+	it("migrates a legacy entry keyed by tmdbId", () => {
+		const entry = toEntry("home-alone", {
+			tmdbId: 771,
+			name: "Home Alone",
+			year: 1990,
+			poster: null,
+		})
+		expect(entry).toMatchObject({ id: 771, slug: "home-alone", poster: null })
+	})
+
+	it("returns null for TV or id-less films", () => {
+		expect(
+			toEntry("a-show", { type: "tv", tmdbId: 1, name: "Show" }),
+		).toBeNull()
+		expect(
+			toEntry("obscure", { type: null, tmdbId: null, name: "Obscure" }),
+		).toBeNull()
 	})
 })
