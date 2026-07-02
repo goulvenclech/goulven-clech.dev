@@ -46,6 +46,7 @@ try {
 const views = lists.map((list) => {
 	const items = buildTodoItems(list, doneBySource.get(list.source) ?? new Map())
 	return {
+		id: list.id,
 		title: list.title,
 		description: list.description,
 		url: list.url ?? null,
@@ -165,8 +166,13 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			type TodoSort,
 			type TodoStatus,
 		} from "../../catalogueTodo"
+		import {
+			buildTodoParams,
+			resolveTodoState,
+		} from "../../components/catalogue/todoFilters"
 
 		interface View {
+			id: string
 			title: string
 			description: string
 			url: string | null
@@ -284,9 +290,30 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			renderGrid(view)
 		}
 
+		const defaultList = views[0]?.id ?? ""
+
+		function syncUrl(): void {
+			const params = buildTodoParams(
+				{
+					list: views[listIndex]?.id ?? "",
+					query: queryInput.value,
+					sort: sortSelect.value,
+					status: statusSelect.value,
+				},
+				{ list: defaultList },
+			)
+			const qs = params.toString()
+			history.replaceState(
+				null,
+				"",
+				`${location.pathname}${qs ? `?${qs}` : ""}`,
+			)
+		}
+
 		listSelect.addEventListener("change", () => {
 			listIndex = Number(listSelect.value)
 			shown = PAGE_SIZE
+			syncUrl()
 			render()
 		})
 
@@ -295,12 +322,14 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			clearTimeout(debounce)
 			debounce = setTimeout(() => {
 				shown = PAGE_SIZE
+				syncUrl()
 				renderGrid(views[listIndex])
 			}, 200)
 		})
 		for (const select of [sortSelect, statusSelect]) {
 			select.addEventListener("change", () => {
 				shown = PAGE_SIZE
+				syncUrl()
 				renderGrid(views[listIndex])
 			})
 		}
@@ -311,9 +340,29 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 		// <reset-button> restores control values without firing input/change.
 		queryInput.form?.addEventListener("reset-filters", () => {
 			shown = PAGE_SIZE
+			syncUrl()
 			renderGrid(views[listIndex])
 		})
+		// A single-field form submits on Enter; keep the URL state instead.
+		queryInput.form?.addEventListener("submit", (event) =>
+			event.preventDefault(),
+		)
 
+		const state = resolveTodoState(
+			new URLSearchParams(location.search),
+			views.map((view) => view.id),
+		)
+		queryInput.value = state.query
+		sortSelect.value = state.sort
+		statusSelect.value = state.status
+		listIndex = Math.max(
+			0,
+			views.findIndex((view) => view.id === state.list),
+		)
+		listSelect.value = String(listIndex)
+		// Notify <reset-button> of the restored control values.
+		queryInput.form?.dispatchEvent(new Event("change", { bubbles: true }))
 		render()
+		syncUrl()
 	</script>
 </Layout>

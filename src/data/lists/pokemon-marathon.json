@@ -6,39 +6,11 @@
 	"url": "https://en.wikipedia.org/wiki/Pok%C3%A9mon_(video_game_series)",
 	"entries": [
 		{
-			"id": 1561,
-			"name": "Pokémon Red & Blue",
-			"year": 1996,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pi4.jpg",
-			"link": "https://www.igdb.com/games/pokemon-red-version"
-		},
-		{
 			"id": 1512,
 			"name": "Pokémon Yellow",
 			"year": 1998,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pih.jpg",
 			"link": "https://www.igdb.com/games/pokemon-yellow-version-special-pikachu-edition"
-		},
-		{
-			"id": 1558,
-			"name": "Pokémon Gold & Silver",
-			"year": 1999,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pia.jpg",
-			"link": "https://www.igdb.com/games/pokemon-gold-version"
-		},
-		{
-			"id": 1514,
-			"name": "Pokémon Crystal",
-			"year": 2000,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pil.jpg",
-			"link": "https://www.igdb.com/games/pokemon-crystal-version"
-		},
-		{
-			"id": 1557,
-			"name": "Pokémon Ruby & Sapphire",
-			"year": 2002,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zhq.jpg",
-			"link": "https://www.igdb.com/games/pokemon-ruby-version"
 		},
 		{
 			"id": 1559,
@@ -53,13 +25,6 @@
 			"year": 2004,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zhr.jpg",
 			"link": "https://www.igdb.com/games/pokemon-emerald-version"
-		},
-		{
-			"id": 1560,
-			"name": "Pokémon Diamond & Pearl",
-			"year": 2006,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zht.jpg",
-			"link": "https://www.igdb.com/games/pokemon-diamond-version"
 		},
 		{
 			"id": 1519,
@@ -102,13 +67,6 @@
 			"year": 2014,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co56ef.jpg",
 			"link": "https://www.igdb.com/games/pokemon-alpha-sapphire"
-		},
-		{
-			"id": 18100,
-			"name": "Pokémon Sun & Moon",
-			"year": 2016,
-			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3co7.jpg",
-			"link": "https://www.igdb.com/games/pokemon-sun"
 		},
 		{
 			"id": 36792,
