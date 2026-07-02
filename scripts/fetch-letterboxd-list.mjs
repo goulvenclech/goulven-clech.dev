@@ -41,13 +41,18 @@ export function parseSlugs(html) {
 
 /**
  * TMDB id and display metadata from a film page.
- * type is "movie" | "tv" | null; tmdbId/name/year are null when absent.
+ * type is "movie" | "tv" | null; tmdbId/name/year/poster are null when absent.
  */
 export function parseFilm(html) {
 	// Matched independently so attribute reordering can't drop the id.
 	const idMatch = html.match(/data-tmdb-id="(\d+)"/)
 	const typeMatch = html.match(/data-tmdb-type="([a-z]+)"/)
 	const titleMatch = html.match(/<meta property="og:title" content="([^"]*)"/)
+	// The JSON-LD image is the 2:3 portrait poster (…-0-600-0-900-crop.jpg);
+	// og:image is a landscape crop. The path varies (film-poster/… or sm/upload/…).
+	const posterMatch = html.match(
+		/"image":"(https:\/\/a\.ltrbxd\.com\/resized\/[^"]+-0-600-0-900-crop\.jpg[^"]*)"/,
+	)
 	let name = null
 	let year = null
 	if (titleMatch) {
@@ -65,6 +70,7 @@ export function parseFilm(html) {
 		tmdbId: idMatch ? Number(idMatch[1]) : null,
 		name,
 		year,
+		poster: posterMatch ? posterMatch[1] : null,
 	}
 }
 
@@ -153,7 +159,8 @@ async function main() {
 	let failed = 0
 	for (const slug of slugs) {
 		const cached = bySlug.get(slug)
-		if (cached) {
+		// Refetch entries from an older run that predate a field (e.g. poster).
+		if (cached && "poster" in cached) {
 			entries.push(cached)
 			continue
 		}

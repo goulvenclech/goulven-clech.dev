@@ -12,6 +12,7 @@ export interface ListEntry {
 	tmdbId: number | null
 	name: string | null
 	year: number | null
+	poster: string | null
 }
 
 export interface ListProgress {
@@ -49,4 +50,72 @@ export function computeListProgress(
 	const percent = total === 0 ? 0 : Math.round((seen.length / total) * 100)
 
 	return { total, seenCount: seen.length, percent, seen, unseen, untracked }
+}
+
+export interface ReviewInfo {
+	title: string
+	emoji: string
+}
+
+export interface ListItem {
+	tmdbId: number
+	name: string
+	year: number | null
+	poster: string | null
+	seen: boolean
+	emoji: string | null
+	href: string
+}
+
+export type ListSort = "year-asc" | "year-desc"
+export type ListStatus = "all" | "seen" | "unseen"
+
+/**
+ * Turn trackable entries into grid items. Seen films link to the catalogue
+ * pre-filtered to their review; unseen films link to their TMDB page.
+ */
+export function buildListItems(
+	entries: ListEntry[],
+	reviews: Map<number, ReviewInfo>,
+): ListItem[] {
+	const items: ListItem[] = []
+	for (const entry of entries) {
+		if (entry.type !== "movie" || entry.tmdbId == null) continue
+		const review = reviews.get(entry.tmdbId)
+		items.push({
+			tmdbId: entry.tmdbId,
+			name: entry.name ?? entry.slug,
+			year: entry.year,
+			poster: entry.poster,
+			seen: review != null,
+			emoji: review?.emoji ?? null,
+			href: review
+				? `/catalogue?query=${encodeURIComponent(review.title)}&source=TMDB_MOVIE`
+				: `https://www.themoviedb.org/movie/${entry.tmdbId}`,
+		})
+	}
+	return items
+}
+
+export function filterListItems(
+	items: ListItem[],
+	options: { query?: string; status?: ListStatus },
+): ListItem[] {
+	const query = (options.query ?? "").trim().toLowerCase()
+	const status = options.status ?? "all"
+	return items.filter((item) => {
+		if (status === "seen" && !item.seen) return false
+		if (status === "unseen" && item.seen) return false
+		if (query && !item.name.toLowerCase().includes(query)) return false
+		return true
+	})
+}
+
+export function sortListItems(items: ListItem[], sort: ListSort): ListItem[] {
+	const direction = sort === "year-desc" ? -1 : 1
+	return [...items].sort((a, b) => {
+		const yearDelta = (a.year ?? 0) - (b.year ?? 0)
+		if (yearDelta !== 0) return yearDelta * direction
+		return a.name.localeCompare(b.name)
+	})
 }

@@ -16,15 +16,26 @@ describe("parseSlugs", () => {
 })
 
 describe("parseFilm", () => {
-	it("reads the TMDB id and type from the body attributes", () => {
+	it("reads the TMDB id, type and poster from a film page", () => {
 		const html = `<body data-tmdb-type="movie" data-tmdb-id="496243">
-			<meta property="og:title" content="Parasite (2019)" /></body>`
+			<meta property="og:title" content="Parasite (2019)" />
+			<script type="application/ld+json">{"image":"https://a.ltrbxd.com/resized/film-poster/4/2/6/4/0/6/426406-parasite-0-600-0-900-crop.jpg"}</script></body>`
 		expect(parseFilm(html)).toEqual({
 			type: "movie",
 			tmdbId: 496243,
 			name: "Parasite",
 			year: 2019,
+			poster:
+				"https://a.ltrbxd.com/resized/film-poster/4/2/6/4/0/6/426406-parasite-0-600-0-900-crop.jpg",
 		})
+	})
+
+	it("reads a poster served from the sm/upload path", () => {
+		const html = `<body data-tmdb-type="movie" data-tmdb-id="424">
+			<script type="application/ld+json">{"image":"https://a.ltrbxd.com/resized/sm/upload/bz/1x/em/jr/yPis-0-600-0-900-crop.jpg?v=ca5215c5a9"}</script></body>`
+		expect(parseFilm(html).poster).toBe(
+			"https://a.ltrbxd.com/resized/sm/upload/bz/1x/em/jr/yPis-0-600-0-900-crop.jpg?v=ca5215c5a9",
+		)
 	})
 
 	it("distinguishes TV entries by type", () => {
@@ -51,6 +62,7 @@ describe("parseFilm", () => {
 			tmdbId: null,
 			name: "Some Obscure Film",
 			year: 1920,
+			poster: null,
 		})
 	})
 
