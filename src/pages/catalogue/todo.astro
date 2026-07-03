@@ -20,7 +20,7 @@ const lists = Object.values(modules)
 	.sort((a, b) => a.title.localeCompare(b.title))
 
 // Latest rating emoji per reviewed id, for each source the lists need.
-const doneBySource = new Map<string, Map<number, string>>()
+const doneBySource = new Map<string, Map<string, string>>()
 try {
 	const client = getClient()
 	for (const source of new Set(lists.map((list) => list.source))) {
@@ -28,12 +28,12 @@ try {
 			sql: `SELECT source_id, rating FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
 			args: [source],
 		})
-		const done = new Map<number, string>()
+		const done = new Map<string, string>()
 		for (const row of result.rows as unknown as {
 			source_id: string
 			rating: number
 		}[]) {
-			const id = Number(row.source_id)
+			const id = String(row.source_id)
 			if (!done.has(id)) done.set(id, ratingLabels[row.rating]?.emoji ?? "")
 		}
 		doneBySource.set(source, done)
@@ -144,6 +144,18 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 		<empty-state id="todo-empty" hidden></empty-state>
 		<button id="load-more" class="button" type="button" hidden>Load more</button
 		>
+
+		<side-note>
+			Images and datas are fetched from <a href="https://igdb.com/"
+				><abbr title="The Internet Game Database">IGDB</abbr></a
+			> for video games, <a href="https://boardgamegeek.com"
+				><abbr title="Board Game Geek">BGG</abbr></a
+			> for board games, <a href="https://themoviedb.org/"
+				><abbr title="The Movie DataBase">TMDB</abbr></a
+			> for movies and shows, <a href="https://spotify.com/">Spotify</a> for albums,
+			and <a href="https://openlibrary.org/">Open Library</a> for books. Their licenses
+			apply.
+		</side-note>
 
 		<noscript>
 			<p>This to-do grid needs JavaScript to filter and sort.</p>

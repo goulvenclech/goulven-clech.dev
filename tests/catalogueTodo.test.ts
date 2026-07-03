@@ -38,7 +38,7 @@ const item = (over: Partial<TodoItem>): TodoItem => ({
 describe("buildTodoItems", () => {
 	it("marks entries done from the review map and links them to the catalogue", () => {
 		const movies = list("TMDB_MOVIE", [entry(1, "Seen"), entry(2, "Unseen")])
-		const [done, todo] = buildTodoItems(movies, new Map([[1, "😍"]]))
+		const [done, todo] = buildTodoItems(movies, new Map([["1", "😍"]]))
 
 		expect(done).toMatchObject({ done: true, emoji: "😍" })
 		expect(done.href).toBe("/catalogue?query=Seen&source=TMDB_MOVIE")
@@ -48,8 +48,25 @@ describe("buildTodoItems", () => {
 
 	it("uses the list's own source in the catalogue deep-link", () => {
 		const games = list("IGDB", [entry(1029, "Ocarina of Time")])
-		const [game] = buildTodoItems(games, new Map([[1029, "⭐"]]))
+		const [game] = buildTodoItems(games, new Map([["1029", "⭐"]]))
 		expect(game.href).toBe("/catalogue?query=Ocarina%20of%20Time&source=IGDB")
+	})
+
+	it("matches a book entry on its Open Library OLID string id", () => {
+		const books = list("OPENLIBRARY", [
+			{
+				id: "OL9701864M",
+				name: "The Fate of Knowledge",
+				year: 2002,
+				poster: null,
+				link: "https://openlibrary.org/books/OL9701864M",
+			},
+		])
+		const [book] = buildTodoItems(books, new Map([["OL9701864M", "😍"]]))
+		expect(book).toMatchObject({ done: true, emoji: "😍" })
+		expect(book.href).toBe(
+			"/catalogue?query=The%20Fate%20of%20Knowledge&source=OPENLIBRARY",
+		)
 	})
 })
 

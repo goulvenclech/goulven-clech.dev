@@ -392,7 +392,8 @@
 		font-family: "Font Awesome 6 Free";
 	}
 
-	a[href^="/catalogue/wrapped"]::before {
+	a[href^="/catalogue/wrapped"]::before,
+	a[href^="/catalogue/todo"]::before {
 		content: none !important;
 	}
 

@@ -1,0 +1,365 @@
+{
+	"id": "modern-philosophy-pile",
+	"title": "Modern philosophy pile",
+	"description": "Contemporary philosophy I'm working through — science, mind, ethics, free will, and politics.",
+	"source": "OPENLIBRARY",
+	"entries": [
+		{
+			"id": "OL9701864M",
+			"name": "The Fate of Knowledge",
+			"year": 2002,
+			"poster": "https://covers.openlibrary.org/b/id/442498-L.jpg",
+			"link": "https://openlibrary.org/books/OL9701864M"
+		},
+		{
+			"id": "OL24842505M",
+			"name": "Science in a Democratic Society",
+			"year": 2011,
+			"poster": "https://covers.openlibrary.org/b/id/12834651-L.jpg",
+			"link": "https://openlibrary.org/books/OL24842505M"
+		},
+		{
+			"id": "OL10146402M",
+			"name": "Every Thing Must Go",
+			"year": 2007,
+			"poster": "https://covers.openlibrary.org/b/id/2334197-L.jpg",
+			"link": "https://openlibrary.org/books/OL10146402M"
+		},
+		{
+			"id": "OL29498544M",
+			"name": "What is a Complex System?",
+			"year": 2020,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL29498544M"
+		},
+		{
+			"id": "OL993218M",
+			"name": "Philosophy of Mathematics",
+			"year": 1997,
+			"poster": "https://covers.openlibrary.org/b/id/122824-L.jpg",
+			"link": "https://openlibrary.org/books/OL993218M"
+		},
+		{
+			"id": "OL26774434M",
+			"name": "From Bacteria to Bach and Back",
+			"year": 2017,
+			"poster": "https://covers.openlibrary.org/b/id/8425621-L.jpg",
+			"link": "https://openlibrary.org/books/OL26774434M"
+		},
+		{
+			"id": "OL22518497M",
+			"name": "Freedom Evolves",
+			"year": 2003,
+			"poster": "https://covers.openlibrary.org/b/id/8651139-L.jpg",
+			"link": "https://openlibrary.org/books/OL22518497M"
+		},
+		{
+			"id": "OL34549710M",
+			"name": "Illusionism as a Theory of Consciousness",
+			"year": 2017,
+			"poster": "https://covers.openlibrary.org/b/id/13311646-L.jpg",
+			"link": "https://openlibrary.org/books/OL34549710M"
+		},
+		{
+			"id": "OL28545856M",
+			"name": "Building Better Beings",
+			"year": 2013,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL28545856M"
+		},
+		{
+			"id": "OL7740880M",
+			"name": "Practical Ethics",
+			"year": 2011,
+			"poster": "https://covers.openlibrary.org/b/id/339199-L.jpg",
+			"link": "https://openlibrary.org/books/OL7740880M"
+		},
+		{
+			"id": "OL25184598M",
+			"name": "The Ethical Project",
+			"year": 2011,
+			"poster": "https://covers.openlibrary.org/b/id/8646679-L.jpg",
+			"link": "https://openlibrary.org/books/OL25184598M"
+		},
+		{
+			"id": "OL27663460M",
+			"name": "Braintrust",
+			"year": 2011,
+			"poster": "https://covers.openlibrary.org/b/id/9106196-L.jpg",
+			"link": "https://openlibrary.org/books/OL27663460M"
+		},
+		{
+			"id": "OL16100241M",
+			"name": "The Really Hard Problem",
+			"year": 2007,
+			"poster": "https://covers.openlibrary.org/b/id/5316666-L.jpg",
+			"link": "https://openlibrary.org/books/OL16100241M"
+		},
+		{
+			"id": "OL765705M",
+			"name": "Republicanism",
+			"year": 1997,
+			"poster": "https://covers.openlibrary.org/b/id/130275-L.jpg",
+			"link": "https://openlibrary.org/books/OL765705M"
+		},
+		{
+			"id": "OL38474473M",
+			"name": "The State",
+			"year": 2023,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL38474473M"
+		},
+		{
+			"id": "OL27337177M",
+			"name": "Private Government",
+			"year": 2017,
+			"poster": "https://covers.openlibrary.org/b/id/8801568-L.jpg",
+			"link": "https://openlibrary.org/books/OL27337177M"
+		},
+		{
+			"id": "OL46578747M",
+			"name": "Hijacked",
+			"year": 2023,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL46578747M"
+		},
+		{
+			"id": "OL26077514M",
+			"name": "The Best Argument against God",
+			"year": 2013,
+			"poster": "https://covers.openlibrary.org/b/id/7682981-L.jpg",
+			"link": "https://openlibrary.org/books/OL26077514M"
+		},
+		{
+			"id": "OL8850970M",
+			"name": "Defending Science Within Reason",
+			"year": 2003,
+			"poster": "https://covers.openlibrary.org/b/id/862370-L.jpg",
+			"link": "https://openlibrary.org/books/OL8850970M"
+		},
+		{
+			"id": "OL799767M",
+			"name": "The Conscious Mind",
+			"year": 1996,
+			"poster": "https://covers.openlibrary.org/b/id/123344-L.jpg",
+			"link": "https://openlibrary.org/books/OL799767M"
+		},
+		{
+			"id": "OL28632277M",
+			"name": "Consciousness and Fundamental Reality",
+			"year": 2017,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL28632277M"
+		},
+		{
+			"id": "OL40893677M",
+			"name": "Living Without Free Will",
+			"year": 2001,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL40893677M"
+		},
+		{
+			"id": "OL812538M",
+			"name": "The Significance of Free Will",
+			"year": 1996,
+			"poster": "https://covers.openlibrary.org/b/id/123342-L.jpg",
+			"link": "https://openlibrary.org/books/OL812538M"
+		},
+		{
+			"id": "OL25103586M",
+			"name": "Taking Morality Seriously",
+			"year": 2011,
+			"poster": "https://covers.openlibrary.org/b/id/9902865-L.jpg",
+			"link": "https://openlibrary.org/books/OL25103586M"
+		},
+		{
+			"id": "OL7692462M",
+			"name": "Ethics and the Limits of Philosophy",
+			"year": 1985,
+			"poster": "https://covers.openlibrary.org/b/id/413142-L.jpg",
+			"link": "https://openlibrary.org/books/OL7692462M"
+		},
+		{
+			"id": "OL1648424M",
+			"name": "The Existence of God",
+			"year": 2004,
+			"poster": "https://covers.openlibrary.org/b/id/129772-L.jpg",
+			"link": "https://openlibrary.org/books/OL1648424M"
+		},
+		{
+			"id": "OL7391716M",
+			"name": "Making Things Happen",
+			"year": 2003,
+			"poster": "https://covers.openlibrary.org/b/id/127083-L.jpg",
+			"link": "https://openlibrary.org/books/OL7391716M"
+		},
+		{
+			"id": "OL4426098M",
+			"name": "The Scientific Image",
+			"year": 1980,
+			"poster": "https://covers.openlibrary.org/b/id/4402191-L.jpg",
+			"link": "https://openlibrary.org/books/OL4426098M"
+		},
+		{
+			"id": "OL27355739M",
+			"name": "Statistical Inference as Severe Testing",
+			"year": 2018,
+			"poster": "https://covers.openlibrary.org/b/id/8819217-L.jpg",
+			"link": "https://openlibrary.org/books/OL27355739M"
+		},
+		{
+			"id": "OL9351991M",
+			"name": "Mind in a Physical World",
+			"year": 1998,
+			"poster": "https://covers.openlibrary.org/b/id/151897-L.jpg",
+			"link": "https://openlibrary.org/books/OL9351991M"
+		},
+		{
+			"id": "OL7693772M",
+			"name": "Wise Choices, Apt Feelings",
+			"year": 1990,
+			"poster": "https://covers.openlibrary.org/b/id/4652724-L.jpg",
+			"link": "https://openlibrary.org/books/OL7693772M"
+		},
+		{
+			"id": "OL22762159M",
+			"name": "A Secular Age",
+			"year": 2007,
+			"poster": "https://covers.openlibrary.org/b/id/8225740-L.jpg",
+			"link": "https://openlibrary.org/books/OL22762159M"
+		},
+		{
+			"id": "OL2855163M",
+			"name": "Making Sense of Marx",
+			"year": 1985,
+			"poster": "https://covers.openlibrary.org/b/id/332612-L.jpg",
+			"link": "https://openlibrary.org/books/OL2855163M"
+		},
+		{
+			"id": "OL1731255M",
+			"name": "Time, Labor, and Social Domination",
+			"year": 1993,
+			"poster": "https://covers.openlibrary.org/b/id/4003984-L.jpg",
+			"link": "https://openlibrary.org/books/OL1731255M"
+		},
+		{
+			"id": "OL25430118M",
+			"name": "Postcolonial Theory and the Specter of Capital",
+			"year": 2013,
+			"poster": "https://covers.openlibrary.org/b/id/7261121-L.jpg",
+			"link": "https://openlibrary.org/books/OL25430118M"
+		},
+		{
+			"id": "OL27371864M",
+			"name": "Critique of Forms of Life",
+			"year": 2014,
+			"poster": "https://covers.openlibrary.org/b/id/8835054-L.jpg",
+			"link": "https://openlibrary.org/books/OL27371864M"
+		},
+		{
+			"id": "OL27613422M",
+			"name": "The People's Republic of Walmart",
+			"year": 2019,
+			"poster": "https://covers.openlibrary.org/b/id/9063092-L.jpg",
+			"link": "https://openlibrary.org/books/OL27613422M"
+		},
+		{
+			"id": "OL9548720M",
+			"name": "Not by Genes Alone",
+			"year": 2005,
+			"poster": "https://covers.openlibrary.org/b/id/142674-L.jpg",
+			"link": "https://openlibrary.org/books/OL9548720M"
+		},
+		{
+			"id": "OL24885508M",
+			"name": "The Evolved Apprentice",
+			"year": 2012,
+			"poster": "https://covers.openlibrary.org/b/id/14464445-L.jpg",
+			"link": "https://openlibrary.org/books/OL24885508M"
+		},
+		{
+			"id": "OL8833883M",
+			"name": "Les Fondements de l'arithmétique",
+			"year": 1884,
+			"poster": "https://covers.openlibrary.org/b/id/963161-L.jpg",
+			"link": "https://openlibrary.org/books/OL8833883M"
+		},
+		{
+			"id": "OL7692564M",
+			"name": "From a Logical Point of View",
+			"year": 1953,
+			"poster": "https://covers.openlibrary.org/b/olid/OL7692564M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL7692564M"
+		},
+		{
+			"id": "OL1011226M",
+			"name": "Empiricism and the Philosophy of Mind",
+			"year": 1997,
+			"poster": "https://covers.openlibrary.org/b/olid/OL1011226M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL1011226M"
+		},
+		{
+			"id": "OL19263891M",
+			"name": "Naming and Necessity",
+			"year": 1980,
+			"poster": "https://covers.openlibrary.org/b/olid/OL19263891M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL19263891M"
+		},
+		{
+			"id": "OL5945993M",
+			"name": "Fact, Fiction, and Forecast",
+			"year": 1955,
+			"poster": "https://covers.openlibrary.org/b/olid/OL5945993M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL5945993M"
+		},
+		{
+			"id": "OL2534358M",
+			"name": "On the Plurality of Worlds",
+			"year": 1986,
+			"poster": "https://covers.openlibrary.org/b/olid/OL2534358M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL2534358M"
+		},
+		{
+			"id": "OL46989603M",
+			"name": "The Structure of Scientific Revolutions",
+			"year": 1962,
+			"poster": "https://covers.openlibrary.org/b/olid/OL46989603M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL46989603M"
+		},
+		{
+			"id": "OL21372956M",
+			"name": "Reasons and Persons",
+			"year": 1984,
+			"poster": "https://covers.openlibrary.org/b/olid/OL21372956M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL21372956M"
+		},
+		{
+			"id": "OL3179680M",
+			"name": "Language, Thought, and Other Biological Categories",
+			"year": 1984,
+			"poster": "https://covers.openlibrary.org/b/olid/OL3179680M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL3179680M"
+		},
+		{
+			"id": "OL7735943M",
+			"name": "Philosophy of Mathematics: Selected Readings",
+			"year": 1983,
+			"poster": "https://covers.openlibrary.org/b/id/332590-L.jpg",
+			"link": "https://openlibrary.org/books/OL7735943M"
+		},
+		{
+			"id": "OL7735914M",
+			"name": "Mind, Language and Reality",
+			"year": 1975,
+			"poster": "https://covers.openlibrary.org/b/id/332565-L.jpg",
+			"link": "https://openlibrary.org/books/OL7735914M"
+		},
+		{
+			"id": "OL10207086M",
+			"name": "Freedom and Resentment and Other Essays",
+			"year": 1974,
+			"poster": "https://covers.openlibrary.org/b/id/9584157-L.jpg",
+			"link": "https://openlibrary.org/books/OL10207086M"
+		}
+	]
+}

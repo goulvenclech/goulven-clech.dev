@@ -43,6 +43,7 @@ const STATIC_PAGES: readonly GraphGardenNode[] = [
 	{ url: "/resume", title: "Resume" },
 	{ url: "/catalogue", title: "Catalogue" },
 	{ url: "/catalogue/wrapped", title: "Wrapped" },
+	{ url: "/catalogue/todo", title: "To-do" },
 ] as const
 
 const PAGE_FILES: ReadonlyArray<{
@@ -53,6 +54,7 @@ const PAGE_FILES: ReadonlyArray<{
 	{ url: "/resume", filePath: "resume.astro" },
 	{ url: "/catalogue", filePath: "catalogue.astro" },
 	{ url: "/catalogue/wrapped", filePath: "catalogue/wrapped.astro" },
+	{ url: "/catalogue/todo", filePath: "catalogue/todo.astro" },
 ] as const
 
 const MARKDOWN_LINK_REGEX = /\[([^\]]*)\]\(([^)]+)\)/g
@@ -196,11 +198,16 @@ export async function GET(context: APIContext) {
 	}
 
 	for (const page of STATIC_PAGES) {
-		if (page.url !== "/" && page.url !== "/catalogue/wrapped") {
+		if (
+			page.url !== "/" &&
+			page.url !== "/catalogue/wrapped" &&
+			page.url !== "/catalogue/todo"
+		) {
 			addEdge(page.url, "/", "internal")
 		}
 	}
 	addEdge("/catalogue/wrapped", "/catalogue", "internal")
+	addEdge("/catalogue/todo", "/catalogue", "internal")
 
 	// Year nodes → home
 	for (const year of years) {

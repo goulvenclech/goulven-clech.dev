@@ -5,7 +5,8 @@
  */
 
 export interface TodoEntry {
-	id: number
+	/** The source's review id: a number for TMDB/IGDB, an edition OLID string for Open Library books. */
+	id: number | string
 	name: string
 	year: number | null
 	poster: string | null
@@ -23,7 +24,7 @@ export interface TodoList {
 }
 
 export interface TodoItem {
-	id: number
+	id: number | string
 	name: string
 	year: number | null
 	poster: string | null
@@ -45,14 +46,15 @@ export type TodoStatus = (typeof STATUSES)[number]
 
 /**
  * Turn a list into grid items. Done entries link to the catalogue filtered to
- * their review; the rest link to their external page.
+ * their review; the rest link to their external page. The done map is keyed by
+ * the review's source_id as a string, so numeric and OLID ids match alike.
  */
 export function buildTodoItems(
 	list: TodoList,
-	done: Map<number, string>,
+	done: Map<string, string>,
 ): TodoItem[] {
 	return list.entries.map((entry) => {
-		const emoji = done.get(entry.id)
+		const emoji = done.get(String(entry.id))
 		return {
 			id: entry.id,
 			name: entry.name,

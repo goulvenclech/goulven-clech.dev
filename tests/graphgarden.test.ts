@@ -207,6 +207,7 @@ describe("GET handler", () => {
 		expect(urls).toContain("/about")
 		expect(urls).toContain("/resume")
 		expect(urls).toContain("/catalogue")
+		expect(urls).toContain("/catalogue/todo")
 	})
 
 	it("creates year nodes from blog entries", async () => {
@@ -225,6 +226,18 @@ describe("GET handler", () => {
 
 		const edge = data.edges.find(
 			(e) => e.source === "/2025/test-entry" && e.target === "/?year=2025",
+		)
+		expect(edge).toBeDefined()
+		expect(edge!.type).toBe("internal")
+	})
+
+	it("connects the to-do page to the catalogue", async () => {
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		const edge = data.edges.find(
+			(e) => e.source === "/catalogue/todo" && e.target === "/catalogue",
 		)
 		expect(edge).toBeDefined()
 		expect(edge!.type).toBe("internal")

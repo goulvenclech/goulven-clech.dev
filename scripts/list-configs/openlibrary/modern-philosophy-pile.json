@@ -1,0 +1,112 @@
+{
+	"id": "modern-philosophy-pile",
+	"title": "Modern philosophy pile",
+	"description": "Contemporary philosophy I'm working through — science, mind, ethics, free will, and politics.",
+	"source": "OPENLIBRARY",
+	"books": [
+		["The Fate of Knowledge", "Helen Longino", 2002],
+		["Science in a Democratic Society", "Philip Kitcher", 2011],
+		["Every Thing Must Go", "James Ladyman", 2007],
+		[
+			"What is a Complex System?",
+			"James Ladyman & Karoline Wiesner",
+			2020,
+			"9780300251104"
+		],
+		["Philosophy of Mathematics", "Stewart Shapiro", 1997],
+		["From Bacteria to Bach and Back", "Daniel Dennett", 2017],
+		["Freedom Evolves", "Daniel Dennett", 2003],
+		["Illusionism as a Theory of Consciousness", "Keith Frankish", 2017],
+		["House of Mirrors", "François Kammerer", 2026, "9780197840252"],
+		["Building Better Beings", "Manuel Vargas", 2013],
+		["Practical Ethics", "Peter Singer", 2011],
+		["The Ethical Project", "Philip Kitcher", 2011],
+		["Braintrust", "Patricia Churchland", 2011],
+		["The Really Hard Problem", "Owen Flanagan", 2007],
+		["Republicanism", "Philip Pettit", 1997],
+		["The State", "Philip Pettit", 2023],
+		["Private Government", "Elizabeth Anderson", 2017],
+		["Hijacked", "Elizabeth Anderson", 2023],
+		["The Best Argument against God", "Graham Oppy", 2013],
+		["Defending Science Within Reason", "Susan Haack", 2003],
+		["The Conscious Mind", "David Chalmers", 1996],
+		["Consciousness and Fundamental Reality", "Philip Goff", 2017],
+		["Living Without Free Will", "Derk Pereboom", 2001],
+		["The Significance of Free Will", "Robert Kane", 1996],
+		["Taking Morality Seriously", "David Enoch", 2011],
+		["Ethics and the Limits of Philosophy", "Bernard Williams", 1985],
+		["The Existence of God", "Richard Swinburne", 2004],
+		["Making Things Happen", "James Woodward", 2003],
+		["The Scientific Image", "Bas van Fraassen", 1980],
+		["Statistical Inference as Severe Testing", "Deborah Mayo", 2018],
+		["Mind in a Physical World", "Jaegwon Kim", 1998],
+		["Wise Choices, Apt Feelings", "Allan Gibbard", 1990],
+		["A Secular Age", "Charles Taylor", 2007],
+		[
+			"A Darwinian Dilemma for Realist Theories of Value",
+			"Sharon Street",
+			2006
+		],
+		["Making Sense of Marx", "Jon Elster", 1985],
+		["Time, Labor, and Social Domination", "Moishe Postone", 1993],
+		["Postcolonial Theory and the Specter of Capital", "Vivek Chibber", 2013],
+		["Critique of Forms of Life", "Rahel Jaeggi", 2014],
+		["La parole aux machines", "Thibaut Giraud", 2025, "9782246841654"],
+		["The People's Republic of Walmart", "Leigh Phillips", 2019],
+		[
+			"Vers une science sociale du vivant",
+			"Bernard Lahire",
+			2025,
+			"9782348086489"
+		],
+		["Not by Genes Alone", "Peter Richerson", 2005],
+		["The Evolved Apprentice", "Kim Sterelny", 2012],
+		[
+			"Les Fondements de l'arithmétique",
+			"Gottlob Frege",
+			1884,
+			"9782020027366"
+		],
+		[
+			"From a Logical Point of View",
+			"Willard Van Orman Quine",
+			1953,
+			"OL7692564M"
+		],
+		[
+			"Empiricism and the Philosophy of Mind",
+			"Wilfrid Sellars",
+			1997,
+			"OL1011226M"
+		],
+		["Naming and Necessity", "Saul Kripke", 1980, "OL19263891M"],
+		["Fact, Fiction, and Forecast", "Nelson Goodman", 1955, "OL5945993M"],
+		["On the Plurality of Worlds", "David Lewis", 1986, "OL2534358M"],
+		[
+			"The Structure of Scientific Revolutions",
+			"Thomas Kuhn",
+			1962,
+			"OL46989603M"
+		],
+		["Reasons and Persons", "Derek Parfit", 1984, "OL21372956M"],
+		[
+			"Language, Thought, and Other Biological Categories",
+			"Ruth Millikan",
+			1984,
+			"OL3179680M"
+		],
+		[
+			"Philosophy of Mathematics: Selected Readings",
+			"Paul Benacerraf & Hilary Putnam",
+			1983,
+			"9780521296489"
+		],
+		["Mind, Language and Reality", "Hilary Putnam", 1975, "9780521295512"],
+		[
+			"Freedom and Resentment and Other Essays",
+			"P. F. Strawson",
+			1974,
+			"9780415448505"
+		]
+	]
+}
