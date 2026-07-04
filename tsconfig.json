@@ -1,7 +1,7 @@
 {
 	"extends": "astro/tsconfigs/strict",
 	"include": [".astro/types.d.ts", "**/*", "src/pages/.well-known/**/*"],
-	"exclude": ["dist"],
+	"exclude": ["dist", "packages"],
 	"compilerOptions": {
 		"moduleResolution": "Bundler",
 		"types": ["astro/env"],
