@@ -57,6 +57,22 @@ describe("buildSelectQuery", () => {
 		const { sql } = buildSelectQuery({ limit: 5, sort: "rating" })
 		expect(sql).toContain("ORDER BY rating DESC, inserted_at DESC")
 	})
+
+	it("adds inclusive inserted_at bounds for date filters", () => {
+		const { sql, args } = buildSelectQuery({
+			limit: 20,
+			dateFrom: "2023-01-01T00:00:00.000Z",
+			dateTo: "2023-12-31T23:59:59.999Z",
+		})
+		expect(sql).toContain("inserted_at >= ?")
+		expect(sql).toContain("inserted_at <= ?")
+		expect(args).toEqual([
+			"2023-01-01T00:00:00.000Z",
+			"2023-12-31T23:59:59.999Z",
+			20,
+			0,
+		])
+	})
 })
 
 describe("buildCountQuery", () => {
@@ -150,6 +166,34 @@ describe("parseQuery", () => {
 		expect(parseQuery(urlOf("?offset=-5")).offset).toBe(0)
 		expect(parseQuery(urlOf("?offset=abc")).offset).toBe(0)
 	})
+
+	it("resolves year into an inclusive date range", () => {
+		const { dateFrom, dateTo } = parseQuery(urlOf("?year=2023")).filters
+		expect(dateFrom).toBe("2023-01-01T00:00:00.000Z")
+		expect(dateTo).toBe("2023-12-31T23:59:59.999Z")
+	})
+
+	it("resolves after/before day bounds inclusively", () => {
+		const { dateFrom, dateTo } = parseQuery(
+			urlOf("?after=2023-06-01&before=2023-06-30"),
+		).filters
+		expect(dateFrom).toBe("2023-06-01T00:00:00.000Z")
+		expect(dateTo).toBe("2023-06-30T23:59:59.999Z")
+	})
+
+	it("intersects year with after (latest start, earliest end)", () => {
+		const { dateFrom, dateTo } = parseQuery(
+			urlOf("?year=2023&after=2023-07-01"),
+		).filters
+		expect(dateFrom).toBe("2023-07-01T00:00:00.000Z")
+		expect(dateTo).toBe("2023-12-31T23:59:59.999Z")
+	})
+
+	it("ignores a malformed date bound", () => {
+		const { dateFrom, dateTo } = parseQuery(urlOf("?after=nonsense")).filters
+		expect(dateFrom).toBeUndefined()
+		expect(dateTo).toBeUndefined()
+	})
 })
 
 describe("buildQueryString", () => {
@@ -186,6 +230,18 @@ describe("buildQueryString", () => {
 		expect(parsed.filters).toEqual(filters)
 		expect(parsed.limit).toBe(10)
 		expect(parsed.offset).toBe(30)
+	})
+
+	it("carries date bounds through pagination and re-parses them", () => {
+		const filters: ReviewFilters = {
+			sort: "date",
+			dateFrom: "2023-01-01T00:00:00.000Z",
+			dateTo: "2023-12-31T23:59:59.999Z",
+		}
+		const parsed = parseQuery(urlOf(buildQueryString(filters, 20, 20)))
+		expect(parsed.filters.dateFrom).toBe("2023-01-01T00:00:00.000Z")
+		expect(parsed.filters.dateTo).toBe("2023-12-31T23:59:59.999Z")
+		expect(parsed.offset).toBe(20)
 	})
 })
 
