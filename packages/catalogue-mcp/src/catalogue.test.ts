@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from "vitest"
 import {
 	buildReviewSearchParams,
-	parseDateBound,
-	filterByDate,
 	resolveEmotionId,
 	enrichReview,
 	CatalogueClient,
@@ -66,64 +64,17 @@ describe("buildReviewSearchParams", () => {
 		expect(params.has("rating")).toBe(false)
 		expect(params.has("emotion")).toBe(false)
 	})
-})
 
-describe("parseDateBound", () => {
-	it("expands a year to the start/end of that year", () => {
-		expect(parseDateBound("2023", "start")).toBe("2023-01-01T00:00:00.000Z")
-		expect(parseDateBound("2023", "end")).toBe("2023-12-31T23:59:59.999Z")
-	})
-
-	it("expands a day to the start/end of that day", () => {
-		expect(parseDateBound("2023-07-04", "start")).toBe(
-			"2023-07-04T00:00:00.000Z",
+	it("passes date filters straight through to the API", () => {
+		const params = buildReviewSearchParams(
+			{ year: 2023, after: "2023-06-01", before: "2023-12-31" },
+			undefined,
+			100,
+			0,
 		)
-		expect(parseDateBound("2023-07-04", "end")).toBe("2023-07-04T23:59:59.999Z")
-	})
-
-	it("rejects anything that is not a year or a day", () => {
-		expect(() => parseDateBound("July 2023", "start")).toThrow()
-		expect(() => parseDateBound("2023-13", "start")).toThrow()
-	})
-})
-
-describe("filterByDate", () => {
-	const reviews = [
-		apiReview({ id: "a", inserted_at: "2022-12-31T23:00:00.000Z" }),
-		apiReview({ id: "b", inserted_at: "2023-06-15T10:00:00.000Z" }),
-		apiReview({ id: "c", inserted_at: "2024-01-01T00:30:00.000Z" }),
-	]
-
-	it("keeps everything when no date filter is set", () => {
-		expect(filterByDate(reviews, {})).toHaveLength(3)
-	})
-
-	it("keeps only reviews within the given year", () => {
-		const kept = filterByDate(reviews, { year: 2023 }).map((r) => r.id)
-		expect(kept).toEqual(["b"])
-	})
-
-	it("applies after and before as an inclusive intersection", () => {
-		const kept = filterByDate(reviews, {
-			after: "2023-01-01",
-			before: "2024",
-		}).map((r) => r.id)
-		expect(kept).toEqual(["b", "c"])
-	})
-
-	it("yields nothing when year and after/before contradict", () => {
-		expect(filterByDate(reviews, { year: 2023, after: "2024" })).toHaveLength(0)
-	})
-
-	it("treats a day bound as inclusive to the end of that day", () => {
-		const boundary = [
-			apiReview({ id: "in", inserted_at: "2023-07-04T23:59:59.999Z" }),
-			apiReview({ id: "out", inserted_at: "2023-07-05T00:00:00.000Z" }),
-		]
-		const kept = filterByDate(boundary, { before: "2023-07-04" }).map(
-			(r) => r.id,
-		)
-		expect(kept).toEqual(["in"])
+		expect(params.get("year")).toBe("2023")
+		expect(params.get("after")).toBe("2023-06-01")
+		expect(params.get("before")).toBe("2023-12-31")
 	})
 })
 
@@ -222,25 +173,23 @@ describe("CatalogueClient.searchReviews", () => {
 		expect(reviewsRoute).not.toHaveBeenCalled()
 	})
 
-	it("applies the date filter and caps with limit", async () => {
+	it("forwards date filters to the API rather than filtering locally", async () => {
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
-			"/api/catalogue/reviews": {
-				reviews: [
-					apiReview({ id: "old", inserted_at: "2019-01-01T00:00:00.000Z" }),
-					apiReview({ id: "y1", inserted_at: "2023-03-01T00:00:00.000Z" }),
-					apiReview({ id: "y2", inserted_at: "2023-09-01T00:00:00.000Z" }),
-				],
-				hasMore: false,
-			},
+			"/api/catalogue/reviews": { reviews: [apiReview()], hasMore: false },
 		})
 		const client = new CatalogueClient(
 			"http://x",
 			fetchFn as unknown as typeof fetch,
 		)
 
-		const reviews = await client.searchReviews({ year: 2023, limit: 1 })
-		expect(reviews.map((r) => r.id)).toEqual(["y1"])
+		await client.searchReviews({ year: 2023, after: "2023-06-01" })
+
+		const reviewUrl = fetchFn.mock.calls
+			.map((c) => new URL(String(c[0]), "http://x"))
+			.find((u) => u.pathname === "/api/catalogue/reviews")
+		expect(reviewUrl?.searchParams.get("year")).toBe("2023")
+		expect(reviewUrl?.searchParams.get("after")).toBe("2023-06-01")
 	})
 
 	it("stops paging once limit is met when no date filter is set", async () => {

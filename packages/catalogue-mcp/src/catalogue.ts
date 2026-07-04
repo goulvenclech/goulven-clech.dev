@@ -118,55 +118,13 @@ export function buildReviewSearchParams(
 	if (args.type) params.set("source", TYPE_TO_SOURCE[args.type])
 	if (args.rating !== undefined) params.set("rating", String(args.rating))
 	if (emotionId !== undefined) params.set("emotion", String(emotionId))
+	if (args.year !== undefined) params.set("year", String(args.year))
+	if (args.after) params.set("after", args.after)
+	if (args.before) params.set("before", args.before)
 	if (args.sort) params.set("sort", args.sort)
 	params.set("limit", String(limit))
 	params.set("offset", String(offset))
 	return params
-}
-
-const YEAR = /^\d{4}$/
-const DAY = /^\d{4}-\d{2}-\d{2}$/
-
-/**
- * Normalise a "YYYY" or "YYYY-MM-DD" filter into an ISO bound. inserted_at is
- * always UTC ISO, so a lexicographic string compare is a correct date compare.
- */
-export function parseDateBound(value: string, edge: "start" | "end"): string {
-	if (YEAR.test(value))
-		return edge === "start"
-			? `${value}-01-01T00:00:00.000Z`
-			: `${value}-12-31T23:59:59.999Z`
-	if (DAY.test(value))
-		return edge === "start"
-			? `${value}T00:00:00.000Z`
-			: `${value}T23:59:59.999Z`
-	throw new Error(
-		`Invalid date "${value}": use a year (2023) or a day (2023-07-04).`,
-	)
-}
-
-/** Keep reviews whose inserted_at falls within year/after/before (AND). */
-export function filterByDate(
-	reviews: ApiReview[],
-	args: Pick<SearchReviewsArgs, "year" | "after" | "before">,
-): ApiReview[] {
-	const lower: string[] = []
-	const upper: string[] = []
-	if (args.year !== undefined) {
-		lower.push(parseDateBound(String(args.year), "start"))
-		upper.push(parseDateBound(String(args.year), "end"))
-	}
-	if (args.after) lower.push(parseDateBound(args.after, "start"))
-	if (args.before) upper.push(parseDateBound(args.before, "end"))
-
-	// Intersection of all bounds: the latest lower and the earliest upper.
-	const min = lower.length ? lower.reduce((a, b) => (a > b ? a : b)) : undefined
-	const max = upper.length ? upper.reduce((a, b) => (a < b ? a : b)) : undefined
-	return reviews.filter(
-		(r) =>
-			(min === undefined || r.inserted_at >= min) &&
-			(max === undefined || r.inserted_at <= max),
-	)
 }
 
 /** Resolve an emotion name (case-insensitive) to its id. */
@@ -287,13 +245,8 @@ export class CatalogueClient {
 				)
 		}
 
-		// Walk the API pages (it caps at 100 and reports hasMore). Date filters are
-		// applied in memory afterwards, so with one we must fetch every page;
-		// without one, the API's own order lets us stop as soon as we have `limit`.
-		const hasDateFilter =
-			args.year !== undefined ||
-			args.after !== undefined ||
-			args.before !== undefined
+		// The API applies every filter (date included) and caps a page at 100; page
+		// until it reports no more, or until we already have enough for `limit`.
 		const raw: ApiReview[] = []
 		let page = 0
 		for (; page < MAX_PAGES; page++) {
@@ -308,25 +261,18 @@ export class CatalogueClient {
 				hasMore: boolean
 			}>(`/api/catalogue/reviews?${params}`)
 			raw.push(...res.reviews)
-			if (
-				!hasDateFilter &&
-				args.limit !== undefined &&
-				raw.length >= args.limit
-			)
-				break
+			if (args.limit !== undefined && raw.length >= args.limit) break
 			if (!res.hasMore) break
 		}
-		// Fail loudly rather than silently truncate if the catalogue ever outgrows
-		// the backstop (raise MAX_PAGES, or add a server-side date filter).
+		// Fail loudly rather than silently truncate if a query ever matches more
+		// than the page backstop allows (raise MAX_PAGES, or narrow the search).
 		if (page === MAX_PAGES)
 			throw new Error(
 				`Too many matching reviews to page through (over ${MAX_PAGES * PAGE_SIZE}). Narrow the search with more filters.`,
 			)
 
 		const emotionsById = new Map(emotions.map((e) => [e.id, e]))
-		const enriched = filterByDate(raw, args).map((r) =>
-			enrichReview(r, emotionsById),
-		)
+		const enriched = raw.map((r) => enrichReview(r, emotionsById))
 		return args.limit !== undefined ? enriched.slice(0, args.limit) : enriched
 	}
 

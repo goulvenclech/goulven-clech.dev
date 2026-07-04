@@ -41,6 +41,8 @@ export function buildQueryString(
 		params.set("rating", String(filters.rating))
 	if (typeof filters.emotion === "number")
 		params.set("emotion", String(filters.emotion))
+	if (filters.dateFrom) params.set("after", filters.dateFrom)
+	if (filters.dateTo) params.set("before", filters.dateTo)
 	if (filters.sort && filters.sort !== "date") params.set("sort", filters.sort)
 	if (limit !== DEFAULT_LIMIT) params.set("limit", String(limit))
 	if (offset > 0) params.set("offset", String(offset))
@@ -67,6 +69,9 @@ function renderApiDoc(emotions: EmotionRow[], site: string): string {
 		`- source=<code>     One of: ${sourceLegend}.`,
 		`- rating=<1-6>      ${ratingLegend}.`,
 		"- emotion=<id>      Filter by emotion id (see list below).",
+		"- year=<YYYY>       Reviews written in that calendar year.",
+		"- after=<date>      Reviews on/after this date (YYYY or YYYY-MM-DD).",
+		"- before=<date>     Reviews on/before this date (YYYY or YYYY-MM-DD).",
 		"- sort=date|rating  Default: date (most recent first).",
 		`- limit=<1-${MAX_LIMIT}>     Default: ${DEFAULT_LIMIT}.`,
 		"- offset=<n>        Default: 0. Use the `Next page` URL to paginate.",
@@ -76,6 +81,7 @@ function renderApiDoc(emotions: EmotionRow[], site: string): string {
 		"Examples:",
 		`- ${site}/catalogue.md?rating=6&sort=date`,
 		`- ${site}/catalogue.md?source=TMDB_MOVIE&emotion=3&limit=25`,
+		`- ${site}/catalogue.md?source=TMDB_MOVIE&year=2023`,
 	].join("\n")
 }
 
@@ -91,6 +97,8 @@ function renderFilterSummary(
 		const e = emotionsById.get(filters.emotion)
 		parts.push(`emotion=${filters.emotion}${e ? ` (${e.name})` : ""}`)
 	}
+	if (filters.dateFrom) parts.push(`after=${filters.dateFrom.slice(0, 10)}`)
+	if (filters.dateTo) parts.push(`before=${filters.dateTo.slice(0, 10)}`)
 	if (filters.sort && filters.sort !== "date")
 		parts.push(`sort=${filters.sort}`)
 	return parts.length ? `Filters: ${parts.join(", ")}.` : "No filters."
