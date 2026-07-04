@@ -7,7 +7,7 @@ import { sourceResolvers } from "./sourceResolver"
 
 /**
  * A review helps me keep track of my feelings about a book, movie, or other media.
- * See catalogue.astro and cataloguer.astro for usage.
+ * See catalogue.astro and catalogue/new.astro for usage.
  */
 export interface Review {
 	id: string

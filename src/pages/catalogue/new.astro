@@ -2,9 +2,6 @@
 import ReturnHome from "$components/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
 
-/**
- * Catalogue page
- */
 const pageTitle = "Cataloguer"
 ---
 
@@ -28,7 +25,15 @@ const pageTitle = "Cataloguer"
 					placeholder="Password"
 					required
 				/>
-				<input id="date" name="date" type="date" required />
+				<select id="date-mode" aria-label="Date mode">
+					<option value="custom" selected>📅 Custom date</option>
+					<option value="today">📌 Today</option>
+					<option value="post-covid">🦠 Post-covid (2020–2024)</option>
+					<option value="pre-covid">🌍 Pre-covid (2015–2019)</option>
+					<option value="adolescence">🎒 Adolescence (2008–2014)</option>
+					<option value="jeunesse">🧸 Childhood (2003–2007)</option>
+				</select>
+				<input id="date" name="date" type="date" required class="col-span-1" />
 				<select id="source" name="source" required>
 					<option value="" disabled selected>Select a source </option>
 					<option value="IGDB">🎮 Video Game (IGDB)</option>
@@ -75,7 +80,13 @@ const pageTitle = "Cataloguer"
 		</section>
 	</section>
 	<script>
-		import type { Emotion } from "./api/catalogue/emotions"
+		import type { Emotion } from "../api/catalogue/emotions"
+		import {
+			ERA_RANGES,
+			pickRandomFreeDate,
+			todayIsoDay,
+			type DateMode,
+		} from "../../catalogueDate"
 
 		// If server-side fetch failed, try to fetch emotions client-side
 		async function loadEmotions() {
@@ -110,6 +121,61 @@ const pageTitle = "Cataloguer"
 		}
 
 		document.addEventListener("DOMContentLoaded", loadEmotions)
+
+		// Date mode: lock the picker to "today" or a random unused era day.
+		const dateInput = document.querySelector<HTMLInputElement>("#date")
+		const dateMode = document.querySelector<HTMLSelectElement>("#date-mode")
+
+		// Days that already have a review, refetched each pick so a just-saved
+		// day is excluded. `null` if the fetch fails, so era modes can fall back.
+		async function usedDays(): Promise<Set<string> | null> {
+			try {
+				const res = await fetch("/api/catalogue/dates")
+				if (!res.ok) throw new Error(`HTTP ${res.status}`)
+				return new Set<string>(await res.json())
+			} catch (error) {
+				console.error("Failed to fetch used dates:", error)
+				return null
+			}
+		}
+
+		// readonly (not disabled) so the value is still submitted with the form.
+		function setDateLocked(locked: boolean) {
+			if (!dateInput) return
+			dateInput.readOnly = locked
+			dateInput.classList.toggle("pointer-events-none", locked)
+			dateInput.classList.toggle("opacity-50", locked)
+		}
+
+		async function applyDateMode(mode: DateMode) {
+			if (!dateInput || !dateMode) return
+
+			if (mode === "custom") {
+				setDateLocked(false)
+				return
+			}
+
+			if (mode === "today") {
+				dateInput.value = todayIsoDay()
+				setDateLocked(true)
+				return
+			}
+
+			const used = await usedDays()
+			const day = used && pickRandomFreeDate(ERA_RANGES[mode], used)
+			if (!day) {
+				alert("Couldn't pick a free date — choose one manually.")
+				dateMode.value = "custom"
+				setDateLocked(false)
+				return
+			}
+			dateInput.value = day
+			setDateLocked(true)
+		}
+
+		dateMode?.addEventListener("change", () => {
+			applyDateMode(dateMode.value as DateMode)
+		})
 
 		// Form validation
 		const form = document.querySelector("form")
@@ -151,7 +217,8 @@ const pageTitle = "Cataloguer"
 				}
 
 				alert("Review saved ✔️")
-				form.reset()
+				form.reset() // resets the mode select to "custom"; unlock to match
+				setDateLocked(false)
 			} catch (e) {
 				alert(`❌ Cannot save review: ${(e as Error).message}`)
 			}
