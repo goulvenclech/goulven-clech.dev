@@ -1,3 +1,5 @@
+import { ratingLabels } from "./components/catalogue/reviewUtils"
+
 /**
  * Progress of the catalogue against curated to-do lists. Each list is tied to a
  * catalogue source (TMDB_MOVIE, IGDB, …) and its entries are keyed by that
@@ -39,6 +41,25 @@ export interface TodoProgress {
 	percent: number
 }
 
+/** Keyed by source id. */
+export interface TodoReview {
+	rating: number
+	emotions: number[]
+}
+
+export interface TodoEmotion {
+	emoji: string
+	name: string
+}
+
+export interface TodoStats {
+	/** Emoji + verb for the rounded-average rating across reviewed entries. */
+	averageEmoji: string
+	averageVerb: string
+	/** The three most-felt emotions, most frequent first. */
+	emotions: TodoEmotion[]
+}
+
 export const SORTS = ["year-asc", "year-desc"] as const
 export const STATUSES = ["all", "done", "todo"] as const
 export type TodoSort = (typeof SORTS)[number]
@@ -75,6 +96,67 @@ export function computeTodoProgress(items: TodoItem[]): TodoProgress {
 	const total = items.length
 	const percent = total === 0 ? 0 : Math.round((doneCount / total) * 100)
 	return { total, doneCount, percent }
+}
+
+/**
+ * Aggregate a list's reviewed entries into a rounded-average rating and the
+ * three most-felt emotions. Returns null until at least `minReviews` entries
+ * are reviewed, so the caller can hide the line while a handful of ratings
+ * wouldn't yet say anything meaningful.
+ */
+export function computeTodoStats(
+	items: TodoItem[],
+	reviews: Map<string, TodoReview>,
+	emotions: Map<string, TodoEmotion>,
+	minReviews = 3,
+): TodoStats | null {
+	const done = items
+		.filter((item) => item.done)
+		.map((item) => reviews.get(String(item.id)))
+		.filter((review): review is TodoReview => review !== undefined)
+
+	if (done.length < minReviews) return null
+
+	const average = Math.round(
+		done.reduce((sum, review) => sum + review.rating, 0) / done.length,
+	)
+
+	const counts = new Map<string, number>()
+	for (const review of done)
+		for (const id of review.emotions) {
+			const key = String(id)
+			counts.set(key, (counts.get(key) ?? 0) + 1)
+		}
+
+	// Resolve names before slicing so unknown ids never take a top-three slot;
+	// break count ties alphabetically for a stable order.
+	const top = [...counts.entries()]
+		.map(([id, count]) => ({ emotion: emotions.get(id), count }))
+		.filter(
+			(entry): entry is { emotion: TodoEmotion; count: number } =>
+				entry.emotion !== undefined,
+		)
+		.sort(
+			(a, b) =>
+				b.count - a.count || a.emotion.name.localeCompare(b.emotion.name),
+		)
+		.slice(0, 3)
+		.map((entry) => entry.emotion)
+
+	const label = ratingLabels[average]
+	return {
+		averageEmoji: label?.emoji ?? "",
+		averageVerb: label?.verb ?? "",
+		emotions: top,
+	}
+}
+
+/** Returns HTML; emotion names are trusted catalogue data italicised inline. */
+export function formatTodoStats(stats: TodoStats): string {
+	const felt = stats.emotions
+		.map((emotion) => `<i>${emotion.name}</i>`)
+		.join(", ")
+	return `On average ${stats.averageVerb} ${stats.averageEmoji}, and mostly felt ${felt}.`
 }
 
 /** Filter by a case-insensitive name query and done/to-do status. */

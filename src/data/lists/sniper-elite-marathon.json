@@ -1,0 +1,65 @@
+{
+	"id": "sniper-elite-marathon",
+	"title": "Marathon Sniper Elite",
+	"description": "A Sniper Elite marathon with my friend Erika, in co-op this time, the Zombie Army spin-offs included.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Sniper_Elite",
+	"entries": [
+		{
+			"id": 3077,
+			"name": "Sniper Elite",
+			"year": 2005,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1p0u.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite"
+		},
+		{
+			"id": 3078,
+			"name": "Sniper Elite V2",
+			"year": 2012,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2e41.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite-v2"
+		},
+		{
+			"id": 8366,
+			"name": "Sniper Elite III",
+			"year": 2014,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2e40.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite-iii"
+		},
+		{
+			"id": 20871,
+			"name": "Zombie Army Trilogy",
+			"year": 2015,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1vgc.jpg",
+			"link": "https://www.igdb.com/games/zombie-army-trilogy"
+		},
+		{
+			"id": 18366,
+			"name": "Sniper Elite 4",
+			"year": 2017,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co24t8.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite-4"
+		},
+		{
+			"id": 119234,
+			"name": "Zombie Army 4: Dead War",
+			"year": 2020,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1lwq.jpg",
+			"link": "https://www.igdb.com/games/zombie-army-4-dead-war"
+		},
+		{
+			"id": 116238,
+			"name": "Sniper Elite 5",
+			"year": 2022,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4ehj.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite-5"
+		},
+		{
+			"id": 314238,
+			"name": "Sniper Elite: Resistance",
+			"year": 2025,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co9brt.jpg",
+			"link": "https://www.igdb.com/games/sniper-elite-resistance"
+		}
+	]
+}

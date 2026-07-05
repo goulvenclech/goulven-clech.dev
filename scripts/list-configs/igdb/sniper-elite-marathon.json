@@ -1,0 +1,17 @@
+{
+	"id": "sniper-elite-marathon",
+	"title": "Marathon Sniper Elite",
+	"description": "A Sniper Elite marathon with my friend Erika, in co-op this time, the Zombie Army spin-offs included.",
+	"source": "IGDB",
+	"url": "https://en.wikipedia.org/wiki/Sniper_Elite",
+	"games": [
+		["Sniper Elite", "Sniper Elite", 2005],
+		["Sniper Elite V2", "Sniper Elite V2", 2012],
+		["Sniper Elite III", "Sniper Elite III", 2014],
+		["Zombie Army Trilogy", "Zombie Army Trilogy", 2015],
+		["Sniper Elite 4", "Sniper Elite 4", 2017],
+		["Zombie Army 4: Dead War", "Zombie Army 4 Dead War", 2020],
+		["Sniper Elite 5", "Sniper Elite 5", 2022],
+		["Sniper Elite: Resistance", "Sniper Elite Resistance", 2025]
+	]
+}

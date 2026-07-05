@@ -1,0 +1,93 @@
+{
+	"id": "wes-anderson-films",
+	"title": "Wes Anderson",
+	"description": "Every Wes Anderson feature film, to get an overall view of a director I love.",
+	"source": "TMDB_MOVIE",
+	"url": "https://en.wikipedia.org/wiki/Wes_Anderson",
+	"entries": [
+		{
+			"id": 13685,
+			"name": "Bottle Rocket",
+			"year": 1996,
+			"poster": "https://image.tmdb.org/t/p/w500/wOPiNYt9V3Cbr9Izeddwj7nU8RT.jpg",
+			"link": "https://www.themoviedb.org/movie/13685"
+		},
+		{
+			"id": 11545,
+			"name": "Rushmore",
+			"year": 1998,
+			"poster": "https://image.tmdb.org/t/p/w500/hSJ6swahAuZ8wM96lHDTwQPXUvZ.jpg",
+			"link": "https://www.themoviedb.org/movie/11545"
+		},
+		{
+			"id": 9428,
+			"name": "The Royal Tenenbaums",
+			"year": 2001,
+			"poster": "https://image.tmdb.org/t/p/w500/nG7hZJn7wQTSDCQT39Gy3s3tbrp.jpg",
+			"link": "https://www.themoviedb.org/movie/9428"
+		},
+		{
+			"id": 421,
+			"name": "The Life Aquatic with Steve Zissou",
+			"year": 2004,
+			"poster": "https://image.tmdb.org/t/p/w500/qZoFLNBC78jzboWeDH6Ha0qavF2.jpg",
+			"link": "https://www.themoviedb.org/movie/421"
+		},
+		{
+			"id": 4538,
+			"name": "The Darjeeling Limited",
+			"year": 2007,
+			"poster": "https://image.tmdb.org/t/p/w500/oSW5OVXTulaIXcoNwJAp5YEKpbP.jpg",
+			"link": "https://www.themoviedb.org/movie/4538"
+		},
+		{
+			"id": 10315,
+			"name": "Fantastic Mr. Fox",
+			"year": 2009,
+			"poster": "https://image.tmdb.org/t/p/w500/hhhJN8aJdTlzGmARCbwWflHXhwI.jpg",
+			"link": "https://www.themoviedb.org/movie/10315"
+		},
+		{
+			"id": 83666,
+			"name": "Moonrise Kingdom",
+			"year": 2012,
+			"poster": "https://image.tmdb.org/t/p/w500/y4SXcbNl6CEF2t36icuzuBioj7K.jpg",
+			"link": "https://www.themoviedb.org/movie/83666"
+		},
+		{
+			"id": 120467,
+			"name": "The Grand Budapest Hotel",
+			"year": 2014,
+			"poster": "https://image.tmdb.org/t/p/w500/zOVCqKUzjFKqa1eDMcOzvXwthY4.jpg",
+			"link": "https://www.themoviedb.org/movie/120467"
+		},
+		{
+			"id": 399174,
+			"name": "Isle of Dogs",
+			"year": 2018,
+			"poster": "https://image.tmdb.org/t/p/w500/c0nUX6Q1ZB0P2t1Jo6EeFSVnOGQ.jpg",
+			"link": "https://www.themoviedb.org/movie/399174"
+		},
+		{
+			"id": 542178,
+			"name": "The French Dispatch",
+			"year": 2021,
+			"poster": "https://image.tmdb.org/t/p/w500/6JXR3KJH5roiBCjWFt09xfgxHZc.jpg",
+			"link": "https://www.themoviedb.org/movie/542178"
+		},
+		{
+			"id": 747188,
+			"name": "Asteroid City",
+			"year": 2023,
+			"poster": "https://image.tmdb.org/t/p/w500/hfo7pvL9Fys7rocfL4VOzw9qDEQ.jpg",
+			"link": "https://www.themoviedb.org/movie/747188"
+		},
+		{
+			"id": 1137350,
+			"name": "The Phoenician Scheme",
+			"year": 2025,
+			"poster": "https://image.tmdb.org/t/p/w500/u2jxeYLXTYfu0bqJmnLGIgZswib.jpg",
+			"link": "https://www.themoviedb.org/movie/1137350"
+		}
+	]
+}

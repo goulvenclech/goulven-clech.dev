@@ -1,0 +1,21 @@
+{
+	"id": "wes-anderson-films",
+	"title": "Wes Anderson",
+	"description": "Every Wes Anderson feature film, to get an overall view of a director I love.",
+	"source": "TMDB_MOVIE",
+	"url": "https://en.wikipedia.org/wiki/Wes_Anderson",
+	"movies": [
+		[13685, "Bottle Rocket"],
+		[11545, "Rushmore"],
+		[9428, "The Royal Tenenbaums"],
+		[421, "The Life Aquatic with Steve Zissou"],
+		[4538, "The Darjeeling Limited"],
+		[10315, "Fantastic Mr. Fox"],
+		[83666, "Moonrise Kingdom"],
+		[120467, "The Grand Budapest Hotel"],
+		[399174, "Isle of Dogs"],
+		[542178, "The French Dispatch"],
+		[747188, "Asteroid City"],
+		[1137350, "The Phoenician Scheme"]
+	]
+}

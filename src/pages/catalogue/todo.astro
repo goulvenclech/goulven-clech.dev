@@ -6,7 +6,11 @@ import { getClient } from "$src/db"
 import {
 	buildTodoItems,
 	computeTodoProgress,
+	computeTodoStats,
+	formatTodoStats,
 	type TodoList,
+	type TodoReview,
+	type TodoEmotion,
 } from "$src/catalogueTodo"
 
 const pageTitle = "To-do"
@@ -19,24 +23,45 @@ const lists = Object.values(modules)
 	.map((module) => module.default)
 	.sort((a, b) => a.title.localeCompare(b.title))
 
-// Latest rating emoji per reviewed id, for each source the lists need.
+// Latest review per reviewed id, per source, plus an id → emotion lookup.
 const doneBySource = new Map<string, Map<string, string>>()
+const reviewsBySource = new Map<string, Map<string, TodoReview>>()
+const emotionsById = new Map<string, TodoEmotion>()
 try {
 	const client = getClient()
+
+	const emotionRows = await client.execute(
+		"SELECT id, emoji, name FROM emotions WHERE is_deleted = false",
+	)
+	for (const row of emotionRows.rows as unknown as {
+		id: number | string
+		emoji: string
+		name: string
+	}[])
+		emotionsById.set(String(row.id), { emoji: row.emoji, name: row.name })
+
 	for (const source of new Set(lists.map((list) => list.source))) {
 		const result = await client.execute({
-			sql: `SELECT source_id, rating FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
+			sql: `SELECT source_id, rating, emotions FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
 			args: [source],
 		})
 		const done = new Map<string, string>()
+		const reviews = new Map<string, TodoReview>()
 		for (const row of result.rows as unknown as {
 			source_id: string
 			rating: number
+			emotions: string
 		}[]) {
 			const id = String(row.source_id)
-			if (!done.has(id)) done.set(id, ratingLabels[row.rating]?.emoji ?? "")
+			if (done.has(id)) continue // keep only the latest review per entry
+			done.set(id, ratingLabels[row.rating]?.emoji ?? "")
+			reviews.set(id, {
+				rating: row.rating,
+				emotions: JSON.parse(row.emotions ?? "[]") as number[],
+			})
 		}
 		doneBySource.set(source, done)
+		reviewsBySource.set(source, reviews)
 	}
 } catch (error) {
 	// The lists are static, so degrade to "nothing done" rather than 500.
@@ -52,12 +77,30 @@ const views = lists.map((list) => {
 		url: list.url ?? null,
 		items,
 		progress: computeTodoProgress(items),
+		stats: computeTodoStats(
+			items,
+			reviewsBySource.get(list.source) ?? new Map<string, TodoReview>(),
+			emotionsById,
+		),
 	}
 })
 
 const initial = views[0]
 // Escape "<" so the serialised data can't close the <script> tag early.
 const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
+
+// Each option keeps its original views index as its value, so the client's
+// listIndex (read off the select value) still resolves to the right view.
+const INACTIVE = new Set([
+	"mario-marathon",
+	"pokemon-marathon",
+	"sniper-elite-marathon",
+	"studio-ghibli-films",
+	"wes-anderson-films",
+])
+const listOptions = views.map((view, index) => ({ view, index }))
+const activeOptions = listOptions.filter(({ view }) => !INACTIVE.has(view.id))
+const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 ---
 
 <Layout
@@ -81,13 +124,33 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			id="list-select"
 			class="w-full border-b-[0.1rem] border-dotted text-sm"
 		>
-			{views.map((view, index) => <option value={index}>{view.title}</option>)}
+			<optgroup label="active">
+				{
+					activeOptions.map(({ view, index }) => (
+						<option value={index}>{view.title}</option>
+					))
+				}
+			</optgroup>
+			<optgroup label="inactive">
+				{
+					inactiveOptions.map(({ view, index }) => (
+						<option value={index}>{view.title}</option>
+					))
+				}
+			</optgroup>
 		</select>
 
 		<p class="mt-3 mb-2 text-sm opacity-80">
 			<span id="list-description">{initial.description}</span>{" "}
 			<a id="list-source-link" href={initial.url ?? "#"}>Source</a>
 		</p>
+
+		<p
+			id="list-stats"
+			class="-mt-1 mb-2 text-sm opacity-80"
+			hidden={!initial.stats}
+			set:html={initial.stats ? formatTodoStats(initial.stats) : ""}
+		/>
 
 		<div class="mb-3 flex items-center gap-3 text-xs sm:text-sm">
 			<div
@@ -175,8 +238,10 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 		import {
 			filterTodoItems,
 			sortTodoItems,
+			formatTodoStats,
 			type TodoItem,
 			type TodoProgress,
+			type TodoStats,
 			type TodoSort,
 			type TodoStatus,
 		} from "../../catalogueTodo"
@@ -193,6 +258,7 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			url: string | null
 			items: TodoItem[]
 			progress: TodoProgress
+			stats: TodoStats | null
 		}
 
 		const PAGE_SIZE = 100
@@ -207,6 +273,9 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 		const sourceLink = document.getElementById(
 			"list-source-link",
 		) as HTMLAnchorElement
+		const statsEl = document.getElementById(
+			"list-stats",
+		) as HTMLParagraphElement
 		const doneEl = document.getElementById("todo-done")!
 		const totalEl = document.getElementById("todo-total")!
 		const percentEl = document.getElementById("todo-percent")!
@@ -279,6 +348,8 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 			descriptionEl.textContent = view.description
 			if (view.url) sourceLink.href = view.url
 			sourceLink.hidden = !view.url
+			if (view.stats) statsEl.innerHTML = formatTodoStats(view.stats)
+			statsEl.hidden = !view.stats
 			doneEl.textContent = String(view.progress.doneCount)
 			totalEl.textContent = String(view.progress.total)
 			percentEl.textContent = String(view.progress.percent)
