@@ -10,84 +10,96 @@
 			"name": "Bottle Rocket",
 			"year": 1996,
 			"poster": "https://image.tmdb.org/t/p/w500/wOPiNYt9V3Cbr9Izeddwj7nU8RT.jpg",
-			"link": "https://www.themoviedb.org/movie/13685"
+			"link": "https://www.themoviedb.org/movie/13685",
+			"meta": "Comedy, Crime, Drama | Gracie Films, Columbia Pictures, Boyle-Taylor Productions | Wes Anderson | Luke Wilson, Owen Wilson, Robert Musgrave"
 		},
 		{
 			"id": 11545,
 			"name": "Rushmore",
 			"year": 1998,
 			"poster": "https://image.tmdb.org/t/p/w500/hSJ6swahAuZ8wM96lHDTwQPXUvZ.jpg",
-			"link": "https://www.themoviedb.org/movie/11545"
+			"link": "https://www.themoviedb.org/movie/11545",
+			"meta": "Comedy, Drama | Touchstone Pictures, American Empirical Pictures | Wes Anderson | Jason Schwartzman, Bill Murray, Olivia Williams"
 		},
 		{
 			"id": 9428,
 			"name": "The Royal Tenenbaums",
 			"year": 2001,
 			"poster": "https://image.tmdb.org/t/p/w500/nG7hZJn7wQTSDCQT39Gy3s3tbrp.jpg",
-			"link": "https://www.themoviedb.org/movie/9428"
+			"link": "https://www.themoviedb.org/movie/9428",
+			"meta": "Comedy, Drama | Touchstone Pictures, American Empirical Pictures | Wes Anderson | Gene Hackman, Anjelica Huston, Ben Stiller"
 		},
 		{
 			"id": 421,
 			"name": "The Life Aquatic with Steve Zissou",
 			"year": 2004,
 			"poster": "https://image.tmdb.org/t/p/w500/qZoFLNBC78jzboWeDH6Ha0qavF2.jpg",
-			"link": "https://www.themoviedb.org/movie/421"
+			"link": "https://www.themoviedb.org/movie/421",
+			"meta": "Adventure, Comedy, Drama | American Empirical Pictures, Touchstone Pictures | Wes Anderson | Bill Murray, Owen Wilson, Cate Blanchett"
 		},
 		{
 			"id": 4538,
 			"name": "The Darjeeling Limited",
 			"year": 2007,
 			"poster": "https://image.tmdb.org/t/p/w500/oSW5OVXTulaIXcoNwJAp5YEKpbP.jpg",
-			"link": "https://www.themoviedb.org/movie/4538"
+			"link": "https://www.themoviedb.org/movie/4538",
+			"meta": "Adventure, Drama, Comedy | The Darjeeling Limited Collection | Fox Searchlight Pictures, Collage, American Empirical Pictures | Wes Anderson | Owen Wilson, Adrien Brody, Jason Schwartzman"
 		},
 		{
 			"id": 10315,
 			"name": "Fantastic Mr. Fox",
 			"year": 2009,
 			"poster": "https://image.tmdb.org/t/p/w500/hhhJN8aJdTlzGmARCbwWflHXhwI.jpg",
-			"link": "https://www.themoviedb.org/movie/10315"
+			"link": "https://www.themoviedb.org/movie/10315",
+			"meta": "Adventure, Animation, Comedy, Family | Regency Enterprises, Indian Paintbrush, American Empirical Pictures | Wes Anderson | George Clooney, Meryl Streep, Jason Schwartzman"
 		},
 		{
 			"id": 83666,
 			"name": "Moonrise Kingdom",
 			"year": 2012,
 			"poster": "https://image.tmdb.org/t/p/w500/y4SXcbNl6CEF2t36icuzuBioj7K.jpg",
-			"link": "https://www.themoviedb.org/movie/83666"
+			"link": "https://www.themoviedb.org/movie/83666",
+			"meta": "Comedy, Drama, Romance | Indian Paintbrush, American Empirical Pictures | Wes Anderson | Jared Gilman, Kara Hayward, Bruce Willis"
 		},
 		{
 			"id": 120467,
 			"name": "The Grand Budapest Hotel",
 			"year": 2014,
 			"poster": "https://image.tmdb.org/t/p/w500/zOVCqKUzjFKqa1eDMcOzvXwthY4.jpg",
-			"link": "https://www.themoviedb.org/movie/120467"
+			"link": "https://www.themoviedb.org/movie/120467",
+			"meta": "Comedy, Drama | Fox Searchlight Pictures, Studio Babelsberg, Indian Paintbrush, TSG Entertainment, American Empirical Pictures | Wes Anderson | Ralph Fiennes, F. Murray Abraham, Mathieu Amalric"
 		},
 		{
 			"id": 399174,
 			"name": "Isle of Dogs",
 			"year": 2018,
 			"poster": "https://image.tmdb.org/t/p/w500/c0nUX6Q1ZB0P2t1Jo6EeFSVnOGQ.jpg",
-			"link": "https://www.themoviedb.org/movie/399174"
+			"link": "https://www.themoviedb.org/movie/399174",
+			"meta": "Adventure, Comedy, Animation | Studio Babelsberg, American Empirical Pictures, Indian Paintbrush, Scott Rudin Productions | Wes Anderson | Bryan Cranston, Koyu Rankin, Bob Balaban"
 		},
 		{
 			"id": 542178,
 			"name": "The French Dispatch",
 			"year": 2021,
 			"poster": "https://image.tmdb.org/t/p/w500/6JXR3KJH5roiBCjWFt09xfgxHZc.jpg",
-			"link": "https://www.themoviedb.org/movie/542178"
+			"link": "https://www.themoviedb.org/movie/542178",
+			"meta": "Drama, Comedy | Indian Paintbrush, American Empirical Pictures, Studio Babelsberg | Wes Anderson | Benicio del Toro, Adrien Brody, Tilda Swinton"
 		},
 		{
 			"id": 747188,
 			"name": "Asteroid City",
 			"year": 2023,
 			"poster": "https://image.tmdb.org/t/p/w500/hfo7pvL9Fys7rocfL4VOzw9qDEQ.jpg",
-			"link": "https://www.themoviedb.org/movie/747188"
+			"link": "https://www.themoviedb.org/movie/747188",
+			"meta": "Comedy, Drama | Indian Paintbrush, American Empirical Pictures, Studio Babelsberg | Wes Anderson | Jason Schwartzman, Scarlett Johansson, Tom Hanks"
 		},
 		{
 			"id": 1137350,
 			"name": "The Phoenician Scheme",
 			"year": 2025,
 			"poster": "https://image.tmdb.org/t/p/w500/u2jxeYLXTYfu0bqJmnLGIgZswib.jpg",
-			"link": "https://www.themoviedb.org/movie/1137350"
+			"link": "https://www.themoviedb.org/movie/1137350",
+			"meta": "Comedy, Adventure, Crime | American Empirical Pictures, Indian Paintbrush, Studio Babelsberg | Wes Anderson | Benicio del Toro, Mia Threapleton, Michael Cera"
 		}
 	]
 }

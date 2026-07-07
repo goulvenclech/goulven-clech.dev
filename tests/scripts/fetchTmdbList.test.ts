@@ -32,6 +32,22 @@ describe("movieToEntry", () => {
 		expect(entry).toMatchObject({ year: null, poster: null })
 	})
 
+	it("adds catalogue meta from the movie's credits and genres", () => {
+		const entry = movieToEntry(11545, "Rushmore", {
+			release_date: "1998-10-09",
+			poster_path: "/x.jpg",
+			genres: [{ name: "Comedy" }, { name: "Drama" }],
+			production_companies: [{ name: "American Empirical Pictures" }],
+			credits: {
+				crew: [{ name: "Wes Anderson", job: "Director" }],
+				cast: [{ name: "Jason Schwartzman" }],
+			},
+		})
+		expect(entry?.meta).toBe(
+			"Comedy, Drama | American Empirical Pictures | Wes Anderson | Jason Schwartzman",
+		)
+	})
+
 	it("returns null when the movie couldn't be fetched", () => {
 		expect(movieToEntry(1, "X", null)).toBeNull()
 	})

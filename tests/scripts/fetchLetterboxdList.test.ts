@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest"
 import {
 	parseSlugs,
 	parseFilm,
-	toEntry,
+	toMovie,
 } from "../../scripts/fetch-letterboxd-list.mjs"
 import moviesConfig from "../../scripts/list-configs/letterboxd/movies-everyone-should-watch.json"
 
@@ -21,26 +21,14 @@ describe("parseSlugs", () => {
 })
 
 describe("parseFilm", () => {
-	it("reads the TMDB id, type and poster from a film page", () => {
+	it("reads the TMDB id, type and name, dropping the year suffix", () => {
 		const html = `<body data-tmdb-type="movie" data-tmdb-id="496243">
-			<meta property="og:title" content="Parasite (2019)" />
-			<script type="application/ld+json">{"image":"https://a.ltrbxd.com/resized/film-poster/4/2/6/4/0/6/426406-parasite-0-600-0-900-crop.jpg"}</script></body>`
+			<meta property="og:title" content="Parasite (2019)" /></body>`
 		expect(parseFilm(html)).toEqual({
 			type: "movie",
 			tmdbId: 496243,
 			name: "Parasite",
-			year: 2019,
-			poster:
-				"https://a.ltrbxd.com/resized/film-poster/4/2/6/4/0/6/426406-parasite-0-600-0-900-crop.jpg",
 		})
-	})
-
-	it("reads a poster served from the sm/upload path", () => {
-		const html = `<body data-tmdb-type="movie" data-tmdb-id="424">
-			<script type="application/ld+json">{"image":"https://a.ltrbxd.com/resized/sm/upload/bz/1x/em/jr/yPis-0-600-0-900-crop.jpg?v=ca5215c5a9"}</script></body>`
-		expect(parseFilm(html).poster).toBe(
-			"https://a.ltrbxd.com/resized/sm/upload/bz/1x/em/jr/yPis-0-600-0-900-crop.jpg?v=ca5215c5a9",
-		)
 	})
 
 	it("distinguishes TV entries by type", () => {
@@ -59,64 +47,38 @@ describe("parseFilm", () => {
 		expect(film.tmdbId).toBe(496243)
 	})
 
-	it("returns null id when the film has no TMDB link", () => {
+	it("returns a null id when the film has no TMDB link", () => {
 		const html = `<body class="film">
 			<meta property="og:title" content="Some Obscure Film (1920)" /></body>`
 		expect(parseFilm(html)).toEqual({
 			type: null,
 			tmdbId: null,
 			name: "Some Obscure Film",
-			year: 1920,
-			poster: null,
 		})
 	})
 
-	it("decodes HTML entities and tolerates a missing year in the title", () => {
+	it("decodes HTML entities and keeps a year-less title", () => {
 		const html = `<body data-tmdb-type="movie" data-tmdb-id="1">
 			<meta property="og:title" content="Fast &amp; Furious" /></body>`
-		const film = parseFilm(html)
-		expect(film.name).toBe("Fast & Furious")
-		expect(film.year).toBeNull()
+		expect(parseFilm(html).name).toBe("Fast & Furious")
 	})
 })
 
-describe("toEntry", () => {
-	it("builds a to-do entry with a TMDB link from a movie", () => {
-		expect(
-			toEntry("psycho", {
-				type: "movie",
-				tmdbId: 539,
-				name: "Psycho",
-				year: 1960,
-				poster: "p.jpg",
-			}),
-		).toEqual({
-			id: 539,
-			name: "Psycho",
-			year: 1960,
-			poster: "p.jpg",
-			link: "https://www.themoviedb.org/movie/539",
-			slug: "psycho",
-		})
-	})
-
-	it("migrates a legacy entry keyed by tmdbId", () => {
-		const entry = toEntry("home-alone", {
-			tmdbId: 771,
-			name: "Home Alone",
-			year: 1990,
-			poster: null,
-		})
-		expect(entry).toMatchObject({ id: 771, slug: "home-alone", poster: null })
+describe("toMovie", () => {
+	it("projects a movie to an [id, name] config tuple", () => {
+		expect(toMovie({ type: "movie", tmdbId: 539, name: "Psycho" })).toEqual([
+			539,
+			"Psycho",
+		])
 	})
 
 	it("returns null for TV or id-less films", () => {
-		expect(
-			toEntry("a-show", { type: "tv", tmdbId: 1, name: "Show" }),
-		).toBeNull()
-		expect(
-			toEntry("obscure", { type: null, tmdbId: null, name: "Obscure" }),
-		).toBeNull()
+		expect(toMovie({ type: "tv", tmdbId: 1, name: "Show" })).toBeNull()
+		expect(toMovie({ type: null, tmdbId: null, name: "Obscure" })).toBeNull()
+	})
+
+	it("returns null when the film's name didn't parse", () => {
+		expect(toMovie({ type: "movie", tmdbId: 5, name: null })).toBeNull()
 	})
 })
 

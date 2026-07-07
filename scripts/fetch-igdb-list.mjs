@@ -19,6 +19,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 import { loadEnv, readListConfig } from "./listConfig.mjs"
+import { enrichEntries } from "./catalogueMeta.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
@@ -142,6 +143,8 @@ async function main() {
 		}
 		await sleep(260)
 	}
+
+	await enrichEntries(env, list.source, entries, { log: console.error })
 
 	const outPath = resolve(outDir, `${list.id}.json`)
 	mkdirSync(outDir, { recursive: true })

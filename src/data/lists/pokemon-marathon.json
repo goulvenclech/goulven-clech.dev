@@ -10,112 +10,128 @@
 			"name": "Pokémon Yellow",
 			"year": 1998,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5pih.jpg",
-			"link": "https://www.igdb.com/games/pokemon-yellow-version-special-pikachu-edition"
+			"link": "https://www.igdb.com/games/pokemon-yellow-version-special-pikachu-edition",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Gradiente, Nintendo | Game Boy Color, Nintendo 3DS, Game Boy"
 		},
 		{
 			"id": 1559,
 			"name": "Pokémon FireRed & LeafGreen",
 			"year": 2004,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1ziq.jpg",
-			"link": "https://www.igdb.com/games/pokemon-firered-version"
+			"link": "https://www.igdb.com/games/pokemon-firered-version",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Game Boy Advance, Nintendo Switch"
 		},
 		{
 			"id": 1517,
 			"name": "Pokémon Emerald",
 			"year": 2004,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zhr.jpg",
-			"link": "https://www.igdb.com/games/pokemon-emerald-version"
+			"link": "https://www.igdb.com/games/pokemon-emerald-version",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Game Boy Advance"
 		},
 		{
 			"id": 1519,
 			"name": "Pokémon Platinum",
 			"year": 2008,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8gvp.jpg",
-			"link": "https://www.igdb.com/games/pokemon-platinum-version"
+			"link": "https://www.igdb.com/games/pokemon-platinum-version",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Nintendo DS"
 		},
 		{
 			"id": 1556,
 			"name": "Pokémon HeartGold & SoulSilver",
 			"year": 2009,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z57.jpg",
-			"link": "https://www.igdb.com/games/pokemon-heartgold-version"
+			"link": "https://www.igdb.com/games/pokemon-heartgold-version",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo, The Pokémon Company | Nintendo DS"
 		},
 		{
 			"id": 1521,
 			"name": "Pokémon Black & White",
 			"year": 2010,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z1x.jpg",
-			"link": "https://www.igdb.com/games/pokemon-black-version"
+			"link": "https://www.igdb.com/games/pokemon-black-version",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Nintendo DS"
 		},
 		{
 			"id": 8284,
 			"name": "Pokémon Black 2 & White 2",
 			"year": 2012,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z8d.jpg",
-			"link": "https://www.igdb.com/games/pokemon-black-version-2"
+			"link": "https://www.igdb.com/games/pokemon-black-version-2",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo, The Pokémon Company | Nintendo DS"
 		},
 		{
 			"id": 2286,
 			"name": "Pokémon X & Y",
 			"year": 2013,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1z8y.jpg",
-			"link": "https://www.igdb.com/games/pokemon-x"
+			"link": "https://www.igdb.com/games/pokemon-x",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | The Pokémon Company, Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 6898,
 			"name": "Pokémon Alpha Sapphire & Omega Ruby",
 			"year": 2014,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co56ef.jpg",
-			"link": "https://www.igdb.com/games/pokemon-alpha-sapphire"
+			"link": "https://www.igdb.com/games/pokemon-alpha-sapphire",
+			"meta": "Role-playing (RPG), Strategy, Turn-based strategy (TBS), Adventure | Game Freak | Nintendo, The Pokémon Company | Nintendo 3DS"
 		},
 		{
 			"id": 36792,
 			"name": "Pokémon Ultra Sun & Ultra Moon",
 			"year": 2017,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zjs.jpg",
-			"link": "https://www.igdb.com/games/pokemon-ultra-sun"
+			"link": "https://www.igdb.com/games/pokemon-ultra-sun",
+			"meta": "Role-playing (RPG), Adventure | Pokémon US | Game Freak | Nintendo of Europe, Nintendo, The Pokémon Company, Nintendo of America | Nintendo 3DS"
 		},
 		{
 			"id": 102873,
 			"name": "Pokémon Let's Go, Eevee! & Pikachu!",
 			"year": 2018,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zjz.jpg",
-			"link": "https://www.igdb.com/games/pokemon-lets-go-eevee"
+			"link": "https://www.igdb.com/games/pokemon-lets-go-eevee",
+			"meta": "Role-playing (RPG), Adventure | Game Freak | Nintendo | Nintendo Switch"
 		},
 		{
 			"id": 37382,
 			"name": "Pokémon Sword & Shield",
 			"year": 2019,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1zk2.jpg",
-			"link": "https://www.igdb.com/games/pokemon-sword"
+			"link": "https://www.igdb.com/games/pokemon-sword",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Nintendo Switch"
 		},
 		{
 			"id": 144051,
 			"name": "Pokémon Brilliant Diamond & Shining Pearl",
 			"year": 2021,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3b9t.jpg",
-			"link": "https://www.igdb.com/games/pokemon-brilliant-diamond"
+			"link": "https://www.igdb.com/games/pokemon-brilliant-diamond",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | ILCA | Nintendo | Nintendo Switch"
 		},
 		{
 			"id": 144054,
 			"name": "Pokémon Legends: Arceus",
 			"year": 2022,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3d03.jpg",
-			"link": "https://www.igdb.com/games/pokemon-legends-arceus"
+			"link": "https://www.igdb.com/games/pokemon-legends-arceus",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo, The Pokémon Company | Nintendo Switch"
 		},
 		{
 			"id": 191931,
 			"name": "Pokémon Scarlet & Violet",
 			"year": 2022,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5sfi.jpg",
-			"link": "https://www.igdb.com/games/pokemon-scarlet"
+			"link": "https://www.igdb.com/games/pokemon-scarlet",
+			"meta": "Role-playing (RPG), Turn-based strategy (TBS), Adventure | Game Freak | Nintendo | Nintendo Switch 2, Nintendo Switch"
 		},
 		{
 			"id": 288327,
 			"name": "Pokémon Legends: Z-A",
 			"year": 2025,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co9wzc.jpg",
-			"link": "https://www.igdb.com/games/pokemon-legends-z-a"
+			"link": "https://www.igdb.com/games/pokemon-legends-z-a",
+			"meta": "Role-playing (RPG), Adventure | Game Freak | Nintendo | Nintendo Switch 2, Nintendo Switch"
 		}
 	]
 }

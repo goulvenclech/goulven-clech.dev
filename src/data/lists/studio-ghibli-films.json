@@ -10,210 +10,240 @@
 			"name": "Horus: Prince of the Sun",
 			"year": 1968,
 			"poster": "https://image.tmdb.org/t/p/w500/zFwoHHJgfJaNqao3L96vktnG7OJ.jpg",
-			"link": "https://www.themoviedb.org/movie/52686"
+			"link": "https://www.themoviedb.org/movie/52686",
+			"meta": "Adventure, Drama, Animation, Fantasy | Toei Animation | Isao Takahata | Hisako Ôkata, Etsuko Ichihara, Eijirō Tōno"
 		},
 		{
 			"id": 695839,
 			"name": "Panda! Go Panda!",
 			"year": 1972,
 			"poster": "https://image.tmdb.org/t/p/w500/ja31iFPODZSXwMnEEG4dpZC9S37.jpg",
-			"link": "https://www.themoviedb.org/movie/695839"
+			"link": "https://www.themoviedb.org/movie/695839",
+			"meta": "Comedy, Fantasy, Animation | TOHO, Tokyo Movie | Isao Takahata | Kazuko Sugiyama, Kazuo Kumakura, Yoshiko Ohta"
 		},
 		{
 			"id": 15371,
 			"name": "The Castle of Cagliostro",
 			"year": 1979,
 			"poster": "https://image.tmdb.org/t/p/w500/p7xL3WYeclgtGCLrWfBrXKdBV7d.jpg",
-			"link": "https://www.themoviedb.org/movie/15371"
+			"link": "https://www.themoviedb.org/movie/15371",
+			"meta": "Animation, Adventure, Comedy, Crime | Lupin the Third Collection | Tokyo Movie Shinsha, Telecom Animation Film | Hayao Miyazaki | Yasuo Yamada, Kiyoshi Kobayashi, Eiko Masuyama"
 		},
 		{
 			"id": 70927,
 			"name": "Chie the Brat",
 			"year": 1981,
 			"poster": "https://image.tmdb.org/t/p/w500/h1rzXMf9YsbAbA7nzOdIWxdbcK5.jpg",
-			"link": "https://www.themoviedb.org/movie/70927"
+			"link": "https://www.themoviedb.org/movie/70927",
+			"meta": "Family, Animation, Comedy, Drama | TOHO, Tokyo Movie Shinsha, Telecom Animation Film | Isao Takahata | Chinatsu Nakayama, Norio Nishikawa, Yoshio Kamigata"
 		},
 		{
 			"id": 41017,
 			"name": "Gauche the Cellist",
 			"year": 1982,
 			"poster": "https://image.tmdb.org/t/p/w500/31I321F0eePRVzsoMcbInmOgb22.jpg",
-			"link": "https://www.themoviedb.org/movie/41017"
+			"link": "https://www.themoviedb.org/movie/41017",
+			"meta": "Animation, Music, Fantasy | Oh! Production | Isao Takahata | Hideki Sasaki, Fuyumi Shiraishi, Kaneta Kimotsuki"
 		},
 		{
 			"id": 81,
 			"name": "Nausicaä of the Valley of the Wind",
 			"year": 1984,
 			"poster": "https://image.tmdb.org/t/p/w500/tcrkfB8SRPQCgwI88hQScua6nxh.jpg",
-			"link": "https://www.themoviedb.org/movie/81"
+			"link": "https://www.themoviedb.org/movie/81",
+			"meta": "Adventure, Animation, Fantasy | Topcraft, Tokuma Shoten, Hakuhodo | Hayao Miyazaki | Sumi Shimamoto, Ichiro Nagai, Gorō Naya"
 		},
 		{
 			"id": 10515,
 			"name": "Castle in the Sky",
 			"year": 1986,
 			"poster": "https://image.tmdb.org/t/p/w500/41XxSsJc5OrulP0m7TrrUeO2hoz.jpg",
-			"link": "https://www.themoviedb.org/movie/10515"
+			"link": "https://www.themoviedb.org/movie/10515",
+			"meta": "Adventure, Fantasy, Animation, Action, Family | Studio Ghibli, Nibariki, Tokuma Shoten | Hayao Miyazaki | Keiko Yokozawa, Mayumi Tanaka, Minori Terada"
 		},
 		{
 			"id": 12477,
 			"name": "Grave of the Fireflies",
 			"year": 1988,
 			"poster": "https://image.tmdb.org/t/p/w500/k9tv1rXZbOhH7eiCk378x61kNQ1.jpg",
-			"link": "https://www.themoviedb.org/movie/12477"
+			"link": "https://www.themoviedb.org/movie/12477",
+			"meta": "Animation, Drama, War | Studio Ghibli | Isao Takahata | Tsutomu Tatsumi, Ayano Shiraishi, Yoshiko Shinohara"
 		},
 		{
 			"id": 8392,
 			"name": "My Neighbor Totoro",
 			"year": 1988,
 			"poster": "https://image.tmdb.org/t/p/w500/rtGDOeG9LzoerkDGZF9dnVeLppL.jpg",
-			"link": "https://www.themoviedb.org/movie/8392"
+			"link": "https://www.themoviedb.org/movie/8392",
+			"meta": "Fantasy, Animation, Family | となりのトトロ コレクション | Studio Ghibli, Nibariki, Tokuma Shoten | Hayao Miyazaki | Noriko Hidaka, Chika Sakamoto, Hitoshi Takagi"
 		},
 		{
 			"id": 16859,
 			"name": "Kiki's Delivery Service",
 			"year": 1989,
 			"poster": "https://image.tmdb.org/t/p/w500/Aufa4YdZIv4AXpR9rznwVA5SEfd.jpg",
-			"link": "https://www.themoviedb.org/movie/16859"
+			"link": "https://www.themoviedb.org/movie/16859",
+			"meta": "Animation, Family, Fantasy | Studio Ghibli, Nibariki, Tokuma Shoten, Nippon Television Network Corporation | Hayao Miyazaki | Minami Takayama, Rei Sakuma, Kappei Yamaguchi"
 		},
 		{
 			"id": 15080,
 			"name": "Only Yesterday",
 			"year": 1991,
 			"poster": "https://image.tmdb.org/t/p/w500/tOSnFE9e82iH3ZAzSTtuOkBsabJ.jpg",
-			"link": "https://www.themoviedb.org/movie/15080"
+			"link": "https://www.themoviedb.org/movie/15080",
+			"meta": "Animation, Drama, Romance | Studio Ghibli, Tokuma Shoten, Nippon Television Network Corporation, Hakuhodo | Isao Takahata | Miki Imai, Yoko Honna, Toshiro Yanagiba"
 		},
 		{
 			"id": 11621,
 			"name": "Porco Rosso",
 			"year": 1992,
 			"poster": "https://image.tmdb.org/t/p/w500/8mIvSvnVBApfORL9N6S38Q7wD6A.jpg",
-			"link": "https://www.themoviedb.org/movie/11621"
+			"link": "https://www.themoviedb.org/movie/11621",
+			"meta": "Animation, Adventure, Fantasy | Studio Ghibli, TOHO, Tokuma Shoten, Nibariki, Mitsubishi, Nippon Television Network Corporation | Hayao Miyazaki | Shūichirō Moriyama, Tokiko Kato, Bunshi Katsura VI"
 		},
 		{
 			"id": 21057,
 			"name": "Ocean Waves",
 			"year": 1993,
 			"poster": "https://image.tmdb.org/t/p/w500/fSR1LLMIJZ6WcQEkM82yKy4F9vQ.jpg",
-			"link": "https://www.themoviedb.org/movie/21057"
+			"link": "https://www.themoviedb.org/movie/21057",
+			"meta": "Animation, Drama, Romance | Studio Ghibli, Tokuma Shoten, Nippon Television Network Corporation | Tomomi Mochizuki | Nobuo Tobita, Yoko Sakamoto, Toshihiko Seki"
 		},
 		{
 			"id": 15283,
 			"name": "Pom Poko",
 			"year": 1994,
 			"poster": "https://image.tmdb.org/t/p/w500/gyoJmFf24MOUc4TTu97sd0cHIQF.jpg",
-			"link": "https://www.themoviedb.org/movie/15283"
+			"link": "https://www.themoviedb.org/movie/15283",
+			"meta": "Adventure, Animation, Fantasy | Studio Ghibli | Isao Takahata | Makoto Nonomura, Nijiko Kiyokawa, Shigeru Izumiya"
 		},
 		{
 			"id": 37797,
 			"name": "Whisper of the Heart",
 			"year": 1995,
 			"poster": "https://image.tmdb.org/t/p/w500/5FROLD8zpWFs9ja7aYho1uOMJHg.jpg",
-			"link": "https://www.themoviedb.org/movie/37797"
+			"link": "https://www.themoviedb.org/movie/37797",
+			"meta": "Animation, Drama, Family | Studio Ghibli, Nippon Television Network Corporation, Tokuma Shoten, Hakuhodo | Yoshifumi Kondo | Yoko Honna, Issey Takahashi, Takashi Tachibana"
 		},
 		{
 			"id": 128,
 			"name": "Princess Mononoke",
 			"year": 1997,
 			"poster": "https://image.tmdb.org/t/p/w500/cMYCDADoLKLbB83g4WnJegaZimC.jpg",
-			"link": "https://www.themoviedb.org/movie/128"
+			"link": "https://www.themoviedb.org/movie/128",
+			"meta": "Adventure, Fantasy, Animation | Studio Ghibli, dentsu, Tokuma Shoten, Nippon Television Network Corporation, Nibariki, TNDG | Hayao Miyazaki | Yoji Matsuda, Yuriko Ishida, Yuko Tanaka"
 		},
 		{
 			"id": 16198,
 			"name": "My Neighbors the Yamadas",
 			"year": 1999,
 			"poster": "https://image.tmdb.org/t/p/w500/nj0ijnOozQtu52r0ncut769G1FX.jpg",
-			"link": "https://www.themoviedb.org/movie/16198"
+			"link": "https://www.themoviedb.org/movie/16198",
+			"meta": "Animation, Comedy, Family | Studio Ghibli, Nippon Television Network Corporation, Tokuma Shoten, Hakuhodo | Isao Takahata | Hayato Isohata, Masako Araki, Naomi Uno"
 		},
 		{
 			"id": 129,
 			"name": "Spirited Away",
 			"year": 2001,
 			"poster": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
-			"link": "https://www.themoviedb.org/movie/129"
+			"link": "https://www.themoviedb.org/movie/129",
+			"meta": "Animation, Family, Fantasy | Studio Ghibli, Tokuma Shoten, Nippon Television Network Corporation, Mitsubishi, dentsu, TFC | Hayao Miyazaki | Rumi Hiiragi, Miyu Irino, Mari Natsuki"
 		},
 		{
 			"id": 15370,
 			"name": "The Cat Returns",
 			"year": 2002,
 			"poster": "https://image.tmdb.org/t/p/w500/pqyY7IEWkCWNZ7EuRStQaJITEta.jpg",
-			"link": "https://www.themoviedb.org/movie/15370"
+			"link": "https://www.themoviedb.org/movie/15370",
+			"meta": "Adventure, Fantasy, Animation, Drama, Family | Studio Ghibli, Hakuhodo DY Media Partners, Mitsubishi, Nippon Television Network Corporation, TOHO, Tokuma Shoten | Hiroyuki Morita | Chizuru Ikewaki, Yoshihiko Hakamada, Aki Maeda"
 		},
 		{
 			"id": 4935,
 			"name": "Howl's Moving Castle",
 			"year": 2004,
 			"poster": "https://image.tmdb.org/t/p/w500/13kOl2v0nD2OLbVSHnHk8GUFEhO.jpg",
-			"link": "https://www.themoviedb.org/movie/4935"
+			"link": "https://www.themoviedb.org/movie/4935",
+			"meta": "Fantasy, Animation, Adventure | Studio Ghibli, Tokuma Shoten, Nippon Television Network Corporation, dentsu, Walt Disney Japan, d-rights, TOHO | Hayao Miyazaki | Chieko Baisho, Takuya Kimura, Akihiro Miwa"
 		},
 		{
 			"id": 37933,
 			"name": "Tales from Earthsea",
 			"year": 2006,
 			"poster": "https://image.tmdb.org/t/p/w500/y0VnJt4eRPMjA1hpJ8f1EFoVaSf.jpg",
-			"link": "https://www.themoviedb.org/movie/37933"
+			"link": "https://www.themoviedb.org/movie/37933",
+			"meta": "Animation, Fantasy, Adventure | Studio Ghibli, dentsu Music and Entertainment, GNDHDDT, Hakuhodo DY Media Partners, Mitsubishi, Nibariki, Nippon Television Network Corporation, TOHO | Goro Miyazaki | Junichi Okada, Aoi Teshima, Bunta Sugawara"
 		},
 		{
 			"id": 12429,
 			"name": "Ponyo",
 			"year": 2008,
 			"poster": "https://image.tmdb.org/t/p/w500/yp8vEZflGynlEylxEesbYasc06i.jpg",
-			"link": "https://www.themoviedb.org/movie/12429"
+			"link": "https://www.themoviedb.org/movie/12429",
+			"meta": "Animation, Fantasy, Family | Studio Ghibli, TOHO, Nippon Television Network Corporation, dentsu, Hakuhodo DY Media Partners, The Walt Disney Company (Japan), Mitsubishi | Hayao Miyazaki | Yuria Kozuki, Hiroki Doi, George Tokoro"
 		},
 		{
 			"id": 51739,
 			"name": "The Secret World of Arrietty",
 			"year": 2010,
 			"poster": "https://image.tmdb.org/t/p/w500/3lSRaSjDp2nkXMQkzzjpRi3035O.jpg",
-			"link": "https://www.themoviedb.org/movie/51739"
+			"link": "https://www.themoviedb.org/movie/51739",
+			"meta": "Fantasy, Animation, Family | Studio Ghibli, Hakuhodo DY Media Partners, Mitsubishi Shoji, dentsu, TOHO, Nippon Television Network Corporation, Wild Bunch, The Walt Disney Company (Japan) | Hiromasa Yonebayashi | Mirai Shida, Ryunosuke Kamiki, Tomokazu Miura"
 		},
 		{
 			"id": 83389,
 			"name": "From Up on Poppy Hill",
 			"year": 2011,
 			"poster": "https://image.tmdb.org/t/p/w500/rRLYX4RZIyloHSJwvZKAhphAjiB.jpg",
-			"link": "https://www.themoviedb.org/movie/83389"
+			"link": "https://www.themoviedb.org/movie/83389",
+			"meta": "Animation, Drama | Studio Ghibli, Mitsubishi, Kodansha, KDDI, Hakuhodo DY Media Partners | Goro Miyazaki | Masami Nagasawa, Junichi Okada, Keiko Takeshita"
 		},
 		{
 			"id": 149870,
 			"name": "The Wind Rises",
 			"year": 2013,
 			"poster": "https://image.tmdb.org/t/p/w500/jfwSexzlIzaOgxP9A8bTA6t8YYb.jpg",
-			"link": "https://www.themoviedb.org/movie/149870"
+			"link": "https://www.themoviedb.org/movie/149870",
+			"meta": "Animation, Drama, History, Romance | Studio Ghibli, Nippon Television Network Corporation, dentsu, Hakuhodo DY Media Partners, The Walt Disney Company (Japan), d-rights, TOHO | Hayao Miyazaki | Hideaki Anno, Hidetoshi Nishijima, Miori Takimoto"
 		},
 		{
 			"id": 149871,
 			"name": "The Tale of the Princess Kaguya",
 			"year": 2013,
 			"poster": "https://image.tmdb.org/t/p/w500/cQidJuA546OSSXKWXoiCeINDxuj.jpg",
-			"link": "https://www.themoviedb.org/movie/149871"
+			"link": "https://www.themoviedb.org/movie/149871",
+			"meta": "Animation, Drama, Fantasy | Studio Ghibli, Hakuhodo DY Media Partners, KDDI, Mitsubishi Shoji, Nippon Television Network Corporation, TOHO, T2 Studio | Isao Takahata | Aki Asakura, Takeo Chii, Nobuko Miyamoto"
 		},
 		{
 			"id": 242828,
 			"name": "When Marnie Was There",
 			"year": 2014,
 			"poster": "https://image.tmdb.org/t/p/w500/vug1dvDI1tSa60Z8qjCuUE7ntkO.jpg",
-			"link": "https://www.themoviedb.org/movie/242828"
+			"link": "https://www.themoviedb.org/movie/242828",
+			"meta": "Animation, Drama, Family | Studio Ghibli, Hakuhodo DY Media Partners, KDDI, Nippon Television Network Corporation, TOHO, dentsu, The Walt Disney Company (Japan), Mitsubishi | Hiromasa Yonebayashi | Sara Takatsuki, Kasumi Arimura, Nanako Matsushima"
 		},
 		{
 			"id": 337703,
 			"name": "The Red Turtle",
 			"year": 2016,
 			"poster": "https://image.tmdb.org/t/p/w500/wOBU3SLjQ9358Km9YWYasPZyebp.jpg",
-			"link": "https://www.themoviedb.org/movie/337703"
+			"link": "https://www.themoviedb.org/movie/337703",
+			"meta": "Animation, Drama, Fantasy, Family | Wild Bunch, Studio Ghibli, Why Not Productions, CN4 Productions, Belvision, ARTE France Cinéma, Prima Linéa Productions | Michael Dudok de Wit | Tom Hudson, Baptiste Goy, Axel Devillers"
 		},
 		{
 			"id": 683127,
 			"name": "Earwig and the Witch",
 			"year": 2021,
 			"poster": "https://image.tmdb.org/t/p/w500/9oK820JieICOcfUhI6mkpFrcA9m.jpg",
-			"link": "https://www.themoviedb.org/movie/683127"
+			"link": "https://www.themoviedb.org/movie/683127",
+			"meta": "Animation, Fantasy, Family | Studio Ghibli, NHK, NHK Enterprises | Goro Miyazaki | Kokoro Hirasawa, Shinobu Terajima, Gaku Hamada"
 		},
 		{
 			"id": 508883,
 			"name": "The Boy and the Heron",
 			"year": 2023,
 			"poster": "https://image.tmdb.org/t/p/w500/f4oZTcfGrVTXKTWg157AwikXqmP.jpg",
-			"link": "https://www.themoviedb.org/movie/508883"
+			"link": "https://www.themoviedb.org/movie/508883",
+			"meta": "Animation, Fantasy, Drama | Studio Ghibli | Hayao Miyazaki | Soma Santoki, Masaki Suda, Ko Shibasaki"
 		}
 	]
 }

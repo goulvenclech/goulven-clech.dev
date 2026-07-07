@@ -15,6 +15,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 import { readListConfig } from "./listConfig.mjs"
+import { enrichEntries } from "./catalogueMeta.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")
@@ -223,6 +224,9 @@ async function main() {
 		}
 		await sleep(500)
 	}
+
+	// Open Library needs no credentials, so there's no env to thread through.
+	await enrichEntries({}, list.source, entries, { log: console.error })
 
 	mkdirSync(outDir, { recursive: true })
 	writeFileSync(

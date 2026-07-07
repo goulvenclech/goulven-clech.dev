@@ -14,6 +14,11 @@ export interface TodoEntry {
 	poster: string | null
 	/** External page for an entry that hasn't been reviewed yet (TMDB, IGDB, …). */
 	link: string
+	/**
+	 * Searchable catalogue-style metadata, pipe-delimited like a review's `meta`.
+	 * Absent on lists built before enrichment, so search must tolerate it missing.
+	 */
+	meta?: string
 }
 
 export interface TodoList {
@@ -33,6 +38,8 @@ export interface TodoItem {
 	done: boolean
 	emoji: string | null
 	href: string
+	/** Searchable catalogue-style metadata; see {@link TodoEntry.meta}. */
+	meta?: string
 }
 
 export interface TodoProgress {
@@ -67,6 +74,8 @@ export type TodoStatus = (typeof STATUSES)[number]
 
 export interface ReviewRow {
 	source_id: string | number
+	source_name: string
+	source_img: string
 	rating: number
 	emotions: string
 }
@@ -74,14 +83,20 @@ export interface ReviewRow {
 /**
  * Index a source's reviews by source id, keeping the newest per id (rows must
  * arrive newest-first). Ids are trimmed — some stored rows carry a stray leading
- * space that wouldn't match an entry's id otherwise.
+ * space that wouldn't match an entry's id otherwise. `names` holds each review's
+ * `source_name` (the catalogue's exact "Title (Year)" string) for deep-linking,
+ * `posters` its `source_img` so a done entry can show the catalogue's own poster.
  */
 export function indexReviews(rows: ReviewRow[]): {
 	done: Map<string, string>
 	reviews: Map<string, TodoReview>
+	names: Map<string, string>
+	posters: Map<string, string>
 } {
 	const done = new Map<string, string>()
 	const reviews = new Map<string, TodoReview>()
+	const names = new Map<string, string>()
+	const posters = new Map<string, string>()
 	for (const row of rows) {
 		const id = String(row.source_id).trim()
 		if (done.has(id)) continue
@@ -90,32 +105,44 @@ export function indexReviews(rows: ReviewRow[]): {
 			rating: row.rating,
 			emotions: JSON.parse(row.emotions ?? "[]") as number[],
 		})
+		names.set(id, row.source_name)
+		posters.set(id, row.source_img)
 	}
-	return { done, reviews }
+	return { done, reviews, names, posters }
 }
 
 /**
- * Turn a list into grid items. Done entries link to the catalogue filtered to
- * their review; the rest link to their external page. The done map is keyed by
- * the review's source_id as a string, so numeric and OLID ids match alike.
+ * Turn a list into grid items. A done entry links to the catalogue filtered to
+ * its review — querying the review's own `source_name` so the deep-link surfaces
+ * that one review rather than every title-alike — and shows the review's own
+ * poster (`source_img`) so a seen film matches the catalogue exactly. Everything
+ * else keeps the entry's title, poster, and external link. Both fall back to the
+ * entry when a review value is missing. Maps are keyed by the review's source_id
+ * as a string, so numeric and OLID ids match alike.
  */
 export function buildTodoItems(
 	list: TodoList,
 	done: Map<string, string>,
+	names: Map<string, string> = new Map(),
+	posters: Map<string, string> = new Map(),
 ): TodoItem[] {
 	return list.entries.map((entry) => {
-		const emoji = done.get(String(entry.id))
+		const id = String(entry.id)
+		const emoji = done.get(id)
+		const query = names.get(id) ?? entry.name
+		const reviewPoster = emoji !== undefined ? posters.get(id) : undefined
 		return {
 			id: entry.id,
 			name: entry.name,
 			year: entry.year,
-			poster: entry.poster,
+			poster: reviewPoster || entry.poster,
 			done: emoji !== undefined,
 			emoji: emoji ?? null,
 			href:
 				emoji !== undefined
-					? `/catalogue?query=${encodeURIComponent(entry.name)}&source=${list.source}`
+					? `/catalogue?query=${encodeURIComponent(query)}&source=${list.source}`
 					: entry.link,
+			meta: entry.meta,
 		}
 	})
 }
@@ -188,7 +215,7 @@ export function formatTodoStats(stats: TodoStats): string {
 	return `On average ${stats.averageVerb} ${stats.averageEmoji}, and mostly felt ${felt}.`
 }
 
-/** Filter by a case-insensitive name query and done/to-do status. */
+/** Filter by a case-insensitive query (title + meta) and done/to-do status. */
 export function filterTodoItems(
 	items: TodoItem[],
 	options: { query?: string; status?: TodoStatus },
@@ -198,7 +225,10 @@ export function filterTodoItems(
 	return items.filter((item) => {
 		if (status === "done" && !item.done) return false
 		if (status === "todo" && item.done) return false
-		if (query && !item.name.toLowerCase().includes(query)) return false
+		if (query) {
+			const haystack = `${item.name} ${item.meta ?? ""}`.toLowerCase()
+			if (!haystack.includes(query)) return false
+		}
 		return true
 	})
 }

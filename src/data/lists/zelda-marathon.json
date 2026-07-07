@@ -10,182 +10,208 @@
 			"name": "The Legend of Zelda",
 			"year": 1986,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1uii.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda",
+			"meta": "Adventure | LoZ, TLoZ | Nintendo R&D4 | Nintendo, Playtronic | Family Computer Disk System, Nintendo 3DS, Wii, Family Computer, Wii U, Nintendo Entertainment System"
 		},
 		{
 			"id": 1025,
 			"name": "Zelda II: The Adventure of Link",
 			"year": 1987,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1uje.jpg",
-			"link": "https://www.igdb.com/games/zelda-ii-the-adventure-of-link"
+			"link": "https://www.igdb.com/games/zelda-ii-the-adventure-of-link",
+			"meta": "Platform, Role-playing (RPG), Adventure | Nintendo R&D4 | Nintendo, Playtronic | Family Computer Disk System, Nintendo 3DS, Wii, Wii U, Nintendo Entertainment System"
 		},
 		{
 			"id": 1026,
 			"name": "A Link to the Past",
 			"year": 1991,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3vzn.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-to-the-past"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-to-the-past",
+			"meta": "Puzzle, Adventure | TLoZ: ALttP | Nintendo Entertainment Analysis & Development | St. GIGA, Nintendo, Playtronic, Gradiente, Hyundai | Satellaview, Super Nintendo Entertainment System, Wii, Wii U, New Nintendo 3DS, Super Famicom"
 		},
 		{
 			"id": 8532,
 			"name": "Link: The Faces of Evil",
 			"year": 1993,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co60ta.jpg",
-			"link": "https://www.igdb.com/games/link-the-faces-of-evil"
+			"link": "https://www.igdb.com/games/link-the-faces-of-evil",
+			"meta": "Adventure | Animation Magic | Philips Interactive Media | Philips CD-i"
 		},
 		{
 			"id": 8533,
 			"name": "Zelda: The Wand of Gamelon",
 			"year": 1993,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co60tx.jpg",
-			"link": "https://www.igdb.com/games/zelda-the-wand-of-gamelon"
+			"link": "https://www.igdb.com/games/zelda-the-wand-of-gamelon",
+			"meta": "Puzzle, Adventure | Animation Magic | Philips Interactive Media | Philips CD-i"
 		},
 		{
 			"id": 8534,
 			"name": "Zelda's Adventure",
 			"year": 1994,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wsk.jpg",
-			"link": "https://www.igdb.com/games/zeldas-adventure"
+			"link": "https://www.igdb.com/games/zeldas-adventure",
+			"meta": "Adventure | Viridis | Philips Interactive Media | Philips CD-i"
 		},
 		{
 			"id": 1027,
 			"name": "Link's Awakening DX",
 			"year": 1998,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4o47.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-link-s-awakening-dx"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-link-s-awakening-dx",
+			"meta": "Puzzle, Adventure | Nintendo Entertainment Analysis & Development | Nintendo, Gradiente | Game Boy Color, Nintendo 3DS"
 		},
 		{
 			"id": 1032,
 			"name": "Oracle of Seasons",
 			"year": 2001,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2tw0.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-seasons"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-seasons",
+			"meta": "Puzzle, Adventure | Capcom Production Studio 1 | Nintendo, Gradiente | Game Boy Color, Nintendo 3DS"
 		},
 		{
 			"id": 1041,
 			"name": "Oracle of Ages",
 			"year": 2001,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2tw1.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-ages"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-oracle-of-ages",
+			"meta": "Puzzle, Adventure | Capcom Production Studio 1 | Nintendo, Gradiente | Game Boy Color, Nintendo 3DS"
 		},
 		{
 			"id": 1034,
 			"name": "Four Swords Adventures",
 			"year": 2004,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob9xf.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-four-swords-adventures"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-four-swords-adventures",
+			"meta": "Puzzle, Adventure | Nintendo EAD Software Development Group No.3 | Nintendo | Nintendo GameCube"
 		},
 		{
 			"id": 1035,
 			"name": "The Minish Cap",
 			"year": 2004,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3nsk.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-minish-cap"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-minish-cap",
+			"meta": "Puzzle, Adventure | Capcom Production Studio 1 | Nintendo | Nintendo 3DS, Wii U, Game Boy Advance"
 		},
 		{
 			"id": 1037,
 			"name": "Phantom Hourglass",
 			"year": 2007,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3ocu.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-phantom-hourglass"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-phantom-hourglass",
+			"meta": "Puzzle, Adventure | Nintendo EAD Software Development Group No.3 | Nintendo | Wii U, Nintendo DS"
 		},
 		{
 			"id": 1038,
 			"name": "Spirit Tracks",
 			"year": 2009,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3oj6.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-spirit-tracks"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-spirit-tracks",
+			"meta": "Puzzle, Adventure | Nintendo EAD Software Development Group No.3 | Nintendo | Wii U, Nintendo DS"
 		},
 		{
 			"id": 1039,
 			"name": "Ocarina of Time 3D",
 			"year": 2011,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co600u.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-ocarina-of-time-3d"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-ocarina-of-time-3d",
+			"meta": "Puzzle, Adventure | TLoZ: OoT 3D | Grezzo | Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 2276,
 			"name": "The Wind Waker HD",
 			"year": 2013,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3ozi.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-wind-waker-hd"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-the-wind-waker-hd",
+			"meta": "Puzzle, Adventure | TLoZ: TWW HD | Nintendo EAD Software Development Group No.3 | Nintendo | Wii U"
 		},
 		{
 			"id": 2909,
 			"name": "A Link Between Worlds",
 			"year": 2013,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p0j.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-between-worlds"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-a-link-between-worlds",
+			"meta": "Puzzle, Adventure | Nintendo EAD Software Development Group No.3 | Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 8593,
 			"name": "Majora's Mask 3D",
 			"year": 2015,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob9x9.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-majoras-mask-3d"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-majoras-mask-3d",
+			"meta": "Puzzle, Adventure | TLoZ: MM3D, LoZ: MM3D | Grezzo | Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 11194,
 			"name": "Tri Force Heroes",
 			"year": 2015,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p1a.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-tri-force-heroes"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-tri-force-heroes",
+			"meta": "Puzzle, Adventure | Grezzo, Nintendo EPD Production Group No. 3 | Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 18017,
 			"name": "Twilight Princess HD",
 			"year": 2016,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3mqa.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-twilight-princess-hd"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-twilight-princess-hd",
+			"meta": "Puzzle, Adventure | TPHD  | Nintendo EPD Production Group No. 3 | Nintendo | Wii U"
 		},
 		{
 			"id": 7346,
 			"name": "Breath of the Wild",
 			"year": 2017,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3p2d.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-breath-of-the-wild"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-breath-of-the-wild",
+			"meta": "Puzzle, Adventure | TLoZ BotW, BotW | Nintendo EPD Production Group No. 3 | Nintendo | Wii U, Nintendo Switch"
 		},
 		{
 			"id": 115284,
 			"name": "Link's Awakening (2019)",
 			"year": 2019,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1qve.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-links-awakening--1"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-links-awakening--1",
+			"meta": "Puzzle, Adventure | Grezzo | Nintendo | Nintendo Switch 2, Nintendo Switch"
 		},
 		{
 			"id": 143614,
 			"name": "Skyward Sword HD",
 			"year": 2021,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob8lb.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-skyward-sword-hd"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-skyward-sword-hd",
+			"meta": "Puzzle, Adventure | Nintendo EPD Production Group No. 3 | Nintendo | Nintendo Switch"
 		},
 		{
 			"id": 195338,
 			"name": "Zelda 2 Redux",
 			"year": 2021,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co6oz0.jpg",
-			"link": "https://www.igdb.com/games/zelda-2-redux"
+			"link": "https://www.igdb.com/games/zelda-2-redux",
+			"meta": "Role-playing (RPG), Adventure | ShadowOne333 | Nintendo Entertainment System"
 		},
 		{
 			"id": 199417,
 			"name": "The Legend of Zelda Redux",
 			"year": 2022,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4zbc.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-redux"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-redux",
+			"meta": "Adventure | ShadowOne333 | Nintendo Entertainment System"
 		},
 		{
 			"id": 119388,
 			"name": "Tears of the Kingdom",
 			"year": 2023,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co5vmg.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-tears-of-the-kingdom"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-tears-of-the-kingdom",
+			"meta": "Puzzle, Adventure | TotK, TLoZ TotK | Nintendo EPD Production Group No. 3 | Nintendo | Nintendo Switch"
 		},
 		{
 			"id": 306149,
 			"name": "Echoes of Wisdom",
 			"year": 2024,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co8d9b.jpg",
-			"link": "https://www.igdb.com/games/the-legend-of-zelda-echoes-of-wisdom"
+			"link": "https://www.igdb.com/games/the-legend-of-zelda-echoes-of-wisdom",
+			"meta": "Puzzle, Adventure | TLoZ: EoW | Grezzo, Nintendo Entertainment Planning & Development, Nintendo EPD Production Group No. 3 | Nintendo | Nintendo Switch 2, Nintendo Switch"
 		}
 	]
 }

@@ -50,6 +50,26 @@ describe("buildTodoItems", () => {
 		expect(todo.href).toBe("https://example.com/2")
 	})
 
+	it("deep-links a done entry via the review's exact source_name", () => {
+		// source_name carries the catalogue's "Title (Year)" form, so the query
+		// pins that one review even when the card title alone would be ambiguous.
+		const movies = list("TMDB_MOVIE", [entry(1, "Rushmore")])
+		const [movie] = buildTodoItems(
+			movies,
+			new Map([["1", "😍"]]),
+			new Map([["1", "Rushmore (1998)"]]),
+		)
+		expect(movie.href).toBe(
+			"/catalogue?query=Rushmore%20(1998)&source=TMDB_MOVIE",
+		)
+	})
+
+	it("falls back to the entry title when no indexed name is given", () => {
+		const movies = list("TMDB_MOVIE", [entry(1, "Rushmore")])
+		const [movie] = buildTodoItems(movies, new Map([["1", "😍"]]))
+		expect(movie.href).toBe("/catalogue?query=Rushmore&source=TMDB_MOVIE")
+	})
+
 	it("uses the list's own source in the catalogue deep-link", () => {
 		const games = list("IGDB", [entry(1029, "Ocarina of Time")])
 		const [game] = buildTodoItems(games, new Map([["1029", "⭐"]]))
@@ -72,24 +92,84 @@ describe("buildTodoItems", () => {
 			"/catalogue?query=The%20Fate%20of%20Knowledge&source=OPENLIBRARY",
 		)
 	})
+
+	it("carries an entry's catalogue meta onto the item for search", () => {
+		const movies = list("TMDB_MOVIE", [
+			{
+				...entry(1, "Spirited Away"),
+				meta: "Animation | Studio Ghibli | Hayao Miyazaki",
+			},
+		])
+		const [movie] = buildTodoItems(movies, new Map())
+		expect(movie.meta).toBe("Animation | Studio Ghibli | Hayao Miyazaki")
+	})
+
+	it("shows the review's own poster for a done entry", () => {
+		// A seen film shows the poster the catalogue stored, not the list's — which
+		// can drift as TMDB swaps its primary art between review time and now.
+		const movies = list("TMDB_MOVIE", [entry(1, "Seen")])
+		const [movie] = buildTodoItems(
+			movies,
+			new Map([["1", "😍"]]),
+			new Map(),
+			new Map([["1", "https://image.tmdb.org/t/p/w500/catalogue.jpg"]]),
+		)
+		expect(movie.poster).toBe("https://image.tmdb.org/t/p/w500/catalogue.jpg")
+	})
+
+	it("keeps the entry poster for a to-do entry or an empty review poster", () => {
+		const movies = list("TMDB_MOVIE", [entry(1, "Seen"), entry(2, "Unseen")])
+		const [seen, unseen] = buildTodoItems(
+			movies,
+			new Map([["1", "😍"]]),
+			new Map(),
+			new Map([["1", ""]]), // reviewed but no stored poster → use the entry's
+		)
+		expect(seen.poster).toBe("poster-1.jpg")
+		expect(unseen.poster).toBe("poster-2.jpg")
+	})
 })
 
 describe("indexReviews", () => {
 	it("trims a stray-space source id so it still matches an entry's id", () => {
-		const { done, reviews } = indexReviews([
-			{ source_id: " 1556", rating: 4, emotions: "[1]" },
+		const { done, reviews, names, posters } = indexReviews([
+			{
+				source_id: " 1556",
+				source_name: "Alien (1979)",
+				source_img: "https://image.tmdb.org/t/p/w500/alien.jpg",
+				rating: 4,
+				emotions: "[1]",
+			},
 		])
 		expect(done.get("1556")).toBe("😀")
 		expect(reviews.get("1556")).toEqual({ rating: 4, emotions: [1] })
+		expect(names.get("1556")).toBe("Alien (1979)")
+		expect(posters.get("1556")).toBe(
+			"https://image.tmdb.org/t/p/w500/alien.jpg",
+		)
 	})
 
 	it("keeps the newest row per id (rows arrive newest-first)", () => {
-		const { done, reviews } = indexReviews([
-			{ source_id: 7, rating: 5, emotions: "[1,2]" },
-			{ source_id: 7, rating: 2, emotions: "[3]" },
+		const { done, reviews, names, posters } = indexReviews([
+			{
+				source_id: 7,
+				source_name: "Heat (1995)",
+				source_img: "heat-new.jpg",
+				rating: 5,
+				emotions: "[1,2]",
+			},
+			{
+				source_id: 7,
+				source_name: "Heat (stale)",
+				source_img: "heat-old.jpg",
+				rating: 2,
+				emotions: "[3]",
+			},
 		])
 		expect(done.get("7")).toBe("😍")
 		expect(reviews.get("7")).toEqual({ rating: 5, emotions: [1, 2] })
+		expect(names.get("7")).toBe("Heat (1995)")
+		expect(posters.get("7")).toBe("heat-new.jpg")
 	})
 })
 
@@ -228,6 +308,36 @@ describe("filterTodoItems", () => {
 				(i) => i.id,
 			),
 		).toEqual([1])
+	})
+
+	it("matches the catalogue meta, not just the title", () => {
+		const withMeta = [
+			item({
+				id: 1,
+				name: "Spirited Away",
+				meta: "Animation | Studio Ghibli | Hayao Miyazaki",
+			}),
+			item({ id: 2, name: "Heat", meta: "Crime | Michael Mann | Al Pacino" }),
+		]
+		expect(
+			filterTodoItems(withMeta, { query: "miyazaki" }).map((i) => i.id),
+		).toEqual([1])
+		expect(
+			filterTodoItems(withMeta, { query: "ghibli" }).map((i) => i.id),
+		).toEqual([1])
+	})
+
+	it("still filters when an item carries no meta", () => {
+		const mixed = [
+			item({ id: 1, name: "Alien" }),
+			item({ id: 2, name: "Heat", meta: "Crime | Michael Mann" }),
+		]
+		expect(filterTodoItems(mixed, { query: "mann" }).map((i) => i.id)).toEqual([
+			2,
+		])
+		expect(filterTodoItems(mixed, { query: "alien" }).map((i) => i.id)).toEqual(
+			[1],
+		)
 	})
 })
 

@@ -9,357 +9,408 @@
 			"name": "The Fate of Knowledge",
 			"year": 2002,
 			"poster": "https://covers.openlibrary.org/b/id/442498-L.jpg",
-			"link": "https://openlibrary.org/books/OL9701864M"
+			"link": "https://openlibrary.org/books/OL9701864M",
+			"meta": "Helen E. Longino | Princeton University Press"
 		},
 		{
 			"id": "OL24842505M",
 			"name": "Science in a Democratic Society",
 			"year": 2011,
 			"poster": "https://covers.openlibrary.org/b/id/12834651-L.jpg",
-			"link": "https://openlibrary.org/books/OL24842505M"
+			"link": "https://openlibrary.org/books/OL24842505M",
+			"meta": "Philip Kitcher | Prometheus Books | Social aspects, Science, Philosophy, Values, Science, social aspects"
 		},
 		{
 			"id": "OL10146402M",
 			"name": "Every Thing Must Go",
 			"year": 2007,
 			"poster": "https://covers.openlibrary.org/b/id/2334197-L.jpg",
-			"link": "https://openlibrary.org/books/OL10146402M"
+			"link": "https://openlibrary.org/books/OL10146402M",
+			"meta": "James Ladyman, Don Ross, Don Spurrett, John Collier | Oxford University Press, USA, OUP UK, Clarendon Press | Metaphysics"
 		},
 		{
 			"id": "OL29498544M",
 			"name": "What is a Complex System?",
 			"year": 2020,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL29498544M"
+			"link": "https://openlibrary.org/books/OL29498544M",
+			"meta": "J. Ladyman, K. Wiesner | Yale University Press"
 		},
 		{
 			"id": "OL993218M",
 			"name": "Philosophy of Mathematics",
 			"year": 1997,
 			"poster": "https://covers.openlibrary.org/b/id/122824-L.jpg",
-			"link": "https://openlibrary.org/books/OL993218M"
+			"link": "https://openlibrary.org/books/OL993218M",
+			"meta": "Stewart Shapiro | Oxford University Press | Mathematics, Philosophy, Mathematics, philosophy"
 		},
 		{
 			"id": "OL26774434M",
 			"name": "From Bacteria to Bach and Back",
 			"year": 2017,
 			"poster": "https://covers.openlibrary.org/b/id/8425621-L.jpg",
-			"link": "https://openlibrary.org/books/OL26774434M"
+			"link": "https://openlibrary.org/books/OL26774434M",
+			"meta": "Daniel C. Dennett | W. W. Norton & Company, W.W. Norton & Company | Consciousness, PHILOSOPHY / Mind & Body, RELIGION / Atheism, SCIENCE / Life Sciences / Evolution, SCIENCE / Philosophy & Social Aspects"
 		},
 		{
 			"id": "OL22518497M",
 			"name": "Freedom Evolves",
 			"year": 2003,
 			"poster": "https://covers.openlibrary.org/b/id/8651139-L.jpg",
-			"link": "https://openlibrary.org/books/OL22518497M"
+			"link": "https://openlibrary.org/books/OL22518497M",
+			"meta": "Daniel C. Dennett | Viking | Decision making, Free will and determinism, New York Times reviewed, Vrije wil, Determinisme"
 		},
 		{
 			"id": "OL34549710M",
 			"name": "Illusionism as a Theory of Consciousness",
 			"year": 2017,
 			"poster": "https://covers.openlibrary.org/b/id/13311646-L.jpg",
-			"link": "https://openlibrary.org/books/OL34549710M"
+			"link": "https://openlibrary.org/books/OL34549710M",
+			"meta": "Keith Frankish | Imprint Academic | Consciousness"
 		},
 		{
 			"id": "OL28545856M",
 			"name": "Building Better Beings",
 			"year": 2013,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL28545856M"
+			"link": "https://openlibrary.org/books/OL28545856M",
+			"meta": "Manuel Vargas | Oxford University Press | Responsibility"
 		},
 		{
 			"id": "OL7740880M",
 			"name": "Practical Ethics",
 			"year": 2011,
 			"poster": "https://covers.openlibrary.org/b/id/339199-L.jpg",
-			"link": "https://openlibrary.org/books/OL7740880M"
+			"link": "https://openlibrary.org/books/OL7740880M",
+			"meta": "Peter Singer | Cambridge University Press | Ethics, Social ethics, Ethics, modern, 20th century, Morale, Morale sociale"
 		},
 		{
 			"id": "OL25184598M",
 			"name": "The Ethical Project",
 			"year": 2011,
 			"poster": "https://covers.openlibrary.org/b/id/8646679-L.jpg",
-			"link": "https://openlibrary.org/books/OL25184598M"
+			"link": "https://openlibrary.org/books/OL25184598M",
+			"meta": "Philip Kitcher | Harvard University Press | Evolutionary Ethics, Ethics, evolutionary"
 		},
 		{
 			"id": "OL27663460M",
 			"name": "Braintrust",
 			"year": 2011,
 			"poster": "https://covers.openlibrary.org/b/id/9106196-L.jpg",
-			"link": "https://openlibrary.org/books/OL27663460M"
+			"link": "https://openlibrary.org/books/OL27663460M",
+			"meta": "Patricia Smith Churchland | Princeton University Press | Ethics, Neurobiology"
 		},
 		{
 			"id": "OL16100241M",
 			"name": "The Really Hard Problem",
 			"year": 2007,
 			"poster": "https://covers.openlibrary.org/b/id/5316666-L.jpg",
-			"link": "https://openlibrary.org/books/OL16100241M"
+			"link": "https://openlibrary.org/books/OL16100241M",
+			"meta": "Owen J Flanagan | MIT Press | Cognitive psychology, Materialism, Meaning (Philosophy), Psychological aspects, Psychological aspects of Materialism"
 		},
 		{
 			"id": "OL765705M",
 			"name": "Republicanism",
 			"year": 1997,
 			"poster": "https://covers.openlibrary.org/b/id/130275-L.jpg",
-			"link": "https://openlibrary.org/books/OL765705M"
+			"link": "https://openlibrary.org/books/OL765705M",
+			"meta": "Philip Pettit | Clarendon Press, Oxford University Press, Oxford University Press, USA | Philosophy, Democracy, Political science, Republicanism, Democra  cia"
 		},
 		{
 			"id": "OL38474473M",
 			"name": "The State",
 			"year": 2023,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL38474473M"
+			"link": "https://openlibrary.org/books/OL38474473M",
+			"meta": "Philip Pettit | Princeton University Press"
 		},
 		{
 			"id": "OL27337177M",
 			"name": "Private Government",
 			"year": 2017,
 			"poster": "https://covers.openlibrary.org/b/id/8801568-L.jpg",
-			"link": "https://openlibrary.org/books/OL27337177M"
+			"link": "https://openlibrary.org/books/OL27337177M",
+			"meta": "Elizabeth Anderson | Princeton University Press | Quality of work life, Work, Work environment, Industrial relations"
 		},
 		{
 			"id": "OL46578747M",
 			"name": "Hijacked",
 			"year": 2023,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL46578747M"
+			"link": "https://openlibrary.org/books/OL46578747M",
+			"meta": "Elizabeth Anderson | Cambridge University Press"
 		},
 		{
 			"id": "OL26077514M",
 			"name": "The Best Argument against God",
 			"year": 2013,
 			"poster": "https://covers.openlibrary.org/b/id/7682981-L.jpg",
-			"link": "https://openlibrary.org/books/OL26077514M"
+			"link": "https://openlibrary.org/books/OL26077514M",
+			"meta": "Graham Oppy | Palgrave Macmillan | Theism, Naturalism, God"
 		},
 		{
 			"id": "OL8850970M",
 			"name": "Defending Science Within Reason",
 			"year": 2003,
 			"poster": "https://covers.openlibrary.org/b/id/862370-L.jpg",
-			"link": "https://openlibrary.org/books/OL8850970M"
+			"link": "https://openlibrary.org/books/OL8850970M",
+			"meta": "Susan Haack | Prometheus Books | Science, Methodology, Philosophy, Creative ability in science, Natuurwetenschappen"
 		},
 		{
 			"id": "OL799767M",
 			"name": "The Conscious Mind",
 			"year": 1996,
 			"poster": "https://covers.openlibrary.org/b/id/123344-L.jpg",
-			"link": "https://openlibrary.org/books/OL799767M"
+			"link": "https://openlibrary.org/books/OL799767M",
+			"meta": "David John Chalmers | Oxford University Press | Dualism, Mind and body, Consciousness, Philosophy of mind., Philosophy of mind"
 		},
 		{
 			"id": "OL28632277M",
 			"name": "Consciousness and Fundamental Reality",
 			"year": 2017,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL28632277M"
+			"link": "https://openlibrary.org/books/OL28632277M",
+			"meta": "Philip Goff | Oxford University Press, Incorporated | Consciousness, Reality, Logical positivism, Mind and body, Monism"
 		},
 		{
 			"id": "OL40893677M",
 			"name": "Living Without Free Will",
 			"year": 2001,
 			"poster": null,
-			"link": "https://openlibrary.org/books/OL40893677M"
+			"link": "https://openlibrary.org/books/OL40893677M",
+			"meta": "Derk Pereboom | Cambridge University Press"
 		},
 		{
 			"id": "OL812538M",
 			"name": "The Significance of Free Will",
 			"year": 1996,
 			"poster": "https://covers.openlibrary.org/b/id/123342-L.jpg",
-			"link": "https://openlibrary.org/books/OL812538M"
+			"link": "https://openlibrary.org/books/OL812538M",
+			"meta": "Kane, Robert | Oxford University Press | Responsibility, Free will and determinism, Nonfiction, Philosophy, Libre arbitre et déterminisme"
 		},
 		{
 			"id": "OL25103586M",
 			"name": "Taking Morality Seriously",
 			"year": 2011,
 			"poster": "https://covers.openlibrary.org/b/id/9902865-L.jpg",
-			"link": "https://openlibrary.org/books/OL25103586M"
+			"link": "https://openlibrary.org/books/OL25103586M",
+			"meta": "David Enoch | Oxford University Press | Ethik, Normativität, Normativity (Ethics), Realism, Realismus (Philosophie)"
 		},
 		{
 			"id": "OL7692462M",
 			"name": "Ethics and the Limits of Philosophy",
 			"year": 1985,
 			"poster": "https://covers.openlibrary.org/b/id/413142-L.jpg",
-			"link": "https://openlibrary.org/books/OL7692462M"
+			"link": "https://openlibrary.org/books/OL7692462M",
+			"meta": "Bernard Williams | Harvard University Press | Ethik, Ethics, Ethiek, Social, PHILOSOPHY"
 		},
 		{
 			"id": "OL1648424M",
 			"name": "The Existence of God",
 			"year": 2004,
 			"poster": "https://covers.openlibrary.org/b/id/129772-L.jpg",
-			"link": "https://openlibrary.org/books/OL1648424M"
+			"link": "https://openlibrary.org/books/OL1648424M",
+			"meta": "Richard Swinburne | Clarendon Press, Oxford University Press | God, Theism, Proof, Addresses, essays, lectures, Godsbewijzen"
 		},
 		{
 			"id": "OL7391716M",
 			"name": "Making Things Happen",
 			"year": 2003,
 			"poster": "https://covers.openlibrary.org/b/id/127083-L.jpg",
-			"link": "https://openlibrary.org/books/OL7391716M"
+			"link": "https://openlibrary.org/books/OL7391716M",
+			"meta": "James Woodward | Oxford University Press, USA | Science, Causation, Philosophy, Explanation, Science, philosophy"
 		},
 		{
 			"id": "OL4426098M",
 			"name": "The Scientific Image",
 			"year": 1980,
 			"poster": "https://covers.openlibrary.org/b/id/4402191-L.jpg",
-			"link": "https://openlibrary.org/books/OL4426098M"
+			"link": "https://openlibrary.org/books/OL4426098M",
+			"meta": "Bas C. Van Fraassen | Clarendon Press, Oxford University Press | Philosophy, Science, Philosophy and science, Literary collections"
 		},
 		{
 			"id": "OL27355739M",
 			"name": "Statistical Inference as Severe Testing",
 			"year": 2018,
 			"poster": "https://covers.openlibrary.org/b/id/8819217-L.jpg",
-			"link": "https://openlibrary.org/books/OL27355739M"
+			"link": "https://openlibrary.org/books/OL27355739M",
+			"meta": "Deborah G. Mayo | Cambridge University Press | Mathematical statistics, Inference, Error analysis (mathematics), Fallacies (logic)"
 		},
 		{
 			"id": "OL9351991M",
 			"name": "Mind in a Physical World",
 			"year": 1998,
 			"poster": "https://covers.openlibrary.org/b/id/151897-L.jpg",
-			"link": "https://openlibrary.org/books/OL9351991M"
+			"link": "https://openlibrary.org/books/OL9351991M",
+			"meta": "Jaegwon Kim | The MIT Press | Causation, Mind and body, Philosophy of mind, Philosophy, Philosophie de l'esprit"
 		},
 		{
 			"id": "OL7693772M",
 			"name": "Wise Choices, Apt Feelings",
 			"year": 1990,
 			"poster": "https://covers.openlibrary.org/b/id/4652724-L.jpg",
-			"link": "https://openlibrary.org/books/OL7693772M"
+			"link": "https://openlibrary.org/books/OL7693772M",
+			"meta": "Allan Gibbard | Harvard University Press | Ethics, Judgment (Ethics), Judgment (Logic), Ethiek, Ethik"
 		},
 		{
 			"id": "OL22762159M",
 			"name": "A Secular Age",
 			"year": 2007,
 			"poster": "https://covers.openlibrary.org/b/id/8225740-L.jpg",
-			"link": "https://openlibrary.org/books/OL22762159M"
+			"link": "https://openlibrary.org/books/OL22762159M",
+			"meta": "Charles Taylor | Belknap Press of Harvard University Press | Religion and culture, Secularism, Secularisatie (maatschappij), Christendom, Religieus bewustzijn"
 		},
 		{
 			"id": "OL2855163M",
 			"name": "Making Sense of Marx",
 			"year": 1985,
 			"poster": "https://covers.openlibrary.org/b/id/332612-L.jpg",
-			"link": "https://openlibrary.org/books/OL2855163M"
+			"link": "https://openlibrary.org/books/OL2855163M",
+			"meta": "Jon Elster | Cambridge University Press, Editions de la Maison des sciences de l'homme | Marxian school of sociology, Socialism, Marx, karl, 1818-1883"
 		},
 		{
 			"id": "OL1731255M",
 			"name": "Time, Labor, and Social Domination",
 			"year": 1993,
 			"poster": "https://covers.openlibrary.org/b/id/4003984-L.jpg",
-			"link": "https://openlibrary.org/books/OL1731255M"
+			"link": "https://openlibrary.org/books/OL1731255M",
+			"meta": "Moishe Postone | Cambridge University Press | Critical theory, Frankfurt school of sociology, Marxian economics, Sociology, germany, Marxist criticism"
 		},
 		{
 			"id": "OL25430118M",
 			"name": "Postcolonial Theory and the Specter of Capital",
 			"year": 2013,
 			"poster": "https://covers.openlibrary.org/b/id/7261121-L.jpg",
-			"link": "https://openlibrary.org/books/OL25430118M"
+			"link": "https://openlibrary.org/books/OL25430118M",
+			"meta": "Vivek Chibber | Verso | Postcolonialism, Capitalism, Developing countries, politics and government, Postcolonialism--developing countries, Capitalism--developing countries"
 		},
 		{
 			"id": "OL27371864M",
 			"name": "Critique of Forms of Life",
 			"year": 2014,
 			"poster": "https://covers.openlibrary.org/b/id/8835054-L.jpg",
-			"link": "https://openlibrary.org/books/OL27371864M"
+			"link": "https://openlibrary.org/books/OL27371864M",
+			"meta": "Rahel Jaeggi | Belknap Press: An Imprint of Harvard University Press | Social sciences, philosophy, Social history, Social change, Social ethics, Criticism (philosophy)"
 		},
 		{
 			"id": "OL27613422M",
 			"name": "The People's Republic of Walmart",
 			"year": 2019,
 			"poster": "https://covers.openlibrary.org/b/id/9063092-L.jpg",
-			"link": "https://openlibrary.org/books/OL27613422M"
+			"link": "https://openlibrary.org/books/OL27613422M",
+			"meta": "Leigh Phillips | Verso | International business enterprises, Economics, sociological aspects, Capitalism, Socialism, Big business"
 		},
 		{
 			"id": "OL9548720M",
 			"name": "Not by Genes Alone",
 			"year": 2005,
 			"poster": "https://covers.openlibrary.org/b/id/142674-L.jpg",
-			"link": "https://openlibrary.org/books/OL9548720M"
+			"link": "https://openlibrary.org/books/OL9548720M",
+			"meta": "Peter J. Richerson, Robert Boyd - undifferentiated | University Of Chicago Press, University of Chicago Press | Human behavior, Evolution, Soziale Evolution, Comportement humain, Évolution sociale"
 		},
 		{
 			"id": "OL24885508M",
 			"name": "The Evolved Apprentice",
 			"year": 2012,
 			"poster": "https://covers.openlibrary.org/b/id/14464445-L.jpg",
-			"link": "https://openlibrary.org/books/OL24885508M"
+			"link": "https://openlibrary.org/books/OL24885508M",
+			"meta": "Kim Sterelny | The MIT Press | Evolutionary psychology, Cooperation, Biological Evolution, Psychology, Cooperative Behavior"
 		},
 		{
 			"id": "OL8833883M",
 			"name": "Les Fondements de l'arithmétique",
 			"year": 1884,
 			"poster": "https://covers.openlibrary.org/b/id/963161-L.jpg",
-			"link": "https://openlibrary.org/books/OL8833883M"
+			"link": "https://openlibrary.org/books/OL8833883M",
+			"meta": "Frege | Seuil"
 		},
 		{
 			"id": "OL7692564M",
 			"name": "From a Logical Point of View",
 			"year": 1953,
 			"poster": "https://covers.openlibrary.org/b/olid/OL7692564M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL7692564M"
+			"link": "https://openlibrary.org/books/OL7692564M",
+			"meta": "Willard Van Orman Quine | Harvard University Press | Logic, Addresses, essays, lectures, Logica, Logique, Bc71 .q48 1980"
 		},
 		{
 			"id": "OL1011226M",
 			"name": "Empiricism and the Philosophy of Mind",
 			"year": 1997,
 			"poster": "https://covers.openlibrary.org/b/olid/OL1011226M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL1011226M"
+			"link": "https://openlibrary.org/books/OL1011226M",
+			"meta": "Wilfrid Sellars | Harvard University Press | Empiricism, Philosophy of mind, Analysis (philosophy), Sellars, wilfrid, Empiricism--controversial literature"
 		},
 		{
 			"id": "OL19263891M",
 			"name": "Naming and Necessity",
 			"year": 1980,
 			"poster": "https://covers.openlibrary.org/b/olid/OL19263891M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL19263891M"
+			"link": "https://openlibrary.org/books/OL19263891M",
+			"meta": "Saul A. Kripke | Harvard Univrsity Press | Identity, Identity (Philosophical concept), Necessity (Philosophy), Reference (Philosophy), Language and languages, philosophy"
 		},
 		{
 			"id": "OL5945993M",
 			"name": "Fact, Fiction, and Forecast",
 			"year": 1955,
 			"poster": "https://covers.openlibrary.org/b/olid/OL5945993M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL5945993M"
+			"link": "https://openlibrary.org/books/OL5945993M",
+			"meta": "Nelson Goodman | Bobbs-Merrill | Addresses, essays, lectures, Conditionals (Logic), Forecasting, Induction (Logic), Logic"
 		},
 		{
 			"id": "OL2534358M",
 			"name": "On the Plurality of Worlds",
 			"year": 1986,
 			"poster": "https://covers.openlibrary.org/b/olid/OL2534358M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL2534358M"
+			"link": "https://openlibrary.org/books/OL2534358M",
+			"meta": "Lewis, David K. | B. Blackwell | Modality (Theory of knowledge), Realism, Plurality of worlds, Modality (theory of knowledge), Bd655 .l48 1986"
 		},
 		{
 			"id": "OL46989603M",
 			"name": "The Structure of Scientific Revolutions",
 			"year": 1962,
 			"poster": "https://covers.openlibrary.org/b/olid/OL46989603M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL46989603M"
+			"link": "https://openlibrary.org/books/OL46989603M",
+			"meta": "Thomas S. Kuhn | University of Chicago Press | Sciences, Histoire, Philosophie, Science, Philosophy"
 		},
 		{
 			"id": "OL21372956M",
 			"name": "Reasons and Persons",
 			"year": 1984,
 			"poster": "https://covers.openlibrary.org/b/olid/OL21372956M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL21372956M"
+			"link": "https://openlibrary.org/books/OL21372956M",
+			"meta": "Derek Parfit | Oxford University Press | Rationalism, Ethics, Self, Morale, Moi (Psychologie)"
 		},
 		{
 			"id": "OL3179680M",
 			"name": "Language, Thought, and Other Biological Categories",
 			"year": 1984,
 			"poster": "https://covers.openlibrary.org/b/olid/OL3179680M-L.jpg?default=false",
-			"link": "https://openlibrary.org/books/OL3179680M"
+			"link": "https://openlibrary.org/books/OL3179680M",
+			"meta": "Ruth Garrett Millikan | MIT Press | Language and languages, Languages, Philosophy, Semantics (Philosophy), Linguistics"
 		},
 		{
 			"id": "OL7735943M",
 			"name": "Philosophy of Mathematics: Selected Readings",
 			"year": 1983,
 			"poster": "https://covers.openlibrary.org/b/id/332590-L.jpg",
-			"link": "https://openlibrary.org/books/OL7735943M"
+			"link": "https://openlibrary.org/books/OL7735943M",
+			"meta": "Paul Benacerraf, Hilary Putnam | Cambridge University Press | Mathematics, Philosophy"
 		},
 		{
 			"id": "OL7735914M",
 			"name": "Mind, Language and Reality",
 			"year": 1975,
 			"poster": "https://covers.openlibrary.org/b/id/332565-L.jpg",
-			"link": "https://openlibrary.org/books/OL7735914M"
+			"link": "https://openlibrary.org/books/OL7735914M",
+			"meta": "Hilary Putnam | Cambridge University Press | Brain, Collected works, Philosophy, Thought and thinking, Language and languages"
 		},
 		{
 			"id": "OL10207086M",
 			"name": "Freedom and Resentment and Other Essays",
 			"year": 1974,
 			"poster": "https://covers.openlibrary.org/b/id/9584157-L.jpg",
-			"link": "https://openlibrary.org/books/OL10207086M"
+			"link": "https://openlibrary.org/books/OL10207086M",
+			"meta": "Strawson P.F. | Routledge | Philosophy, Free will and determinism, Personal Autonomy, Philosophie, Libre arbitre et déterminisme"
 		}
 	]
 }

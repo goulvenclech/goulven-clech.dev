@@ -10,189 +10,216 @@
 			"name": "Dr. No",
 			"year": 1962,
 			"poster": "https://image.tmdb.org/t/p/w500/f9HsemSsBEHN5eoMble1bj6fDxs.jpg",
-			"link": "https://www.themoviedb.org/movie/646"
+			"link": "https://www.themoviedb.org/movie/646",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Terence Young | Sean Connery, Ursula Andress, Joseph Wiseman"
 		},
 		{
 			"id": 657,
 			"name": "From Russia with Love",
 			"year": 1963,
 			"poster": "https://image.tmdb.org/t/p/w500/zx4V17FP8oclNvOpTgs2iCCtiYk.jpg",
-			"link": "https://www.themoviedb.org/movie/657"
+			"link": "https://www.themoviedb.org/movie/657",
+			"meta": "Action, Thriller, Adventure | James Bond Collection | EON Productions | Terence Young | Sean Connery, Daniela Bianchi, Pedro Armendáriz"
 		},
 		{
 			"id": 658,
 			"name": "Goldfinger",
 			"year": 1964,
 			"poster": "https://image.tmdb.org/t/p/w500/3zqmjujYSkgLSrdvvZ9VnDfaDRV.jpg",
-			"link": "https://www.themoviedb.org/movie/658"
+			"link": "https://www.themoviedb.org/movie/658",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | Guy Hamilton | Sean Connery, Gert Fröbe, Honor Blackman"
 		},
 		{
 			"id": 660,
 			"name": "Thunderball",
 			"year": 1965,
 			"poster": "https://image.tmdb.org/t/p/w500/wCc4qllaTDsQN8zgGkAgQrKO6N9.jpg",
-			"link": "https://www.themoviedb.org/movie/660"
+			"link": "https://www.themoviedb.org/movie/660",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Terence Young | Sean Connery, Claudine Auger, Adolfo Celi"
 		},
 		{
 			"id": 667,
 			"name": "You Only Live Twice",
 			"year": 1967,
 			"poster": "https://image.tmdb.org/t/p/w500/9mvNd43HgTkbfPwX6MF6EoPIMIa.jpg",
-			"link": "https://www.themoviedb.org/movie/667"
+			"link": "https://www.themoviedb.org/movie/667",
+			"meta": "Action, Thriller, Adventure | James Bond Collection | EON Productions, United Artists | Lewis Gilbert | Sean Connery, Akiko Wakabayashi, Mie Hama"
 		},
 		{
 			"id": 12208,
 			"name": "Casino Royale",
 			"year": 1967,
 			"poster": "https://image.tmdb.org/t/p/w500/9wdw5H018bgIM8bK2HuDvh8BwOh.jpg",
-			"link": "https://www.themoviedb.org/movie/12208"
+			"link": "https://www.themoviedb.org/movie/12208",
+			"meta": "Adventure, Action, Comedy | Famous Artists Productions, Columbia Pictures | Robert Parrish, Val Guest, Ken Hughes, John Huston, Joseph McGrath | David Niven, Peter Sellers, Ursula Andress"
 		},
 		{
 			"id": 668,
 			"name": "On Her Majesty's Secret Service",
 			"year": 1969,
 			"poster": "https://image.tmdb.org/t/p/w500/m3KfbxvqaiAvRJ6MpguA3GuLdDQ.jpg",
-			"link": "https://www.themoviedb.org/movie/668"
+			"link": "https://www.themoviedb.org/movie/668",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | Peter R. Hunt | George Lazenby, Diana Rigg, Telly Savalas"
 		},
 		{
 			"id": 681,
 			"name": "Diamonds Are Forever",
 			"year": 1971,
 			"poster": "https://image.tmdb.org/t/p/w500/ooDT0eKrWCxJCsn9JehPkD0QYNj.jpg",
-			"link": "https://www.themoviedb.org/movie/681"
+			"link": "https://www.themoviedb.org/movie/681",
+			"meta": "Action, Thriller | James Bond Collection | EON Productions, United Artists | Guy Hamilton | Sean Connery, Jill St. John, Charles Gray"
 		},
 		{
 			"id": 253,
 			"name": "Live and Let Die",
 			"year": 1973,
 			"poster": "https://image.tmdb.org/t/p/w500/39qkrjqMZs6utwNmihVImC3ghas.jpg",
-			"link": "https://www.themoviedb.org/movie/253"
+			"link": "https://www.themoviedb.org/movie/253",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | Guy Hamilton | Roger Moore, Yaphet Kotto, Jane Seymour"
 		},
 		{
 			"id": 682,
 			"name": "The Man with the Golden Gun",
 			"year": 1974,
 			"poster": "https://image.tmdb.org/t/p/w500/xVkbKwGnBVNQ122GN5bCTMyPbWz.jpg",
-			"link": "https://www.themoviedb.org/movie/682"
+			"link": "https://www.themoviedb.org/movie/682",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | Guy Hamilton | Roger Moore, Christopher Lee, Britt Ekland"
 		},
 		{
 			"id": 691,
 			"name": "The Spy Who Loved Me",
 			"year": 1977,
 			"poster": "https://image.tmdb.org/t/p/w500/3ZxHKFxMYvAko680DsRgAZKWcLi.jpg",
-			"link": "https://www.themoviedb.org/movie/691"
+			"link": "https://www.themoviedb.org/movie/691",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | Lewis Gilbert | Roger Moore, Barbara Bach, Curd Jürgens"
 		},
 		{
 			"id": 698,
 			"name": "Moonraker",
 			"year": 1979,
 			"poster": "https://image.tmdb.org/t/p/w500/6LrJdXNmu5uHOVALZxVYd44Lva0.jpg",
-			"link": "https://www.themoviedb.org/movie/698"
+			"link": "https://www.themoviedb.org/movie/698",
+			"meta": "Action, Adventure, Thriller, Science Fiction | James Bond Collection | EON Productions, Les Productions Artistes Associés, United Artists | Lewis Gilbert | Roger Moore, Lois Chiles, Michael Lonsdale"
 		},
 		{
 			"id": 699,
 			"name": "For Your Eyes Only",
 			"year": 1981,
 			"poster": "https://image.tmdb.org/t/p/w500/xV4Nnr6DjjERlqNikqDQX8LUgua.jpg",
-			"link": "https://www.themoviedb.org/movie/699"
+			"link": "https://www.themoviedb.org/movie/699",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists | John Glen | Roger Moore, Carole Bouquet, Chaim Topol"
 		},
 		{
 			"id": 700,
 			"name": "Octopussy",
 			"year": 1983,
 			"poster": "https://image.tmdb.org/t/p/w500/yoosZitM9igSk3Sd0sBXIhKlAh1.jpg",
-			"link": "https://www.themoviedb.org/movie/700"
+			"link": "https://www.themoviedb.org/movie/700",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | John Glen | Roger Moore, Maud Adams, Louis Jourdan"
 		},
 		{
 			"id": 36670,
 			"name": "Never Say Never Again",
 			"year": 1983,
 			"poster": "https://image.tmdb.org/t/p/w500/zhoAL4o1STGgLbLxJ9r1ijfyHC9.jpg",
-			"link": "https://www.themoviedb.org/movie/36670"
+			"link": "https://www.themoviedb.org/movie/36670",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | TaliaFilm II Productions, Woodcote | Irvin Kershner | Sean Connery, Klaus Maria Brandauer, Max von Sydow"
 		},
 		{
 			"id": 707,
 			"name": "A View to a Kill",
 			"year": 1985,
 			"poster": "https://image.tmdb.org/t/p/w500/arJF829RP9cYvh0NU70dC5TtXSa.jpg",
-			"link": "https://www.themoviedb.org/movie/707"
+			"link": "https://www.themoviedb.org/movie/707",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, United Artists, Metro-Goldwyn-Mayer | John Glen | Roger Moore, Tanya Roberts, Christopher Walken"
 		},
 		{
 			"id": 708,
 			"name": "The Living Daylights",
 			"year": 1987,
 			"poster": "https://image.tmdb.org/t/p/w500/1oRlmWX9hewpn2B44wawBjHd7dx.jpg",
-			"link": "https://www.themoviedb.org/movie/708"
+			"link": "https://www.themoviedb.org/movie/708",
+			"meta": "Action, Adventure, Thriller | James Bond Collection | EON Productions, United Artists | John Glen | Timothy Dalton, Maryam D'Abo, Joe Don Baker"
 		},
 		{
 			"id": 709,
 			"name": "Licence to Kill",
 			"year": 1989,
 			"poster": "https://image.tmdb.org/t/p/w500/8nzJve63EXA79HGAyidZwivZrQ2.jpg",
-			"link": "https://www.themoviedb.org/movie/709"
+			"link": "https://www.themoviedb.org/movie/709",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, Estudios Churubusco Azteca, United Artists | John Glen | Timothy Dalton, Carey Lowell, Robert Davi"
 		},
 		{
 			"id": 710,
 			"name": "GoldenEye",
 			"year": 1995,
 			"poster": "https://image.tmdb.org/t/p/w500/z0ljRnNxIO7CRBhLEO0DvLgAFPR.jpg",
-			"link": "https://www.themoviedb.org/movie/710"
+			"link": "https://www.themoviedb.org/movie/710",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Martin Campbell | Pierce Brosnan, Sean Bean, Izabella Scorupco"
 		},
 		{
 			"id": 714,
 			"name": "Tomorrow Never Dies",
 			"year": 1997,
 			"poster": "https://image.tmdb.org/t/p/w500/gZm002w7q9yLOkltxT76TWGfdZX.jpg",
-			"link": "https://www.themoviedb.org/movie/714"
+			"link": "https://www.themoviedb.org/movie/714",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Roger Spottiswoode | Pierce Brosnan, Jonathan Pryce, Michelle Yeoh"
 		},
 		{
 			"id": 36643,
 			"name": "The World Is Not Enough",
 			"year": 1999,
 			"poster": "https://image.tmdb.org/t/p/w500/wCb2msgoZPK01WIqry24M4xsM73.jpg",
-			"link": "https://www.themoviedb.org/movie/36643"
+			"link": "https://www.themoviedb.org/movie/36643",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Michael Apted | Pierce Brosnan, Sophie Marceau, Robert Carlyle"
 		},
 		{
 			"id": 36669,
 			"name": "Die Another Day",
 			"year": 2002,
 			"poster": "https://image.tmdb.org/t/p/w500/bZmGqOhMhaLn8AoFMvFDct4tbrL.jpg",
-			"link": "https://www.themoviedb.org/movie/36669"
+			"link": "https://www.themoviedb.org/movie/36669",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions | Lee Tamahori | Pierce Brosnan, Halle Berry, Toby Stephens"
 		},
 		{
 			"id": 36557,
 			"name": "Casino Royale",
 			"year": 2006,
 			"poster": "https://image.tmdb.org/t/p/w500/lMrxYKKhd4lqRzwUHAy5gcx9PSO.jpg",
-			"link": "https://www.themoviedb.org/movie/36557"
+			"link": "https://www.themoviedb.org/movie/36557",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | Metro-Goldwyn-Mayer, Columbia Pictures, EON Productions, Casino Royale Productions | Martin Campbell | Daniel Craig, Eva Green, Mads Mikkelsen"
 		},
 		{
 			"id": 10764,
 			"name": "Quantum of Solace",
 			"year": 2008,
 			"poster": "https://image.tmdb.org/t/p/w500/e3DXXLJHGqMx9yYpXsql1XNljmM.jpg",
-			"link": "https://www.themoviedb.org/movie/10764"
+			"link": "https://www.themoviedb.org/movie/10764",
+			"meta": "Adventure, Action, Thriller | James Bond Collection | EON Productions, Metro-Goldwyn-Mayer, Columbia Pictures, B22 | Marc Forster | Daniel Craig, Olga Kurylenko, Mathieu Amalric"
 		},
 		{
 			"id": 37724,
 			"name": "Skyfall",
 			"year": 2012,
 			"poster": "https://image.tmdb.org/t/p/w500/d0IVecFQvsGdSbnMAHqiYsNYaJT.jpg",
-			"link": "https://www.themoviedb.org/movie/37724"
+			"link": "https://www.themoviedb.org/movie/37724",
+			"meta": "Action, Adventure, Thriller | James Bond Collection | Metro-Goldwyn-Mayer, EON Productions, Columbia Pictures | Sam Mendes | Daniel Craig, Judi Dench, Javier Bardem"
 		},
 		{
 			"id": 206647,
 			"name": "Spectre",
 			"year": 2015,
 			"poster": "https://image.tmdb.org/t/p/w500/zj8ongFhtWNsVlfjOGo8pSr7PQg.jpg",
-			"link": "https://www.themoviedb.org/movie/206647"
+			"link": "https://www.themoviedb.org/movie/206647",
+			"meta": "Action, Adventure, Thriller | James Bond Collection | Metro-Goldwyn-Mayer, Columbia Pictures, EON Productions | Sam Mendes | Daniel Craig, Christoph Waltz, Léa Seydoux"
 		},
 		{
 			"id": 370172,
 			"name": "No Time to Die",
 			"year": 2021,
 			"poster": "https://image.tmdb.org/t/p/w500/iUgygt3fscRoKWCV1d0C7FbM9TP.jpg",
-			"link": "https://www.themoviedb.org/movie/370172"
+			"link": "https://www.themoviedb.org/movie/370172",
+			"meta": "Action, Thriller, Adventure | James Bond Collection | EON Productions, Metro-Goldwyn-Mayer | Cary Joji Fukunaga | Daniel Craig, Léa Seydoux, Rami Malek"
 		}
 	]
 }

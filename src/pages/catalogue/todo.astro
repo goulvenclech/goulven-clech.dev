@@ -27,6 +27,8 @@ const lists = Object.values(modules)
 // Latest review per reviewed id, per source, plus an id → emotion lookup.
 const doneBySource = new Map<string, Map<string, string>>()
 const reviewsBySource = new Map<string, Map<string, TodoReview>>()
+const namesBySource = new Map<string, Map<string, string>>()
+const postersBySource = new Map<string, Map<string, string>>()
 const emotionsById = new Map<string, TodoEmotion>()
 try {
 	const client = getClient()
@@ -43,14 +45,16 @@ try {
 
 	for (const source of new Set(lists.map((list) => list.source))) {
 		const result = await client.execute({
-			sql: `SELECT source_id, rating, emotions FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
+			sql: `SELECT source_id, source_name, source_img, rating, emotions FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
 			args: [source],
 		})
-		const { done, reviews } = indexReviews(
+		const { done, reviews, names, posters } = indexReviews(
 			result.rows as unknown as ReviewRow[],
 		)
 		doneBySource.set(source, done)
 		reviewsBySource.set(source, reviews)
+		namesBySource.set(source, names)
+		postersBySource.set(source, posters)
 	}
 } catch (error) {
 	// The lists are static, so degrade to "nothing done" rather than 500.
@@ -58,7 +62,12 @@ try {
 }
 
 const views = lists.map((list) => {
-	const items = buildTodoItems(list, doneBySource.get(list.source) ?? new Map())
+	const items = buildTodoItems(
+		list,
+		doneBySource.get(list.source) ?? new Map(),
+		namesBySource.get(list.source) ?? new Map(),
+		postersBySource.get(list.source) ?? new Map(),
+	)
 	return {
 		id: list.id,
 		title: list.title,
@@ -171,7 +180,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 					<input
 						id="query"
 						type="text"
-						placeholder="Search by title"
+						placeholder="Search by title, director, genre, etc."
 						class="group-has-focus:text-primary w-full truncate border-b-[0.1rem] border-dotted whitespace-nowrap outline-hidden placeholder:truncate"
 					/>
 				</div>
