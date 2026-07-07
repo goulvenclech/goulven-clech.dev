@@ -65,6 +65,35 @@ export const STATUSES = ["all", "done", "todo"] as const
 export type TodoSort = (typeof SORTS)[number]
 export type TodoStatus = (typeof STATUSES)[number]
 
+export interface ReviewRow {
+	source_id: string | number
+	rating: number
+	emotions: string
+}
+
+/**
+ * Index a source's reviews by source id, keeping the newest per id (rows must
+ * arrive newest-first). Ids are trimmed — some stored rows carry a stray leading
+ * space that wouldn't match an entry's id otherwise.
+ */
+export function indexReviews(rows: ReviewRow[]): {
+	done: Map<string, string>
+	reviews: Map<string, TodoReview>
+} {
+	const done = new Map<string, string>()
+	const reviews = new Map<string, TodoReview>()
+	for (const row of rows) {
+		const id = String(row.source_id).trim()
+		if (done.has(id)) continue
+		done.set(id, ratingLabels[row.rating]?.emoji ?? "")
+		reviews.set(id, {
+			rating: row.rating,
+			emotions: JSON.parse(row.emotions ?? "[]") as number[],
+		})
+	}
+	return { done, reviews }
+}
+
 /**
  * Turn a list into grid items. Done entries link to the catalogue filtered to
  * their review; the rest link to their external page. The done map is keyed by

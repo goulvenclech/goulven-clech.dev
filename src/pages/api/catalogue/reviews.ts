@@ -100,7 +100,7 @@ export async function POST(
 		const {
 			date,
 			source,
-			source_id,
+			source_id: rawSourceId,
 			rating,
 			emotions,
 			comment = "",
@@ -112,6 +112,10 @@ export async function POST(
 			emotions: number[]
 			comment?: string
 		} = body
+
+		// Trim so a stray space can't reach the DB; the to-do page matches on this id.
+		const source_id =
+			typeof rawSourceId === "string" ? rawSourceId.trim() : rawSourceId
 
 		const isValid =
 			source &&

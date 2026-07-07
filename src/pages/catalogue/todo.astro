@@ -1,13 +1,14 @@
 ---
 import ReturnHome from "$components/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
-import { ratingLabels } from "$components/catalogue/reviewUtils"
 import { getClient } from "$src/db"
 import {
 	buildTodoItems,
 	computeTodoProgress,
 	computeTodoStats,
 	formatTodoStats,
+	indexReviews,
+	type ReviewRow,
 	type TodoList,
 	type TodoReview,
 	type TodoEmotion,
@@ -45,21 +46,9 @@ try {
 			sql: `SELECT source_id, rating, emotions FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
 			args: [source],
 		})
-		const done = new Map<string, string>()
-		const reviews = new Map<string, TodoReview>()
-		for (const row of result.rows as unknown as {
-			source_id: string
-			rating: number
-			emotions: string
-		}[]) {
-			const id = String(row.source_id)
-			if (done.has(id)) continue // keep only the latest review per entry
-			done.set(id, ratingLabels[row.rating]?.emoji ?? "")
-			reviews.set(id, {
-				rating: row.rating,
-				emotions: JSON.parse(row.emotions ?? "[]") as number[],
-			})
-		}
+		const { done, reviews } = indexReviews(
+			result.rows as unknown as ReviewRow[],
+		)
 		doneBySource.set(source, done)
 		reviewsBySource.set(source, reviews)
 	}
@@ -261,7 +250,9 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 			stats: TodoStats | null
 		}
 
-		const PAGE_SIZE = 100
+		// Multiple of both grid column counts (3 on mobile, 4 on desktop) so a
+		// full page fills whole rows instead of leaving a stray item on mobile.
+		const PAGE_SIZE = 96
 
 		const dataEl = document.getElementById("todo-views")
 		const views: View[] = dataEl ? JSON.parse(dataEl.textContent || "[]") : []

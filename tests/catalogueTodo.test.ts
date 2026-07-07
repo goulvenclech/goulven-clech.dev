@@ -5,6 +5,7 @@ import {
 	computeTodoStats,
 	filterTodoItems,
 	formatTodoStats,
+	indexReviews,
 	sortTodoItems,
 	type TodoItem,
 	type TodoList,
@@ -70,6 +71,25 @@ describe("buildTodoItems", () => {
 		expect(book.href).toBe(
 			"/catalogue?query=The%20Fate%20of%20Knowledge&source=OPENLIBRARY",
 		)
+	})
+})
+
+describe("indexReviews", () => {
+	it("trims a stray-space source id so it still matches an entry's id", () => {
+		const { done, reviews } = indexReviews([
+			{ source_id: " 1556", rating: 4, emotions: "[1]" },
+		])
+		expect(done.get("1556")).toBe("😀")
+		expect(reviews.get("1556")).toEqual({ rating: 4, emotions: [1] })
+	})
+
+	it("keeps the newest row per id (rows arrive newest-first)", () => {
+		const { done, reviews } = indexReviews([
+			{ source_id: 7, rating: 5, emotions: "[1,2]" },
+			{ source_id: 7, rating: 2, emotions: "[3]" },
+		])
+		expect(done.get("7")).toBe("😍")
+		expect(reviews.get("7")).toEqual({ rating: 5, emotions: [1, 2] })
 	})
 })
 

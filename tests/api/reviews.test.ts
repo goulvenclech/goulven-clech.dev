@@ -181,6 +181,7 @@ describe("POST /api/catalogue/reviews", () => {
 
 	it.each([
 		{ name: "missing source_id", body: { source_id: "" } },
+		{ name: "whitespace-only source_id", body: { source_id: "  " } },
 		{ name: "rating below 1", body: { rating: 0 } },
 		{ name: "rating above 6", body: { rating: 7 } },
 		{ name: "non-integer rating", body: { rating: 3.5 } },
@@ -240,6 +241,27 @@ describe("POST /api/catalogue/reviews", () => {
 			"metroidvania",
 			new Date("2025-01-02").toISOString(),
 		])
+	})
+
+	it("trims a padded source_id before resolving and inserting", async () => {
+		vi.mocked(sourceResolvers.IGDB).mockResolvedValue({
+			source_name: "Hollow Knight (2017)",
+			source_link: "https://www.igdb.com/games/hollow-knight",
+			source_img: "",
+			meta: "metroidvania",
+		})
+		const client = createMockDbClient()
+		const res = await POST(
+			postCtx({ ...validBody, source_id: "  1  " }),
+			client,
+		)
+		expect(res.status).toBe(201)
+		expect(vi.mocked(sourceResolvers.IGDB)).toHaveBeenCalledWith("1")
+
+		const stmt = vi.mocked(client.execute).mock.calls[0][0] as unknown as {
+			args: unknown[]
+		}
+		expect(stmt.args[1]).toBe("1")
 	})
 
 	it("skips focus computation when the resolved item has no image", async () => {
