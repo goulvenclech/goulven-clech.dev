@@ -112,7 +112,7 @@ async function getPositiveReviews(
 	source: MediaSource,
 ): Promise<ReviewThumbnail[]> {
 	const result = await db.execute({
-		sql: `SELECT source_name, source_img, source_img_focus_y, source_link, rating
+		sql: `SELECT source_name, source_img, source_link, rating
 		      FROM reviews
 		      WHERE inserted_at >= ? AND inserted_at < ?
 		        AND source = ?

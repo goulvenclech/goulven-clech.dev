@@ -1,7 +1,6 @@
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
-import { computeImageFocusY } from "../../../imageFocus"
 import { buildSelectQuery, parseReviewQuery } from "./reviewQueries"
 import { sourceResolvers } from "./sourceResolver"
 
@@ -16,7 +15,6 @@ export interface Review {
 	source_name: string
 	source_link: string
 	source_img: string
-	source_img_focus_y: number | null
 	rating: number // 1-6
 	emotions: number[] // Emotion IDs
 	comment: string
@@ -29,12 +27,14 @@ export interface Review {
  */
 interface DbReviewRow extends Omit<Review, "emotions"> {
 	emotions: string // JSON‑encoded array of emotion IDs
+	/** Legacy column, no longer consumed since covers stopped being cropped. */
+	source_img_focus_y?: number | null
 }
 
 /**
- * Maps a DB row to the public Review shape.
+ * Maps a DB row to the public Review shape, dropping legacy columns.
  */
-const mapRow = (row: DbReviewRow): Review => ({
+const mapRow = ({ source_img_focus_y: _, ...row }: DbReviewRow): Review => ({
 	...row,
 	emotions: JSON.parse(row.emotions ?? "[]") as number[],
 })
@@ -135,22 +135,17 @@ export async function POST(
 		const resolved = await resolver(source_id)
 		if (!resolved) return json({ error: "Not found" }, 404)
 
-		const source_img_focus_y = resolved.source_img
-			? await computeImageFocusY(resolved.source_img)
-			: null
-
 		await client.execute({
 			sql: `INSERT INTO reviews
-            (source, source_id, source_name, source_link, source_img, source_img_focus_y,
+            (source, source_id, source_name, source_link, source_img,
              rating, emotions, comment, meta, inserted_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			args: [
 				source,
 				source_id,
 				resolved.source_name,
 				resolved.source_link,
 				resolved.source_img,
-				source_img_focus_y,
 				rating,
 				JSON.stringify(emotions),
 				comment,

@@ -29,11 +29,11 @@ export class CardSkeleton extends HTMLElement {
 		for (let i = 0; i < this.count; i++) {
 			this.innerHTML += `
         <div
-          class="my-5 flex animate-pulse flex-col gap-5 sm:flex-row"
+          class="flex animate-pulse gap-5 py-5"
           style="animation-delay: ${i * 0.66}s"
         >
-          <div class="bg-alt-light dark:bg-alt-dark hidden h-[153.25px] w-full rounded sm:block sm:max-w-[150px]"></div>
-          <article class="bg-alt-light dark:bg-alt-dark h-[153.25px] w-full min-w-0 rounded p-0"></article>
+          <div class="bg-alt-light dark:bg-alt-dark hidden h-40 w-37.5 flex-none sm:block"></div>
+          <article class="bg-alt-light dark:bg-alt-dark h-40 w-full min-w-0 p-0"></article>
         </div>
       `
 		}

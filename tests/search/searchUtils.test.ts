@@ -13,7 +13,6 @@ function mockBlogEntry(overrides: Partial<BlogEntry> = {}): BlogEntry {
 		year: 2025,
 		tags: ["typescript", "testing"],
 		abstract: "A test blog entry about testing things.",
-		imageAlt: "Test image",
 		isPublished: true,
 		...overrides,
 	}

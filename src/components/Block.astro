@@ -7,32 +7,21 @@ import InternalImage from "./images/InternalImage.astro"
  */
 interface Props {
 	image?: ImageMetadata | string
-	imageDark?: ImageMetadata | string
 	imageAlt?: string
-	imageFocusY?: number
 	imageWidth?: number
 	imageHeight?: number
 	to: string
 }
 
 const formats = ["webp", "avif"]
-const cardImageWidths = [320, 480, 640, 960]
-const cardImageSizes = "(max-width: 640px) 100vw, 150px"
+const cardImageWidths = [100, 150, 200, 300]
+const cardImageSizes = "(max-width: 640px) 100px, 150px"
 const cardImageQuality = 80
 
-const {
-	image,
-	imageDark,
-	imageAlt = "",
-	to,
-	imageFocusY,
-	imageWidth,
-	imageHeight,
-} = Astro.props
+const { image, imageAlt = "", to, imageWidth, imageHeight } = Astro.props
 
 // Generate placeholders for images like in Image.astro
 let placeholderURL: string | undefined
-let placeholderURLDark: string | undefined
 
 if (image && typeof image !== "string" && image.format !== "svg") {
 	// Use fsPath if available (for local images), fallback to src
@@ -58,84 +47,26 @@ if (image && typeof image !== "string" && image.format !== "svg") {
 		}
 	}
 }
-
-if (imageDark && typeof imageDark !== "string" && imageDark.format !== "svg") {
-	// Use fsPath if available (for local images), fallback to src
-	const imageDarkPath = (imageDark as any).fsPath || imageDark.src
-	if (
-		imageDarkPath &&
-		typeof imageDarkPath === "string" &&
-		!imageDarkPath.startsWith("http")
-	) {
-		try {
-			placeholderURLDark = await generatePlaceholder(
-				imageDarkPath,
-				Math.max(imageDark.width, 600),
-				imageDark.height,
-			)
-		} catch (error) {
-			// If placeholder generation fails, continue without placeholder
-			console.warn(
-				"Failed to generate placeholder for dark image:",
-				imageDarkPath,
-				error,
-			)
-		}
-	}
-}
 ---
 
 <a href={to} class="card">
-	<div
-		class="card-image"
-		style={typeof imageFocusY === "number"
-			? `--image-focus-y: ${imageFocusY}%`
-			: undefined}
-	>
-		{
-			image &&
-				(!imageDark ? (
-					<InternalImage
-						source={image}
-						alt={imageAlt}
-						formats={formats}
-						widths={cardImageWidths}
-						sizes={cardImageSizes}
-						quality={cardImageQuality}
-						placeholderURL={placeholderURL}
-						width={imageWidth}
-						height={imageHeight}
-					/>
-				) : (
-					<>
-						<InternalImage
-							source={image}
-							alt={imageAlt}
-							formats={formats}
-							widths={cardImageWidths}
-							sizes={cardImageSizes}
-							quality={cardImageQuality}
-							class="dark:hidden"
-							placeholderURL={placeholderURL}
-							width={imageWidth}
-							height={imageHeight}
-						/>
-						<InternalImage
-							source={imageDark}
-							alt={imageAlt}
-							formats={formats}
-							widths={cardImageWidths}
-							sizes={cardImageSizes}
-							quality={cardImageQuality}
-							class="hidden dark:block"
-							placeholderURL={placeholderURLDark}
-							width={imageWidth}
-							height={imageHeight}
-						/>
-					</>
-				))
-		}
-	</div>
+	{
+		image && (
+			<div class="card-image">
+				<InternalImage
+					source={image}
+					alt={imageAlt}
+					formats={formats}
+					widths={cardImageWidths}
+					sizes={cardImageSizes}
+					quality={cardImageQuality}
+					placeholderURL={placeholderURL}
+					width={imageWidth}
+					height={imageHeight}
+				/>
+			</div>
+		)
+	}
 	<article>
 		<slot />
 	</article>

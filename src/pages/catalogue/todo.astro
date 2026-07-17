@@ -312,7 +312,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 			link.href = item.href
 			link.title = label(item)
 			link.className =
-				"no-icon bg-alt-light relative aspect-3/4 overflow-hidden rounded"
+				"no-icon bg-alt-light relative aspect-3/4 overflow-hidden"
 			if (!item.done) {
 				link.classList.add("opacity-60", "grayscale")
 				link.target = "_blank"

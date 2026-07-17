@@ -40,7 +40,6 @@ function mockReview(overrides: Partial<Review> = {}): Review {
 		source_link: "https://www.igdb.com/games/hollow-knight",
 		source_img:
 			"https://images.igdb.com/igdb/image/upload/t_cover_big_2x/abc123.jpg",
-		source_img_focus_y: 35,
 		rating: 5,
 		emotions: [1, 2],
 		comment: "A masterpiece of exploration and atmosphere",
@@ -132,46 +131,6 @@ describe("ReviewCard", () => {
 		const img = card.querySelector("img")
 		expect(img).not.toBeNull()
 		expect(img!.getAttribute("src")).toContain("picsum.photos/seed/12345")
-
-		card.remove()
-	})
-
-	it("sets image focus-y style", () => {
-		const card = new ReviewCard()
-		card.setReviewData(mockReview(), testEmotionsMap)
-		document.body.appendChild(card)
-
-		const img = card.querySelector("img")
-		expect(img).not.toBeNull()
-		expect(img!.getAttribute("style")).toContain("--image-focus-y: 35%")
-
-		card.remove()
-	})
-
-	it("handles focus-y of 0", () => {
-		const card = new ReviewCard()
-		card.setReviewData(mockReview({ source_img_focus_y: 0 }), testEmotionsMap)
-		document.body.appendChild(card)
-
-		const img = card.querySelector("img")
-		expect(img).not.toBeNull()
-		expect(img!.getAttribute("style")).toContain("--image-focus-y: 0%")
-
-		card.remove()
-	})
-
-	it("no focus-y style when null", () => {
-		const card = new ReviewCard()
-		card.setReviewData(
-			mockReview({ source_img_focus_y: null }),
-			testEmotionsMap,
-		)
-		document.body.appendChild(card)
-
-		const img = card.querySelector("img")
-		expect(img).not.toBeNull()
-		const style = img!.getAttribute("style")
-		expect(style === null || !style.includes("--image-focus-y")).toBe(true)
 
 		card.remove()
 	})

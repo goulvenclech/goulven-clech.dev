@@ -1,10 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content"
-import { getImage } from "astro:assets"
-import type { ImageMetadata } from "astro"
 import { formatDate } from "$src/dateUtils"
 import { isEntryPublished } from "$src/blogUtils"
-import { generatePlaceholder } from "$src/imageService"
 import type { BlogEntry } from "$src/blogUtils"
 import Block from "../Block.astro"
 export type ClientBlogEntries = BlogEntry[]
@@ -29,99 +26,6 @@ const blogEntries = blogEntriesRaw.sort(
 	(a, b) => b.data.date.getTime() - a.data.date.getTime(),
 )
 
-const CARD_IMAGE_MAX_WIDTH = 960
-const CARD_IMAGE_QUALITY = 80
-
-type EntryImage = ImageMetadata | string | undefined
-
-async function collectCardImageData(
-	entryImage: EntryImage,
-	id: string,
-	variant: "light" | "dark",
-): Promise<{ placeholder: string; optimizedSrc?: string }> {
-	let placeholder = ""
-	let optimizedSrc: string | undefined
-
-	if (!entryImage) {
-		return { placeholder, optimizedSrc }
-	}
-
-	if (typeof entryImage === "string") {
-		optimizedSrc = entryImage
-		return { placeholder, optimizedSrc }
-	}
-
-	if (entryImage.format === "svg") {
-		optimizedSrc = entryImage.src
-		return { placeholder, optimizedSrc }
-	}
-
-	try {
-		// Try to use fsPath from raw image, fallback to checking various properties
-		const imageWithPath = entryImage as any
-		const fsPath =
-			imageWithPath.fsPath ||
-			imageWithPath.filepath ||
-			imageWithPath.file?.fsPath
-		if (fsPath && typeof fsPath === "string") {
-			placeholder = await generatePlaceholder(
-				fsPath,
-				Math.max(entryImage.width, 600),
-				entryImage.height,
-			)
-		}
-	} catch (error) {
-		console.warn(
-			`Failed to generate placeholder for ${variant} image in ${id}:`,
-			error,
-		)
-	}
-
-	optimizedSrc = entryImage.src
-	try {
-		const targetWidth = Math.min(entryImage.width, CARD_IMAGE_MAX_WIDTH)
-		const targetFormat = entryImage.format === "gif" ? "gif" : "webp"
-		const optimized = await getImage({
-			src: entryImage,
-			width: targetWidth,
-			format: targetFormat,
-			...(targetFormat === "gif" ? {} : { quality: CARD_IMAGE_QUALITY }),
-		})
-		optimizedSrc = optimized.src
-	} catch (error) {
-		console.warn(`Failed to optimize ${variant} image in ${id}:`, error)
-	}
-
-	return { placeholder, optimizedSrc }
-}
-
-const imageAssets = await Promise.all(
-	blogEntries.map(async ({ id, data }) => {
-		const { placeholder, optimizedSrc } = await collectCardImageData(
-			data.image,
-			id,
-			"light",
-		)
-		return { id, placeholder, optimizedSrc }
-	}),
-)
-
-const imageDarkAssets = await Promise.all(
-	blogEntries.map(async ({ id, data }) => {
-		const { placeholder, optimizedSrc } = await collectCardImageData(
-			data.imageDark,
-			id,
-			"dark",
-		)
-		return { id, placeholder, optimizedSrc }
-	}),
-)
-
-const imageAssetMap = new Map(imageAssets.map((asset) => [asset.id, asset]))
-const imageDarkAssetMap = new Map(
-	imageDarkAssets.map((asset) => [asset.id, asset]),
-)
-
 // Extract all tags and years for filter options
 const allTags = new Set<string>()
 const allYears = new Set<number>()
@@ -143,33 +47,15 @@ const importantTags = [
 // Format blog entries for client-side filtering
 // Reduce the amount of data sent to the client as much as possible
 const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
-	({ id, data }) => {
-		const lightAssets = imageAssetMap.get(id)
-		const darkAssets = imageDarkAssetMap.get(id)
-
-		return {
-			id,
-			title: data.title,
-			date: formatDate(data.date),
-			year: data.date.getFullYear(),
-			tags: data.tags,
-			abstract: data.abstract,
-			image: lightAssets?.optimizedSrc
-				? { src: lightAssets.optimizedSrc }
-				: undefined,
-			imageDark: darkAssets?.optimizedSrc
-				? { src: darkAssets.optimizedSrc }
-				: undefined,
-			imagePlaceholder: lightAssets?.placeholder,
-			imageDarkPlaceholder: darkAssets?.placeholder,
-			imageAlt: data.imageAlt,
-			isPublished: isEntryPublished(data.published, true),
-			imageFocusY:
-				typeof data.cardImageFocusY === "number"
-					? data.cardImageFocusY
-					: undefined,
-		}
-	},
+	({ id, data }) => ({
+		id,
+		title: data.title,
+		date: formatDate(data.date),
+		year: data.date.getFullYear(),
+		tags: data.tags,
+		abstract: data.abstract,
+		isPublished: isEntryPublished(data.published, true),
+	}),
 )
 ---
 
@@ -208,12 +94,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 	{
 		/* Default SSR output */
 		blogEntries.slice(0, 5).map((result) => (
-			<Block
-				image={result.data.image}
-				imageDark={result.data.imageDark}
-				to={`/${result.id}`}
-				imageFocusY={result.data.cardImageFocusY}
-			>
+			<Block to={`/${result.id}`}>
 				<h3>{result.data.title}</h3>
 				<p class="line-clamp-4 text-ellipsis sm:line-clamp-3">
 					<span set:html={result.data.abstract} /> –
@@ -225,7 +106,7 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 </div>
 <button
 	id="load-more"
-	class={`button mt-0 ${blogEntries.length <= 5 ? "hidden" : ""}`}
+	class={`button mt-2.5 ${blogEntries.length <= 5 ? "hidden" : ""}`}
 	type="button"
 >
 	Load more

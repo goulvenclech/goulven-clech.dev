@@ -13,7 +13,7 @@ const { id, class: className = "" } = Astro.props
 
 <iframe
 	loading="lazy"
-	class={`my-5 aspect-video w-full rounded ${className}`}
+	class={`my-5 aspect-video w-full ${className}`}
 	src={`https://www.youtube.com/embed/${id}`}
 	title="YouTube video player"
 	allowfullscreen></iframe>

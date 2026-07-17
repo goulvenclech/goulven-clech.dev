@@ -11,15 +11,10 @@ import {
 vi.mock("../../src/pages/api/catalogue/sourceResolver", () => ({
 	sourceResolvers: { IGDB: vi.fn() },
 }))
-vi.mock("../../src/imageFocus", () => ({
-	computeImageFocusY: vi.fn().mockResolvedValue(42),
-}))
-
 vi.stubEnv("CATALOGUE_PASSWORD", "secret")
 
 import { GET, POST } from "../../src/pages/api/catalogue/reviews"
 import { sourceResolvers } from "../../src/pages/api/catalogue/sourceResolver"
-import { computeImageFocusY } from "../../src/imageFocus"
 
 // The DB stores emotions as a JSON string; the handler parses it back.
 const dbRow = {
@@ -234,7 +229,6 @@ describe("POST /api/catalogue/reviews", () => {
 			"Hollow Knight (2017)",
 			"https://www.igdb.com/games/hollow-knight",
 			"https://img/cover.jpg",
-			42, // source_img_focus_y
 			5,
 			JSON.stringify([1]),
 			"loved it",
@@ -264,7 +258,7 @@ describe("POST /api/catalogue/reviews", () => {
 		expect(stmt.args[1]).toBe("1")
 	})
 
-	it("skips focus computation when the resolved item has no image", async () => {
+	it("inserts a review even when the resolved item has no image", async () => {
 		vi.mocked(sourceResolvers.IGDB).mockResolvedValue({
 			source_name: "No Cover Game (TBD)",
 			source_link: "https://www.igdb.com/games/no-cover",
@@ -274,11 +268,10 @@ describe("POST /api/catalogue/reviews", () => {
 		const client = createMockDbClient()
 		const res = await POST(postCtx(validBody), client)
 		expect(res.status).toBe(201)
-		expect(vi.mocked(computeImageFocusY)).not.toHaveBeenCalled()
 
 		const stmt = vi.mocked(client.execute).mock.calls[0][0] as unknown as {
 			args: unknown[]
 		}
-		expect(stmt.args[5]).toBeNull() // source_img_focus_y
+		expect(stmt.args[4]).toBe("") // source_img
 	})
 })

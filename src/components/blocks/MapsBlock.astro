@@ -2,7 +2,6 @@
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "../Block.astro"
-import { computeImageFocusY } from "../../imageFocus"
 import { getClosedDays, scaleToMaxHeight } from "./mapsUtils"
 
 /**
@@ -45,7 +44,6 @@ const MAX_HEIGHT = 750
 let photoUrl: string | undefined
 let imageWidth: number | undefined
 let imageHeight: number | undefined
-let imageFocusY: number | undefined
 
 try {
 	const photo = place.photos?.[0]
@@ -66,13 +64,6 @@ try {
 			// Never pass a remote URL without explicit dimensions
 			photoUrl = undefined
 		}
-
-		if (photoUrl) {
-			const computedFocus = await computeImageFocusY(photoUrl)
-			if (typeof computedFocus === "number") {
-				imageFocusY = computedFocus
-			}
-		}
 	}
 } catch (error) {
 	console.warn(`Failed to build photo for place ${id}:`, error)
@@ -88,7 +79,6 @@ try {
 		? `Photo of ${place.displayName.text}`
 		: "Place photo"}
 	to={place.googleMapsUri}
-	imageFocusY={imageFocusY}
 	imageWidth={imageWidth}
 	imageHeight={imageHeight}
 >

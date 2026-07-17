@@ -2,8 +2,7 @@
 // @ts-ignore - Please EleventyFetch type your shit 🙏
 import EleventyFetch from "@11ty/eleventy-fetch"
 import Block from "../Block.astro"
-import { computeImageFocusY } from "../../imageFocus"
-import { resolveRedirectChain } from "../../imageUtils"
+import { probeImageSize, resolveRedirectChain } from "../../imageUtils"
 
 /**
  * Used to present a book as a card, also a link to Google Shopping that book.
@@ -12,11 +11,12 @@ import { resolveRedirectChain } from "../../imageUtils"
  */
 interface Props {
 	isbn: string
+	/** Unused since covers are no longer cropped, kept so existing MDX still type-checks. */
 	focusY?: number
 	authors?: string
 }
 
-const { isbn, focusY, authors } = Astro.props
+const { isbn, authors } = Astro.props
 
 /**
  * Await fetch function, to the Open Library Api
@@ -41,19 +41,19 @@ const coverUrl = await resolveRedirectChain(
 	`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
 )
 
-// Compute focus like MapsBlock, with optional manual override
-const computedFocus =
-	typeof focusY === "number" ? focusY : await computeImageFocusY(coverUrl)
-const imageFocusY: number | undefined =
-	typeof computedFocus === "number" ? computedFocus : undefined
+// Open Library covers vary in ratio, probe the real one so the layout doesn't
+// shift when the browser loads the file. 2:3 is only a fallback.
+const coverSize = (await probeImageSize(coverUrl)) ?? {
+	width: 600,
+	height: 900,
+}
 ---
 
 <Block
 	image={coverUrl}
 	to={book.info_url}
-	imageFocusY={imageFocusY}
-	imageWidth={600}
-	imageHeight={900}
+	imageWidth={coverSize.width}
+	imageHeight={coverSize.height}
 >
 	<h3
 		id={book.details.title}

@@ -111,7 +111,6 @@ export const sampleReview = {
 	source_name: "Test Game",
 	source_link: "https://example.com/game",
 	source_img: "https://example.com/image.jpg",
-	source_img_focus_y: 0.5,
 	rating: 5,
 	emotions: [1, 3],
 	comment: "Great game!",

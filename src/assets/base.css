@@ -54,8 +54,6 @@
 	--font-weight-normal: 400;
 	--font-weight-medium: 525;
 
-	--radius: 0.5rem;
-
 	--font-serif:
 		var(--font-eb-garamond), "Source Serif 4", ui-serif, Georgia, Cambria,
 		"Times New Roman", Times, serif;
@@ -151,12 +149,14 @@
 	}
 
 	/* app.css ou directives @apply */
+	/* Negative margin bleeds the hover background into the gutter while inner
+	   content stays aligned; no outer margin so hover zones tile edge to edge. */
 	.card {
-		@apply hover:bg-alt-light hover:text-font-light dark:hover:bg-alt-dark dark:hover:text-font-dark relative mb-5 flex flex-col overflow-hidden rounded whitespace-normal no-underline sm:flex-row;
+		@apply hover:bg-alt-light hover:text-font-light dark:hover:bg-alt-dark dark:hover:text-font-dark -mx-4 flex flex-col gap-2.5 px-4 py-5 whitespace-normal no-underline sm:-mx-5 sm:flex-row sm:gap-5 sm:px-5;
 	}
 
 	.card article {
-		@apply m-5 min-w-0 p-0 sm:pl-37.5;
+		@apply min-w-0 p-0;
 	}
 
 	.card h3,
@@ -164,32 +164,34 @@
 		@apply my-0;
 	}
 
+	/* The card is one big link, so its title reacts like one. */
+	.card:hover h3 {
+		@apply text-primary;
+	}
+
+	/* Width is the single authority so srcset'd pictures and raw <img> render
+	   at the same size; height follows the natural ratio. */
 	.card .card-image {
-		@apply h-[153.25px] w-auto sm:absolute sm:h-full sm:w-37.5 sm:flex-none sm:object-cover;
+		@apply w-25 flex-none sm:w-37.5;
 	}
 
 	.card .card-image img {
-		@apply h-full! w-full! rounded-none object-cover text-transparent;
-	}
-
-	@media (width <= theme(--breakpoint-sm)) {
-		.card .card-image img {
-			object-position: 50% var(--image-focus-y, 50%);
-		}
+		@apply h-auto max-h-56 w-full object-contain text-transparent;
 	}
 
 	.legend {
 		@apply mx-8 mt-2 text-center text-xs text-pretty italic sm:text-sm;
 	}
 
+	/* Buttons look like any other link, only block-level and centered. */
 	.button {
-		@apply hover:bg-alt-light! hover:text-font-light! dark:hover:bg-alt-dark! dark:hover:text-font-dark! focus:ring-primary focus:text-primary ring-offset-body-light dark:ring-offset-body-dark my-5 flex w-full flex-col items-center justify-center overflow-hidden rounded px-2.5 py-1.5 font-medium whitespace-normal no-underline ring-2 ring-transparent ring-offset-2 outline-hidden before:content-none! sm:flex-row;
+		@apply mx-auto my-5 block w-fit text-center whitespace-normal before:content-none!;
 	}
 
 	li code,
 	p code {
 		overflow-wrap: break-word;
-		@apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
+		@apply border-alt-light dark:border-alt-dark border-[1.5px] px-1 py-0.5 font-mono text-[12px] sm:text-[14px];
 	}
 
 	table {
@@ -220,7 +222,7 @@
 
 	side-note code {
 		overflow-wrap: break-word;
-		@apply border-alt-light dark:border-alt-dark rounded border-[1.5px] px-1 py-0.5 font-mono text-[11px];
+		@apply border-alt-light dark:border-alt-dark border-[1.5px] px-1 py-0.5 font-mono text-[11px];
 	}
 
 	annotation {
@@ -246,7 +248,7 @@
 	draft-section,
 	side-note.draft,
 	warning-note {
-		@apply relative block rounded border border-dashed py-5;
+		@apply relative block border border-dashed py-5;
 	}
 
 	draft-section,
@@ -266,7 +268,7 @@
 	draft-section::before,
 	side-note.draft::before {
 		content: "Draft";
-		@apply bg-alt-dark text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
+		@apply bg-alt-dark text-body-light absolute -top-3 left-4 px-1 text-xs;
 	}
 
 	.dark draft-section::before,
@@ -276,7 +278,7 @@
 
 	warning-note::before {
 		content: "Warning";
-		@apply bg-primary text-body-light absolute -top-3 left-4 rounded px-1 text-xs;
+		@apply bg-primary text-body-light absolute -top-3 left-4 px-1 text-xs;
 	}
 
 	.dark warning-note::before {

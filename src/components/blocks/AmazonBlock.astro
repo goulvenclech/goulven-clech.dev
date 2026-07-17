@@ -1,6 +1,7 @@
 ---
 import Block from "../Block.astro"
 import { parseAmazonImageSize } from "./amazonUtils"
+import { probeImageSize } from "../../imageUtils"
 
 /**
  * Used to present an Amazon product as a card, also a link that product.
@@ -14,20 +15,23 @@ interface Props {
 	price: string
 	rating: number
 	ratings_total: string
+	/** Unused since images are no longer cropped, kept so existing MDX still type-checks. */
 	focusY?: number
 }
 
-const { id, name, brand, img, price, rating, ratings_total, focusY } =
-	Astro.props
+const { id, name, brand, img, price, rating, ratings_total } = Astro.props
 
-const imageDimensions = parseAmazonImageSize(img)
+// The `_SL{n}_` URL hint only encodes the longest edge, so it can't give a
+// trustworthy aspect ratio — probe the real dimensions and only fall back
+// to the (square) hint if the fetch fails.
+const probedDimensions = await probeImageSize(img)
+const imageDimensions = probedDimensions ?? parseAmazonImageSize(img)
 const AMAZON_FALLBACK_SIZE = 1500
 ---
 
 <Block
 	image={img}
 	to={`https://www.amazon.fr/gp/product/${id}/`}
-	imageFocusY={focusY}
 	imageWidth={imageDimensions?.width ?? AMAZON_FALLBACK_SIZE}
 	imageHeight={imageDimensions?.height ?? AMAZON_FALLBACK_SIZE}
 >

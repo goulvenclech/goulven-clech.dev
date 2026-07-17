@@ -13,7 +13,6 @@ function mockBlogEntry(overrides: Partial<BlogEntry> = {}): BlogEntry {
 		year: 2025,
 		tags: ["typescript", "testing"],
 		abstract: "A test blog entry abstract.",
-		imageAlt: "Test cover",
 		isPublished: true,
 		...overrides,
 	}
@@ -82,50 +81,13 @@ describe("Card", () => {
 		card.remove()
 	})
 
-	it("renders an image when image src is provided", () => {
+	it("renders no image, blog cards are text-only", () => {
 		const card = new Card()
-		card.fromBlogEntry(mockBlogEntry({ image: { src: "/img/cover.webp" } }))
+		card.fromBlogEntry(mockBlogEntry())
 		document.body.appendChild(card)
 
-		const img = card.querySelector("img")
-		expect(img).not.toBeNull()
-		expect(img!.getAttribute("src")).toBe("/img/cover.webp")
-
-		card.remove()
-	})
-
-	it("does not render an img tag when no image is provided", () => {
-		const card = new Card()
-		card.fromBlogEntry(mockBlogEntry({ image: undefined }))
-		document.body.appendChild(card)
-
-		const img = card.querySelector("img")
-		expect(img).toBeNull()
-
-		card.remove()
-	})
-
-	it("sets --image-focus-y custom property when imageFocusY is provided", () => {
-		const card = new Card()
-		card.fromBlogEntry(mockBlogEntry({ imageFocusY: 30 }))
-		document.body.appendChild(card)
-
-		const imageDiv = card.querySelector(".card-image")
-		expect(imageDiv).not.toBeNull()
-		expect(imageDiv!.getAttribute("style")).toContain("--image-focus-y: 30%")
-
-		card.remove()
-	})
-
-	it("does not set --image-focus-y when imageFocusY is not provided", () => {
-		const card = new Card()
-		card.fromBlogEntry(mockBlogEntry({ imageFocusY: undefined }))
-		document.body.appendChild(card)
-
-		const imageDiv = card.querySelector(".card-image")
-		expect(imageDiv).not.toBeNull()
-		const style = imageDiv!.getAttribute("style")
-		expect(style === null || !style.includes("--image-focus-y")).toBe(true)
+		expect(card.querySelector("img")).toBeNull()
+		expect(card.querySelector(".card-image")).toBeNull()
 
 		card.remove()
 	})

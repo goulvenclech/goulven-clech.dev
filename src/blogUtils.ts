@@ -46,11 +46,5 @@ export interface BlogEntry {
 	year: number
 	tags: string[]
 	abstract: string
-	image?: { src: string }
-	imageDark?: { src: string }
-	imageAlt: string
-	imagePlaceholder?: string
-	imageDarkPlaceholder?: string
 	isPublished: boolean
-	imageFocusY?: number
 }

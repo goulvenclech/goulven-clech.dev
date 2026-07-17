@@ -32,7 +32,7 @@ const astroExpressiveCodeOptions = {
 		codeFontFamily: "var(--font-monaspace), ui-monospace, monospace",
 		uiFontFamily: "var(--font-monaspace), ui-monospace, monospace",
 		codeFontSize: "14px",
-		borderRadius: "0.5rem",
+		borderRadius: "0",
 	},
 }
 

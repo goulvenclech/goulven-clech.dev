@@ -141,7 +141,6 @@ export async function GET(context: APIContext): Promise<Response> {
 			year: e.data.date.getFullYear(),
 			tags: e.data.tags,
 			abstract: e.data.abstract_clean ?? e.data.abstract,
-			imageAlt: "",
 			isPublished: true,
 			dateObj: e.data.date,
 		}))
