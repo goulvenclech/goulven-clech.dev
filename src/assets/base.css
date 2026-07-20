@@ -169,14 +169,13 @@
 		@apply text-primary;
 	}
 
-	/* Width is the single authority so srcset'd pictures and raw <img> render
-	   at the same size; height follows the natural ratio. */
+	/* Capped to a thumbnail box, ratio preserved (no crop), same on every screen. */
 	.card .card-image {
-		@apply w-25 flex-none sm:w-37.5;
+		@apply w-fit flex-none;
 	}
 
 	.card .card-image img {
-		@apply h-auto max-h-56 w-full object-contain text-transparent;
+		@apply h-auto max-h-56 w-auto max-w-37.5 object-contain text-transparent;
 	}
 
 	.legend {
