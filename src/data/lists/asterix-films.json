@@ -1,0 +1,129 @@
+{
+	"id": "asterix-films",
+	"title": "Films Astérix",
+	"description": "Every Astérix film, animated and live-action. A nostalgia trip through our childhoods, watched with my partner Sterenn.",
+	"source": "TMDB_MOVIE",
+	"url": "https://en.wikipedia.org/wiki/List_of_Asterix_films",
+	"entries": [
+		{
+			"id": 11047,
+			"name": "Asterix the Gaul",
+			"year": 1967,
+			"poster": "https://image.tmdb.org/t/p/w500/A2dlVs5WRmAwIPVS5vODhAOkNy7.jpg",
+			"link": "https://www.themoviedb.org/movie/11047",
+			"meta": "Family, Animation, Adventure, Comedy | Asterix and Obelix (Animation) Collection | Dargaud Films, Belvision | Ray Goossens | Roger Carel, Jacques Morel, Pierre Tornade"
+		},
+		{
+			"id": 9929,
+			"name": "Asterix and Cleopatra",
+			"year": 1968,
+			"poster": "https://image.tmdb.org/t/p/w500/gNpKAmWFsCiWKKx39Ap8pF7EWQg.jpg",
+			"link": "https://www.themoviedb.org/movie/9929",
+			"meta": "Family, Animation, Adventure, Comedy | Asterix and Obelix (Animation) Collection | Belvision, Dargaud Films | René Goscinny, Albert Uderzo | Roger Carel, Jacques Morel, Micheline Dax"
+		},
+		{
+			"id": 9385,
+			"name": "The Twelve Tasks of Asterix",
+			"year": 1976,
+			"poster": "https://image.tmdb.org/t/p/w500/7cZQZOYZFJcLjZnxWjO5PcUtmDZ.jpg",
+			"link": "https://www.themoviedb.org/movie/9385",
+			"meta": "Family, Animation, Comedy, Adventure | Asterix and Obelix (Animation) Collection | Studios Idéfix, Dargaud Films, Les Productions René Goscinny, Halas and Batchelor Cartoon Films | René Goscinny, Albert Uderzo | Roger Carel, Jacques Morel, Jean Martinelli"
+		},
+		{
+			"id": 8868,
+			"name": "Asterix vs. Caesar",
+			"year": 1985,
+			"poster": "https://image.tmdb.org/t/p/w500/8LlqOgKKU0BeZzEo1PMMIjtLuj4.jpg",
+			"link": "https://www.themoviedb.org/movie/8868",
+			"meta": "Comedy, Animation, Family, Adventure | Asterix and Obelix (Animation) Collection | Gaumont International, Dargaud Films, Les Productions René Goscinny | Gaëtan Brizzi, Paul Brizzi | Roger Carel, Pierre Tornade, Pierre Mondy"
+		},
+		{
+			"id": 9318,
+			"name": "Asterix in Britain",
+			"year": 1986,
+			"poster": "https://image.tmdb.org/t/p/w500/10L5R1l03MqDx36e0LJ99NKLGD3.jpg",
+			"link": "https://www.themoviedb.org/movie/9318",
+			"meta": "Family, Animation, Adventure, Comedy | Asterix and Obelix (Animation) Collection | Dargaud Films, Gutenberghus, Gaumont International | Pino Van Lamsweerde | Roger Carel, Pierre Tornade, Graham Bushnell"
+		},
+		{
+			"id": 11625,
+			"name": "Asterix and the Big Fight",
+			"year": 1989,
+			"poster": "https://image.tmdb.org/t/p/w500/7KFAtZRXzD00Zw9sWxusrInLHgJ.jpg",
+			"link": "https://www.themoviedb.org/movie/11625",
+			"meta": "Family, Animation, Adventure, Comedy | Asterix and Obelix (Animation) Collection | Gaumont, Extrafilm Produktion, Dargaud Films | Philippe Grimond | Roger Carel, Pierre Tornade, Julien Guiomar"
+		},
+		{
+			"id": 9369,
+			"name": "Asterix Conquers America",
+			"year": 1994,
+			"poster": "https://image.tmdb.org/t/p/w500/lKSunt7dnbITSopaEeeR7KfeSHb.jpg",
+			"link": "https://www.themoviedb.org/movie/9369",
+			"meta": "Family, Animation, Adventure, Comedy | Asterix and Obelix (Animation) Collection | Extrafilm Produktion | Gerhard Hahn | Peer Augustinski, Ottfried Fischer, Ralf Wolter"
+		},
+		{
+			"id": 9564,
+			"name": "Asterix and Obelix Take On Caesar",
+			"year": 1999,
+			"poster": "https://image.tmdb.org/t/p/w500/sJ4zNakOuWcsW6ssH1qk80JehQ2.jpg",
+			"link": "https://www.themoviedb.org/movie/9564",
+			"meta": "Family, Adventure, Comedy, Fantasy | Asterix & Obelix (Live Action) Collection | Katharina, Renn Productions, TF1 Films Production, Bavaria Film, Bavaria Entertainment, Melampo Cinematografica | Claude Zidi | Christian Clavier, Gérard Depardieu, Roberto Benigni"
+		},
+		{
+			"id": 2899,
+			"name": "Asterix & Obelix: Mission Cleopatra",
+			"year": 2002,
+			"poster": "https://image.tmdb.org/t/p/w500/i4k9LPyy2j5d6m5bzDaZj0E7eR7.jpg",
+			"link": "https://www.themoviedb.org/movie/2899",
+			"meta": "Family, Fantasy, Comedy, Adventure | Asterix & Obelix (Live Action) Collection | Pathé, La Petite Reine, Katharina, Renn Productions, TF1 Films Production, Chez Wam, CP Medien, KC Medien | Alain Chabat | Gérard Depardieu, Christian Clavier, Jamel Debbouze"
+		},
+		{
+			"id": 9642,
+			"name": "Asterix and the Vikings",
+			"year": 2006,
+			"poster": "https://image.tmdb.org/t/p/w500/dW9h1Ez6PRx8PnZUVT27MnG8Wu5.jpg",
+			"link": "https://www.themoviedb.org/movie/9642",
+			"meta": "Family, Animation, Comedy, Adventure | Asterix and Obelix (Animation) Collection | M6 Studio, A. Film Production, Mandarin SAS, SND, 2d3D Animations | Stefan Fjeldmark, Jesper Møller | Roger Carel, Lorànt Deutsch, Sara Forestier"
+		},
+		{
+			"id": 2395,
+			"name": "Asterix at the Olympic Games",
+			"year": 2008,
+			"poster": "https://image.tmdb.org/t/p/w500/eNB2SrqmTJLByRDq3akDzA6Z9rC.jpg",
+			"link": "https://www.themoviedb.org/movie/2395",
+			"meta": "Fantasy, Adventure, Comedy, Family | Asterix & Obelix (Live Action) Collection | Pathé, Pathé Renn Productions, La Petite Reine, TF1 Films Production, Tripictures, Sorolla Films, Constantin Film, Novo RPI | Frédéric Forestier, Thomas Langmann | Gérard Depardieu, Clovis Cornillac, José Garcia"
+		},
+		{
+			"id": 99770,
+			"name": "Asterix & Obelix: God Save Britannia",
+			"year": 2012,
+			"poster": "https://image.tmdb.org/t/p/w500/rbdGCkvLPxuSvfVwHDK4PmOqmIm.jpg",
+			"link": "https://www.themoviedb.org/movie/99770",
+			"meta": "Family, Adventure, Comedy | Asterix & Obelix (Live Action) Collection | Fidélité Films, Cinetotal, Lucky Red, Morena Films, Saint Sébastien Froissart, France 2 Cinéma, France 3 Cinéma | Laurent Tirard | Édouard Baer, Gérard Depardieu, Guillaume Gallienne"
+		},
+		{
+			"id": 170522,
+			"name": "Asterix: The Mansions of the Gods",
+			"year": 2014,
+			"poster": "https://image.tmdb.org/t/p/w500/oppvIr8jmTXEVkzRHtipxcmvdQ5.jpg",
+			"link": "https://www.themoviedb.org/movie/170522",
+			"meta": "Animation, Comedy, Adventure, Family | Asterix and Obelix (Animation) Collection | M6 Studio, Belvision, Grid Animation, M6 Films, SNC | Louis Clichy | Roger Carel, Alexandre Astier, Lionnel Astier"
+		},
+		{
+			"id": 527729,
+			"name": "Asterix: The Secret of the Magic Potion",
+			"year": 2018,
+			"poster": "https://image.tmdb.org/t/p/w500/5OvHpzWXBzOvgZwOoUsqNSouSwy.jpg",
+			"link": "https://www.themoviedb.org/movie/527729",
+			"meta": "Family, Animation, Comedy, Adventure | Asterix and Obelix (Animation) Collection | M6 Studio, M6 Films | Alexandre Astier, Louis Clichy | Christian Clavier, Guillaume Briat, Alex Lutz"
+		},
+		{
+			"id": 643215,
+			"name": "Asterix & Obelix: The Middle Kingdom",
+			"year": 2023,
+			"poster": "https://image.tmdb.org/t/p/w500/ifOqT5SmA4ANjmyEacLw3KAFKUd.jpg",
+			"link": "https://www.themoviedb.org/movie/643215",
+			"meta": "Family, Comedy, Adventure, Fantasy | Asterix & Obelix (Live Action) Collection | Les Éditions Albert René, Les Enfants Terribles, Pathé, Trésor Films, Artémis Productions, White and Yellow Films, TF1 Films Production | Guillaume Canet | Guillaume Canet, Gilles Lellouche, Vincent Cassel"
+		}
+	]
+}

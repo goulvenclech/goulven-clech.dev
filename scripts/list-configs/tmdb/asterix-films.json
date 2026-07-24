@@ -1,0 +1,24 @@
+{
+	"id": "asterix-films",
+	"title": "Films Astérix",
+	"description": "Every Astérix film, animated and live-action. A nostalgia trip through our childhoods, watched with my partner Sterenn.",
+	"source": "TMDB_MOVIE",
+	"url": "https://en.wikipedia.org/wiki/List_of_Asterix_films",
+	"movies": [
+		[11047, "Asterix the Gaul"],
+		[9929, "Asterix and Cleopatra"],
+		[9385, "The Twelve Tasks of Asterix"],
+		[8868, "Asterix vs. Caesar"],
+		[9318, "Asterix in Britain"],
+		[11625, "Asterix and the Big Fight"],
+		[9369, "Asterix Conquers America"],
+		[9564, "Asterix and Obelix Take On Caesar"],
+		[2899, "Asterix & Obelix: Mission Cleopatra"],
+		[9642, "Asterix and the Vikings"],
+		[2395, "Asterix at the Olympic Games"],
+		[99770, "Asterix & Obelix: God Save Britannia"],
+		[170522, "Asterix: The Mansions of the Gods"],
+		[527729, "Asterix: The Secret of the Magic Potion"],
+		[643215, "Asterix & Obelix: The Middle Kingdom"]
+	]
+}
