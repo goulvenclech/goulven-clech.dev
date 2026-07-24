@@ -1,0 +1,42 @@
+---
+import {
+	getReviewFacts,
+	ratingsBySource,
+	NEGATIVE_RATINGS,
+	type Period,
+} from "$src/catalogueStats"
+import { RATING_SERIES, sourceLabel } from "./chartSeries"
+import CatalogueBarChart from "./CatalogueBarChart.astro"
+
+interface Props {
+	/** Restrict to one period (e.g. `"2027"` or `"backfill"`); omit for all time. */
+	period?: Period
+	caption?: string
+	class?: string
+}
+
+const {
+	period,
+	caption = "How I rated each medium, from hated (left) to favourite (right).",
+	class: className,
+} = Astro.props
+
+const facts = await getReviewFacts()
+const rows = ratingsBySource(facts, period)
+
+// Facts came back but none land in this period: the scope is empty, not the
+// fetch broken, so the default "unavailable" message would mislead.
+const noDataMessage =
+	facts.length > 0 ? "No reviews in this period yet." : undefined
+---
+
+<CatalogueBarChart
+	rows={rows}
+	series={RATING_SERIES}
+	splitAfter={NEGATIVE_RATINGS}
+	rowLabel={sourceLabel}
+	rowHeader="Media"
+	caption={caption}
+	noDataMessage={noDataMessage}
+	class={className}
+/>

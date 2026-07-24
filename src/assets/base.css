@@ -236,7 +236,19 @@
 	@media (width >= theme(--breakpoint-xl)) {
 		side-note,
 		annotation {
-			@apply relative float-right clear-right mt-0 -mr-87.5 w-87.5;
+			/*
+			 * Media queries count the scrollbar in the viewport, so a fixed-width
+			 * note overflows at the breakpoint. Clamp to the room beside the centred
+			 * column; the gutter absorbs the scrollbar and `annotation`'s rotation.
+			 */
+			--column-width: 36.875rem; /* keep in sync with `main` (max-w-147.5) */
+			--note-width: min(
+				21.875rem,
+				calc((100vw - var(--column-width)) / 2 - 1.5rem)
+			);
+			width: var(--note-width);
+			margin-right: calc(-1 * var(--note-width));
+			@apply relative float-right clear-right mt-0;
 		}
 	}
 
@@ -349,9 +361,14 @@
     LINKS
   */
 	a,
-	button {
+	button,
+	summary {
 		/* decoration has a fixed value, so it doesn't change with the font size */
 		@apply text-font-light hover:text-primary dark:text-font-dark dark:hover:text-primary decoration-font-light dark:decoration-font-dark hover:decoration-primary dark:hover:decoration-primary whitespace-nowrap underline decoration-dotted decoration-[0.1rem] underline-offset-[3px];
+	}
+
+	summary {
+		@apply cursor-pointer;
 	}
 
 	/* Remove leading icon for links that have the `card` or `no-icon` class */

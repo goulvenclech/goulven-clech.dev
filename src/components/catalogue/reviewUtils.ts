@@ -8,6 +8,16 @@ export const sourceNouns: Record<string, string> = {
 	OPENLIBRARY: "book",
 }
 
+/** Source key → plural label */
+export const sourcePlurals: Record<string, string> = {
+	IGDB: "video games",
+	BGG: "board games",
+	TMDB_MOVIE: "movies",
+	TMDB_TV: "shows",
+	SPOTIFY: "albums",
+	OPENLIBRARY: "books",
+}
+
 /** Rating → emoji + verb */
 export const ratingLabels: Record<number, { emoji: string; verb: string }> = {
 	1: { emoji: "😡", verb: "hated" },

@@ -1,0 +1,334 @@
+---
+import { totalRow, TOTAL_ROW_KEY, type CrossTabRow } from "$src/catalogueStats"
+import type { SeriesDef } from "./chartSeries"
+import {
+	barLayout,
+	formatShare,
+	isLabelled,
+	type BarRow,
+	type Segment,
+} from "./chartGeometry"
+import "./chartFigure.css"
+
+/**
+ * A horizontal stacked-bar chart, shared by the catalogue's rating and media
+ * charts. Everything is computed at build time from `rows`, so the SVG-free
+ * markup is fully static; the only script is an optional hover tooltip.
+ */
+interface Props {
+	rows: CrossTabRow[]
+	series: SeriesDef[]
+	/** Cells before this index sit left of the neutral axis. `0` = plain stack. */
+	splitAfter?: number
+	rowLabel: (key: string) => string
+	caption: string
+	/** Header for the first table column (e.g. "Year", "Media"). */
+	rowHeader: string
+	/** Label of the summary row summing every other one. */
+	totalLabel?: string
+	/** Shown when every row is empty; callers refine it when they know why. */
+	noDataMessage?: string
+	class?: string
+}
+
+const {
+	rows,
+	series,
+	splitAfter = 0,
+	rowLabel,
+	caption,
+	rowHeader,
+	totalLabel = "total",
+	noDataMessage = "Catalogue stats are unavailable — check back after the next build.",
+	class: className,
+} = Astro.props
+
+// A summary row gives the whole catalogue as a baseline to read each row
+// against. Pointless with a single row, which would only repeat itself.
+const plotted = rows.length > 1 ? [...rows, totalRow(rows)] : rows
+const layout = barLayout(plotted, splitAfter)
+const seriesByKey = new Map(series.map((s) => [s.key, s]))
+
+const labelOf = (key: string) =>
+	key === TOTAL_ROW_KEY ? totalLabel : rowLabel(key)
+
+/** "loved: 12 (18%)" — the tooltip and native-title text for a segment. */
+function segmentTitle(segment: Segment): string {
+	const label = seriesByKey.get(segment.key)?.label ?? segment.key
+	return `${label}: ${segment.count} (${formatShare(segment.share)})`
+}
+
+const hasData = layout.rows.some((row) => row.total > 0)
+
+const armsOf = (row: BarRow) =>
+	layout.diverging
+		? [
+				{ side: "arm-negative", segments: row.negative },
+				{ side: "arm-positive", segments: row.positive },
+			]
+		: [{ side: "arm-positive", segments: row.positive }]
+---
+
+<figure class:list={["catalogue-chart", className]} data-chart>
+	{
+		hasData ? (
+			<div class="chart-plot" class:list={{ diverging: layout.diverging }}>
+				{layout.rows.map((row) => (
+					<>
+						<div
+							class="row-label"
+							class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
+						>
+							{labelOf(row.key)}
+						</div>
+						{row.total === 0 ? (
+							<div class="row-empty">no reviews</div>
+						) : (
+							<div
+								class="row-bar"
+								class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
+							>
+								{armsOf(row).map((arm, armIndex) => (
+									<>
+										{armIndex > 0 && (
+											<div class="neutral-gap" aria-hidden="true" />
+										)}
+										<div class:list={["arm", arm.side]}>
+											{arm.segments.map((segment, i) => (
+												<div
+													class="segment"
+													class:list={{ split: i > 0 }}
+													style={`width:${segment.widthPercent}%;background:var(${seriesByKey.get(segment.key)?.colorVar})`}
+													data-tooltip={segmentTitle(segment)}
+													title={segmentTitle(segment)}
+												>
+													{isLabelled(segment) && (
+														<span class="segment-label">
+															{formatShare(segment.share)}
+														</span>
+													)}
+												</div>
+											))}
+										</div>
+									</>
+								))}
+							</div>
+						)}
+						<div
+							class="row-count"
+							class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
+							title={`${row.total} reviews`}
+						>
+							{row.total > 0 ? row.total : ""}
+						</div>
+					</>
+				))}
+			</div>
+		) : (
+			<p class="chart-nodata">{noDataMessage}</p>
+		)
+	}
+
+	{
+		hasData && (
+			<ul class="chart-legend" aria-hidden="true">
+				{series.map((entry) => (
+					<li>
+						<span class="swatch" style={`background:var(${entry.colorVar})`} />
+						{entry.emoji && <span class="legend-emoji">{entry.emoji}</span>}
+						{entry.label}
+					</li>
+				))}
+			</ul>
+		)
+	}
+
+	<figcaption>{caption}</figcaption>
+
+	{
+		hasData && (
+			<details class="chart-data">
+				<summary>Show the numbers</summary>
+				<div class="chart-data-scroll">
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">{rowHeader}</th>
+								{series.map((entry) => (
+									<th scope="col">
+										{entry.emoji} {entry.label}
+									</th>
+								))}
+								<th scope="col">total</th>
+							</tr>
+						</thead>
+						<tbody>
+							{layout.rows.map((row) => {
+								const counts = new Map(
+									[...row.negative, ...row.positive].map((s) => [s.key, s]),
+								)
+								return (
+									<tr class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}>
+										<th scope="row">{labelOf(row.key)}</th>
+										{series.map((entry) => {
+											const cell = counts.get(entry.key)
+											return (
+												<td>
+													{cell && cell.count > 0
+														? `${cell.count} (${formatShare(cell.share)})`
+														: "—"}
+												</td>
+											)
+										})}
+										<td>{row.total}</td>
+									</tr>
+								)
+							})}
+						</tbody>
+					</table>
+				</div>
+			</details>
+		)
+	}
+</figure>
+
+<style>
+	@reference "$assets/base.css";
+
+	/*
+	 * Rating ramps are two diverging ordinal scales (unfavourable → red,
+	 * favourable → green), lightest near the neutral axis so intensity grows
+	 * towards the extremes. Media hues are nominal and CVD-checked in stacking
+	 * order. Dark mode re-steps the rating ramps against the dark surface rather
+	 * than flipping the light ones.
+	 */
+	.catalogue-chart {
+		--chart-rating-1: #c0342a;
+		--chart-rating-2: #e06b52;
+		--chart-rating-3: #f0a48c;
+		--chart-rating-4: #7fbf93;
+		--chart-rating-5: #3f9e6a;
+		--chart-rating-6: #1f6f43;
+
+		--chart-source-1: #2563eb;
+		--chart-source-2: #e0692e;
+		--chart-source-3: #0d9488;
+		--chart-source-4: #7c3aed;
+		--chart-source-5: #65a30d;
+		--chart-source-6: #a16207;
+
+		--chart-surface: var(--color-body-light);
+
+		@apply my-6 block;
+	}
+
+	:global(html.dark) .catalogue-chart {
+		--chart-rating-1: #d83f34;
+		--chart-rating-2: #e8674c;
+		--chart-rating-3: #f0a48c;
+		--chart-rating-4: #8fc9a0;
+		--chart-rating-5: #42a870;
+		--chart-rating-6: #217a49;
+
+		--chart-surface: var(--color-body-dark);
+	}
+
+	.chart-plot {
+		@apply grid items-center gap-x-3 gap-y-1.5;
+		grid-template-columns: max-content 1fr max-content;
+	}
+
+	.row-label {
+		@apply text-right text-xs whitespace-nowrap sm:text-sm;
+	}
+
+	/* The count behind each bar: the shares are normalised, so volume needs saying. */
+	.row-count {
+		@apply text-font-light/55 dark:text-font-dark/45 text-right text-xs whitespace-nowrap;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.row-bar {
+		@apply flex h-5 items-stretch overflow-hidden;
+	}
+
+	/*
+	 * The summary row is a baseline, not another year. A wider gap sets it apart
+	 * — the site draws no horizontal rules, so a line here would read as foreign.
+	 */
+	.row-label.is-total,
+	.row-bar.is-total,
+	.row-count.is-total {
+		@apply mt-2;
+	}
+
+	.row-label.is-total,
+	.row-count.is-total {
+		@apply text-font-light dark:text-font-dark font-medium;
+	}
+
+	/* Two arms of equal width so rows stay comparable around the shared axis. */
+	.chart-plot.diverging .arm-negative,
+	.chart-plot.diverging .arm-positive {
+		flex: 0 0 calc(50% - 1px);
+	}
+
+	.arm {
+		@apply flex items-stretch overflow-hidden;
+	}
+
+	/* Negative arm grows leftwards from the axis, so it hugs its trailing edge. */
+	.arm-negative {
+		@apply justify-end;
+	}
+
+	.arm-positive {
+		@apply flex-1 justify-start;
+	}
+
+	/*
+	 * The neutral pivot is a gap in the surface colour, matching the separators
+	 * between segments. Every row splits on it, so the unbroken vertical channel
+	 * marks the centre without drawing a line the rest of the site never uses.
+	 */
+	.neutral-gap {
+		@apply w-0.5 shrink-0 self-stretch;
+		background: var(--chart-surface);
+	}
+
+	.segment {
+		@apply flex min-w-0 items-center justify-center overflow-hidden;
+	}
+
+	/* A 2px surface line between neighbours, inset so widths still sum to 100%. */
+	.segment.split {
+		box-shadow: inset 2px 0 0 var(--chart-surface);
+	}
+
+	.segment-label {
+		@apply px-0.5 text-[11px] leading-none font-medium;
+		/* A white glyph with a dark halo stays legible on any fill, light or dark. */
+		color: #fff;
+		text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.row-empty {
+		@apply text-font-light/45 dark:text-font-dark/40 flex h-5 items-center text-xs italic;
+	}
+
+	.chart-data th[scope="col"] {
+		@apply whitespace-nowrap;
+	}
+
+	.chart-data tr.is-total td,
+	.chart-data tr.is-total th {
+		@apply font-medium;
+	}
+</style>
+
+<script>
+	import { initChartTooltips } from "./chartTooltip"
+
+	initChartTooltips()
+</script>

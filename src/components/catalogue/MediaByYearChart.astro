@@ -1,0 +1,26 @@
+---
+import { getReviewFacts, sourcesByPeriod } from "$src/catalogueStats"
+import { SOURCE_SERIES, periodLabel } from "./chartSeries"
+import CatalogueBarChart from "./CatalogueBarChart.astro"
+
+interface Props {
+	caption?: string
+	class?: string
+}
+
+const {
+	caption = "The mix of media I reviewed each year, as a share of that year's reviews.",
+	class: className,
+} = Astro.props
+
+const rows = sourcesByPeriod(await getReviewFacts())
+---
+
+<CatalogueBarChart
+	rows={rows}
+	series={SOURCE_SERIES}
+	rowLabel={periodLabel}
+	rowHeader="Year"
+	caption={caption}
+	class={className}
+/>

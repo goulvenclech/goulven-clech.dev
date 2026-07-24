@@ -1,0 +1,283 @@
+---
+import { getEmotionStats } from "$src/catalogueStats"
+import {
+	buildScatter,
+	bubbleTitle,
+	DEFAULT_SCATTER_OPTIONS,
+	MOBILE_SCATTER_OPTIONS,
+	type Band,
+} from "./scatterGeometry"
+import "./chartFigure.css"
+
+/**
+ * Every emotion tag placed by how often I reach for it (x) against the average
+ * rating of the reviews carrying it (y), bubble area by frequency.
+ *
+ * Colour deliberately restates the band the bubble already sits in vertically:
+ * the three-band shape reads at a glance, and colour-vision-deficient readers
+ * lose nothing since position and the labels carry the same information.
+ */
+interface Props {
+	caption?: string
+	class?: string
+}
+
+const {
+	caption = "Each emotion tag placed by how often I use it (left to right) against the average rating of the reviews carrying it (bottom to top). Bubble size is frequency, so the smallest bubbles rest on very few reviews.",
+	class: className,
+} = Astro.props
+
+const stats = await getEmotionStats()
+const layout = buildScatter(stats)
+
+// The same data laid out twice: the SVG scales to the column, so a narrow screen
+// needs a squarer canvas to keep its text legible. Only one is ever displayed.
+const renders = [
+	{
+		layout: buildScatter(stats, MOBILE_SCATTER_OPTIONS),
+		options: MOBILE_SCATTER_OPTIONS,
+		visibility: "sm:hidden",
+	},
+	{
+		layout,
+		options: DEFAULT_SCATTER_OPTIONS,
+		visibility: "hidden sm:block",
+	},
+]
+
+const BAND_LABELS: Record<Band, string> = {
+	summit: "summit · high rating",
+	ambivalent: "ambivalent · around neutral",
+	chasm: "chasm · low rating",
+}
+const BANDS: Band[] = ["summit", "ambivalent", "chasm"]
+
+// Table order tells the story: strongest lift first, heaviest drag last.
+const ranked = [...layout.bubbles].sort((a, b) => b.avgRating - a.avgRating)
+---
+
+{
+	layout.bubbles.length > 0 ? (
+		<figure class:list={["emotion-chart", className]} data-chart>
+			{renders.map(({ layout, options, visibility }) => (
+				<svg
+					viewBox={`0 0 ${options.width} ${options.height}`}
+					class:list={["chart-svg", visibility]}
+					role="img"
+					aria-label="Bubble chart of every emotion tag, plotted by frequency against the average rating of the reviews carrying it."
+				>
+					{layout.yTicks.map((tick) => (
+						<g>
+							<line
+								class="grid"
+								x1={layout.plot.left}
+								x2={layout.plot.right}
+								y1={tick.y}
+								y2={tick.y}
+							/>
+							<text
+								class="axis-text"
+								x={layout.plot.left - 10}
+								y={tick.y + 4}
+								text-anchor="end"
+							>
+								{tick.value}
+							</text>
+						</g>
+					))}
+
+					{layout.xTicks.map((tick) => (
+						<text
+							class="axis-text"
+							x={tick.x}
+							y={layout.plot.bottom + 16}
+							text-anchor="middle"
+						>
+							{tick.value}
+						</text>
+					))}
+
+					<line
+						class="neutral-line"
+						x1={layout.plot.left}
+						x2={layout.plot.right}
+						y1={layout.neutralY}
+						y2={layout.neutralY}
+					/>
+					<text
+						class="axis-text neutral-label"
+						x={layout.plot.right}
+						y={layout.neutralY - 6}
+						text-anchor="end"
+					>
+						neutral
+					</text>
+
+					{layout.bubbles.map((bubble) => (
+						<circle
+							class:list={["bubble", bubble.band]}
+							cx={bubble.cx}
+							cy={bubble.cy}
+							r={bubble.r}
+							data-tooltip={bubbleTitle(bubble)}
+						>
+							<title>{bubbleTitle(bubble)}</title>
+						</circle>
+					))}
+
+					{layout.labels.map((label) => (
+						<text
+							class="bubble-label"
+							x={label.x}
+							y={label.y}
+							text-anchor={label.anchor}
+						>
+							{label.text}
+						</text>
+					))}
+				</svg>
+			))}
+
+			<ul class="chart-legend" aria-hidden="true">
+				{BANDS.map((band) => (
+					<li>
+						<span class:list={["swatch", band]} />
+						{BAND_LABELS[band]}
+					</li>
+				))}
+			</ul>
+
+			<figcaption>{caption}</figcaption>
+
+			<details class="chart-data">
+				<summary>Show the numbers</summary>
+				<div class="chart-data-scroll">
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Emotion</th>
+								<th scope="col">Tags</th>
+								<th scope="col">Average rating</th>
+								<th scope="col">Band</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ranked.map((bubble) => (
+								<tr>
+									<th scope="row">
+										{bubble.emoji} {bubble.name}
+									</th>
+									<td>{bubble.count}</td>
+									<td>{bubble.avgRating.toFixed(2)}</td>
+									<td>{BAND_LABELS[bubble.band].split(" · ")[0]}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</details>
+		</figure>
+	) : (
+		<figure class:list={["emotion-chart", className]} data-chart>
+			<p class="chart-nodata">
+				Emotion stats are unavailable — check back after the next build.
+			</p>
+		</figure>
+	)
+}
+
+<style>
+	@reference "$assets/base.css";
+
+	/*
+	 * A diverging triad around the neutral line: two hues plus a neutral grey
+	 * midpoint. Summit green and chasm red are the rating bars' own favourite and
+	 * disliked steps, so the two charts share a palette. Dark mode pairs a
+	 * lighter green with a darker red for the lightness separation CVD needs.
+	 */
+	.emotion-chart {
+		--band-summit: #1f6f43;
+		--band-ambivalent: #8b90a0;
+		--band-chasm: #e06b52;
+		--chart-grid: #e4e4e7;
+		--chart-axis: #9ca3af;
+
+		@apply my-6 block;
+	}
+
+	:global(html.dark) .emotion-chart {
+		--band-summit: #42a870;
+		--band-ambivalent: #6a7082;
+		--band-chasm: #c93b30;
+		--chart-grid: #2e303e;
+		--chart-axis: #565b6b;
+	}
+
+	.chart-svg {
+		@apply w-full max-w-full;
+	}
+
+	.grid {
+		stroke: var(--chart-grid);
+		stroke-width: 1;
+	}
+
+	.neutral-line {
+		stroke: var(--chart-axis);
+		stroke-width: 1.5;
+		stroke-dasharray: 5 4;
+	}
+
+	.axis-text {
+		@apply fill-font-light/60 dark:fill-font-dark/50 text-[11px];
+	}
+
+	.neutral-label {
+		@apply text-[10px] italic;
+	}
+
+	.bubble {
+		fill-opacity: 0.78;
+		/* A surface ring keeps overlapping bubbles legible as separate marks. */
+		stroke: var(--color-body-light);
+		stroke-width: 1.5;
+	}
+
+	:global(html.dark) .bubble {
+		stroke: var(--color-body-dark);
+	}
+
+	.bubble.summit {
+		fill: var(--band-summit);
+	}
+
+	.bubble.ambivalent {
+		fill: var(--band-ambivalent);
+	}
+
+	.bubble.chasm {
+		fill: var(--band-chasm);
+	}
+
+	.bubble-label {
+		@apply fill-font-light dark:fill-font-dark text-[11px];
+	}
+
+	.swatch.summit {
+		background: var(--band-summit);
+	}
+
+	.swatch.ambivalent {
+		background: var(--band-ambivalent);
+	}
+
+	.swatch.chasm {
+		background: var(--band-chasm);
+	}
+</style>
+
+<script>
+	import { initChartTooltips } from "./chartTooltip"
+
+	initChartTooltips()
+</script>

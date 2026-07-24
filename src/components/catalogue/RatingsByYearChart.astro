@@ -1,0 +1,31 @@
+---
+import {
+	getReviewFacts,
+	ratingsByPeriod,
+	NEGATIVE_RATINGS,
+} from "$src/catalogueStats"
+import { RATING_SERIES, periodLabel } from "./chartSeries"
+import CatalogueBarChart from "./CatalogueBarChart.astro"
+
+interface Props {
+	caption?: string
+	class?: string
+}
+
+const {
+	caption = "How I rated things each year, from hated (left) to favourite (right), split at the neutral line.",
+	class: className,
+} = Astro.props
+
+const rows = ratingsByPeriod(await getReviewFacts())
+---
+
+<CatalogueBarChart
+	rows={rows}
+	series={RATING_SERIES}
+	splitAfter={NEGATIVE_RATINGS}
+	rowLabel={periodLabel}
+	rowHeader="Year"
+	caption={caption}
+	class={className}
+/>

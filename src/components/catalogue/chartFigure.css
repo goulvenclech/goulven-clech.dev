@@ -1,0 +1,55 @@
+@reference "$assets/base.css";
+
+/*
+ * Shared shell of every catalogue chart figure — legend, caption, data table,
+ * and no-data notice — keyed on `data-chart` so a restyle lands everywhere at
+ * once. Chart-specific colours and plot styles stay in each component.
+ */
+
+[data-chart] .chart-legend {
+	@apply mt-3 flex list-none flex-wrap justify-center gap-x-3 gap-y-1 text-xs sm:text-sm;
+}
+
+[data-chart] .chart-legend li {
+	@apply flex items-center gap-1.5;
+}
+
+[data-chart] .swatch {
+	@apply inline-block h-2.5 w-2.5 shrink-0;
+}
+
+[data-chart] figcaption {
+	@apply mt-3 text-center text-xs text-pretty italic sm:text-sm;
+}
+
+[data-chart] .chart-data {
+	@apply mt-2 text-xs sm:text-sm;
+}
+
+/* Colour and underline come from the site's shared link treatment. */
+[data-chart] .chart-data summary {
+	@apply text-center text-xs;
+}
+
+[data-chart] .chart-data-scroll {
+	@apply mt-2 overflow-x-auto;
+}
+
+[data-chart] .chart-data table {
+	@apply mx-0 my-0 border-separate;
+	border-spacing: 0.5rem 0.35rem;
+}
+
+[data-chart] .chart-nodata {
+	@apply text-font-light/60 dark:text-font-dark/50 text-center text-sm italic;
+}
+
+/* One floating box, created by `chartTooltip` and shared by every chart. */
+.chart-tooltip {
+	@apply bg-alt-dark text-body-light pointer-events-none fixed top-0 left-0 z-50 px-2 py-1 text-xs;
+	font-variant-numeric: tabular-nums;
+}
+
+.chart-tooltip[hidden] {
+	display: none;
+}
