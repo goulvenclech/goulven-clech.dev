@@ -278,8 +278,16 @@ export class CatalogueClient {
 		const res = await this.fetchFn(new URL(path, this.baseUrl), {
 			signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
 		})
-		if (!res.ok)
-			throw new Error(`GET ${path} failed: ${res.status} ${res.statusText}`)
+		if (!res.ok) {
+			// 4xx means fix the arguments, 5xx means come back later.
+			const detail = await res
+				.json()
+				.then((body) => (body as { error?: string } | null)?.error)
+				.catch(() => undefined)
+			throw new Error(
+				`GET ${path} failed: ${res.status} ${res.statusText}${detail ? ` — ${detail}` : ""}`,
+			)
+		}
 		return (await res.json()) as T
 	}
 
@@ -370,12 +378,20 @@ export class CatalogueClient {
 			offset?: number
 		} = {},
 	): Promise<TodoListView> {
+		// Ask for just this list: the others run to hundreds of kilobytes.
 		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
-			"/api/catalogue/todo",
+			`/api/catalogue/todo?list=${encodeURIComponent(id)}`,
 		)
-		const list = lists.find(
-			(l) => l.id === id || l.title.toLowerCase() === id.toLowerCase(),
-		)
+		// Resolve locally only for an older deployment that ignored the param.
+		const wanted = id.trim().toLowerCase().normalize("NFC")
+		const list =
+			lists.length === 1
+				? lists[0]
+				: lists.find(
+						(l) =>
+							l.id === wanted ||
+							l.title.toLowerCase().normalize("NFC") === wanted,
+					)
 		if (!list)
 			throw new Error(
 				`Unknown to-do list "${id}". Available: ${lists.map((l) => l.id).join(", ")}.`,

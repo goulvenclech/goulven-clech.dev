@@ -113,6 +113,95 @@ describe("GET /api/catalogue/todo", () => {
 		})
 	})
 
+	it("returns only the requested list", async () => {
+		const twoLists: TodoList[] = [
+			...lists,
+			{ ...lists[0], id: "games", title: "Games to play", source: "IGDB" },
+		]
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?list=games"),
+			client,
+			twoLists,
+		)
+
+		const data = await parseJsonResponse<TodoResponse>(res)
+		expect(data.lists.map((l) => l.id)).toEqual(["games"])
+	})
+
+	it("queries only the selected list's source", async () => {
+		const twoLists: TodoList[] = [
+			...lists,
+			{ ...lists[0], id: "games", title: "Games to play", source: "IGDB" },
+		]
+		const client = createMockDbClient({ "FROM reviews": [] })
+		await GET(
+			createEndpointContext("/api/catalogue/todo?list=games"),
+			client,
+			twoLists,
+		)
+
+		const sources = vi
+			.mocked(client.execute)
+			.mock.calls.map(
+				(call) =>
+					call[0] as unknown as string | { sql: string; args?: unknown[] },
+			)
+			.filter(
+				(stmt) => typeof stmt !== "string" && stmt.sql.includes("FROM reviews"),
+			)
+			.map((stmt) => (stmt as { args?: unknown[] }).args?.[0])
+		expect(sources).toEqual(["IGDB"])
+	})
+
+	it("refuses an empty list selector rather than returning everything", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?list="),
+			client,
+			lists,
+		)
+		expect(res.status).toBe(404)
+	})
+
+	it("tolerates surrounding whitespace and casing in the selector", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?list=%20MOVIES%20"),
+			client,
+			lists,
+		)
+
+		const data = await parseJsonResponse<TodoResponse>(res)
+		expect(data.lists.map((l) => l.id)).toEqual(["movies"])
+	})
+
+	it("accepts a list title as well as its id", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?list=movies%20to%20watch"),
+			client,
+			lists,
+		)
+
+		const data = await parseJsonResponse<TodoResponse>(res)
+		expect(data.lists.map((l) => l.id)).toEqual(["movies"])
+	})
+
+	it("refuses an unknown list and names the ones that exist", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?list=nope"),
+			client,
+			lists,
+		)
+		expect(res.status).toBe(404)
+
+		const data = await parseJsonResponse<{ error: string }>(res)
+		expect(data.error).toContain('Unknown to-do list "nope"')
+		expect(data.error).toContain("movies")
+	})
+
 	it("keeps the most recent review when an entry was reviewed twice", async () => {
 		const client = createMockDbClient({
 			"FROM reviews": [

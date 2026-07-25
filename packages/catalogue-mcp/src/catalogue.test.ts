@@ -562,6 +562,63 @@ describe("CatalogueClient.getTodoList", () => {
 		expect(todo.matched).toBe(1)
 	})
 
+	it("asks the API for just the one list", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await client.getTodoList("movies-to-watch")
+
+		const url = new URL(String(fetchFn.mock.calls[0][0]), "http://x")
+		expect(url.searchParams.get("list")).toBe("movies-to-watch")
+	})
+
+	it("still reports the status when the failure body isn't JSON", async () => {
+		const fetchFn = vi.fn(
+			async () =>
+				({
+					ok: false,
+					status: 502,
+					statusText: "Bad Gateway",
+					json: async () => {
+						throw new Error("not json")
+					},
+				}) as unknown as Response,
+		)
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await expect(client.getTodoList("movies")).rejects.toThrow(/502/)
+	})
+
+	it("surfaces the API's own refusal alongside the status", async () => {
+		const fetchFn = vi.fn(
+			async () =>
+				({
+					ok: false,
+					status: 404,
+					statusText: "Not Found",
+					json: async () => ({
+						error: 'Unknown to-do list "nope". Available: movies, games.',
+					}),
+				}) as Response,
+		)
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await expect(client.getTodoList("nope")).rejects.toThrow(
+			/Available: movies, games/,
+		)
+	})
+
 	it("matches the query against metadata, not just the title", async () => {
 		const fetchFn = stubFetch({
 			"/api/catalogue/todo": { lists: [detail] },
@@ -651,7 +708,7 @@ describe("CatalogueClient.getTodoList", () => {
 		expect(todo.items.map((i) => i.name)).toEqual(["Alien"])
 	})
 
-	it("resolves a list by title and rejects an unknown id", async () => {
+	it("resolves a list by title", async () => {
 		const fetchFn = stubFetch({
 			"/api/catalogue/todo": { lists: [detail] },
 		})
@@ -661,6 +718,21 @@ describe("CatalogueClient.getTodoList", () => {
 		)
 
 		expect((await client.getTodoList("Movies to watch")).id).toBe(
+			"movies-to-watch",
+		)
+	})
+
+	it("resolves locally when the API ignores the selector", async () => {
+		const other: TodoListDetail = { ...detail, id: "games", title: "Games" }
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": { lists: [other, detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		expect((await client.getTodoList("movies-to-watch")).id).toBe(
 			"movies-to-watch",
 		)
 		await expect(client.getTodoList("nope")).rejects.toThrow(
