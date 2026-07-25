@@ -11,6 +11,7 @@ import {
 	CatalogueClient,
 	DEFAULT_SEARCH_LIMIT,
 	DEFAULT_TODO_LIMIT,
+	isRealDate,
 	MEDIA_TYPES,
 	PAGE_SIZE,
 } from "./catalogue.js"
@@ -71,18 +72,12 @@ server.registerTool(
 				.describe("Only reviews written during this year, e.g. 2023"),
 			after: z
 				.string()
-				.regex(
-					/^\d{4}(-\d{2}-\d{2})?$/,
-					"Use a year (2023) or a day (2023-07-04)",
-				)
+				.refine(isRealDate, "Use a year (2023) or a real day (2023-07-04)")
 				.optional()
 				.describe("Only reviews on/after this date (YYYY or YYYY-MM-DD)"),
 			before: z
 				.string()
-				.regex(
-					/^\d{4}(-\d{2}-\d{2})?$/,
-					"Use a year (2023) or a day (2023-07-04)",
-				)
+				.refine(isRealDate, "Use a year (2023) or a real day (2023-07-04)")
 				.optional()
 				.describe("Only reviews on/before this date (YYYY or YYYY-MM-DD)"),
 			sort: z

@@ -204,6 +204,30 @@ describe("parseQuery", () => {
 		expect(dateTo).toBeUndefined()
 	})
 
+	it.each(["2023-13-45", "2023-02-30", "2023-02-29", "2023-04-31"])(
+		"drops the impossible day %s instead of bounding on it",
+		(day) => {
+			expect(
+				parseQuery(urlOf(`?after=${day}`)).filters.dateFrom,
+			).toBeUndefined()
+		},
+	)
+
+	it("keeps a real leap day", () => {
+		expect(parseQuery(urlOf("?after=2024-02-29")).filters.dateFrom).toBe(
+			"2024-02-29T00:00:00.000Z",
+		)
+	})
+
+	it("drops an impossible full instant too, not just a bare day", () => {
+		expect(
+			parseQuery(urlOf("?after=2023-02-30T00:00:00Z")).filters.dateFrom,
+		).toBeUndefined()
+		expect(
+			parseQuery(urlOf("?before=2023-13-99T99:99:99Z")).filters.dateTo,
+		).toBeUndefined()
+	})
+
 	it("pads a seconds-precision instant to the millisecond stored form", () => {
 		expect(
 			parseQuery(urlOf("?after=2023-01-01T00:00:00Z")).filters.dateFrom,

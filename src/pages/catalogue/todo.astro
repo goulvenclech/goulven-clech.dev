@@ -7,59 +7,19 @@ import {
 	computeTodoProgress,
 	computeTodoStats,
 	formatTodoStats,
-	indexReviews,
-	type ReviewRow,
-	type TodoList,
 	type TodoReview,
-	type TodoEmotion,
 } from "$src/catalogueTodo"
+import { loadTodoReviews, todoLists as lists } from "$src/catalogueTodoData"
 
 const pageTitle = "To-do"
 
-const modules = import.meta.glob<{ default: TodoList }>(
-	"/src/data/lists/*.json",
-	{ eager: true },
-)
-const lists = Object.values(modules)
-	.map((module) => module.default)
-	.sort((a, b) => a.title.localeCompare(b.title))
-
-// Latest review per reviewed id, per source, plus an id → emotion lookup.
-const doneBySource = new Map<string, Map<string, string>>()
-const reviewsBySource = new Map<string, Map<string, TodoReview>>()
-const namesBySource = new Map<string, Map<string, string>>()
-const postersBySource = new Map<string, Map<string, string>>()
-const emotionsById = new Map<string, TodoEmotion>()
-try {
-	const client = getClient()
-
-	const emotionRows = await client.execute(
-		"SELECT id, emoji, name FROM emotions WHERE is_deleted = false",
-	)
-	for (const row of emotionRows.rows as unknown as {
-		id: number | string
-		emoji: string
-		name: string
-	}[])
-		emotionsById.set(String(row.id), { emoji: row.emoji, name: row.name })
-
-	for (const source of new Set(lists.map((list) => list.source))) {
-		const result = await client.execute({
-			sql: `SELECT source_id, source_name, source_img, rating, emotions FROM reviews WHERE source = ? ORDER BY inserted_at DESC`,
-			args: [source],
-		})
-		const { done, reviews, names, posters } = indexReviews(
-			result.rows as unknown as ReviewRow[],
-		)
-		doneBySource.set(source, done)
-		reviewsBySource.set(source, reviews)
-		namesBySource.set(source, names)
-		postersBySource.set(source, posters)
-	}
-} catch (error) {
-	// The lists are static, so degrade to "nothing done" rather than 500.
-	console.error("todo: could not load reviews", error)
-}
+const {
+	doneBySource,
+	reviewsBySource,
+	namesBySource,
+	postersBySource,
+	emotionsById,
+} = await loadTodoReviews(getClient(), lists)
 
 const views = lists.map((list) => {
 	const items = buildTodoItems(

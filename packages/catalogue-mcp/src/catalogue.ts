@@ -102,6 +102,9 @@ export interface SearchReviewsArgs {
 	offset?: number
 }
 
+/** Give up on a request rather than hanging the tool call indefinitely. */
+const REQUEST_TIMEOUT_MS = 10_000
+
 /** MAX_LIMIT of the reviews API; we never ask for more in one page. */
 export const PAGE_SIZE = 100
 /** Backstop against a server that never reports the end of the results. */
@@ -146,6 +149,19 @@ export function buildReviewSearchParams(
 	params.set("limit", String(limit))
 	params.set("offset", String(offset))
 	return params
+}
+
+const YEAR_OR_DAY = /^\d{4}(-\d{2}-\d{2})?$/
+
+/**
+ * A year, or a day that actually exists: shape alone isn't enough, since Date
+ * rolls 2023-02-30 over to March rather than rejecting it.
+ */
+export function isRealDate(value: string): boolean {
+	if (!YEAR_OR_DAY.test(value)) return false
+	if (value.length === 4) return true
+	const date = new Date(`${value}T00:00:00.000Z`)
+	return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value)
 }
 
 /** Resolve an emotion name (case-insensitive) to its id. */
@@ -257,7 +273,9 @@ export class CatalogueClient {
 	) {}
 
 	private async getJson<T>(path: string): Promise<T> {
-		const res = await this.fetchFn(new URL(path, this.baseUrl))
+		const res = await this.fetchFn(new URL(path, this.baseUrl), {
+			signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+		})
 		if (!res.ok)
 			throw new Error(`GET ${path} failed: ${res.status} ${res.statusText}`)
 		return (await res.json()) as T
@@ -334,7 +352,7 @@ export class CatalogueClient {
 
 	async listTodoLists(): Promise<TodoListSummary[]> {
 		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
-			"/api/catalogue/todo.json",
+			"/api/catalogue/todo",
 		)
 		return lists.map(({ items: _items, ...summary }) => summary)
 	}
@@ -349,7 +367,7 @@ export class CatalogueClient {
 		} = {},
 	): Promise<TodoListView> {
 		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
-			"/api/catalogue/todo.json",
+			"/api/catalogue/todo",
 		)
 		const list = lists.find(
 			(l) => l.id === id || l.title.toLowerCase() === id.toLowerCase(),

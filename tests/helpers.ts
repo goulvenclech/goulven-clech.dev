@@ -85,16 +85,21 @@ export function expectCacheHeaders(response: Response, maxAge: number): void {
 }
 
 // Avoids hitting real database in tests; returns rows whose pattern is a
-// substring of the executed SQL.
+// substring of the executed SQL. Rows may be a function of the bound args, for
+// queries that differ only by parameter.
 export function createMockDbClient(
-	mockResults: Record<string, unknown[]> = {},
+	mockResults: Record<
+		string,
+		unknown[] | ((args: unknown[]) => unknown[])
+	> = {},
 ): Client {
 	return {
 		execute: vi.fn(async (stmt: string | { sql: string; args?: unknown[] }) => {
 			const sql = typeof stmt === "string" ? stmt : stmt.sql
+			const args = typeof stmt === "string" ? [] : (stmt.args ?? [])
 			for (const [pattern, rows] of Object.entries(mockResults)) {
 				if (sql.includes(pattern)) {
-					return { rows }
+					return { rows: typeof rows === "function" ? rows(args) : rows }
 				}
 			}
 			return { rows: [] }

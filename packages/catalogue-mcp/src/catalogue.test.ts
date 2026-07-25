@@ -5,6 +5,7 @@ import {
 	enrichReview,
 	CatalogueClient,
 	DEFAULT_SEARCH_LIMIT,
+	isRealDate,
 	type ApiReview,
 	type Emotion,
 	type TodoListDetail,
@@ -79,6 +80,26 @@ describe("buildReviewSearchParams", () => {
 	})
 })
 
+describe("isRealDate", () => {
+	it("accepts a year and a real day", () => {
+		expect(isRealDate("2023")).toBe(true)
+		expect(isRealDate("2023-07-04")).toBe(true)
+		expect(isRealDate("2024-02-29")).toBe(true)
+	})
+
+	it("rejects a day that does not exist, however well-formed", () => {
+		expect(isRealDate("2023-13-45")).toBe(false)
+		expect(isRealDate("2023-02-30")).toBe(false)
+		expect(isRealDate("2023-02-29")).toBe(false)
+		expect(isRealDate("2023-04-31")).toBe(false)
+	})
+
+	it("rejects anything that isn't a year or a day", () => {
+		expect(isRealDate("July 2023")).toBe(false)
+		expect(isRealDate("23")).toBe(false)
+	})
+})
+
 describe("resolveEmotionId", () => {
 	it("matches an emotion name case-insensitively", () => {
 		expect(resolveEmotionId("nostalgia", emotions)).toBe(1)
@@ -117,7 +138,7 @@ describe("enrichReview", () => {
 
 /** A fetch stub that routes by pathname to canned JSON. */
 function stubFetch(routes: Record<string, unknown | (() => unknown)>) {
-	return vi.fn(async (input: URL | string) => {
+	return vi.fn(async (input: URL | string, _init?: RequestInit) => {
 		const url = new URL(input.toString(), "http://x")
 		const route = routes[url.pathname]
 		const body =
@@ -419,6 +440,74 @@ describe("CatalogueClient.searchReviews", () => {
 	})
 })
 
+describe("CatalogueClient.getEmotions", () => {
+	it("exposes only id, emoji and name", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": [
+				{ id: 1, emoji: "😌", name: "Nostalgia", is_deleted: false },
+			],
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		expect(await client.getEmotions()).toEqual([
+			{ id: 1, emoji: "😌", name: "Nostalgia" },
+		])
+	})
+
+	it("sends an abort signal so a request can't hang forever", async () => {
+		const fetchFn = stubFetch({ "/api/catalogue/emotions": [] })
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await client.getEmotions()
+		const init = fetchFn.mock.calls[0][1] as RequestInit | undefined
+		expect(init?.signal).toBeInstanceOf(AbortSignal)
+	})
+
+	it("surfaces a failed request as an error", async () => {
+		const fetchFn = stubFetch({}) // every path 404s
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await expect(client.getEmotions()).rejects.toThrow(/404/)
+	})
+})
+
+describe("CatalogueClient.listTodoLists", () => {
+	it("returns list summaries without their entries", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": {
+				lists: [
+					{
+						id: "movies",
+						title: "Movies",
+						description: "…",
+						source: "TMDB_MOVIE",
+						url: null,
+						progress: { total: 2, doneCount: 1, percent: 50 },
+						items: [{ id: 1, name: "Alien" }],
+					},
+				],
+			},
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const [summary] = await client.listTodoLists()
+		expect(summary).not.toHaveProperty("items")
+		expect(summary.progress).toEqual({ total: 2, doneCount: 1, percent: 50 })
+	})
+})
+
 describe("CatalogueClient.getTodoList", () => {
 	const detail: TodoListDetail = {
 		id: "movies-to-watch",
@@ -451,7 +540,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("filters entries by status", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",
@@ -465,7 +554,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("drops the website-only poster art from entries", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",
@@ -479,7 +568,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("caps entries at the limit while reporting how many matched", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",
@@ -493,7 +582,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("pages entries with offset, keeping matched at the full count", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",
@@ -511,7 +600,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("clamps an unusable limit instead of slicing from the end", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",
@@ -524,7 +613,7 @@ describe("CatalogueClient.getTodoList", () => {
 
 	it("resolves a list by title and rejects an unknown id", async () => {
 		const fetchFn = stubFetch({
-			"/api/catalogue/todo.json": { lists: [detail] },
+			"/api/catalogue/todo": { lists: [detail] },
 		})
 		const client = new CatalogueClient(
 			"http://x",

@@ -32,16 +32,28 @@ function toDateBound(
 	const iso = ISO_RE.exec(value)
 	// Bounds are compared as text and "Z" sorts after ".", so a seconds-precision
 	// instant has to be padded or it excludes the rows stored at that second.
-	if (iso) return `${iso[1]}${iso[2] ?? (edge === "start" ? ".000" : ".999")}Z`
+	if (iso)
+		return real(`${iso[1]}${iso[2] ?? (edge === "start" ? ".000" : ".999")}Z`)
 	if (YEAR_RE.test(value))
 		return edge === "start"
 			? `${value}-01-01T00:00:00.000Z`
 			: `${value}-12-31T23:59:59.999Z`
 	if (DAY_RE.test(value))
-		return edge === "start"
-			? `${value}T00:00:00.000Z`
-			: `${value}T23:59:59.999Z`
+		return real(
+			edge === "start" ? `${value}T00:00:00.000Z` : `${value}T23:59:59.999Z`,
+		)
 	return undefined
+}
+
+/**
+ * The instant back, or undefined if it doesn't exist: Date rolls 2023-02-30
+ * over to March rather than rejecting it.
+ */
+function real(iso: string): string | undefined {
+	const date = new Date(iso)
+	return !Number.isNaN(date.getTime()) && date.toISOString() === iso
+		? iso
+		: undefined
 }
 
 export interface ParsedReviewQuery {
