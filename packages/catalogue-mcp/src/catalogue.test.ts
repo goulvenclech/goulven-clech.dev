@@ -4,6 +4,7 @@ import {
 	resolveEmotionId,
 	enrichReview,
 	CatalogueClient,
+	DEFAULT_SEARCH_LIMIT,
 	type ApiReview,
 	type Emotion,
 	type TodoListDetail,
@@ -151,9 +152,10 @@ describe("CatalogueClient.searchReviews", () => {
 			fetchFn as unknown as typeof fetch,
 		)
 
-		const reviews = await client.searchReviews({})
+		const { reviews, hasMore } = await client.searchReviews({})
 		expect(reviews.map((r) => r.id)).toEqual(["a", "b", "c"])
 		expect(reviews[0].emotions[0].name).toBe("Nostalgia")
+		expect(hasMore).toBe(false)
 	})
 
 	it("throws a helpful error for an unknown emotion, without paging reviews", async () => {
@@ -192,6 +194,100 @@ describe("CatalogueClient.searchReviews", () => {
 		expect(reviewUrl?.searchParams.get("after")).toBe("2023-06-01")
 	})
 
+	it("pages with a cumulative offset", async () => {
+		let call = 0
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": () => {
+				call++
+				return call === 1
+					? { reviews: [apiReview(), apiReview()], hasMore: true }
+					: { reviews: [apiReview()], hasMore: false }
+			},
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await client.searchReviews({})
+
+		const offsets = fetchFn.mock.calls
+			.map((c) => new URL(String(c[0]), "http://x"))
+			.filter((u) => u.pathname === "/api/catalogue/reviews")
+			.map((u) => u.searchParams.get("offset"))
+		expect(offsets).toEqual(["0", "2"])
+	})
+
+	it("starts from the requested offset and advances from there", async () => {
+		let call = 0
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": () => {
+				call++
+				return call === 1
+					? {
+							reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+							hasMore: true,
+						}
+					: { reviews: [apiReview({ id: "c" })], hasMore: false }
+			},
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({ offset: 50 })
+
+		const offsets = fetchFn.mock.calls
+			.map((c) => new URL(String(c[0]), "http://x"))
+			.filter((u) => u.pathname === "/api/catalogue/reviews")
+			.map((u) => u.searchParams.get("offset"))
+		expect(offsets).toEqual(["50", "52"])
+		expect(result.offset).toBe(50)
+		expect(result.reviews.map((r) => r.id)).toEqual(["a", "b", "c"])
+		expect(result.hasMore).toBe(false)
+	})
+
+	it("reports more results when paging stops mid-way at an offset", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": {
+				reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+				hasMore: true,
+			},
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({ offset: 20, limit: 2 })
+		expect(result.offset).toBe(20)
+		expect(result.returned).toBe(2)
+		expect(result.hasMore).toBe(true)
+	})
+
+	it("clamps a negative offset to the start", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": { reviews: [apiReview()], hasMore: false },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({ offset: -10 })
+		expect(result.offset).toBe(0)
+
+		const url = fetchFn.mock.calls
+			.map((c) => new URL(String(c[0]), "http://x"))
+			.find((u) => u.pathname === "/api/catalogue/reviews")
+		expect(url?.searchParams.get("offset")).toBe("0")
+	})
+
 	it("stops paging once limit is met when no date filter is set", async () => {
 		const reviewsRoute = vi.fn(() => ({
 			reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
@@ -206,22 +302,120 @@ describe("CatalogueClient.searchReviews", () => {
 			fetchFn as unknown as typeof fetch,
 		)
 
-		const reviews = await client.searchReviews({ limit: 1 })
+		const { reviews, hasMore } = await client.searchReviews({ limit: 1 })
 		expect(reviews).toHaveLength(1)
+		expect(hasMore).toBe(true)
 		expect(reviewsRoute).toHaveBeenCalledTimes(1) // did not chase hasMore
 	})
 
-	it("fails loudly instead of truncating when the page backstop is hit", async () => {
+	it("caps an unbounded search at the default limit and says there is more", async () => {
+		const page = Array.from({ length: 100 }, (_, i) =>
+			apiReview({ id: `r${i}` }),
+		)
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
-			"/api/catalogue/reviews": { reviews: [apiReview()], hasMore: true },
+			"/api/catalogue/reviews": { reviews: page, hasMore: true },
 		})
 		const client = new CatalogueClient(
 			"http://x",
 			fetchFn as unknown as typeof fetch,
 		)
 
-		await expect(client.searchReviews({})).rejects.toThrow(/Too many/)
+		const result = await client.searchReviews({})
+		expect(result.returned).toBe(DEFAULT_SEARCH_LIMIT)
+		expect(result.reviews).toHaveLength(DEFAULT_SEARCH_LIMIT)
+		expect(result.limit).toBe(DEFAULT_SEARCH_LIMIT)
+		expect(result.hasMore).toBe(true)
+	})
+
+	it("never asks the API for more rows than the limit needs", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": { reviews: [apiReview()], hasMore: false },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await client.searchReviews({ limit: 3 })
+
+		const url = fetchFn.mock.calls
+			.map((c) => new URL(String(c[0]), "http://x"))
+			.find((u) => u.pathname === "/api/catalogue/reviews")
+		expect(url?.searchParams.get("limit")).toBe("3")
+	})
+
+	it("reports no more results when the last page exactly meets the limit", async () => {
+		const page = Array.from({ length: DEFAULT_SEARCH_LIMIT }, (_, i) =>
+			apiReview({ id: `r${i}` }),
+		)
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": { reviews: page, hasMore: false },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({})
+		expect(result.returned).toBe(DEFAULT_SEARCH_LIMIT)
+		expect(result.hasMore).toBe(false)
+	})
+
+	it("stops instead of re-asking when a page comes back empty", async () => {
+		const reviewsRoute = vi.fn(() => ({ reviews: [], hasMore: true }))
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": reviewsRoute,
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({})
+		expect(result.returned).toBe(0)
+		expect(reviewsRoute).toHaveBeenCalledTimes(1)
+		// Claiming more would send the caller back to the same offset forever.
+		expect(result.hasMore).toBe(false)
+	})
+
+	it("fails loudly when a search would page past the backstop", async () => {
+		const page = Array.from({ length: 100 }, (_, i) =>
+			apiReview({ id: `r${i}` }),
+		)
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": { reviews: page, hasMore: true },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await expect(client.searchReviews({ limit: 6000 })).rejects.toThrow(
+			/Gave up after 50 pages/,
+		)
+	})
+
+	it("clamps a non-positive limit instead of slicing from the end", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/emotions": emotions,
+			"/api/catalogue/reviews": {
+				reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+				hasMore: false,
+			},
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const result = await client.searchReviews({ limit: -1 })
+		expect(result.limit).toBe(1)
+		expect(result.reviews.map((r) => r.id)).toEqual(["a"])
 	})
 })
 
@@ -238,7 +432,7 @@ describe("CatalogueClient.getTodoList", () => {
 				id: 1,
 				name: "Alien",
 				year: 1979,
-				poster: null,
+				poster: "https://img/alien.jpg",
 				done: true,
 				emoji: "😍",
 				href: "/x",
@@ -266,6 +460,66 @@ describe("CatalogueClient.getTodoList", () => {
 
 		const todo = await client.getTodoList("movies-to-watch", { status: "todo" })
 		expect(todo.items.map((i) => i.name)).toEqual(["Aliens"])
+		expect(todo.matched).toBe(1)
+	})
+
+	it("drops the website-only poster art from entries", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo.json": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const todo = await client.getTodoList("movies-to-watch")
+		expect(todo.items[0]).not.toHaveProperty("poster")
+		expect(todo.items[0].name).toBe("Alien")
+	})
+
+	it("caps entries at the limit while reporting how many matched", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo.json": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const todo = await client.getTodoList("movies-to-watch", { limit: 1 })
+		expect(todo.items).toHaveLength(1)
+		expect(todo.matched).toBe(2)
+	})
+
+	it("pages entries with offset, keeping matched at the full count", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo.json": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const page = await client.getTodoList("movies-to-watch", {
+			limit: 1,
+			offset: 1,
+		})
+		expect(page.offset).toBe(1)
+		expect(page.matched).toBe(2)
+		expect(page.items.map((i) => i.name)).toEqual(["Aliens"])
+	})
+
+	it("clamps an unusable limit instead of slicing from the end", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo.json": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const todo = await client.getTodoList("movies-to-watch", { limit: -1 })
+		expect(todo.items.map((i) => i.name)).toEqual(["Alien"])
 	})
 
 	it("resolves a list by title and rejects an unknown id", async () => {

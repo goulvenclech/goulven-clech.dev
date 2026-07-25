@@ -7,7 +7,13 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod"
-import { CatalogueClient } from "./catalogue.js"
+import {
+	CatalogueClient,
+	DEFAULT_SEARCH_LIMIT,
+	DEFAULT_TODO_LIMIT,
+	MEDIA_TYPES,
+	PAGE_SIZE,
+} from "./catalogue.js"
 
 const BASE_URL = process.env.CATALOGUE_BASE_URL ?? "https://goulven-clech.dev"
 const client = new CatalogueClient(BASE_URL)
@@ -33,16 +39,14 @@ server.registerTool(
 		description:
 			"Search and filter Goulven's catalogue reviews (games, board games, films, TV shows, albums, books). " +
 			"Returns full reviews — rating, emotions felt, and the written comment. " +
-			"Every filter is optional; multiple filters combine with AND.",
+			"Every filter is optional; multiple filters combine with AND. " +
+			"Results are capped: when the reply says hasMore, re-run it with offset set to offset + returned.",
 		inputSchema: {
 			query: z
 				.string()
 				.optional()
 				.describe("Free-text search over title, comment and metadata"),
-			type: z
-				.enum(["game", "board-game", "movie", "tv-show", "album", "book"])
-				.optional()
-				.describe("Media type"),
+			type: z.enum(MEDIA_TYPES).optional().describe("Media type"),
 			rating: z
 				.number()
 				.int()
@@ -50,7 +54,7 @@ server.registerTool(
 				.max(6)
 				.optional()
 				.describe(
-					"Exact rating: 1 hated, 2 disliked, 3 meh, 4 liked, 5 loved, 6 favourite",
+					"Exact rating: 1 hated, 2 disliked, 3 meh, 4 liked, 5 loved, 6 favorite",
 				),
 			emotion: z
 				.string()
@@ -61,8 +65,10 @@ server.registerTool(
 			year: z
 				.number()
 				.int()
+				.min(1900)
+				.max(2100)
 				.optional()
-				.describe("Only reviews written during this year"),
+				.describe("Only reviews written during this year, e.g. 2023"),
 			after: z
 				.string()
 				.regex(
@@ -86,9 +92,18 @@ server.registerTool(
 			limit: z
 				.number()
 				.int()
-				.positive()
-				.optional()
-				.describe("Cap the number of reviews returned (default: all matches)"),
+				.min(1)
+				.max(PAGE_SIZE)
+				.default(DEFAULT_SEARCH_LIMIT)
+				.describe(
+					`Maximum reviews to return (default ${DEFAULT_SEARCH_LIMIT}, max ${PAGE_SIZE})`,
+				),
+			offset: z
+				.number()
+				.int()
+				.min(0)
+				.default(0)
+				.describe("Skip this many matches, to page through the results"),
 		},
 	},
 	async (args) => {
@@ -138,7 +153,8 @@ server.registerTool(
 	{
 		description:
 			"Get a single to-do list's entries with their done / to-do status. " +
-			"Optionally filter by completion status or entry name.",
+			"Lists run to hundreds of entries, so narrow with status or query. " +
+			"Entries are capped: when matched exceeds what came back, re-run with offset.",
 		inputSchema: {
 			id: z.string().describe("The list id or title (see list_todo_lists)"),
 			status: z
@@ -149,11 +165,26 @@ server.registerTool(
 				.string()
 				.optional()
 				.describe("Keep only entries whose name contains this text"),
+			limit: z
+				.number()
+				.int()
+				.min(1)
+				.max(500)
+				.default(DEFAULT_TODO_LIMIT)
+				.describe(
+					`Maximum entries to return (default ${DEFAULT_TODO_LIMIT}). The reply reports how many matched.`,
+				),
+			offset: z
+				.number()
+				.int()
+				.min(0)
+				.default(0)
+				.describe("Skip this many matching entries, to page through the list"),
 		},
 	},
-	async ({ id, status, query }) => {
+	async ({ id, status, query, limit, offset }) => {
 		try {
-			return ok(await client.getTodoList(id, { status, query }))
+			return ok(await client.getTodoList(id, { status, query, limit, offset }))
 		} catch (err) {
 			return fail(err)
 		}

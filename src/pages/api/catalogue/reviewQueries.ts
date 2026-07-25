@@ -16,7 +16,7 @@ const VALID_SOURCES = Object.keys(sourceNouns)
 
 const YEAR_RE = /^\d{4}$/
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/
-const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
+const ISO_RE = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{3})?Z$/
 
 /**
  * Normalise a date filter to an inclusive ISO bound, or undefined if malformed
@@ -29,7 +29,10 @@ function toDateBound(
 	edge: "start" | "end",
 ): string | undefined {
 	if (!value) return undefined
-	if (ISO_RE.test(value)) return value
+	const iso = ISO_RE.exec(value)
+	// Bounds are compared as text and "Z" sorts after ".", so a seconds-precision
+	// instant has to be padded or it excludes the rows stored at that second.
+	if (iso) return `${iso[1]}${iso[2] ?? (edge === "start" ? ".000" : ".999")}Z`
 	if (YEAR_RE.test(value))
 		return edge === "start"
 			? `${value}-01-01T00:00:00.000Z`
@@ -161,10 +164,12 @@ export function buildSelectQuery(
 	filters: ReviewFilters & { limit: number; offset?: number },
 ): { sql: string; args: (string | number)[] } {
 	const { where, args } = buildWhereClause(filters)
+	// inserted_at is a plain day for form-entered reviews, so `id` makes the
+	// order total — LIMIT/OFFSET paging would otherwise skip rows.
 	const orderBy =
 		filters.sort === "rating"
-			? " ORDER BY rating DESC, inserted_at DESC"
-			: " ORDER BY inserted_at DESC"
+			? " ORDER BY rating DESC, inserted_at DESC, id DESC"
+			: " ORDER BY inserted_at DESC, id DESC"
 	const sql = `SELECT * FROM reviews${where}${orderBy} LIMIT ? OFFSET ?`
 	args.push(filters.limit, filters.offset ?? 0)
 	return { sql, args }

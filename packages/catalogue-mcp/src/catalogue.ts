@@ -5,8 +5,8 @@
  * unit-testable on its own.
  *
  * A couple of small tables (media types, rating labels) are mirrored from the
- * website rather than imported, so this package can be published and run
- * standalone without depending on the Astro app's source.
+ * website rather than imported: this package builds on its own Node toolchain,
+ * without the Astro aliases the originals rely on.
  */
 
 /** The catalogue sources, as stored server-side. */
@@ -99,12 +99,33 @@ export interface SearchReviewsArgs {
 	before?: string
 	sort?: "date" | "rating"
 	limit?: number
+	offset?: number
 }
 
-/** MAX_LIMIT of the reviews API; we page at this size. */
-const PAGE_SIZE = 100
-/** Backstop against a misbehaving hasMore, ~5000 reviews. */
+/** MAX_LIMIT of the reviews API; we never ask for more in one page. */
+export const PAGE_SIZE = 100
+/** Backstop against a server that never reports the end of the results. */
 const MAX_PAGES = 50
+
+/**
+ * Caps for callers that don't ask for one: a whole catalogue or list runs to
+ * hundreds of kilobytes, far past what fits in a single tool result.
+ */
+export const DEFAULT_SEARCH_LIMIT = 25
+export const DEFAULT_TODO_LIMIT = 100
+
+/**
+ * A negative count would slice from the end of the results and quietly return
+ * the wrong rows, so anything unusable falls back.
+ */
+function clampCount(
+	value: number | undefined,
+	fallback: number,
+	min: number,
+): number {
+	if (value === undefined || !Number.isFinite(value)) return fallback
+	return Math.max(min, Math.trunc(value))
+}
 
 /** Build the query string for one page of GET /api/catalogue/reviews. */
 export function buildReviewSearchParams(
@@ -206,6 +227,25 @@ export type TodoListSummary = Omit<TodoListDetail, "items">
 
 export type TodoStatus = "all" | "done" | "todo"
 
+/** A to-do entry as exposed to assistants; poster art is website-only. */
+export type TodoItemView = Omit<TodoItem, "poster">
+
+export interface TodoListView extends TodoListSummary {
+	offset: number
+	/** Entries matching the filter, before `limit`/`offset` were applied. */
+	matched: number
+	items: TodoItemView[]
+}
+
+export interface ReviewSearchResult {
+	offset: number
+	returned: number
+	limit: number
+	/** More reviews match — re-run from `offset + returned` to continue. */
+	hasMore: boolean
+	reviews: Review[]
+}
+
 /**
  * Read-only HTTP client over the public catalogue API. `fetchFn` is injectable
  * for testing; it defaults to the global fetch.
@@ -229,7 +269,7 @@ export class CatalogueClient {
 		return emotions.map(({ id, emoji, name }) => ({ id, emoji, name }))
 	}
 
-	async searchReviews(args: SearchReviewsArgs): Promise<Review[]> {
+	async searchReviews(args: SearchReviewsArgs): Promise<ReviewSearchResult> {
 		// Emotions are needed both to resolve the filter and to name the results,
 		// so fetch them once up front.
 		const emotions = await this.getEmotions()
@@ -245,35 +285,51 @@ export class CatalogueClient {
 				)
 		}
 
-		// The API applies every filter (date included) and caps a page at 100; page
-		// until it reports no more, or until we already have enough for `limit`.
+		// The API applies every filter (date included) and caps a page at 100.
+		const limit = clampCount(args.limit, DEFAULT_SEARCH_LIMIT, 1)
+		const offset = clampCount(args.offset, 0, 0)
 		const raw: ApiReview[] = []
+		let hasMore = false
 		let page = 0
 		for (; page < MAX_PAGES; page++) {
 			const params = buildReviewSearchParams(
 				args,
 				emotionId,
-				PAGE_SIZE,
-				page * PAGE_SIZE,
+				Math.min(PAGE_SIZE, limit - raw.length),
+				offset + raw.length,
 			)
 			const res = await this.getJson<{
 				reviews: ApiReview[]
 				hasMore: boolean
 			}>(`/api/catalogue/reviews?${params}`)
 			raw.push(...res.reviews)
-			if (args.limit !== undefined && raw.length >= args.limit) break
-			if (!res.hasMore) break
+			hasMore = res.hasMore
+			// An empty page can't advance the offset, so reporting more would send
+			// the caller round in circles.
+			if (res.reviews.length === 0) {
+				hasMore = false
+				break
+			}
+			if (raw.length >= limit || !res.hasMore) break
 		}
-		// Fail loudly rather than silently truncate if a query ever matches more
-		// than the page backstop allows (raise MAX_PAGES, or narrow the search).
+		// A server that never reports the end would otherwise be indistinguishable
+		// from a complete result.
 		if (page === MAX_PAGES)
 			throw new Error(
-				`Too many matching reviews to page through (over ${MAX_PAGES * PAGE_SIZE}). Narrow the search with more filters.`,
+				`Gave up after ${MAX_PAGES} pages (${raw.length} reviews) without reaching the end of the results.`,
 			)
 
 		const emotionsById = new Map(emotions.map((e) => [e.id, e]))
-		const enriched = raw.map((r) => enrichReview(r, emotionsById))
-		return args.limit !== undefined ? enriched.slice(0, args.limit) : enriched
+		const reviews = raw
+			.slice(0, limit)
+			.map((r) => enrichReview(r, emotionsById))
+		return {
+			offset,
+			returned: reviews.length,
+			limit,
+			hasMore: hasMore || raw.length > reviews.length,
+			reviews,
+		}
 	}
 
 	async listTodoLists(): Promise<TodoListSummary[]> {
@@ -285,8 +341,13 @@ export class CatalogueClient {
 
 	async getTodoList(
 		id: string,
-		filter: { status?: TodoStatus; query?: string } = {},
-	): Promise<TodoListDetail> {
+		filter: {
+			status?: TodoStatus
+			query?: string
+			limit?: number
+			offset?: number
+		} = {},
+	): Promise<TodoListView> {
 		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
 			"/api/catalogue/todo.json",
 		)
@@ -300,12 +361,23 @@ export class CatalogueClient {
 
 		const status = filter.status ?? "all"
 		const query = (filter.query ?? "").trim().toLowerCase()
-		const items = list.items.filter((item) => {
+		const matching = list.items.filter((item) => {
 			if (status === "done" && !item.done) return false
 			if (status === "todo" && item.done) return false
 			if (query && !item.name.toLowerCase().includes(query)) return false
 			return true
 		})
-		return { ...list, items }
+
+		const limit = clampCount(filter.limit, DEFAULT_TODO_LIMIT, 1)
+		const offset = clampCount(filter.offset, 0, 0)
+		const { items: _items, ...summary } = list
+		return {
+			...summary,
+			offset,
+			matched: matching.length,
+			items: matching
+				.slice(offset, offset + limit)
+				.map(({ poster: _poster, ...item }) => item),
+		}
 	}
 }

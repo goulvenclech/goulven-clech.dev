@@ -45,6 +45,10 @@ jobs:
       - name: Check TypeScript
         run: pnpm check:types
 
+      # The root tsconfig excludes packages/, which build on their own toolchain.
+      - name: Check TypeScript (packages)
+        run: pnpm -r run typecheck
+
   test:
     name: Tests
     runs-on: ubuntu-latest
@@ -72,3 +76,7 @@ jobs:
 
       - name: Run tests
         run: pnpm test:run
+
+      # Root vitest only globs tests/. `-r` skips the root, whose `test` watches.
+      - name: Run tests (packages)
+        run: pnpm -r run test

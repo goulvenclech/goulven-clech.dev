@@ -6,10 +6,10 @@ It runs on my machine over stdio (no listener, no auth, nothing hosted) and read
 
 ## Tools
 
-- `search_reviews` — filter reviews by `type`, `rating`, `emotion`, date (`year`/`after`/`before`), or free-text `query`; sort and limit.
+- `search_reviews` — filter reviews by `type`, `rating`, `emotion`, date (`year`/`after`/`before`), or free-text `query`; sort, and page with `limit`/`offset`.
 - `list_emotions` — the emotion names `search_reviews` accepts.
 - `list_todo_lists` — my curated lists, with completion progress.
-- `get_todo_list` — one list's entries, with their done/to-do status.
+- `get_todo_list` — one list's entries, with their done/to-do status; same `limit`/`offset` paging.
 
 ## Build
 

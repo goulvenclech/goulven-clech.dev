@@ -20,7 +20,7 @@ describe("buildSelectQuery", () => {
 	it("returns LIMIT/OFFSET-only query when no filters are set", () => {
 		const { sql, args } = buildSelectQuery({ limit: 20 })
 		expect(sql).toBe(
-			"SELECT * FROM reviews ORDER BY inserted_at DESC LIMIT ? OFFSET ?",
+			"SELECT * FROM reviews ORDER BY inserted_at DESC, id DESC LIMIT ? OFFSET ?",
 		)
 		expect(args).toEqual([20, 0])
 	})
@@ -56,6 +56,15 @@ describe("buildSelectQuery", () => {
 	it("switches to rating-first ordering when sort=rating", () => {
 		const { sql } = buildSelectQuery({ limit: 5, sort: "rating" })
 		expect(sql).toContain("ORDER BY rating DESC, inserted_at DESC")
+	})
+
+	it("breaks ties on id so the order is total for paging", () => {
+		expect(buildSelectQuery({ limit: 5 }).sql).toContain(
+			"ORDER BY inserted_at DESC, id DESC",
+		)
+		expect(buildSelectQuery({ limit: 5, sort: "rating" }).sql).toContain(
+			"ORDER BY rating DESC, inserted_at DESC, id DESC",
+		)
 	})
 
 	it("adds inclusive inserted_at bounds for date filters", () => {
@@ -193,6 +202,28 @@ describe("parseQuery", () => {
 		const { dateFrom, dateTo } = parseQuery(urlOf("?after=nonsense")).filters
 		expect(dateFrom).toBeUndefined()
 		expect(dateTo).toBeUndefined()
+	})
+
+	it("pads a seconds-precision instant to the millisecond stored form", () => {
+		expect(
+			parseQuery(urlOf("?after=2023-01-01T00:00:00Z")).filters.dateFrom,
+		).toBe("2023-01-01T00:00:00.000Z")
+		expect(
+			parseQuery(urlOf("?before=2023-12-31T23:59:59Z")).filters.dateTo,
+		).toBe("2023-12-31T23:59:59.999Z")
+	})
+
+	it("leaves an already-millisecond bound byte-identical", () => {
+		expect(
+			parseQuery(urlOf("?after=2023-01-01T00:00:00.000Z")).filters.dateFrom,
+		).toBe("2023-01-01T00:00:00.000Z")
+	})
+
+	it("does not let a seconds-precision bound outrank a year filter", () => {
+		expect(
+			parseQuery(urlOf("?year=2026&after=2026-01-01T00:00:00Z")).filters
+				.dateFrom,
+		).toBe("2026-01-01T00:00:00.000Z")
 	})
 })
 
