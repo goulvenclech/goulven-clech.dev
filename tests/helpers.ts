@@ -110,7 +110,7 @@ export function createMockDbClient(
 }
 
 export const sampleReview = {
-	id: "test-review-1",
+	id: 1,
 	source: "game",
 	source_id: "12345",
 	source_name: "Test Game",

@@ -46,7 +46,7 @@ export const RATING_LABELS: Record<number, { emoji: string; verb: string }> = {
 
 /** A review as returned by GET /api/catalogue/reviews. */
 export interface ApiReview {
-	id: string
+	id: number
 	source: string
 	source_id: string
 	source_name: string
@@ -76,7 +76,7 @@ export interface ReviewEmotion {
 
 /** Assistant-facing review: enriched, with internal display fields dropped. */
 export interface Review {
-	id: string
+	id: number
 	type: MediaType | string
 	title: string
 	link: string
@@ -227,6 +227,8 @@ export interface TodoItem {
 	done: boolean
 	emoji: string | null
 	href: string
+	/** Catalogue-style metadata (genres, studio, cast); absent on older lists. */
+	meta?: string
 }
 
 export interface TodoListDetail {
@@ -283,7 +285,7 @@ export class CatalogueClient {
 
 	async getEmotions(): Promise<Emotion[]> {
 		const emotions = await this.getJson<Emotion[]>("/api/catalogue/emotions")
-		// Project to the fields we expose, dropping the DB's is_deleted flag.
+		// An older deployment may still return internal columns.
 		return emotions.map(({ id, emoji, name }) => ({ id, emoji, name }))
 	}
 
@@ -351,9 +353,11 @@ export class CatalogueClient {
 	}
 
 	async listTodoLists(): Promise<TodoListSummary[]> {
-		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
-			"/api/catalogue/todo",
-		)
+		// Entries dwarf the summaries: ask the API to omit them, and drop any
+		// it still sends.
+		const { lists } = await this.getJson<{
+			lists: (TodoListSummary & { items?: TodoItem[] })[]
+		}>("/api/catalogue/todo?items=false")
 		return lists.map(({ items: _items, ...summary }) => summary)
 	}
 
@@ -382,7 +386,11 @@ export class CatalogueClient {
 		const matching = list.items.filter((item) => {
 			if (status === "done" && !item.done) return false
 			if (status === "todo" && item.done) return false
-			if (query && !item.name.toLowerCase().includes(query)) return false
+			// Search title and metadata together, as the website's filter does.
+			if (query) {
+				const haystack = `${item.name} ${item.meta ?? ""}`.toLowerCase()
+				if (!haystack.includes(query)) return false
+			}
 			return true
 		})
 

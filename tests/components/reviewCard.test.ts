@@ -33,7 +33,7 @@ describe("ratingText", () => {
 
 function mockReview(overrides: Partial<Review> = {}): Review {
 	return {
-		id: "1",
+		id: 1,
 		source: "IGDB",
 		source_id: "12345",
 		source_name: "Hollow Knight (2017)",
@@ -50,9 +50,9 @@ function mockReview(overrides: Partial<Review> = {}): Review {
 }
 
 const testEmotionsMap = new Map<number, Emotion>([
-	[1, { id: "1", emoji: "🤗", name: "comforted", is_deleted: false }],
-	[2, { id: "2", emoji: "🌿", name: "nostalgic", is_deleted: false }],
-	[3, { id: "3", emoji: "😌", name: "satisfied", is_deleted: false }],
+	[1, { id: 1, emoji: "🤗", name: "comforted" }],
+	[2, { id: 2, emoji: "🌿", name: "nostalgic" }],
+	[3, { id: 3, emoji: "😌", name: "satisfied" }],
 ])
 
 describe("ReviewCard", () => {

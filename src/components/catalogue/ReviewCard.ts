@@ -17,9 +17,9 @@ export class ReviewCard extends HTMLElement {
 	/**
 	 * Set the review data and emotions map for the card
 	 */
-	setReviewData(review: Review, emotionsMap: Map<number | string, Emotion>) {
+	setReviewData(review: Review, emotionsMap: Map<number, Emotion>) {
 		this.review = review
-		this.emotionsMap = emotionsMap as Map<number, Emotion>
+		this.emotionsMap = emotionsMap
 		this.render()
 		return this
 	}

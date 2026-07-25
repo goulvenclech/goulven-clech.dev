@@ -9,7 +9,7 @@ import { sourceResolvers } from "./sourceResolver"
  * See catalogue.astro and catalogue/new.astro for usage.
  */
 export interface Review {
-	id: string
+	id: number
 	source: string
 	source_id: string
 	source_name: string

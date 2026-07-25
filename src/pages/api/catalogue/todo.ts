@@ -13,13 +13,15 @@ export const prerender = false // Reads the live catalogue, must not prerender.
 /**
  * Read-only JSON of the curated to-do lists with completion computed against
  * the catalogue — the machine-readable twin of /catalogue/todo, consumed by the
- * catalogue MCP server.
+ * catalogue MCP server. `?items=false` omits the entries, returning progress
+ * only.
  */
 export async function GET(
-	_context: APIContext,
+	{ url }: APIContext,
 	client: Client = getClient(),
 	lists: TodoList[] = todoLists,
 ): Promise<Response> {
+	const withItems = url.searchParams.get("items") !== "false"
 	const { doneBySource, namesBySource, postersBySource } =
 		await loadTodoReviews(client, lists)
 
@@ -37,7 +39,7 @@ export async function GET(
 			source: list.source,
 			url: list.url ?? null,
 			progress: computeTodoProgress(items),
-			items,
+			...(withItems ? { items } : {}),
 		}
 	})
 

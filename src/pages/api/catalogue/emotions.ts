@@ -1,29 +1,34 @@
 import type { APIContext } from "astro"
+import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
 
 export const prerender = false // API routes should not be pre-rendered
 
 export interface Emotion {
-	id: string
+	id: number
 	emoji: string
 	name: string
-	is_deleted: boolean
 }
 
-export async function GET(_context: APIContext): Promise<Response> {
+export async function GET(
+	_context: APIContext,
+	client: Client = getClient(),
+): Promise<Response> {
 	try {
-		const client = getClient()
-
 		const emotions = await client.execute(
-			"SELECT * FROM emotions WHERE is_deleted = false",
+			"SELECT id, emoji, name FROM emotions WHERE is_deleted = false",
 		)
-		const emotionsRows = emotions.rows as unknown as Emotion[]
+		// Project in code too, so internal columns can't leak if the query widens.
+		const emotionsRows = (emotions.rows as unknown as Emotion[]).map(
+			({ id, emoji, name }) => ({ id, emoji, name }),
+		)
 
 		return new Response(JSON.stringify(emotionsRows), {
 			status: 200,
 			headers: {
 				"Content-Type": "application/json",
-				"Cache-Control": "public, max-age=86400, immutable", // 24h cache
+				// No `immutable`: it would suppress revalidation even on a refresh.
+				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
 			},
 		})
 	} catch (error) {

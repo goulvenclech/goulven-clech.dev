@@ -18,7 +18,7 @@ const emotions: Emotion[] = [
 
 function apiReview(overrides: Partial<ApiReview> = {}): ApiReview {
 	return {
-		id: "r1",
+		id: 1,
 		source: "TMDB_MOVIE",
 		source_id: "603",
 		source_name: "The Matrix",
@@ -162,10 +162,10 @@ describe("CatalogueClient.searchReviews", () => {
 				call++
 				return call === 1
 					? {
-							reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+							reviews: [apiReview({ id: 1 }), apiReview({ id: 2 })],
 							hasMore: true,
 						}
-					: { reviews: [apiReview({ id: "c" })], hasMore: false }
+					: { reviews: [apiReview({ id: 3 })], hasMore: false }
 			},
 		})
 		const client = new CatalogueClient(
@@ -174,7 +174,7 @@ describe("CatalogueClient.searchReviews", () => {
 		)
 
 		const { reviews, hasMore } = await client.searchReviews({})
-		expect(reviews.map((r) => r.id)).toEqual(["a", "b", "c"])
+		expect(reviews.map((r) => r.id)).toEqual([1, 2, 3])
 		expect(reviews[0].emotions[0].name).toBe("Nostalgia")
 		expect(hasMore).toBe(false)
 	})
@@ -248,10 +248,10 @@ describe("CatalogueClient.searchReviews", () => {
 				call++
 				return call === 1
 					? {
-							reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+							reviews: [apiReview({ id: 1 }), apiReview({ id: 2 })],
 							hasMore: true,
 						}
-					: { reviews: [apiReview({ id: "c" })], hasMore: false }
+					: { reviews: [apiReview({ id: 3 })], hasMore: false }
 			},
 		})
 		const client = new CatalogueClient(
@@ -267,7 +267,7 @@ describe("CatalogueClient.searchReviews", () => {
 			.map((u) => u.searchParams.get("offset"))
 		expect(offsets).toEqual(["50", "52"])
 		expect(result.offset).toBe(50)
-		expect(result.reviews.map((r) => r.id)).toEqual(["a", "b", "c"])
+		expect(result.reviews.map((r) => r.id)).toEqual([1, 2, 3])
 		expect(result.hasMore).toBe(false)
 	})
 
@@ -275,7 +275,7 @@ describe("CatalogueClient.searchReviews", () => {
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
 			"/api/catalogue/reviews": {
-				reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+				reviews: [apiReview({ id: 1 }), apiReview({ id: 2 })],
 				hasMore: true,
 			},
 		})
@@ -311,7 +311,7 @@ describe("CatalogueClient.searchReviews", () => {
 
 	it("stops paging once limit is met when no date filter is set", async () => {
 		const reviewsRoute = vi.fn(() => ({
-			reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+			reviews: [apiReview({ id: 1 }), apiReview({ id: 2 })],
 			hasMore: true,
 		}))
 		const fetchFn = stubFetch({
@@ -330,9 +330,7 @@ describe("CatalogueClient.searchReviews", () => {
 	})
 
 	it("caps an unbounded search at the default limit and says there is more", async () => {
-		const page = Array.from({ length: 100 }, (_, i) =>
-			apiReview({ id: `r${i}` }),
-		)
+		const page = Array.from({ length: 100 }, (_, i) => apiReview({ id: i }))
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
 			"/api/catalogue/reviews": { reviews: page, hasMore: true },
@@ -369,7 +367,7 @@ describe("CatalogueClient.searchReviews", () => {
 
 	it("reports no more results when the last page exactly meets the limit", async () => {
 		const page = Array.from({ length: DEFAULT_SEARCH_LIMIT }, (_, i) =>
-			apiReview({ id: `r${i}` }),
+			apiReview({ id: i }),
 		)
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
@@ -404,9 +402,7 @@ describe("CatalogueClient.searchReviews", () => {
 	})
 
 	it("fails loudly when a search would page past the backstop", async () => {
-		const page = Array.from({ length: 100 }, (_, i) =>
-			apiReview({ id: `r${i}` }),
-		)
+		const page = Array.from({ length: 100 }, (_, i) => apiReview({ id: i }))
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
 			"/api/catalogue/reviews": { reviews: page, hasMore: true },
@@ -425,7 +421,7 @@ describe("CatalogueClient.searchReviews", () => {
 		const fetchFn = stubFetch({
 			"/api/catalogue/emotions": emotions,
 			"/api/catalogue/reviews": {
-				reviews: [apiReview({ id: "a" }), apiReview({ id: "b" })],
+				reviews: [apiReview({ id: 1 }), apiReview({ id: 2 })],
 				hasMore: false,
 			},
 		})
@@ -436,7 +432,7 @@ describe("CatalogueClient.searchReviews", () => {
 
 		const result = await client.searchReviews({ limit: -1 })
 		expect(result.limit).toBe(1)
-		expect(result.reviews.map((r) => r.id)).toEqual(["a"])
+		expect(result.reviews.map((r) => r.id)).toEqual([1])
 	})
 })
 
@@ -506,6 +502,19 @@ describe("CatalogueClient.listTodoLists", () => {
 		expect(summary).not.toHaveProperty("items")
 		expect(summary.progress).toEqual({ total: 2, doneCount: 1, percent: 50 })
 	})
+
+	it("asks the API to leave the entries out", async () => {
+		const fetchFn = stubFetch({ "/api/catalogue/todo": { lists: [] } })
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await client.listTodoLists()
+
+		const url = new URL(String(fetchFn.mock.calls[0][0]), "http://x")
+		expect(url.searchParams.get("items")).toBe("false")
+	})
 })
 
 describe("CatalogueClient.getTodoList", () => {
@@ -525,6 +534,7 @@ describe("CatalogueClient.getTodoList", () => {
 				done: true,
 				emoji: "😍",
 				href: "/x",
+				meta: "Horror, Sci-Fi | Ridley Scott | Sigourney Weaver",
 			},
 			{
 				id: 2,
@@ -550,6 +560,36 @@ describe("CatalogueClient.getTodoList", () => {
 		const todo = await client.getTodoList("movies-to-watch", { status: "todo" })
 		expect(todo.items.map((i) => i.name)).toEqual(["Aliens"])
 		expect(todo.matched).toBe(1)
+	})
+
+	it("matches the query against metadata, not just the title", async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const byDirector = await client.getTodoList("movies-to-watch", {
+			query: "ridley scott",
+		})
+		expect(byDirector.items.map((i) => i.name)).toEqual(["Alien"])
+	})
+
+	it('does not match "undefined" on an entry without metadata', async () => {
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		const todo = await client.getTodoList("movies-to-watch", {
+			query: "undefined",
+		})
+		expect(todo.items).toHaveLength(0)
 	})
 
 	it("drops the website-only poster art from entries", async () => {

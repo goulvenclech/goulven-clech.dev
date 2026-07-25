@@ -25,7 +25,7 @@ export function createCatalogueController(): CatalogueController {
 	// Used so stale requests shouldn't win the race
 	let inflight: AbortController | null = null
 
-	const allEmotionsMap = new Map<string | number, Emotion>()
+	const allEmotionsMap = new Map<number, Emotion>()
 
 	function updateUrlNow(filters: ReturnType<typeof getFilterValues>) {
 		const params = buildReviewParams(filters)

@@ -94,6 +94,25 @@ describe("GET /api/catalogue/todo", () => {
 		expect(res.headers.get("Cache-Control")).toContain("max-age=3600")
 	})
 
+	it("omits the entries when asked for a summary", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo?items=false"),
+			client,
+			lists,
+		)
+
+		const data = await parseJsonResponse<{
+			lists: { progress: unknown; items?: unknown }[]
+		}>(res)
+		expect(data.lists[0].items).toBeUndefined()
+		expect(data.lists[0].progress).toEqual({
+			total: 2,
+			doneCount: 0,
+			percent: 0,
+		})
+	})
+
 	it("keeps the most recent review when an entry was reviewed twice", async () => {
 		const client = createMockDbClient({
 			"FROM reviews": [

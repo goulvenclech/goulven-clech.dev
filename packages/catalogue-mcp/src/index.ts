@@ -159,7 +159,9 @@ server.registerTool(
 			query: z
 				.string()
 				.optional()
-				.describe("Keep only entries whose name contains this text"),
+				.describe(
+					"Free-text search over the entry's title and metadata (genres, studio, cast)",
+				),
 			limit: z
 				.number()
 				.int()
