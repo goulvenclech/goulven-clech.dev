@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { ratingText } from "../../src/components/catalogue/reviewUtils"
+import { ratingText } from "../../src/catalogue/reviewUtils"
 import { ReviewCard } from "../../src/components/catalogue/ReviewCard"
 import type { Review } from "../../src/pages/api/catalogue/reviews"
 import type { Emotion } from "../../src/pages/api/catalogue/emotions"

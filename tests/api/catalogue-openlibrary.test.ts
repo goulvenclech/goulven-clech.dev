@@ -4,7 +4,7 @@ import {
 	buildBookMeta,
 	fetchBook,
 	type OpenLibraryBook,
-} from "../../src/pages/api/catalogue/sources/openlibrary"
+} from "../../src/catalogue/sources/openlibrary"
 
 function makeBook(overrides: Partial<OpenLibraryBook> = {}): OpenLibraryBook {
 	return {

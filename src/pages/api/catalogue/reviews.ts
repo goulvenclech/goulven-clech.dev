@@ -1,8 +1,12 @@
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
-import { buildSelectQuery, parseReviewQuery } from "./reviewQueries"
-import { sourceResolvers } from "./sourceResolver"
+import { json } from "$src/apiResponse"
+import {
+	buildSelectQuery,
+	parseReviewQuery,
+} from "$src/catalogue/reviewQueries"
+import { sourceResolvers } from "$src/catalogue/sources/resolvers"
 
 /**
  * A review helps me keep track of my feelings about a book, movie, or other media.
@@ -39,19 +43,7 @@ const mapRow = ({ source_img_focus_y: _, ...row }: DbReviewRow): Review => ({
 	emotions: JSON.parse(row.emotions ?? "[]") as number[],
 })
 
-/**
- * Returns a JSON response with the given status.
- */
-function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
-	const headers: Record<string, string> = { "Content-Type": "application/json" }
-	if (cacheSeconds)
-		headers["Cache-Control"] =
-			`public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
-
-	return new Response(JSON.stringify(payload), { status, headers })
-}
-
-export const prerender = false // API routes should not be pre‑rendered
+export const prerender = false // API routes should not be pre-rendered
 
 /**
  * Retrieves reviews with optional filters.
@@ -89,9 +81,17 @@ export async function POST(
 	{ request }: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
+	// Parsed outside the main try so a malformed body is a 400, not a 500.
+	let body
 	try {
-		const body = await request.json()
+		body = await request.json()
+	} catch (err) {
+		// Warn, not error: any anonymous caller can trigger this before auth.
+		console.warn("POST /reviews could not read the body:", err)
+		return json({ error: "Bad Request" }, 400)
+	}
 
+	try {
 		// Basic auth
 		if (body?.password !== import.meta.env.CATALOGUE_PASSWORD)
 			return json({ error: "Unauthorized" }, 401)

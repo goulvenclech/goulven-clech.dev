@@ -3,7 +3,7 @@ import {
 	buildBggMeta,
 	parseBggItem,
 	type BggGame,
-} from "../../src/pages/api/catalogue/sources/bgg"
+} from "../../src/catalogue/sources/bgg"
 
 function makeGame(overrides: Partial<BggGame> = {}): BggGame {
 	return {

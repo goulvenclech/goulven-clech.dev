@@ -8,9 +8,9 @@ import { getClient, type Client } from "$src/db"
 
 /**
  * Reviews dated before the catalogue existed are backfill: memories dated by
- * life era rather than by logging day (see `catalogueDate.ts`), so their years
- * are noise and collapse into one bucket. Moving this to the catalogue's real
- * birthday (2025-04-24) would also fold in the pre-launch reviews.
+ * life era rather than by logging day, so their years are noise and collapse
+ * into one bucket. Moving this to the catalogue's real birthday (2025-04-24)
+ * would also fold in the pre-launch reviews.
  */
 export const BACKFILL_END = "2025-01-01"
 

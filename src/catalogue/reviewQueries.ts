@@ -1,4 +1,4 @@
-import { sourceNouns } from "../../../components/catalogue/reviewUtils"
+import { sourceNouns } from "$src/catalogue/reviewUtils"
 
 export interface ReviewFilters {
 	search?: string

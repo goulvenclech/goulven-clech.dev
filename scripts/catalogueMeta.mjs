@@ -12,11 +12,11 @@
  * fetch-tmdb-list.mjs from the movie they already fetch, so no TMDB resolver
  * lives here.
  */
-import { buildIgdbMeta } from "../src/pages/api/catalogue/sources/igdb.ts"
+import { buildIgdbMeta } from "../src/catalogue/sources/igdb.ts"
 import {
 	fetchBook,
 	buildBookMeta,
-} from "../src/pages/api/catalogue/sources/openlibrary.ts"
+} from "../src/catalogue/sources/openlibrary.ts"
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 

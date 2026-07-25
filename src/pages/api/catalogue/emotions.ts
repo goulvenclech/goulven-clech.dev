@@ -1,6 +1,7 @@
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
+import { json } from "$src/apiResponse"
 
 export const prerender = false // API routes should not be pre-rendered
 
@@ -23,21 +24,10 @@ export async function GET(
 			({ id, emoji, name }) => ({ id, emoji, name }),
 		)
 
-		return new Response(JSON.stringify(emotionsRows), {
-			status: 200,
-			headers: {
-				"Content-Type": "application/json",
-				// No `immutable`: it would suppress revalidation even on a refresh.
-				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
-			},
-		})
+		// Emotions rarely change, but a new one should land without a long wait.
+		return json(emotionsRows, 200, 3600)
 	} catch (error) {
 		console.error("Failed to fetch emotions:", error)
-		return new Response(JSON.stringify({ error: "Failed to fetch emotions" }), {
-			status: 500,
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
+		return json({ error: "Failed to fetch emotions" }, 500)
 	}
 }

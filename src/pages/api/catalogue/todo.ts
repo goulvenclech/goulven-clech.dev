@@ -5,19 +5,11 @@ import {
 	buildTodoItems,
 	computeTodoProgress,
 	type TodoList,
-} from "$src/catalogueTodo"
-import { loadTodoReviews, todoLists } from "$src/catalogueTodoData"
+} from "$src/catalogue/todo"
+import { loadTodoReviews, todoLists } from "$src/catalogue/todoData"
+import { json } from "$src/apiResponse"
 
 export const prerender = false // Reads the live catalogue, must not prerender.
-
-function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
-	const headers: Record<string, string> = { "Content-Type": "application/json" }
-	if (cacheSeconds)
-		headers["Cache-Control"] =
-			`public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
-
-	return new Response(JSON.stringify(payload), { status, headers })
-}
 
 /** Ids are slugs and titles carry accents, so compare both leniently. */
 const normalise = (value: string) => value.trim().toLowerCase().normalize("NFC")

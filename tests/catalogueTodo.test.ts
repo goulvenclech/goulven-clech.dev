@@ -10,7 +10,7 @@ import {
 	type TodoItem,
 	type TodoList,
 	type TodoReview,
-} from "../src/catalogueTodo"
+} from "../src/catalogue/todo"
 
 const list = (source: string, entries: TodoList["entries"]): TodoList => ({
 	id: "l",

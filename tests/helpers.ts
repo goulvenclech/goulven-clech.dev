@@ -1,4 +1,4 @@
-import { vi, expect } from "vitest"
+import { vi } from "vitest"
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 
@@ -69,19 +69,6 @@ export function createEndpointContext(
 export async function parseJsonResponse<T>(response: Response): Promise<T> {
 	const text = await response.text()
 	return JSON.parse(text) as T
-}
-
-export function expectJsonResponse(
-	response: Response,
-	expectedStatus = 200,
-): void {
-	expect(response.status).toBe(expectedStatus)
-	expect(response.headers.get("Content-Type")).toBe("application/json")
-}
-
-export function expectCacheHeaders(response: Response, maxAge: number): void {
-	const cacheControl = response.headers.get("Cache-Control")
-	expect(cacheControl).toContain(`max-age=${maxAge}`)
 }
 
 // Avoids hitting real database in tests; returns rows whose pattern is a

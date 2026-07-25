@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest"
-import type { TodoList } from "../../src/catalogueTodo"
+import type { TodoList } from "../../src/catalogue/todo"
 import {
 	createEndpointContext,
 	createMockDbClient,

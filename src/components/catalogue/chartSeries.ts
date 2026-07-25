@@ -3,8 +3,8 @@ import {
 	RATING_ORDER,
 	SOURCE_ORDER,
 	type Period,
-} from "$src/catalogueStats"
-import { ratingLabels, sourcePlurals } from "./reviewUtils"
+} from "$src/catalogue/stats"
+import { ratingLabels, sourcePlurals } from "$src/catalogue/reviewUtils"
 
 /**
  * Colours live in the chart component's stylesheet, in two modes; a series

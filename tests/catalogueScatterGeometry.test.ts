@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import type { EmotionStat } from "../src/catalogueStats"
+import type { EmotionStat } from "../src/catalogue/stats"
 import {
 	buildScatter,
 	bubbleTitle,

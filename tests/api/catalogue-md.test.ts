@@ -4,7 +4,7 @@ import {
 	buildSelectQuery,
 	parseReviewQuery,
 	type ReviewFilters,
-} from "../../src/pages/api/catalogue/reviewQueries"
+} from "../../src/catalogue/reviewQueries"
 import {
 	buildQueryString,
 	renderReviewLine,

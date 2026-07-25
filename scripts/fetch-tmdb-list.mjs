@@ -16,7 +16,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 import { loadEnv, readListConfig } from "./listConfig.mjs"
-import { buildMovieMeta } from "../src/pages/api/catalogue/sources/tmdb.ts"
+import { buildMovieMeta } from "../src/catalogue/sources/tmdb.ts"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(__dirname, "..")

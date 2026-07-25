@@ -1,4 +1,4 @@
-import type { Cell, CrossTabRow } from "$src/catalogueStats"
+import type { Cell, CrossTabRow } from "$src/catalogue/stats"
 
 /**
  * Layout maths for the catalogue's stacked bars, shared by the rating and media

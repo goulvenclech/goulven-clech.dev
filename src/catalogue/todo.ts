@@ -1,4 +1,4 @@
-import { ratingLabels } from "./components/catalogue/reviewUtils"
+import { ratingLabels } from "$src/catalogue/reviewUtils"
 
 /**
  * Progress of the catalogue against curated to-do lists. Each list is tied to a

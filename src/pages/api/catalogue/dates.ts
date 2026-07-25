@@ -1,6 +1,7 @@
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
+import { json } from "$src/apiResponse"
 
 export const prerender = false // API routes should not be pre-rendered
 
@@ -17,19 +18,10 @@ export async function GET(
 			(row) => row.day,
 		)
 
-		return new Response(JSON.stringify(days), {
-			status: 200,
-			headers: {
-				"Content-Type": "application/json",
-				// No cache: the form reads this live to avoid reusing an existing day.
-				"Cache-Control": "no-store",
-			},
-		})
+		// No cache: the form reads this live to avoid reusing an existing day.
+		return json(days, 200, "no-store")
 	} catch (error) {
 		console.error("Failed to fetch review dates:", error)
-		return new Response(JSON.stringify({ error: "Failed to fetch dates" }), {
-			status: 500,
-			headers: { "Content-Type": "application/json" },
-		})
+		return json({ error: "Failed to fetch dates" }, 500)
 	}
 }

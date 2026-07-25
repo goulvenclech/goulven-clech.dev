@@ -1,13 +1,13 @@
 import type { APIContext } from "astro"
 import { getClient } from "$src/db"
-import { ratingText } from "../components/catalogue/reviewUtils"
+import { ratingText } from "$src/catalogue/reviewUtils"
 import {
 	buildCountQuery,
 	buildSelectQuery,
 	MAX_LIMIT,
 	parseReviewQuery,
 	type ReviewFilters,
-} from "./api/catalogue/reviewQueries"
+} from "$src/catalogue/reviewQueries"
 
 export const prerender = false
 

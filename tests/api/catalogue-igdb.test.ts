@@ -3,7 +3,7 @@ import {
 	coverUrl,
 	buildIgdbMeta,
 	type IgdbGame,
-} from "../../src/pages/api/catalogue/sources/igdb"
+} from "../../src/catalogue/sources/igdb"
 
 function makeGame(overrides: Partial<IgdbGame> = {}): IgdbGame {
 	return {

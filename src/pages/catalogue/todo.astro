@@ -8,8 +8,8 @@ import {
 	computeTodoStats,
 	formatTodoStats,
 	type TodoReview,
-} from "$src/catalogueTodo"
-import { loadTodoReviews, todoLists as lists } from "$src/catalogueTodoData"
+} from "$src/catalogue/todo"
+import { loadTodoReviews, todoLists as lists } from "$src/catalogue/todoData"
 
 const pageTitle = "To-do"
 
@@ -203,7 +203,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 			type TodoStats,
 			type TodoSort,
 			type TodoStatus,
-		} from "../../catalogueTodo"
+		} from "$src/catalogue/todo"
 		import {
 			buildTodoParams,
 			resolveTodoState,

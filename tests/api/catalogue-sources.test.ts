@@ -2,43 +2,43 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 
 // Mock the source modules to test mapping logic without network calls; cover /
 // meta helpers return identifiable strings so the wiring can be asserted.
-vi.mock("../../src/pages/api/catalogue/sources/igdb", () => ({
+vi.mock("../../src/catalogue/sources/igdb", () => ({
 	fetchGame: vi.fn(),
 	coverUrl: vi.fn((id: string) => `igdb-cover:${id}`),
 	buildIgdbMeta: vi.fn(() => "igdb-meta"),
 }))
-vi.mock("../../src/pages/api/catalogue/sources/bgg", () => ({
+vi.mock("../../src/catalogue/sources/bgg", () => ({
 	fetchBoardGame: vi.fn(),
 	buildBggMeta: vi.fn(() => "bgg-meta"),
 }))
-vi.mock("../../src/pages/api/catalogue/sources/tmdb", () => ({
+vi.mock("../../src/catalogue/sources/tmdb", () => ({
 	fetchMovie: vi.fn(),
 	fetchShow: vi.fn(),
 	posterUrl: vi.fn((p: string) => `tmdb-poster:${p}`),
 	buildMovieMeta: vi.fn(() => "movie-meta"),
 	buildShowMeta: vi.fn(() => "show-meta"),
 }))
-vi.mock("../../src/pages/api/catalogue/sources/spotify", () => ({
+vi.mock("../../src/catalogue/sources/spotify", () => ({
 	fetchAlbum: vi.fn(),
 	albumCoverUrl: vi.fn(() => "spotify-cover"),
 	buildAlbumMeta: vi.fn(() => "album-meta"),
 }))
-vi.mock("../../src/pages/api/catalogue/sources/openlibrary", () => ({
+vi.mock("../../src/catalogue/sources/openlibrary", () => ({
 	fetchBook: vi.fn(),
 	bookCoverUrl: vi.fn((olid: string) => `ol-cover:${olid}`),
 	buildBookMeta: vi.fn(() => "book-meta"),
 }))
 
-import { sourceResolvers } from "../../src/pages/api/catalogue/sourceResolver"
-import { fetchGame } from "../../src/pages/api/catalogue/sources/igdb"
-import { fetchBoardGame } from "../../src/pages/api/catalogue/sources/bgg"
+import { sourceResolvers } from "../../src/catalogue/sources/resolvers"
+import { fetchGame } from "../../src/catalogue/sources/igdb"
+import { fetchBoardGame } from "../../src/catalogue/sources/bgg"
 import {
 	fetchMovie,
 	fetchShow,
 	posterUrl,
-} from "../../src/pages/api/catalogue/sources/tmdb"
-import { fetchAlbum } from "../../src/pages/api/catalogue/sources/spotify"
-import { fetchBook } from "../../src/pages/api/catalogue/sources/openlibrary"
+} from "../../src/catalogue/sources/tmdb"
+import { fetchAlbum } from "../../src/catalogue/sources/spotify"
+import { fetchBook } from "../../src/catalogue/sources/openlibrary"
 
 describe("sourceResolvers", () => {
 	beforeEach(() => {

@@ -1,5 +1,5 @@
 import { formatDate } from "../../dateUtils"
-import { ratingText } from "./reviewUtils"
+import { ratingText } from "$src/catalogue/reviewUtils"
 import type { Review } from "../../pages/api/catalogue/reviews"
 import type { Emotion } from "../../pages/api/catalogue/emotions"
 

@@ -1,6 +1,6 @@
 /**
- * Server-side loading for the to-do lists. Kept out of `catalogueTodo.ts`,
- * which is also bundled for the browser: the eager glob would ship every list.
+ * Server-side loading for the to-do lists. Kept out of `todo.ts`, which is also
+ * bundled for the browser: the eager glob would ship every list.
  */
 import type { Client } from "@libsql/client"
 import {
@@ -9,7 +9,7 @@ import {
 	type TodoEmotion,
 	type TodoList,
 	type TodoReview,
-} from "$src/catalogueTodo"
+} from "$src/catalogue/todo"
 
 /** Every curated list, alphabetical. */
 export const todoLists: TodoList[] = Object.values(

@@ -8,13 +8,13 @@ import {
 } from "../helpers"
 
 // Only IGDB is wired; an absent key drives the "unsupported source" path.
-vi.mock("../../src/pages/api/catalogue/sourceResolver", () => ({
+vi.mock("../../src/catalogue/sources/resolvers", () => ({
 	sourceResolvers: { IGDB: vi.fn() },
 }))
 vi.stubEnv("CATALOGUE_PASSWORD", "secret")
 
 import { GET, POST } from "../../src/pages/api/catalogue/reviews"
-import { sourceResolvers } from "../../src/pages/api/catalogue/sourceResolver"
+import { sourceResolvers } from "../../src/catalogue/sources/resolvers"
 
 // The DB stores emotions as a JSON string; the handler parses it back.
 const dbRow = {
@@ -166,6 +166,23 @@ describe("POST /api/catalogue/reviews", () => {
 			headers: { "Content-Type": "application/json" },
 		})
 	}
+
+	it.each([
+		{ name: "a body that isn't JSON", body: "not json at all" },
+		{ name: "no body at all", body: undefined },
+	])("rejects $name with 400 and writes nothing", async ({ body }) => {
+		const client = createMockDbClient()
+		const res = await POST(
+			createEndpointContext("/api/catalogue/reviews", {
+				method: "POST",
+				body,
+				headers: { "Content-Type": "application/json" },
+			}),
+			client,
+		)
+		expect(res.status).toBe(400)
+		expect(vi.mocked(client.execute)).not.toHaveBeenCalled()
+	})
 
 	it("rejects a wrong password with 401 and writes nothing", async () => {
 		const client = createMockDbClient()
