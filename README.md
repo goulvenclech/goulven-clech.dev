@@ -20,7 +20,9 @@ At its heart, this project looks like any Astro project, you can start by readin
 
 - [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/home/Search.astro): made with Astro and Web Components only, with full-text search, multi-criteria filters (category, year), pagination, and reset button. Should be commented and tested enough to be easily copied and adapted to your needs.
 
-- [Catalogue](https://goulven-clech.dev/catalogue): personal media log with full-text search, multi-criteria filters (source, emotions, rating), pagination, and reset button. Powered by Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database. See [this entry](https://goulven-clech.dev/2025/catalogue-astro-turso) for the full story and technical details.
+- [Catalogue](https://goulven-clech.dev/catalogue): personal media log with full-text search, multi-criteria filters (source, emotions, rating), pagination, and reset button. Alongside it, a private form to log reviews, [to-do lists](https://goulven-clech.dev/catalogue/todo) tracking progress across sources, and a [year wrapped](https://goulven-clech.dev/catalogue/wrapped).
+
+- [Catalogue API](https://github.com/goulvenclech/goulven-clech.dev/tree/main/src/pages/api/catalogue): Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database. Also read by a [local MCP server](https://github.com/goulvenclech/goulven-clech.dev/tree/main/packages/catalogue-mcp), letting an assistant browse the catalogue and to-do lists. See [this entry](https://goulven-clech.dev/2025/catalogue-astro-turso) for the full story and technical details.
 
 - [Friends](https://goulven-clech.dev/friends): interactive graph visualisation of my and my friends' websites, powered by [GraphGarden](https://github.com/bruits/graphgarden).
 
