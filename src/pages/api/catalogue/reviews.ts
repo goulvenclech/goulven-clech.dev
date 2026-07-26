@@ -7,40 +7,32 @@ import {
 	parseReviewQuery,
 } from "$src/catalogue/reviewQueries"
 import { sourceResolvers } from "$src/catalogue/sources/resolvers"
+import type { Review } from "$src/catalogue/apiTypes"
 
 /**
- * A review helps me keep track of my feelings about a book, movie, or other media.
- * See catalogue.astro and catalogue/new.astro for usage.
- */
-export interface Review {
-	id: number
-	source: string
-	source_id: string
-	source_name: string
-	source_link: string
-	source_img: string
-	rating: number // 1-6
-	emotions: number[] // Emotion IDs
-	comment: string
-	inserted_at: string // ISO-8601
-	meta: string
-}
-
-/**
- * Raw row as stored in the database.
+ * Raw row as stored in the database. The query selects every column, so a row
+ * can carry more than this declares.
  */
 interface DbReviewRow extends Omit<Review, "emotions"> {
 	emotions: string // JSON‑encoded array of emotion IDs
-	/** Legacy column, no longer consumed since covers stopped being cropped. */
-	source_img_focus_y?: number | null
 }
 
 /**
- * Maps a DB row to the public Review shape, dropping legacy columns.
+ * Projected field by field rather than spread, so widening the table can't
+ * silently widen the API response.
  */
-const mapRow = ({ source_img_focus_y: _, ...row }: DbReviewRow): Review => ({
-	...row,
+const mapRow = (row: DbReviewRow): Review => ({
+	id: row.id,
+	source: row.source,
+	source_id: row.source_id,
+	source_name: row.source_name,
+	source_link: row.source_link,
+	source_img: row.source_img,
+	rating: row.rating,
 	emotions: JSON.parse(row.emotions ?? "[]") as number[],
+	comment: row.comment,
+	inserted_at: row.inserted_at,
+	meta: row.meta,
 })
 
 export const prerender = false // API routes should not be pre-rendered

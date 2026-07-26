@@ -1,6 +1,7 @@
 import { vi } from "vitest"
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
+import type { Review } from "../src/catalogue/apiTypes"
 
 export function createMockAPIContext(
 	overrides: Partial<APIContext> = {},
@@ -108,10 +109,4 @@ export const sampleReview = {
 	comment: "Great game!",
 	inserted_at: "2025-01-01T00:00:00Z",
 	meta: "{}",
-} as const
-
-export const sampleEmotions = [
-	{ id: 1, name: "Joy", color: "#FFD700" },
-	{ id: 2, name: "Sadness", color: "#4169E1" },
-	{ id: 3, name: "Fear", color: "#800080" },
-] as const
+} satisfies Review

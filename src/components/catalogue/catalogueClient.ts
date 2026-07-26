@@ -1,5 +1,4 @@
-import type { Emotion } from "../../pages/api/catalogue/emotions"
-import type { Review } from "../../pages/api/catalogue/reviews"
+import type { Emotion, Review } from "$src/catalogue/apiTypes"
 import { ReviewCard } from "./ReviewCard"
 import { CardSkeleton } from "../CardSkeleton"
 import { ErrorState } from "../ErrorState"

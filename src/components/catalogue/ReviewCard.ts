@@ -1,7 +1,6 @@
-import { formatDate } from "../../dateUtils"
+import { formatDate } from "$src/dateUtils"
 import { ratingText } from "$src/catalogue/reviewUtils"
-import type { Review } from "../../pages/api/catalogue/reviews"
-import type { Emotion } from "../../pages/api/catalogue/emotions"
+import type { Emotion, Review } from "$src/catalogue/apiTypes"
 
 /**
  * A web component to display a review card

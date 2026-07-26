@@ -24,7 +24,6 @@ function apiReview(overrides: Partial<ApiReview> = {}): ApiReview {
 		source_name: "The Matrix",
 		source_link: "https://themoviedb.org/movie/603",
 		source_img: "https://img/matrix.jpg",
-		source_img_focus_y: 0.5,
 		rating: 5,
 		emotions: [1],
 		comment: "Woah.",
@@ -115,15 +114,19 @@ describe("enrichReview", () => {
 	const byId = new Map(emotions.map((e) => [e.id, e]))
 
 	it("resolves emotion ids to names, parses meta, and adds a rating label", () => {
-		const enriched = enrichReview(apiReview(), byId)
-		expect(enriched.type).toBe("movie")
-		expect(enriched.title).toBe("The Matrix")
-		expect(enriched.rating_label).toBe("😍 loved")
-		expect(enriched.emotions).toEqual([
-			{ id: 1, name: "Nostalgia", emoji: "😌" },
-		])
-		expect(enriched.meta).toEqual({ director: "The Wachowskis" })
-		expect(enriched).not.toHaveProperty("source_img_focus_y")
+		expect(enrichReview(apiReview(), byId)).toEqual({
+			id: 1,
+			type: "movie",
+			title: "The Matrix",
+			link: "https://themoviedb.org/movie/603",
+			image: "https://img/matrix.jpg",
+			rating: 5,
+			rating_label: "😍 loved",
+			emotions: [{ id: 1, name: "Nostalgia", emoji: "😌" }],
+			comment: "Woah.",
+			date: "2023-06-15T10:00:00.000Z",
+			meta: { director: "The Wachowskis" },
+		})
 	})
 
 	it("falls back gracefully on unknown emotion ids and unparseable meta", () => {

@@ -80,7 +80,7 @@ const pageTitle = "Cataloguer"
 		</section>
 	</section>
 	<script>
-		import type { Emotion } from "../api/catalogue/emotions"
+		import type { Emotion } from "$src/catalogue/apiTypes"
 		import {
 			ERA_RANGES,
 			pickRandomFreeDate,
@@ -88,35 +88,32 @@ const pageTitle = "Cataloguer"
 			type DateMode,
 		} from "$src/catalogue/date"
 
-		// If server-side fetch failed, try to fetch emotions client-side
 		async function loadEmotions() {
-			if (document.querySelector("fieldset p")) {
-				try {
-					const response = await fetch("/api/catalogue/emotions")
-					if (!response.ok)
-						throw new Error(
-							`HTTP ${response.status} ${response.statusText}:  ${response.text()}`,
-						)
+			try {
+				const response = await fetch("/api/catalogue/emotions")
+				if (!response.ok)
+					throw new Error(
+						`HTTP ${response.status} ${response.statusText}: ${await response.text()}`,
+					)
 
-					const emotions: Emotion[] = await response.json()
-					const emotionsContainer = document.querySelector("fieldset div")
-					if (emotionsContainer) {
-						emotionsContainer.innerHTML = ""
+				const emotions: Emotion[] = await response.json()
+				const emotionsContainer = document.querySelector("fieldset div")
+				if (emotionsContainer) {
+					emotionsContainer.innerHTML = ""
 
-						emotions
-							.sort((a, b) => a.name.localeCompare(b.name))
-							.forEach((emotion) => {
-								const wrapper = document.createElement("label")
-								wrapper.innerHTML = `
-																	<input type="checkbox" name="emotions" value=${emotion.id} class="hidden" />
-																	${emotion.emoji} ${emotion.name}
+					emotions
+						.sort((a, b) => a.name.localeCompare(b.name))
+						.forEach((emotion) => {
+							const wrapper = document.createElement("label")
+							wrapper.innerHTML = `
+																<input type="checkbox" name="emotions" value=${emotion.id} class="hidden" />
+																${emotion.emoji} ${emotion.name}
                                 `
-								emotionsContainer.appendChild(wrapper)
-							})
-					}
-				} catch (error) {
-					console.error("Failed to load emotions client-side:", error)
+							emotionsContainer.appendChild(wrapper)
+						})
 				}
+			} catch (error) {
+				console.error("Failed to load emotions:", error)
 			}
 		}
 

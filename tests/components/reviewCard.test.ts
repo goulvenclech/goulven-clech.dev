@@ -1,8 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { ratingText } from "../../src/catalogue/reviewUtils"
 import { ReviewCard } from "../../src/components/catalogue/ReviewCard"
-import type { Review } from "../../src/pages/api/catalogue/reviews"
-import type { Emotion } from "../../src/pages/api/catalogue/emotions"
+import type { Emotion, Review } from "../../src/catalogue/apiTypes"
 
 describe("ratingText", () => {
 	it("should include media noun for known sources", () => {

@@ -6,7 +6,8 @@ import {
 	parseJsonResponse,
 } from "../helpers"
 
-import { GET, type Emotion } from "../../src/pages/api/catalogue/emotions"
+import { GET } from "../../src/pages/api/catalogue/emotions"
+import type { Emotion } from "../../src/catalogue/apiTypes"
 
 const rows = [
 	{ id: 1, emoji: "🤗", name: "comforted" },

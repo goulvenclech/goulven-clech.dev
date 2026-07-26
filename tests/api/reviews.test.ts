@@ -14,6 +14,7 @@ vi.mock("../../src/catalogue/sources/resolvers", () => ({
 vi.stubEnv("CATALOGUE_PASSWORD", "secret")
 
 import { GET, POST } from "../../src/pages/api/catalogue/reviews"
+import type { Review } from "../../src/catalogue/apiTypes"
 import { sourceResolvers } from "../../src/catalogue/sources/resolvers"
 
 // The DB stores emotions as a JSON string; the handler parses it back.
@@ -36,11 +37,38 @@ describe("GET /api/catalogue/reviews", () => {
 		expect(res.status).toBe(200)
 
 		const data = await parseJsonResponse<{
-			reviews: { emotions: number[] }[]
+			reviews: Review[]
 			hasMore: boolean
 		}>(res)
 		expect(data.reviews).toHaveLength(1)
-		expect(data.reviews[0].emotions).toEqual([1, 3])
+		expect(data.reviews[0]).toEqual(sampleReview)
+	})
+
+	it("serves only the Review fields, even when the table has extra columns", async () => {
+		const client = createMockDbClient({
+			"FROM reviews": [{ ...dbRow, source_img_focus_y: 0.5, secret: "nope" }],
+		})
+		const res = await GET(
+			createEndpointContext("/api/catalogue/reviews"),
+			client,
+		)
+
+		const data = await parseJsonResponse<{ reviews: Review[] }>(res)
+		expect(Object.keys(data.reviews[0]).sort()).toEqual(
+			[
+				"comment",
+				"emotions",
+				"id",
+				"inserted_at",
+				"meta",
+				"rating",
+				"source",
+				"source_id",
+				"source_img",
+				"source_link",
+				"source_name",
+			].sort(),
+		)
 	})
 
 	it("defaults emotions to [] when the stored value is null", async () => {

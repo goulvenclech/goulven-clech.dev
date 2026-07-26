@@ -2,14 +2,9 @@ import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
 import { json } from "$src/apiResponse"
+import type { Emotion } from "$src/catalogue/apiTypes"
 
 export const prerender = false // API routes should not be pre-rendered
-
-export interface Emotion {
-	id: number
-	emoji: string
-	name: string
-}
 
 export async function GET(
 	_context: APIContext,

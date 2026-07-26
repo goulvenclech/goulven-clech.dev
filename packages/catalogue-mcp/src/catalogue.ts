@@ -52,7 +52,6 @@ export interface ApiReview {
 	source_name: string
 	source_link: string
 	source_img: string
-	source_img_focus_y: number | null
 	rating: number
 	emotions: number[]
 	comment: string
