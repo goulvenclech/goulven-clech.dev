@@ -8,7 +8,7 @@ import {
 	STATUSES,
 	type TodoSort,
 	type TodoStatus,
-} from "$src/catalogueTodo"
+} from "$src/catalogue/todo"
 
 export interface TodoFilters {
 	list: string

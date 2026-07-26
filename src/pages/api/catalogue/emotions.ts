@@ -1,38 +1,28 @@
 import type { APIContext } from "astro"
+import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
+import { json } from "$src/apiResponse"
+import type { Emotion } from "$src/catalogue/apiTypes"
 
 export const prerender = false // API routes should not be pre-rendered
 
-export interface Emotion {
-	id: string
-	emoji: string
-	name: string
-	is_deleted: boolean
-}
-
-export async function GET(_context: APIContext): Promise<Response> {
+export async function GET(
+	_context: APIContext,
+	client: Client = getClient(),
+): Promise<Response> {
 	try {
-		const client = getClient()
-
 		const emotions = await client.execute(
-			"SELECT * FROM emotions WHERE is_deleted = false",
+			"SELECT id, emoji, name FROM emotions WHERE is_deleted = false",
 		)
-		const emotionsRows = emotions.rows as unknown as Emotion[]
+		// Project in code too, so internal columns can't leak if the query widens.
+		const emotionsRows = (emotions.rows as unknown as Emotion[]).map(
+			({ id, emoji, name }) => ({ id, emoji, name }),
+		)
 
-		return new Response(JSON.stringify(emotionsRows), {
-			status: 200,
-			headers: {
-				"Content-Type": "application/json",
-				"Cache-Control": "public, max-age=86400, immutable", // 24h cache
-			},
-		})
+		// Emotions rarely change, but a new one should land without a long wait.
+		return json(emotionsRows, 200, 3600)
 	} catch (error) {
 		console.error("Failed to fetch emotions:", error)
-		return new Response(JSON.stringify({ error: "Failed to fetch emotions" }), {
-			status: 500,
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
+		return json({ error: "Failed to fetch emotions" }, 500)
 	}
 }

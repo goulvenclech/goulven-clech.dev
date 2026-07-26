@@ -1,8 +1,7 @@
 import { describe, it, expect } from "vitest"
-import { ratingText } from "../../src/components/catalogue/reviewUtils"
+import { ratingText } from "../../src/catalogue/reviewUtils"
 import { ReviewCard } from "../../src/components/catalogue/ReviewCard"
-import type { Review } from "../../src/pages/api/catalogue/reviews"
-import type { Emotion } from "../../src/pages/api/catalogue/emotions"
+import type { Emotion, Review } from "../../src/catalogue/apiTypes"
 
 describe("ratingText", () => {
 	it("should include media noun for known sources", () => {
@@ -33,7 +32,7 @@ describe("ratingText", () => {
 
 function mockReview(overrides: Partial<Review> = {}): Review {
 	return {
-		id: "1",
+		id: 1,
 		source: "IGDB",
 		source_id: "12345",
 		source_name: "Hollow Knight (2017)",
@@ -50,9 +49,9 @@ function mockReview(overrides: Partial<Review> = {}): Review {
 }
 
 const testEmotionsMap = new Map<number, Emotion>([
-	[1, { id: "1", emoji: "🤗", name: "comforted", is_deleted: false }],
-	[2, { id: "2", emoji: "🌿", name: "nostalgic", is_deleted: false }],
-	[3, { id: "3", emoji: "😌", name: "satisfied", is_deleted: false }],
+	[1, { id: 1, emoji: "🤗", name: "comforted" }],
+	[2, { id: 2, emoji: "🌿", name: "nostalgic" }],
+	[3, { id: 3, emoji: "😌", name: "satisfied" }],
 ])
 
 describe("ReviewCard", () => {

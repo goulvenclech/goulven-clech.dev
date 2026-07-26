@@ -1,57 +1,41 @@
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
-import { buildSelectQuery, parseReviewQuery } from "./reviewQueries"
-import { sourceResolvers } from "./sourceResolver"
+import { json } from "$src/apiResponse"
+import {
+	buildSelectQuery,
+	parseReviewQuery,
+} from "$src/catalogue/reviewQueries"
+import { sourceResolvers } from "$src/catalogue/sources/resolvers"
+import type { Review } from "$src/catalogue/apiTypes"
 
 /**
- * A review helps me keep track of my feelings about a book, movie, or other media.
- * See catalogue.astro and catalogue/new.astro for usage.
- */
-export interface Review {
-	id: string
-	source: string
-	source_id: string
-	source_name: string
-	source_link: string
-	source_img: string
-	rating: number // 1-6
-	emotions: number[] // Emotion IDs
-	comment: string
-	inserted_at: string // ISO-8601
-	meta: string
-}
-
-/**
- * Raw row as stored in the database.
+ * Raw row as stored in the database. The query selects every column, so a row
+ * can carry more than this declares.
  */
 interface DbReviewRow extends Omit<Review, "emotions"> {
 	emotions: string // JSON‑encoded array of emotion IDs
-	/** Legacy column, no longer consumed since covers stopped being cropped. */
-	source_img_focus_y?: number | null
 }
 
 /**
- * Maps a DB row to the public Review shape, dropping legacy columns.
+ * Projected field by field rather than spread, so widening the table can't
+ * silently widen the API response.
  */
-const mapRow = ({ source_img_focus_y: _, ...row }: DbReviewRow): Review => ({
-	...row,
+const mapRow = (row: DbReviewRow): Review => ({
+	id: row.id,
+	source: row.source,
+	source_id: row.source_id,
+	source_name: row.source_name,
+	source_link: row.source_link,
+	source_img: row.source_img,
+	rating: row.rating,
 	emotions: JSON.parse(row.emotions ?? "[]") as number[],
+	comment: row.comment,
+	inserted_at: row.inserted_at,
+	meta: row.meta,
 })
 
-/**
- * Returns a JSON response with the given status.
- */
-function json(payload: unknown, status = 200, cacheSeconds = 0): Response {
-	const headers: Record<string, string> = { "Content-Type": "application/json" }
-	if (cacheSeconds)
-		headers["Cache-Control"] =
-			`public, max-age=${cacheSeconds}, stale-while-revalidate=${Math.round(cacheSeconds / 2)}`
-
-	return new Response(JSON.stringify(payload), { status, headers })
-}
-
-export const prerender = false // API routes should not be pre‑rendered
+export const prerender = false // API routes should not be pre-rendered
 
 /**
  * Retrieves reviews with optional filters.
@@ -89,9 +73,17 @@ export async function POST(
 	{ request }: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
+	// Parsed outside the main try so a malformed body is a 400, not a 500.
+	let body
 	try {
-		const body = await request.json()
+		body = await request.json()
+	} catch (err) {
+		// Warn, not error: any anonymous caller can trigger this before auth.
+		console.warn("POST /reviews could not read the body:", err)
+		return json({ error: "Bad Request" }, 400)
+	}
 
+	try {
 		// Basic auth
 		if (body?.password !== import.meta.env.CATALOGUE_PASSWORD)
 			return json({ error: "Unauthorized" }, 401)

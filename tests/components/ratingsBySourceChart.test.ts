@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest"
 import { experimental_AstroContainer as AstroContainer } from "astro/container"
-import type { ReviewFact } from "../../src/catalogueStats"
+import type { ReviewFact } from "../../src/catalogue/stats"
 
 /**
  * RatingsBySourceChart distinguishes "the fetch degraded to []" (default
@@ -11,9 +11,9 @@ import type { ReviewFact } from "../../src/catalogueStats"
  */
 const state = vi.hoisted(() => ({ facts: [] as ReviewFact[] }))
 
-vi.mock("$src/catalogueStats", async (importOriginal) => {
+vi.mock("$src/catalogue/stats", async (importOriginal) => {
 	const actual =
-		await importOriginal<typeof import("../../src/catalogueStats")>()
+		await importOriginal<typeof import("../../src/catalogue/stats")>()
 	return {
 		...actual,
 		getReviewFacts: vi.fn(async () => state.facts),

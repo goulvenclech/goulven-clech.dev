@@ -19,7 +19,7 @@ vi.mock("$src/db", () => ({
 /** The caches are module-level, so every case needs a fresh module instance. */
 async function loadStats() {
 	vi.resetModules()
-	return import("../src/catalogueStats")
+	return import("../src/catalogue/stats")
 }
 
 beforeEach(() => {

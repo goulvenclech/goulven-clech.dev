@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import type { CrossTabRow } from "../src/catalogueStats"
+import type { CrossTabRow } from "../src/catalogue/stats"
 import {
 	barLayout,
 	formatShare,

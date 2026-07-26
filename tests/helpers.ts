@@ -1,6 +1,7 @@
-import { vi, expect } from "vitest"
+import { vi } from "vitest"
 import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
+import type { Review } from "../src/catalogue/apiTypes"
 
 export function createMockAPIContext(
 	overrides: Partial<APIContext> = {},
@@ -71,30 +72,22 @@ export async function parseJsonResponse<T>(response: Response): Promise<T> {
 	return JSON.parse(text) as T
 }
 
-export function expectJsonResponse(
-	response: Response,
-	expectedStatus = 200,
-): void {
-	expect(response.status).toBe(expectedStatus)
-	expect(response.headers.get("Content-Type")).toBe("application/json")
-}
-
-export function expectCacheHeaders(response: Response, maxAge: number): void {
-	const cacheControl = response.headers.get("Cache-Control")
-	expect(cacheControl).toContain(`max-age=${maxAge}`)
-}
-
 // Avoids hitting real database in tests; returns rows whose pattern is a
-// substring of the executed SQL.
+// substring of the executed SQL. Rows may be a function of the bound args, for
+// queries that differ only by parameter.
 export function createMockDbClient(
-	mockResults: Record<string, unknown[]> = {},
+	mockResults: Record<
+		string,
+		unknown[] | ((args: unknown[]) => unknown[])
+	> = {},
 ): Client {
 	return {
 		execute: vi.fn(async (stmt: string | { sql: string; args?: unknown[] }) => {
 			const sql = typeof stmt === "string" ? stmt : stmt.sql
+			const args = typeof stmt === "string" ? [] : (stmt.args ?? [])
 			for (const [pattern, rows] of Object.entries(mockResults)) {
 				if (sql.includes(pattern)) {
-					return { rows }
+					return { rows: typeof rows === "function" ? rows(args) : rows }
 				}
 			}
 			return { rows: [] }
@@ -105,7 +98,7 @@ export function createMockDbClient(
 }
 
 export const sampleReview = {
-	id: "test-review-1",
+	id: 1,
 	source: "game",
 	source_id: "12345",
 	source_name: "Test Game",
@@ -116,10 +109,4 @@ export const sampleReview = {
 	comment: "Great game!",
 	inserted_at: "2025-01-01T00:00:00Z",
 	meta: "{}",
-} as const
-
-export const sampleEmotions = [
-	{ id: 1, name: "Joy", color: "#FFD700" },
-	{ id: 2, name: "Sadness", color: "#4169E1" },
-	{ id: 3, name: "Fear", color: "#800080" },
-] as const
+} satisfies Review

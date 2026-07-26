@@ -5,7 +5,7 @@ import {
 	buildShowMeta,
 	type TmdbMovie,
 	type TmdbShow,
-} from "../../src/pages/api/catalogue/sources/tmdb"
+} from "../../src/catalogue/sources/tmdb"
 
 function makeMovie(overrides: Partial<TmdbMovie> = {}): TmdbMovie {
 	return {

@@ -5,7 +5,7 @@ import {
 	pickRandomFreeDate,
 	todayIsoDay,
 	toIsoDay,
-} from "../src/catalogueDate"
+} from "../src/catalogue/date"
 
 describe("toIsoDay", () => {
 	it("formats a Date as its UTC yyyy-mm-dd", () => {

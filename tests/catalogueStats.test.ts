@@ -12,7 +12,7 @@ import {
 	totalRow,
 	TOTAL_ROW_KEY,
 	type ReviewFact,
-} from "../src/catalogueStats"
+} from "../src/catalogue/stats"
 
 const fact = (
 	period: string,

@@ -3,7 +3,7 @@ import {
 	albumCoverUrl,
 	buildAlbumMeta,
 	type SpotifyAlbum,
-} from "../../src/pages/api/catalogue/sources/spotify"
+} from "../../src/catalogue/sources/spotify"
 
 function makeAlbum(overrides: Partial<SpotifyAlbum> = {}): SpotifyAlbum {
 	return {

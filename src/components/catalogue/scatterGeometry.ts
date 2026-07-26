@@ -1,4 +1,4 @@
-import type { EmotionStat } from "$src/catalogueStats"
+import type { EmotionStat } from "$src/catalogue/stats"
 
 /**
  * Layout maths for the emotion-impact bubble chart: frequency on x, average

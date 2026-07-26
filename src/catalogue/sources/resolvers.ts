@@ -1,14 +1,14 @@
-import { fetchGame, coverUrl, buildIgdbMeta } from "./sources/igdb"
+import { fetchGame, coverUrl, buildIgdbMeta } from "./igdb"
 import {
 	buildMovieMeta,
 	buildShowMeta,
 	fetchMovie,
 	fetchShow,
 	posterUrl,
-} from "./sources/tmdb"
-import { fetchBoardGame, buildBggMeta } from "./sources/bgg"
-import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./sources/spotify"
-import { fetchBook, bookCoverUrl, buildBookMeta } from "./sources/openlibrary"
+} from "./tmdb"
+import { fetchBoardGame, buildBggMeta } from "./bgg"
+import { fetchAlbum, albumCoverUrl, buildAlbumMeta } from "./spotify"
+import { fetchBook, bookCoverUrl, buildBookMeta } from "./openlibrary"
 
 export interface ResolvedSource {
 	source_name: string

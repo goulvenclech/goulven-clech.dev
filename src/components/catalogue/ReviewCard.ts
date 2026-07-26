@@ -1,7 +1,6 @@
-import { formatDate } from "../../dateUtils"
-import { ratingText } from "./reviewUtils"
-import type { Review } from "../../pages/api/catalogue/reviews"
-import type { Emotion } from "../../pages/api/catalogue/emotions"
+import { formatDate } from "$src/dateUtils"
+import { ratingText } from "$src/catalogue/reviewUtils"
+import type { Emotion, Review } from "$src/catalogue/apiTypes"
 
 /**
  * A web component to display a review card
@@ -17,9 +16,9 @@ export class ReviewCard extends HTMLElement {
 	/**
 	 * Set the review data and emotions map for the card
 	 */
-	setReviewData(review: Review, emotionsMap: Map<number | string, Emotion>) {
+	setReviewData(review: Review, emotionsMap: Map<number, Emotion>) {
 		this.review = review
-		this.emotionsMap = emotionsMap as Map<number, Emotion>
+		this.emotionsMap = emotionsMap
 		this.render()
 		return this
 	}
