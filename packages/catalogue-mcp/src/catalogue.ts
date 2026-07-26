@@ -381,16 +381,13 @@ export class CatalogueClient {
 		const { lists } = await this.getJson<{ lists: TodoListDetail[] }>(
 			`/api/catalogue/todo?list=${encodeURIComponent(id)}`,
 		)
-		// Resolve locally only for an older deployment that ignored the param.
-		const wanted = id.trim().toLowerCase().normalize("NFC")
-		const list =
-			lists.length === 1
-				? lists[0]
-				: lists.find(
-						(l) =>
-							l.id === wanted ||
-							l.title.toLowerCase().normalize("NFC") === wanted,
-					)
+		// An older deployment ignored the param, so match locally. Normalise both
+		// sides as the server does, else an honored response would be rejected.
+		const normalise = (s: string) => s.trim().toLowerCase().normalize("NFC")
+		const wanted = normalise(id)
+		const list = lists.find(
+			(l) => normalise(l.id) === wanted || normalise(l.title) === wanted,
+		)
 		if (!list)
 			throw new Error(
 				`Unknown to-do list "${id}". Available: ${lists.map((l) => l.id).join(", ")}.`,

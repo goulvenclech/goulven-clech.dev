@@ -742,4 +742,19 @@ describe("CatalogueClient.getTodoList", () => {
 			/Unknown to-do list/,
 		)
 	})
+
+	it("rejects an unknown id even when the response holds a single list", async () => {
+		// An older deployment ignoring ?list= returns its sole list either way.
+		const fetchFn = stubFetch({
+			"/api/catalogue/todo": { lists: [detail] },
+		})
+		const client = new CatalogueClient(
+			"http://x",
+			fetchFn as unknown as typeof fetch,
+		)
+
+		await expect(client.getTodoList("nope")).rejects.toThrow(
+			/Unknown to-do list/,
+		)
+	})
 })
