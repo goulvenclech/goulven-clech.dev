@@ -5,6 +5,7 @@
  * pure so they can be tested without a database.
  */
 import { getClient, type Client } from "$src/db"
+import { RATING_ORDER, SOURCE_ORDER } from "$src/catalogue/reviewUtils"
 
 /**
  * Reviews dated before the catalogue existed are backfill: memories dated by
@@ -25,19 +26,6 @@ export interface ReviewFact {
 	rating: number
 	count: number
 }
-
-/** Media sources, in the order the catalogue's own filters list them. */
-export const SOURCE_ORDER = [
-	"IGDB",
-	"BGG",
-	"TMDB_MOVIE",
-	"TMDB_TV",
-	"SPOTIFY",
-	"OPENLIBRARY",
-] as const
-
-/** Ratings from hated to favorite, matching `ratingLabels` in `reviewUtils`. */
-export const RATING_ORDER = [1, 2, 3, 4, 5, 6] as const
 
 /** Ratings 1–3 sit left of the neutral axis, 4–6 right of it. */
 export const NEGATIVE_RATINGS = 3

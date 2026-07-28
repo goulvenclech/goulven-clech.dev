@@ -22,7 +22,6 @@ export default getViteConfig({
 				"./tests/__mocks__/astro-content.ts",
 				import.meta.url,
 			).pathname,
-			"src/": new URL("./src/", import.meta.url).pathname,
 		},
 	},
 })

@@ -1,3 +1,26 @@
+/**
+ * The catalogue's media vocabulary and the labels it renders with. Each table
+ * stays total over its key set: charts index them without a fallback, so a
+ * missing entry must fail the build rather than leak a raw key into the UI.
+ */
+
+/** Media sources, in the order the catalogue's own filters list them. */
+export const SOURCE_ORDER = [
+	"IGDB",
+	"BGG",
+	"TMDB_MOVIE",
+	"TMDB_TV",
+	"SPOTIFY",
+	"OPENLIBRARY",
+] as const
+
+export type MediaSource = (typeof SOURCE_ORDER)[number]
+
+/** Ratings from hated to favorite. */
+export const RATING_ORDER = [1, 2, 3, 4, 5, 6] as const
+
+export type Rating = (typeof RATING_ORDER)[number]
+
 /** Source key → human-readable media noun */
 export const sourceNouns: Record<string, string> = {
 	IGDB: "game",
@@ -6,7 +29,7 @@ export const sourceNouns: Record<string, string> = {
 	TMDB_TV: "show",
 	SPOTIFY: "album",
 	OPENLIBRARY: "book",
-}
+} satisfies Record<MediaSource, string>
 
 /** Source key → plural label */
 export const sourcePlurals: Record<string, string> = {
@@ -16,7 +39,7 @@ export const sourcePlurals: Record<string, string> = {
 	TMDB_TV: "shows",
 	SPOTIFY: "albums",
 	OPENLIBRARY: "books",
-}
+} satisfies Record<MediaSource, string>
 
 /** Rating → emoji + verb */
 export const ratingLabels: Record<number, { emoji: string; verb: string }> = {
@@ -26,7 +49,7 @@ export const ratingLabels: Record<number, { emoji: string; verb: string }> = {
 	4: { emoji: "😀", verb: "liked" },
 	5: { emoji: "😍", verb: "loved" },
 	6: { emoji: "⭐", verb: "favorite" },
-}
+} satisfies Record<Rating, { emoji: string; verb: string }>
 
 /**
  * Build a rating text like "😍 loved this game" or "⭐ favorite album".

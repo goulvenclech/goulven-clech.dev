@@ -6,7 +6,9 @@
  *
  * A couple of small tables (media types, rating labels) are mirrored from the
  * website rather than imported: this package builds on its own Node toolchain,
- * without the Astro aliases the originals rely on.
+ * without the Astro aliases the originals rely on. A parity test on the site
+ * imports this module, so it must also typecheck under the site's compiler
+ * options.
  */
 
 /** The catalogue sources, as stored server-side. */

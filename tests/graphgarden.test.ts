@@ -5,10 +5,6 @@ vi.mock("astro:content", () => ({
 	getCollection: vi.fn(),
 }))
 
-vi.mock("src/utils", () => ({
-	isEntryPublished: vi.fn(() => true),
-}))
-
 vi.mock("node:fs", async (importOriginal) => {
 	const actual = await importOriginal<typeof import("node:fs")>()
 	const mockReadFileSync = vi.fn(
@@ -44,6 +40,7 @@ import { readFileSync } from "node:fs"
 import { getCollection } from "astro:content"
 
 const SITE_ORIGIN = "https://goulven-clech.dev"
+const NEVER_PUBLISHED_ID = "2025/never-published-entry"
 
 function mockBlogEntry(overrides: Record<string, unknown> = {}) {
 	return {
@@ -168,12 +165,25 @@ interface GraphGardenResponse {
 describe("GET handler", () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
-		vi.mocked(getCollection).mockImplementation((collection: string) => {
-			if (collection === "blog") {
-				return Promise.resolve([mockBlogEntry()] as never)
-			}
-			return Promise.resolve([] as never)
-		})
+		vi.mocked(getCollection).mockImplementation(
+			(collection: string, filter?: (entry: unknown) => boolean) => {
+				if (collection !== "blog") {
+					return Promise.resolve([] as never)
+				}
+				const published = mockBlogEntry()
+				const entries = [
+					published,
+					mockBlogEntry({
+						id: NEVER_PUBLISHED_ID,
+						data: { ...published.data, published: "never" },
+					}),
+				]
+				// Mirror Astro's getCollection, which applies the caller's filter
+				return Promise.resolve(
+					(filter ? entries.filter(filter) : entries) as never,
+				)
+			},
+		)
 	})
 
 	afterEach(() => {
@@ -217,6 +227,16 @@ describe("GET handler", () => {
 
 		const urls = data.nodes.map((node) => node.url)
 		expect(urls).toContain("/?year=2025")
+	})
+
+	it("excludes entries published as never from nodes", async () => {
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		const urls = data.nodes.map((node) => node.url)
+		expect(urls).toContain("/2025/test-entry")
+		expect(urls).not.toContain(`/${NEVER_PUBLISHED_ID}`)
 	})
 
 	it("creates edges from blog entries to year nodes", async () => {

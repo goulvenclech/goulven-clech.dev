@@ -242,35 +242,6 @@ export function createCatalogueController(): CatalogueController {
 	return { bootstrap, loadReviews }
 }
 
-// Hidden helper: fires only if a #sync-igdb button is temporarily added to the page.
-function setupSyncIgdb(controller: CatalogueController) {
-	document.getElementById("sync-igdb")?.addEventListener("click", async (e) => {
-		e.preventDefault()
-
-		const password = prompt("Catalogue password ?")
-		if (!password) return
-
-		try {
-			const res = await fetch("/api/catalogue/reviews", {
-				method: "PATCH",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ password, task: "syncIGDB" }),
-			})
-
-			const json = await res.json()
-			if (res.ok && json.ok) {
-				alert(`✅ ${json.updated} review(s) updated.`)
-				await controller.loadReviews()
-			} else {
-				alert(`❌ ${json.error ?? res.status}`)
-			}
-		} catch (err) {
-			console.error(err)
-			alert("❌ Network or server error.")
-		}
-	})
-}
-
 export function initCatalogue() {
 	const controller = createCatalogueController()
 
@@ -285,6 +256,4 @@ export function initCatalogue() {
 	} else {
 		controller.bootstrap()
 	}
-
-	setupSyncIgdb(controller)
 }
