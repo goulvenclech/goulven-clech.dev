@@ -84,6 +84,35 @@ describe("GET /api/catalogue/todo", () => {
 		expect(data.lists[0].items.every((i) => !i.done)).toBe(true)
 	})
 
+	it("serves a BCE year as the raw negative number, not as display text", async () => {
+		const ancient: TodoList[] = [
+			{
+				...lists[0],
+				source: "OPENLIBRARY",
+				entries: [
+					{
+						id: "OL22159894M",
+						name: "La République",
+						year: -375,
+						poster: null,
+						link: "https://openlibrary.org/books/OL22159894M",
+					},
+				],
+			},
+		]
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const res = await GET(
+			createEndpointContext("/api/catalogue/todo"),
+			client,
+			ancient,
+		)
+
+		const data = await parseJsonResponse<{
+			lists: { items: { year: number | null }[] }[]
+		}>(res)
+		expect(data.lists[0].items[0].year).toBe(-375)
+	})
+
 	it("caches the response for an hour", async () => {
 		const client = createMockDbClient({ "FROM reviews": [] })
 		const res = await GET(

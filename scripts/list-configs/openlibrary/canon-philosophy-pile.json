@@ -1,0 +1,48 @@
+{
+	"id": "canon-philosophy-pile",
+	"title": "Canon philosophy pile",
+	"description": "Works from the Western canon, read for university or out of sheer curiosity.",
+	"source": "OPENLIBRARY",
+	"books": [
+		["Gorgias", "Platon", -385, "OL28695111M"],
+		["La République", "Platon", -375, "OL8837644M"],
+		["Éthique à Nicomaque", "Aristote", -340, "OL22159891M"],
+		["Lettre à Ménécée", "Épicure", -300, "OL32369446M"],
+		["Manuel", "Épictète", 125, "OL12399673M"],
+		["Le Prince", "Machiavel", 1532, "OL58889208M"],
+		["Essais", "Montaigne", 1580, "OL32899560M"],
+		["Méditations métaphysiques", "René Descartes", 1641, "OL8841727M"],
+		["Léviathan", "Thomas Hobbes", 1651, "OL8840785M"],
+		["Pensées", "Blaise Pascal", 1670, "OL8888439M"],
+		["Éthique", "Baruch Spinoza", 1677, "OL37769770M"],
+		["Enquête sur l'entendement humain", "David Hume", 1748, "OL8841733M"],
+		[
+			"Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
+			"Jean-Jacques Rousseau",
+			1755,
+			"OL32888079M"
+		],
+		["Qu'est-ce que les Lumières ?", "Emmanuel Kant", 1784, "OL32756844M"],
+		[
+			"Fondements de la métaphysique des mœurs",
+			"Emmanuel Kant",
+			1785,
+			"OL8887835M"
+		],
+		["La Raison dans l'Histoire", "G. W. F. Hegel", 1837, "OL8889445M"],
+		[
+			"Manifeste du parti communiste",
+			"Karl Marx & Friedrich Engels",
+			1848,
+			"OL8841964M"
+		],
+		["La Généalogie de la morale", "Friedrich Nietzsche", 1887, "OL8841884M"],
+		["La Pensée et le Mouvant", "Henri Bergson", 1934, "OL45044280M"],
+		[
+			"L'existentialisme est un humanisme",
+			"Jean-Paul Sartre",
+			1946,
+			"OL53592957M"
+		]
+	]
+}

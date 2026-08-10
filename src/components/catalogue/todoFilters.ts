@@ -1,7 +1,7 @@
 /**
  * URL state for the catalogue to-do page, mirroring catalogueFilters: default
- * values are omitted so a bare URL means "first list, no filters", and only the
- * keys present in the URL are read back.
+ * values are omitted so a bare URL means "the default list, no filters", and
+ * only the keys present in the URL are read back.
  */
 import {
 	SORTS,
@@ -26,6 +26,18 @@ const FILTER_KEYS = [
 
 export const DEFAULT_SORT: TodoSort = "year-asc"
 export const DEFAULT_STATUS: TodoStatus = "all"
+/** Pinned so the landing view doesn't drift as lists are added or renamed. */
+export const DEFAULT_LIST_ID = "movies-everyone-should-watch"
+
+/**
+ * Single answer to "which list does no list in the URL mean", asked by the
+ * server render, the URL state and the client's landing view alike.
+ */
+export function defaultTodoListId(listIds: string[]): string {
+	return listIds.includes(DEFAULT_LIST_ID)
+		? DEFAULT_LIST_ID
+		: (listIds[0] ?? "")
+}
 
 export interface TodoState {
 	list: string
@@ -44,7 +56,7 @@ export function resolveTodoState(
 		list:
 			filters.list && listIds.includes(filters.list)
 				? filters.list
-				: (listIds[0] ?? ""),
+				: defaultTodoListId(listIds),
 		query: filters.query ?? "",
 		sort: coerce(filters.sort, SORTS, DEFAULT_SORT),
 		status: coerce(filters.status, STATUSES, DEFAULT_STATUS),
@@ -63,10 +75,10 @@ function coerce<T extends string>(
 
 export function buildTodoParams(
 	filters: TodoFilters,
-	defaults: { list: string },
+	listIds: string[],
 ): URLSearchParams {
 	const params = new URLSearchParams()
-	if (filters.list && filters.list !== defaults.list)
+	if (filters.list && filters.list !== defaultTodoListId(listIds))
 		params.set("list", filters.list)
 	if (filters.query) params.set("query", filters.query)
 	if (filters.sort && filters.sort !== DEFAULT_SORT)

@@ -9,7 +9,7 @@
  * directly (the search is noisy for translations, anthologies and new books).
  *
  * Usage:
- *   node scripts/fetch-openlibrary-list.mjs --list modern-philosophy-pile
+ *   node scripts/fetch-openlibrary-list.mjs --list contemporary-philosophy-pile
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"

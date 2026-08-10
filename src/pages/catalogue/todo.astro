@@ -9,6 +9,7 @@ import {
 	formatTodoStats,
 	type TodoReview,
 } from "$src/catalogue/todo"
+import { defaultTodoListId } from "$components/catalogue/todoFilters"
 import { loadTodoReviews, todoLists as lists } from "$src/catalogue/todoData"
 
 const pageTitle = "To-do"
@@ -43,7 +44,9 @@ const views = lists.map((list) => {
 	}
 })
 
-const initial = views[0]
+const defaultListId = defaultTodoListId(views.map((view) => view.id))
+// The id comes from `views`; the fallback only satisfies the type checker.
+const initial = views.find((view) => view.id === defaultListId) ?? views[0]
 // Escape "<" so the serialised data can't close the <script> tag early.
 const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 
@@ -86,14 +89,18 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 			<optgroup label="active">
 				{
 					activeOptions.map(({ view, index }) => (
-						<option value={index}>{view.title}</option>
+						<option value={index} selected={view.id === initial.id}>
+							{view.title}
+						</option>
 					))
 				}
 			</optgroup>
 			<optgroup label="inactive">
 				{
 					inactiveOptions.map(({ view, index }) => (
-						<option value={index}>{view.title}</option>
+						<option value={index} selected={view.id === initial.id}>
+							{view.title}
+						</option>
 					))
 				}
 			</optgroup>
@@ -101,7 +108,9 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 
 		<p class="mt-3 mb-2 text-sm opacity-80">
 			<span id="list-description">{initial.description}</span>{" "}
-			<a id="list-source-link" href={initial.url ?? "#"}>Source</a>
+			<a id="list-source-link" href={initial.url ?? "#"} hidden={!initial.url}
+				>Source</a
+			>
 		</p>
 
 		<p
@@ -197,6 +206,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 		import {
 			filterTodoItems,
 			sortTodoItems,
+			formatTodoLabel,
 			formatTodoStats,
 			type TodoItem,
 			type TodoProgress,
@@ -256,22 +266,18 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 		let listIndex = 0
 		let shown = PAGE_SIZE
 
-		function label(item: TodoItem): string {
-			return item.year ? `${item.name} (${item.year})` : item.name
-		}
-
 		function placeholderFor(item: TodoItem): HTMLSpanElement {
 			const span = document.createElement("span")
 			span.className =
 				"flex h-full w-full items-center justify-center p-2 text-center text-xs"
-			span.textContent = label(item)
+			span.textContent = formatTodoLabel(item)
 			return span
 		}
 
 		function cardFor(item: TodoItem): HTMLAnchorElement {
 			const link = document.createElement("a")
 			link.href = item.href
-			link.title = label(item)
+			link.title = formatTodoLabel(item)
 			link.className =
 				"no-icon bg-alt-light relative aspect-3/4 overflow-hidden"
 			if (!item.done) {
@@ -339,7 +345,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 			renderGrid(view)
 		}
 
-		const defaultList = views[0]?.id ?? ""
+		const listIds = views.map((view) => view.id)
 
 		function syncUrl(): void {
 			const params = buildTodoParams(
@@ -349,7 +355,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 					sort: sortSelect.value,
 					status: statusSelect.value,
 				},
-				{ list: defaultList },
+				listIds,
 			)
 			history.replaceState(
 				null,
@@ -398,7 +404,7 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 
 		const state = resolveTodoState(
 			new URLSearchParams(location.search),
-			views.map((view) => view.id),
+			listIds,
 		)
 		queryInput.value = state.query
 		sortSelect.value = state.sort

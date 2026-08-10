@@ -4,6 +4,7 @@ import {
 	computeTodoProgress,
 	computeTodoStats,
 	filterTodoItems,
+	formatTodoLabel,
 	formatTodoStats,
 	indexReviews,
 	sortTodoItems,
@@ -280,6 +281,24 @@ describe("formatTodoStats", () => {
 	})
 })
 
+describe("formatTodoLabel", () => {
+	it("reads a negative year back as BCE", () => {
+		expect(formatTodoLabel(item({ name: "La République", year: -375 }))).toBe(
+			"La République (375 BCE)",
+		)
+	})
+
+	it("leaves a positive year as it stands", () => {
+		expect(formatTodoLabel(item({ name: "Le Prince", year: 1532 }))).toBe(
+			"Le Prince (1532)",
+		)
+	})
+
+	it("drops the parentheses when the year is unknown", () => {
+		expect(formatTodoLabel(item({ name: "Manuel", year: null }))).toBe("Manuel")
+	})
+})
+
 describe("filterTodoItems", () => {
 	const items = [
 		item({ id: 1, name: "Alien", done: true }),
@@ -355,6 +374,17 @@ describe("sortTodoItems", () => {
 	it("sorts newest first, still breaking ties alphabetically", () => {
 		expect(sortTodoItems(items, "year-desc").map((i) => i.id)).toEqual([
 			2, 1, 3,
+		])
+	})
+
+	it("keeps BCE years (stored negative) in chronological order", () => {
+		const ancient = [
+			item({ id: 1, name: "Manuel", year: 125 }),
+			item({ id: 2, name: "Gorgias", year: -385 }),
+			item({ id: 3, name: "La République", year: -375 }),
+		]
+		expect(sortTodoItems(ancient, "year-asc").map((i) => i.id)).toEqual([
+			2, 3, 1,
 		])
 	})
 })

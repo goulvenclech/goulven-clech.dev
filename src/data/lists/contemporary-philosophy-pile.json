@@ -1,7 +1,7 @@
 {
-	"id": "modern-philosophy-pile",
-	"title": "Modern philosophy pile",
-	"description": "Contemporary philosophy I'm working through — science, mind, ethics, free will, and politics.",
+	"id": "contemporary-philosophy-pile",
+	"title": "Contemporary philosophy pile",
+	"description": "Serious contemporary interlocutors, whether or not I share their views, for working out where I stand on science, mind, ethics, free will, and politics.",
 	"source": "OPENLIBRARY",
 	"entries": [
 		{
@@ -411,6 +411,54 @@
 			"poster": "https://covers.openlibrary.org/b/id/9584157-L.jpg",
 			"link": "https://openlibrary.org/books/OL10207086M",
 			"meta": "Strawson P.F. | Routledge | Philosophy, Free will and determinism, Personal Autonomy, Philosophie, Libre arbitre et déterminisme"
+		},
+		{
+			"id": "OL7384559M",
+			"name": "The Problems of Philosophy",
+			"year": 1912,
+			"poster": "https://covers.openlibrary.org/b/olid/OL7384559M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL7384559M",
+			"meta": "Bertrand Russell | Oxford Paperbacks"
+		},
+		{
+			"id": "OL5256292M",
+			"name": "Tractatus Logico-Philosophicus",
+			"year": 1921,
+			"poster": "https://covers.openlibrary.org/b/id/5415771-L.jpg",
+			"link": "https://openlibrary.org/books/OL5256292M",
+			"meta": "Ludwig Wittgenstein | Routledge and Kegan Paul | Analysis (Philosophy), Language, Language and languages, Language and logic, Languages"
+		},
+		{
+			"id": "OL28377478M",
+			"name": "Philosophical Investigations",
+			"year": 1953,
+			"poster": "https://covers.openlibrary.org/b/id/10680791-L.jpg",
+			"link": "https://openlibrary.org/books/OL28377478M",
+			"meta": "Ludwig Wittgenstein | Macmillan | German Philosophy, Modern Philosophy, Filosofie"
+		},
+		{
+			"id": "OL3568077M",
+			"name": "Conjectures and Refutations",
+			"year": 1963,
+			"poster": "https://covers.openlibrary.org/b/id/267020-L.jpg",
+			"link": "https://openlibrary.org/books/OL3568077M",
+			"meta": "Karl Popper | Routledge | Methodology, Theory of Knowledge, Science, Prediction (Logic), Knowledge, Theory of"
+		},
+		{
+			"id": "OL6992788M",
+			"name": "La Théorie physique. Son objet, sa structure",
+			"year": 1906,
+			"poster": "https://covers.openlibrary.org/b/olid/OL6992788M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL6992788M",
+			"meta": "Pierre Maurice Marie Duhem | Chevalier & Rivière | History, Mathematical physics, Philosophy, Physics"
+		},
+		{
+			"id": "OL4097053M",
+			"name": "On Sense and Reference",
+			"year": 1892,
+			"poster": "https://covers.openlibrary.org/b/olid/OL4097053M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL4097053M",
+			"meta": "Gottlob Frege | Rowman & Littlefield | Addresses, essays, lectures, Mathematics, Philosophy, Symbolic and mathematical Logic, Logic, symbolic and mathematical"
 		}
 	]
 }

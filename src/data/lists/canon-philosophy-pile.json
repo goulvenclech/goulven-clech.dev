@@ -1,0 +1,168 @@
+{
+	"id": "canon-philosophy-pile",
+	"title": "Canon philosophy pile",
+	"description": "Works from the Western canon, read for university or out of sheer curiosity.",
+	"source": "OPENLIBRARY",
+	"entries": [
+		{
+			"id": "OL28695111M",
+			"name": "Gorgias",
+			"year": -385,
+			"poster": "https://covers.openlibrary.org/b/olid/OL28695111M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL28695111M",
+			"meta": "Plato | Flammarion | Classic Literature, Fiction, Early works to 1800, Ethics, Political science"
+		},
+		{
+			"id": "OL8837644M",
+			"name": "La République",
+			"year": -375,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8837644M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8837644M",
+			"meta": "Plato, Pierre Pachet | Gallimard | Political science, Early works to 1800, Utopias, Ouvrages avant 1800, Science politique"
+		},
+		{
+			"id": "OL22159891M",
+			"name": "Éthique à Nicomaque",
+			"year": -340,
+			"poster": "https://covers.openlibrary.org/b/olid/OL22159891M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL22159891M",
+			"meta": "Aristotle | Flammarion | Morale, Morale ancienne, Ouvrages avant 1800"
+		},
+		{
+			"id": "OL32369446M",
+			"name": "Lettre à Ménécée",
+			"year": -300,
+			"poster": "https://covers.openlibrary.org/b/olid/OL32369446M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL32369446M",
+			"meta": "Épicure | Flammarion | Happiness, Atomism, Bonheur, Ouvrages avant 1800, Atomisme"
+		},
+		{
+			"id": "OL12399673M",
+			"name": "Manuel",
+			"year": 125,
+			"poster": "https://covers.openlibrary.org/b/olid/OL12399673M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL12399673M",
+			"meta": "Epictetus | Flammarion | Early works to 1800, Conduct of life, Ethics, Morale pratique"
+		},
+		{
+			"id": "OL58889208M",
+			"name": "Le Prince",
+			"year": 1532,
+			"poster": "https://covers.openlibrary.org/b/olid/OL58889208M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL58889208M",
+			"meta": "Machiavel, Paul Veyne | Gallimard | Rois et souverains"
+		},
+		{
+			"id": "OL32899560M",
+			"name": "Essais",
+			"year": 1580,
+			"poster": "https://covers.openlibrary.org/b/olid/OL32899560M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL32899560M",
+			"meta": "Montaigne | FLAMMARION | Essays (single author)"
+		},
+		{
+			"id": "OL8841727M",
+			"name": "Méditations métaphysiques",
+			"year": 1641,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8841727M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8841727M",
+			"meta": "René Descartes | Editions Flammarion | Metaphysics, Science, Methodology, Métaphysique"
+		},
+		{
+			"id": "OL8840785M",
+			"name": "Léviathan",
+			"year": 1651,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8840785M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8840785M",
+			"meta": "T. Hobbes | Gallimard | Political science, Early works to 1800, The State, Philosophie politique, Thomas Hobbes"
+		},
+		{
+			"id": "OL8888439M",
+			"name": "Pensées",
+			"year": 1670,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8888439M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8888439M",
+			"meta": "Blaise Pascal | Livre de Poche | Nonfiction, Philosophy, Religion & Spirituality, Religion, Christianity"
+		},
+		{
+			"id": "OL37769770M",
+			"name": "Éthique",
+			"year": 1677,
+			"poster": "https://covers.openlibrary.org/b/olid/OL37769770M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL37769770M",
+			"meta": "Benedictus de Spinoza | Seuil | Ethics, Early works to 1800, Morale, Ouvrages avant 1800"
+		},
+		{
+			"id": "OL8841733M",
+			"name": "Enquête sur l'entendement humain",
+			"year": 1748,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8841733M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8841733M",
+			"meta": "David Hume | Flammarion | Connaissance, Théorie de la"
+		},
+		{
+			"id": "OL32888079M",
+			"name": "Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
+			"year": 1755,
+			"poster": "https://covers.openlibrary.org/b/olid/OL32888079M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL32888079M",
+			"meta": "Jean-Jacques Rousseau, Blaise Bachofen, Bruno Bernardi | FLAMMARION"
+		},
+		{
+			"id": "OL32756844M",
+			"name": "Qu'est-ce que les Lumières ?",
+			"year": 1784,
+			"poster": "https://covers.openlibrary.org/b/olid/OL32756844M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL32756844M",
+			"meta": "Immanuel Kant | Flammarion | Paix (Philosophie), Ouvrages avant 1800, Siècle des Lumières, Raison, Dieu"
+		},
+		{
+			"id": "OL8887835M",
+			"name": "Fondements de la métaphysique des mœurs",
+			"year": 1785,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8887835M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8887835M",
+			"meta": "Immanuel Kant, Victor Delbos | LGF | Morale"
+		},
+		{
+			"id": "OL8889445M",
+			"name": "La Raison dans l'Histoire",
+			"year": 1837,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8889445M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8889445M",
+			"meta": "Hegel | 10-18"
+		},
+		{
+			"id": "OL8841964M",
+			"name": "Manifeste du parti communiste",
+			"year": 1848,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8841964M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8841964M",
+			"meta": "Karl Marx, Friedrich Engels, Emile Bottigelli | Flammarion | Communism, Sources, Capitalism, Socialism, Social conflict"
+		},
+		{
+			"id": "OL8841884M",
+			"name": "La Généalogie de la morale",
+			"year": 1887,
+			"poster": "https://covers.openlibrary.org/b/olid/OL8841884M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL8841884M",
+			"meta": "Friedrich Nietzsche | Flammarion | German Philosophy, Ethics, Morale, Philosophie allemande, Ethics (philosophy)"
+		},
+		{
+			"id": "OL45044280M",
+			"name": "La Pensée et le Mouvant",
+			"year": 1934,
+			"poster": "https://covers.openlibrary.org/b/olid/OL45044280M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL45044280M",
+			"meta": "Henri Bergson | Quadrige/PUF | Philosophy, Metaphysics"
+		},
+		{
+			"id": "OL53592957M",
+			"name": "L'existentialisme est un humanisme",
+			"year": 1946,
+			"poster": "https://covers.openlibrary.org/b/olid/OL53592957M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL53592957M",
+			"meta": "Jean-Paul Sartre | Gallimard, Folio essais | Existentialism, Existentialisme, French language materials, Philosophie"
+		}
+	]
+}

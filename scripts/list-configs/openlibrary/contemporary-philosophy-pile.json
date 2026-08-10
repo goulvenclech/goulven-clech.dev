@@ -1,7 +1,7 @@
 {
-	"id": "modern-philosophy-pile",
-	"title": "Modern philosophy pile",
-	"description": "Contemporary philosophy I'm working through — science, mind, ethics, free will, and politics.",
+	"id": "contemporary-philosophy-pile",
+	"title": "Contemporary philosophy pile",
+	"description": "Serious contemporary interlocutors, whether or not I share their views, for working out where I stand on science, mind, ethics, free will, and politics.",
 	"source": "OPENLIBRARY",
 	"books": [
 		["The Fate of Knowledge", "Helen Longino", 2002],
@@ -107,6 +107,17 @@
 			"P. F. Strawson",
 			1974,
 			"9780415448505"
-		]
+		],
+		["The Problems of Philosophy", "Bertrand Russell", 1912, "OL7384559M"],
+		["Tractatus Logico-Philosophicus", "Ludwig Wittgenstein", 1921],
+		["Philosophical Investigations", "Ludwig Wittgenstein", 1953],
+		["Conjectures and Refutations", "Karl Popper", 1963],
+		[
+			"La Théorie physique. Son objet, sa structure",
+			"Pierre Duhem",
+			1906,
+			"OL6992788M"
+		],
+		["On Sense and Reference", "Gottlob Frege", 1892, "OL4097053M"]
 	]
 }

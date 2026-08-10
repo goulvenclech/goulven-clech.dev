@@ -1,4 +1,7 @@
 import { describe, it, expect } from "vitest"
+import { readdirSync, readFileSync } from "node:fs"
+import { dirname, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
 import {
 	bookCoverUrl,
 	olidCoverUrl,
@@ -8,7 +11,6 @@ import {
 	olidToEntry,
 	editionToEntry,
 } from "../../scripts/fetch-openlibrary-list.mjs"
-import pileConfig from "../../scripts/list-configs/openlibrary/modern-philosophy-pile.json"
 
 describe("bookCoverUrl", () => {
 	it("builds an Open Library cover URL from a cover id", () => {
@@ -157,17 +159,35 @@ describe("editionToEntry", () => {
 })
 
 describe("list config contract", () => {
-	it("modern-philosophy-pile is an OPENLIBRARY list of [title, author, year] books", () => {
-		expect(pileConfig.source).toBe("OPENLIBRARY")
-		expect(typeof pileConfig.id).toBe("string")
-		expect(pileConfig.books.length).toBeGreaterThan(0)
-		for (const book of pileConfig.books) {
-			expect(book.length === 3 || book.length === 4).toBe(true)
-			const [title, author, year, id] = book
-			expect(typeof title).toBe("string")
-			expect(typeof author).toBe("string")
-			expect(typeof year).toBe("number")
-			if (book.length === 4) expect(typeof id).toBe("string")
-		}
+	// Read the directory rather than a hand-kept list, so a new config can't
+	// slip past unchecked.
+	const configDir = resolve(
+		dirname(fileURLToPath(import.meta.url)),
+		"../../scripts/list-configs/openlibrary",
+	)
+	const names = readdirSync(configDir).filter((f) => f.endsWith(".json"))
+
+	it("has configs to check", () => {
+		expect(names.length).toBeGreaterThan(0)
 	})
+
+	it.each(names)(
+		"%s is an OPENLIBRARY list of [title, author, year] books",
+		(name) => {
+			const config = JSON.parse(readFileSync(resolve(configDir, name), "utf8"))
+			expect(config.source).toBe("OPENLIBRARY")
+			// --list selects by filename but output is written to `id`.json, so a
+			// mismatch quietly builds a second, stale list.
+			expect(config.id).toBe(name.replace(/\.json$/, ""))
+			expect(config.books.length).toBeGreaterThan(0)
+			for (const book of config.books) {
+				expect(book.length === 3 || book.length === 4).toBe(true)
+				const [title, author, year, id] = book
+				expect(typeof title).toBe("string")
+				expect(typeof author).toBe("string")
+				expect(typeof year).toBe("number")
+				if (book.length === 4) expect(typeof id).toBe("string")
+			}
+		},
+	)
 })

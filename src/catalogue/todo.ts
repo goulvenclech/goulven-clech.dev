@@ -215,6 +215,13 @@ export function formatTodoStats(stats: TodoStats): string {
 	return `On average ${stats.averageVerb} ${stats.averageEmoji}, and mostly felt ${felt}.`
 }
 
+/** Ancient works carry a negative year to sort chronologically; read back as BCE. */
+export function formatTodoLabel(item: TodoItem): string {
+	if (item.year === null) return item.name
+	const year = item.year < 0 ? `${-item.year} BCE` : `${item.year}`
+	return `${item.name} (${year})`
+}
+
 /** Filter by a case-insensitive query (title + meta) and done/to-do status. */
 export function filterTodoItems(
 	items: TodoItem[],
