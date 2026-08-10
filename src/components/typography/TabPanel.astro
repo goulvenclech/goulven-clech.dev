@@ -1,0 +1,109 @@
+---
+/**
+ * Shows alternative versions of the same content one at a time behind a row of
+ * tabs. Each tab is a radio nested in its label: no JavaScript, and keyboard
+ * traversal and set-position announcements come for free rather than
+ * hand-rolled on top of the ARIA tabs pattern.
+ */
+interface Props {
+	/** Tab labels, in order. Each one exposes a `tab-{index}` slot for its panel. */
+	tabs: string[]
+	/** Accessible name for the group, e.g. "Prompt variants". */
+	groupLabel: string
+}
+
+const { tabs, groupLabel } = Astro.props
+
+// Tabs and slots must match one-to-one: either mismatch silently drops content.
+const declared = tabs.map((_, index) => `tab-${index}`)
+
+const missing = declared.filter((name) => !Astro.slots.has(name))
+if (missing.length > 0)
+	throw new Error(
+		`<TabPanel groupLabel="${groupLabel}"> declares ${tabs.length} tabs but has no content for ${missing.join(", ")}. Each tab needs a <Fragment slot="tab-{index}"> child.`,
+	)
+
+const stray = Object.keys(Astro.slots).filter(
+	(name) => name.startsWith("tab-") && !declared.includes(name),
+)
+if (stray.length > 0)
+	throw new Error(
+		`<TabPanel groupLabel="${groupLabel}"> declares ${tabs.length} tabs, so the content of ${stray.join(", ")} renders nowhere. Add its label to \`tabs\`, or fix the slot name.`,
+	)
+
+// A shared name groups the radios; the suffix keeps two panels on one page apart.
+const group = `tab-panel-${crypto.randomUUID().slice(0, 8)}`
+---
+
+<tab-panel role="radiogroup" aria-label={groupLabel}>
+	{
+		tabs.map((tab, index) => (
+			<Fragment>
+				<label>
+					<input type="radio" name={group} checked={index === 0} />
+					{tab}
+				</label>
+				<div class="panel">
+					<slot name={`tab-${index}`} />
+				</div>
+			</Fragment>
+		))
+	}
+</tab-panel>
+
+<style>
+	@reference "$assets/base.css";
+
+	/* `order` lifts the labels into a first row, panels wrap full width below. */
+	tab-panel {
+		@apply my-5 flex flex-wrap gap-2.5;
+	}
+
+	tab-panel label {
+		@apply hover:border-primary hover:text-primary cursor-pointer px-2 py-1 text-xs;
+		order: -1;
+	}
+
+	/* Visually hidden but still focusable, unlike `display: none`. */
+	tab-panel input {
+		@apply sr-only;
+	}
+
+	tab-panel label:has(input:focus-visible) {
+		@apply outline-primary outline-2 outline-offset-2;
+	}
+
+	tab-panel .panel {
+		@apply hidden min-w-0 basis-full;
+	}
+
+	tab-panel label:has(input:checked) + .panel {
+		@apply block;
+	}
+
+	/* The tabs row already spaces the panel; drop the content's outer margins. */
+	tab-panel .panel > :global(:first-child) {
+		@apply mt-0;
+	}
+
+	tab-panel .panel > :global(:last-child) {
+		@apply mb-0;
+	}
+
+	/*
+	 * Paper has no tabs, so every panel prints under its own label. Dropping the
+	 * flex container neutralises `order`; the checked label is restated to
+	 * outrank its accent colour.
+	 */
+	@media print {
+		tab-panel,
+		tab-panel .panel {
+			@apply block;
+		}
+
+		tab-panel label,
+		tab-panel label:has(input:checked) {
+			@apply text-font-light mt-5 mb-1.5 block border-none p-0 font-medium;
+		}
+	}
+</style>
