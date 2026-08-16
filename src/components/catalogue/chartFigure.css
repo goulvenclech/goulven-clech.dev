@@ -48,6 +48,7 @@
 .chart-tooltip {
 	@apply bg-alt-dark text-body-light pointer-events-none fixed top-0 left-0 z-50 px-2 py-1 text-xs;
 	font-variant-numeric: tabular-nums;
+	max-width: 20rem;
 }
 
 .chart-tooltip[hidden] {

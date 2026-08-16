@@ -65,3 +65,36 @@ export function ratingText(rating: number, source: string): string {
 			: `${label.emoji} ${label.verb}`
 	return `${label.emoji} ${label.verb} this ${noun ?? "one"}`
 }
+
+/**
+ * One-line review detail like "😍 loved this game, felt cozy; « comment »".
+ * Unknown emotion ids are dropped (soft-deleted emotions may linger in rows).
+ */
+export function reviewDetailText(
+	row: {
+		source: string
+		rating: number
+		emotions: string
+		comment: string | null
+	},
+	emotionsById: Map<number, { name: string }>,
+): string {
+	let emotionIds: number[] = []
+	try {
+		emotionIds = JSON.parse(row.emotions ?? "[]") as number[]
+	} catch {
+		emotionIds = []
+	}
+	const emotionNames = emotionIds
+		.map((id) => emotionsById.get(id)?.name)
+		.filter((n): n is string => Boolean(n))
+
+	const feltClause = emotionNames.length
+		? `, felt ${emotionNames.join(", ")}`
+		: ""
+	// Collapse whitespace so a stray newline or "## " in the comment can't fake a heading
+	const flatComment = row.comment?.replace(/\s+/g, " ").trim()
+	const commentClause = flatComment ? `; « ${flatComment} »` : ""
+
+	return `${ratingText(row.rating, row.source)}${feltClause}${commentClause}`
+}

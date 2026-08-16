@@ -1,8 +1,8 @@
 /**
  * Progressive-enhancement tooltip for the catalogue charts. Segments ship with a
  * native `title`, so hover works with no JavaScript; when this runs it swaps that
- * for a styled floating box tracking the pointer. One delegated listener covers
- * every chart on the page.
+ * for a styled floating box tracking the pointer or keyboard focus. One delegated
+ * listener covers every chart on the page.
  */
 const SEGMENT_SELECTOR = "[data-tooltip]"
 
@@ -18,16 +18,19 @@ function ensureTooltip(): HTMLElement {
 	return tooltip
 }
 
-function place(box: HTMLElement, event: PointerEvent): void {
+function place(
+	box: HTMLElement,
+	at: { clientX: number; clientY: number },
+): void {
 	const margin = 12
 	const { innerWidth } = window
 	const { offsetWidth, offsetHeight } = box
 	// Prefer above-right of the cursor, flipping near the viewport edges.
-	let x = event.clientX + margin
-	let y = event.clientY - offsetHeight - margin
+	let x = at.clientX + margin
+	let y = at.clientY - offsetHeight - margin
 	if (x + offsetWidth > innerWidth - margin)
-		x = event.clientX - offsetWidth - margin
-	if (y < margin) y = event.clientY + margin
+		x = at.clientX - offsetWidth - margin
+	if (y < margin) y = at.clientY + margin
 	box.style.transform = `translate(${Math.max(margin, x)}px, ${Math.max(margin, y)}px)`
 }
 
@@ -60,15 +63,34 @@ export function initChartTooltips(): void {
 			if (tooltip) tooltip.hidden = true
 			return
 		}
-		const box = ensureTooltip()
-		const text = segment.dataset.tooltip ?? ""
-		// `role="status"` re-announces on every write, so skip identical ones.
-		if (box.textContent !== text) box.textContent = text
-		box.hidden = false
-		place(box, event)
+		show(segment, event)
+	})
+
+	// Thumbnail links can hold focus; chart marks can't, so this stays pointer-only there.
+	document.addEventListener("focusin", (event) => {
+		const segment = segmentAt(event.target)
+		if (!segment) return
+		const rect = segment.getBoundingClientRect()
+		show(segment, { clientX: rect.left + rect.width / 2, clientY: rect.top })
+	})
+
+	document.addEventListener("focusout", (event) => {
+		if (segmentAt(event.target) && tooltip) tooltip.hidden = true
 	})
 
 	document.addEventListener("pointerleave", () => {
 		if (tooltip) tooltip.hidden = true
 	})
+}
+
+function show(
+	segment: Markable,
+	at: { clientX: number; clientY: number },
+): void {
+	const box = ensureTooltip()
+	const text = segment.dataset.tooltip ?? ""
+	// `role="status"` re-announces on every write, so skip identical ones.
+	if (box.textContent !== text) box.textContent = text
+	box.hidden = false
+	place(box, at)
 }

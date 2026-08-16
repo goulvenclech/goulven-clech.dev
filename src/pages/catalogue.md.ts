@@ -3,7 +3,7 @@ import { getClient } from "$src/db"
 import {
 	RATING_ORDER,
 	ratingLabels,
-	ratingText,
+	reviewDetailText,
 	SOURCE_ORDER,
 	sourcePlurals,
 } from "$src/catalogue/reviewUtils"
@@ -217,26 +217,7 @@ export function renderReviewLine(
 	row: DbReviewRow,
 	emotionsById: Map<number, EmotionRow>,
 ): string {
-	const rating = ratingText(row.rating, row.source)
-
-	let emotionIds: number[] = []
-	try {
-		emotionIds = JSON.parse(row.emotions ?? "[]") as number[]
-	} catch {
-		emotionIds = []
-	}
-	const emotionNames = emotionIds
-		.map((id) => emotionsById.get(id)?.name)
-		.filter((n): n is string => Boolean(n))
-
-	const feltClause = emotionNames.length
-		? `, felt ${emotionNames.join(", ")}`
-		: ""
-	// Collapse whitespace so a stray newline or "## " in the comment can't fake a heading
-	const flatComment = row.comment?.replace(/\s+/g, " ").trim()
-	const commentClause = flatComment ? `; « ${flatComment} »` : ""
-
-	return `${row.source_name} — ${rating}${feltClause}${commentClause}`
+	return `${row.source_name} — ${reviewDetailText(row, emotionsById)}`
 }
 
 export interface CatalogueView {

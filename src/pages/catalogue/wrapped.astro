@@ -5,6 +5,7 @@ import ReviewThumbnailGrid, {
 } from "$components/catalogue/ReviewThumbnailGrid.astro"
 import ReturnHome from "$components/ReturnHome.astro"
 import Layout from "$layouts/Layout.astro"
+import { reviewDetailText } from "$src/catalogue/reviewUtils"
 import { getClient, type Client } from "$src/db"
 
 const pageTitle = "My catalogue wrapped"
@@ -107,12 +108,22 @@ function formatEmotions(emotions: EmotionStat[]): string {
 	return ` And mostly felt ${emotions.map((e) => `<i>${e.name}</i>`).join(", ")}.`
 }
 
+interface PositiveReview {
+	source: string
+	source_name: string
+	source_img: string
+	source_link: string
+	rating: number
+	emotions: string
+	comment: string | null
+}
+
 async function getPositiveReviews(
 	db: Client,
 	source: MediaSource,
-): Promise<ReviewThumbnail[]> {
+): Promise<PositiveReview[]> {
 	const result = await db.execute({
-		sql: `SELECT source_name, source_img, source_link, rating
+		sql: `SELECT source, source_name, source_img, source_link, rating, emotions, comment
 		      FROM reviews
 		      WHERE inserted_at >= ? AND inserted_at < ?
 		        AND source = ?
@@ -120,7 +131,30 @@ async function getPositiveReviews(
 		      ORDER BY rating DESC, inserted_at DESC`,
 		args: [START_DATE, END_DATE, source],
 	})
-	return result.rows as unknown as ReviewThumbnail[]
+	return result.rows as unknown as PositiveReview[]
+}
+
+async function getEmotionNames(
+	db: Client,
+): Promise<Map<number, { name: string }>> {
+	const result = await db.execute(
+		"SELECT id, name FROM emotions WHERE is_deleted = false",
+	)
+	const rows = result.rows as unknown as { id: number; name: string }[]
+	return new Map(rows.map((r) => [Number(r.id), { name: r.name }]))
+}
+
+function toThumbnails(
+	rows: PositiveReview[],
+	emotionNames: Map<number, { name: string }>,
+): ReviewThumbnail[] {
+	return rows.map((r) => ({
+		source_name: r.source_name,
+		source_img: r.source_img,
+		source_link: r.source_link,
+		rating: r.rating,
+		detail: reviewDetailText(r, emotionNames),
+	}))
 }
 
 const overallStats = await getRatingStats(client)
@@ -137,11 +171,12 @@ const [
 	movieEmotions,
 	showEmotions,
 	albumEmotions,
-	gameReviews,
-	boardGameReviews,
-	movieReviews,
-	showReviews,
-	albumReviews,
+	gameRows,
+	boardGameRows,
+	movieRows,
+	showRows,
+	albumRows,
+	emotionNames,
 ] = await Promise.all([
 	getTopEmotions(client, null, 10),
 	getTopEmotions(client, "IGDB"),
@@ -154,7 +189,14 @@ const [
 	getPositiveReviews(client, "TMDB_MOVIE"),
 	getPositiveReviews(client, "TMDB_TV"),
 	getPositiveReviews(client, "SPOTIFY"),
+	getEmotionNames(client),
 ])
+
+const gameReviews = toThumbnails(gameRows, emotionNames)
+const boardGameReviews = toThumbnails(boardGameRows, emotionNames)
+const movieReviews = toThumbnails(movieRows, emotionNames)
+const showReviews = toThumbnails(showRows, emotionNames)
+const albumReviews = toThumbnails(albumRows, emotionNames)
 
 const MOBILE_EMOTION_COUNT = 7
 const DESKTOP_EMOTION_COUNT = 10

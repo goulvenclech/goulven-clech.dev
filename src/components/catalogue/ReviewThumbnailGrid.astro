@@ -1,9 +1,12 @@
 ---
+import "./chartFigure.css"
+
 export interface ReviewThumbnail {
 	source_name: string
 	source_img: string
 	source_link: string
 	rating: number
+	detail: string
 }
 
 interface Props {
@@ -24,16 +27,27 @@ const RATING_EMOJI: Record<number, string> = { 6: "⭐", 5: "😍", 4: "😀" }
 				target="_blank"
 				rel="noopener"
 				class="no-icon relative aspect-3/4 overflow-hidden"
+				data-tooltip={`${r.source_name} — ${r.detail}`}
 			>
 				<img
 					src={r.source_img}
 					alt={r.source_name}
 					class="h-full w-full object-cover"
 				/>
-				<span class="absolute top-1 right-1 text-lg drop-shadow-md">
+				<span class="sr-only">{r.detail}</span>
+				<span
+					aria-hidden="true"
+					class="absolute top-1 right-1 text-lg drop-shadow-md"
+				>
 					{RATING_EMOJI[r.rating]}
 				</span>
 			</a>
 		))
 	}
 </div>
+
+<script>
+	import { initChartTooltips } from "./chartTooltip"
+
+	initChartTooltips()
+</script>
