@@ -7,6 +7,12 @@ export interface FilterState {
 	sort: "date"
 }
 
+export const importantTags = [
+	{ value: "software engineering", label: "💻 Software Engineering" },
+	{ value: "game development", label: "🎮 Game Development" },
+	{ value: "coffee", label: "☕️ Speciality Coffee" },
+]
+
 /**
  * Filter blog entries by search query, tag, and year.
  * Query is split into space-separated keywords, ALL must match in title, abstract, or tags.

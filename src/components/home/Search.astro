@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content"
 import { formatDate } from "$src/dateUtils"
 import { isEntryPublished } from "$src/blogUtils"
 import type { BlogEntry } from "$src/blogUtils"
+import { importantTags } from "$src/components/home/searchUtils"
 import Block from "../Block.astro"
 export type ClientBlogEntries = BlogEntry[]
 
@@ -36,13 +37,6 @@ blogEntries.forEach(({ data }) => {
 })
 
 const sortedYears = [...allYears].sort((a, b) => b - a)
-
-// Important tags based on your blog content
-const importantTags = [
-	{ value: "software engineering", label: "💻 Software Engineering" },
-	{ value: "game development", label: "🎮 Game Development" },
-	{ value: "coffee", label: "☕️ Speciality Coffee" },
-]
 
 // Format blog entries for client-side filtering
 // Reduce the amount of data sent to the client as much as possible

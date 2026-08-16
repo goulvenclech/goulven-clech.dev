@@ -273,7 +273,7 @@ export function renderCatalogue(view: CatalogueView): string {
 		"",
 		"Where I keep track of books, movies, songs, video games, and other media I consume. Keep in mind that this is a personal catalogue, incomplete and biased.",
 		"",
-		`Markdown twin of ${site}/catalogue, optimized for crawlers, LLMs, and no-JS readers. See also ${site}/2025/catalogue-astro-turso (how this catalogue is built) and ${site}/catalogue/wrapped (yearly recap).`,
+		`Markdown twin of ${site}/catalogue, optimized for crawlers, LLMs, and no-JS readers. See also ${site}/index.md (blog index), ${site}/2025/catalogue-astro-turso (how this catalogue is built), and ${site}/catalogue/wrapped (yearly recap).`,
 	].join("\n")
 
 	const apiDoc = showHelp
