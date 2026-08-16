@@ -20,6 +20,16 @@ export const todoLists: TodoList[] = Object.values(
 	.map((module) => module.default)
 	.sort((a, b) => a.title.localeCompare(b.title))
 
+/** Lists on hold rather than actively pursued. */
+export const INACTIVE_LIST_IDS: ReadonlySet<string> = new Set([
+	"asterix-films",
+	"mario-marathon",
+	"pokemon-marathon",
+	"sniper-elite-marathon",
+	"studio-ghibli-films",
+	"wes-anderson-films",
+])
+
 export interface TodoReviewIndex {
 	doneBySource: Map<string, Map<string, string>>
 	reviewsBySource: Map<string, Map<string, TodoReview>>

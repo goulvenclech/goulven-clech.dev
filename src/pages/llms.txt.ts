@@ -15,6 +15,7 @@ function renderBody(site: string): string {
 - [About](${site}/about): colophon, changelog, and legal notice
 - [Resume](${site}/resume): CV — work experience, education, languages
 - [Catalogue](${site}/catalogue.md): queryable log of books, movies, games, shows, and albums I've consumed (with URL params for filter/sort/pagination)
+- [To-do lists](${site}/catalogue/todo.md): progress through curated media lists — films to watch, games to play, books to read (queryable)
 - [Friends](${site}/friends): interactive graph of friends' personal websites
 - [RSS feed](${site}/feed.xml): subscribe to new posts
 `

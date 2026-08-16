@@ -10,10 +10,17 @@ import {
 	type TodoReview,
 } from "$src/catalogue/todo"
 import { defaultTodoListId } from "$components/catalogue/todoFilters"
-import { loadTodoReviews, todoLists as lists } from "$src/catalogue/todoData"
+import {
+	INACTIVE_LIST_IDS,
+	loadTodoReviews,
+	todoLists as lists,
+} from "$src/catalogue/todoData"
 
 const pageTitle = "To-do"
 
+// Prerendered: this query runs at build, so progress freezes until the next
+// deploy. Deliberate for this page; live data lives in /api/catalogue/todo
+// and /catalogue/todo.md.
 const {
 	doneBySource,
 	reviewsBySource,
@@ -52,23 +59,27 @@ const viewsJson = JSON.stringify(views).replace(/</g, "\\u003c")
 
 // Each option keeps its original views index as its value, so the client's
 // listIndex (read off the select value) still resolves to the right view.
-const INACTIVE = new Set([
-	"asterix-films",
-	"mario-marathon",
-	"pokemon-marathon",
-	"sniper-elite-marathon",
-	"studio-ghibli-films",
-	"wes-anderson-films",
-])
 const listOptions = views.map((view, index) => ({ view, index }))
-const activeOptions = listOptions.filter(({ view }) => !INACTIVE.has(view.id))
-const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
+const activeOptions = listOptions.filter(
+	({ view }) => !INACTIVE_LIST_IDS.has(view.id),
+)
+const inactiveOptions = listOptions.filter(({ view }) =>
+	INACTIVE_LIST_IDS.has(view.id),
+)
 ---
 
 <Layout
 	title={pageTitle}
 	description="Tracking my catalogue against curated to-do lists — films to watch, games to play."
 >
+	<Fragment slot="head">
+		<link
+			rel="alternate"
+			type="text/markdown"
+			href="/catalogue/todo.md"
+			title="To-do lists (Markdown / LLM-friendly)"
+		/>
+	</Fragment>
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
@@ -189,7 +200,12 @@ const inactiveOptions = listOptions.filter(({ view }) => INACTIVE.has(view.id))
 		</side-note>
 
 		<noscript>
-			<p>This to-do grid needs JavaScript to filter and sort.</p>
+			<p>
+				This to-do grid needs JavaScript to filter and sort. Markdown version
+				for crawlers, LLMs, and no-JS readers: <a href="/catalogue/todo.md"
+					>/catalogue/todo.md</a
+				>
+			</p>
 		</noscript>
 	</section>
 

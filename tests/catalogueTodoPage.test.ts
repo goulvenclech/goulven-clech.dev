@@ -51,6 +51,7 @@ const { LISTS } = vi.hoisted(() => ({
 vi.mock("$src/db", () => ({ getClient: () => ({}) }))
 vi.mock("$src/catalogue/todoData", () => ({
 	todoLists: LISTS,
+	INACTIVE_LIST_IDS: new Set<string>(),
 	loadTodoReviews: async () => ({
 		doneBySource: new Map(),
 		reviewsBySource: new Map(),
