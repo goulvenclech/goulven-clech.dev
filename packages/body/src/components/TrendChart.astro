@@ -1,0 +1,64 @@
+---
+import type { WeeklyPoint } from "$src/stats"
+
+/**
+ * Gaps (null values) break the line rather than interpolating, so a missed
+ * week stays visible.
+ */
+interface Props {
+	points: WeeklyPoint[]
+	label: string
+}
+
+const { points, label } = Astro.props
+
+const WIDTH = 288
+const HEIGHT = 64
+const PAD = 6
+
+const values = points.flatMap((point) =>
+	point.value === null ? [] : [point.value],
+)
+const max = Math.max(...values)
+const min = Math.min(...values)
+
+const x = (index: number) =>
+	points.length === 1
+		? WIDTH / 2
+		: PAD + (index * (WIDTH - 2 * PAD)) / (points.length - 1)
+const y = (value: number) =>
+	max === min
+		? HEIGHT / 2
+		: HEIGHT - PAD - ((value - min) * (HEIGHT - 2 * PAD)) / (max - min)
+
+let path = ""
+let pen = false
+let last: { cx: number; cy: number } | null = null
+for (const [index, point] of points.entries()) {
+	if (point.value === null) {
+		pen = false
+		continue
+	}
+	const cx = x(index)
+	const cy = y(point.value)
+	path += `${pen ? "L" : "M"}${cx.toFixed(1)} ${cy.toFixed(1)} `
+	pen = true
+	last = { cx, cy }
+}
+---
+
+<svg
+	viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+	class="w-full"
+	role="img"
+	aria-label={label}
+>
+	<path
+		d={path.trim()}
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2.5"
+		stroke-linecap="round"
+		stroke-linejoin="round"></path>
+	{last && <circle cx={last.cx} cy={last.cy} r="3.5" class="fill-primary" />}
+</svg>

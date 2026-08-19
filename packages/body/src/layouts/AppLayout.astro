@@ -1,0 +1,74 @@
+---
+import "$assets/base.css"
+import { Font } from "astro:assets"
+
+interface Props {
+	title: string
+	description?: string
+}
+
+const { title, description = "Personal workout tracker." } = Astro.props
+
+const tabs = [
+	{ href: "/", label: "Today" },
+	{ href: "/history", label: "History" },
+	{ href: "/stats", label: "Stats" },
+]
+
+const path = Astro.url.pathname
+const isCurrent = (href: string) =>
+	href === "/" ? path === "/" : path.startsWith(href)
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, viewport-fit=cover"
+		/>
+		<meta name="generator" content={Astro.generator} />
+		<meta name="author" content="Goulven Clec'h" />
+		<meta name="description" content={description} />
+		<!-- Personal tracker: keep it out of search results. -->
+		<meta name="robots" content="noindex" />
+		<meta
+			name="theme-color"
+			media="(prefers-color-scheme: light)"
+			content="#fafafa"
+		/>
+		<meta
+			name="theme-color"
+			media="(prefers-color-scheme: dark)"
+			content="#101116"
+		/>
+		<link rel="icon" href="/favicon.svg" />
+		<Font cssVariable="--font-inter" preload />
+		<title>{title} – Body</title>
+	</head>
+	<body>
+		<main>
+			<slot />
+		</main>
+		<nav
+			aria-label="Screens"
+			class="border-alt-light bg-body-light/90 dark:border-alt-dark dark:bg-body-dark/90 fixed inset-x-0 bottom-0 border-t backdrop-blur"
+			style="padding-bottom: env(safe-area-inset-bottom)"
+		>
+			<div class="mx-auto flex max-w-md">
+				{
+					tabs.map((tab) => (
+						<a
+							href={tab.href}
+							aria-current={isCurrent(tab.href) ? "page" : undefined}
+							class="text-muted-light dark:text-muted-dark aria-[current=page]:text-primary flex-1 py-4 text-center text-xs font-extrabold tracking-widest uppercase"
+						>
+							{tab.label}
+						</a>
+					))
+				}
+			</div>
+		</nav>
+	</body>
+</html>

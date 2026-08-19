@@ -1,0 +1,28 @@
+{
+	"name": "@goulven-clech/body",
+	"version": "0.1.0",
+	"description": "Workout tracking app at body.goulven-clech.dev — Astro, Netlify Functions & Turso.",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"typecheck": "astro check --minimumSeverity warning && tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"@astrojs/netlify": "^8.0.0",
+		"@libsql/client": "^0.17.4"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.9",
+		"@tailwindcss/vite": "^4.3.1",
+		"astro": "^7.0.3",
+		"tailwindcss": "^4.3.1",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.9"
+	}
+}

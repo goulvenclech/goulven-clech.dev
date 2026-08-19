@@ -1,0 +1,292 @@
+---
+import AppLayout from "$src/layouts/AppLayout.astro"
+import { getClient } from "$src/db"
+import { formatDay, localDateOf } from "$src/dates"
+import { EXERCISES, exerciseBySlug, programFor } from "$src/program"
+import {
+	getSessionByDate,
+	listSetsForSessions,
+	type SetRow,
+} from "$src/queries"
+import { SKIP_REASONS } from "$src/sessionValidation"
+import { SKIP_REASON_LABELS, STATUS_LABELS } from "$src/labels"
+
+const today = localDateOf(new Date())
+const day = programFor(today)
+
+const client = getClient()
+const session = await getSessionByDate(client, today)
+const sets = session ? await listSetsForSessions(client, [session.id]) : []
+
+const setsByExercise = new Map<string, SetRow[]>()
+for (const set of sets) {
+	const group = setsByExercise.get(set.exercise) ?? []
+	group.push(set)
+	setsByExercise.set(set.exercise, group)
+}
+
+const formatSet = (set: SetRow) =>
+	set.weight_kg === null ? `×${set.reps}` : `${set.weight_kg} kg × ${set.reps}`
+---
+
+<AppLayout title="Today">
+	<p
+		class="text-muted-light dark:text-muted-dark text-xs font-extrabold tracking-widest uppercase"
+	>
+		{formatDay(today)}
+	</p>
+	<h1 class="mt-2">{day.title}</h1>
+	{
+		day.location && (
+			<p class="text-muted-light dark:text-muted-dark mt-2 text-sm font-bold">
+				{day.location === "gym" ? "At the gym" : "At home"}
+			</p>
+		)
+	}
+
+	{
+		day.kind === "rest" && (
+			<section class="panel mt-8">
+				<p class="text-sm font-bold">
+					Nothing to log today — see you tomorrow.
+				</p>
+			</section>
+		)
+	}
+
+	{
+		session && (
+			<section class="panel mt-8">
+				<p
+					class:list={[
+						"text-lg font-black",
+						session.status === "skipped" && "text-primary",
+					]}
+				>
+					{STATUS_LABELS[session.status]}
+					{session.skip_reason &&
+						` — ${SKIP_REASON_LABELS[session.skip_reason]}`}
+				</p>
+				{[...setsByExercise.entries()].map(([slug, exerciseSets]) => (
+					<p class="numeric mt-3 text-sm font-semibold">
+						<span class="font-extrabold">
+							{exerciseBySlug(slug)?.name ?? slug}
+						</span>
+						<span class="text-muted-light dark:text-muted-dark">
+							{" "}
+							{exerciseSets.map(formatSet).join(" · ")}
+						</span>
+					</p>
+				))}
+				{session.notes && (
+					<p class="text-muted-light dark:text-muted-dark mt-3 text-sm font-semibold">
+						{session.notes}
+					</p>
+				)}
+			</section>
+		)
+	}
+
+	{
+		!session && day.kind !== "rest" && (
+			<form id="session-form" data-date={today} class="mt-8">
+				<fieldset>
+					<legend>How did it go?</legend>
+					<div class="grid gap-2">
+						<label class="choice">
+							<input type="radio" name="status" value="completed" required />
+							Done as planned
+						</label>
+						<label class="choice">
+							<input type="radio" name="status" value="partial" />
+							Done, with some misses
+						</label>
+						<label class="choice">
+							<input type="radio" name="status" value="skipped" />
+							Didn't happen
+						</label>
+					</div>
+				</fieldset>
+
+				<div id="skip-reason" class="mt-6" hidden>
+					<label for="skip_reason">Why not?</label>
+					<select id="skip_reason" name="skip_reason">
+						{SKIP_REASONS.map((reason) => (
+							<option value={reason}>{SKIP_REASON_LABELS[reason]}</option>
+						))}
+					</select>
+				</div>
+
+				{day.kind === "strength" && (
+					<fieldset id="sets" class="mt-6">
+						<legend>Sets</legend>
+						<p class="text-muted-light dark:text-muted-dark mb-3 text-xs font-semibold">
+							Exercise targets are still WIP — log what you actually did.
+						</p>
+						<div id="set-rows" class="space-y-2" />
+						<template id="set-row-template">
+							<div class="set-row flex items-center gap-2">
+								<select class="set-exercise" aria-label="Exercise">
+									{EXERCISES.map((exercise) => (
+										<option value={exercise.slug}>{exercise.name}</option>
+									))}
+								</select>
+								<input
+									class="set-weight w-20!"
+									type="number"
+									inputmode="decimal"
+									step="any"
+									min="0.5"
+									placeholder="kg"
+									aria-label="Weight (kg)"
+								/>
+								<input
+									class="set-reps w-20!"
+									type="number"
+									inputmode="numeric"
+									step="1"
+									min="1"
+									placeholder="reps"
+									aria-label="Reps"
+								/>
+								<button
+									type="button"
+									class="set-remove button-ghost px-3!"
+									aria-label="Remove set"
+								>
+									×
+								</button>
+							</div>
+						</template>
+						<button type="button" id="add-set" class="button-ghost mt-3">
+							+ Add set
+						</button>
+					</fieldset>
+				)}
+
+				<div class="mt-6">
+					<label for="notes">Notes</label>
+					<textarea id="notes" name="notes" rows="3" />
+				</div>
+
+				<div class="mt-6">
+					<label for="password">Password</label>
+					<input
+						id="password"
+						name="password"
+						type="password"
+						autocomplete="current-password"
+						required
+					/>
+				</div>
+
+				{/* Always rendered so screen readers announce failures reliably. */}
+				<p
+					id="form-error"
+					role="alert"
+					class="text-primary mt-4 text-sm font-bold"
+				/>
+
+				<button class="button-primary mt-6">Log session</button>
+			</form>
+		)
+	}
+</AppLayout>
+
+<script>
+	const form = document.getElementById("session-form") as HTMLFormElement | null
+
+	if (form) {
+		const skipReason = document.getElementById("skip-reason")
+		const setsSection = document.getElementById("sets")
+		const rows = document.getElementById("set-rows")
+		const template = document.getElementById(
+			"set-row-template",
+		) as HTMLTemplateElement | null
+		const errorNote = document.getElementById("form-error")
+		const submitButton = form.querySelector<HTMLButtonElement>(
+			"button.button-primary",
+		)
+
+		form.addEventListener("change", () => {
+			const skipped = new FormData(form).get("status") === "skipped"
+			skipReason?.toggleAttribute("hidden", !skipped)
+			// `disabled` as well: hidden inputs still block native form validation,
+			// which would silently swallow the submit.
+			setsSection?.toggleAttribute("hidden", skipped)
+			setsSection?.toggleAttribute("disabled", skipped)
+		})
+
+		document.getElementById("add-set")?.addEventListener("click", () => {
+			if (template && rows) rows.append(template.content.cloneNode(true))
+		})
+
+		rows?.addEventListener("click", (event) => {
+			const target = event.target as HTMLElement
+			if (target.matches(".set-remove")) target.closest(".set-row")?.remove()
+		})
+
+		form.addEventListener("submit", async (event) => {
+			event.preventDefault()
+			if (submitButton) submitButton.disabled = true
+			const data = new FormData(form)
+			const status = data.get("status")
+			const skipped = status === "skipped"
+
+			// Untouched rows are treated as never filled in, but a row with a
+			// weight and no reps must block: sending would lose it for good
+			// (the day locks on first submit).
+			const rowValues = [...form.querySelectorAll(".set-row")].map((row) => ({
+				exercise: row.querySelector<HTMLSelectElement>(".set-exercise")?.value,
+				weight: row.querySelector<HTMLInputElement>(".set-weight")?.value ?? "",
+				reps: Number(row.querySelector<HTMLInputElement>(".set-reps")?.value),
+			}))
+			const isFilled = (row: { reps: number }) =>
+				Number.isInteger(row.reps) && row.reps >= 1
+			if (
+				!skipped &&
+				rowValues.some((row) => row.weight !== "" && !isFilled(row))
+			) {
+				if (errorNote)
+					errorNote.textContent =
+						"A set has a weight but no reps — fill it in or clear it."
+				if (submitButton) submitButton.disabled = false
+				return
+			}
+			const sets = rowValues.flatMap((row) =>
+				row.exercise && isFilled(row)
+					? [
+							{
+								exercise: row.exercise,
+								weight_kg: row.weight === "" ? null : Number(row.weight),
+								reps: row.reps,
+							},
+						]
+					: [],
+			)
+
+			const response = await fetch("/api/sessions", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					password: data.get("password"),
+					date: form.dataset.date,
+					status,
+					skip_reason: skipped ? data.get("skip_reason") : undefined,
+					notes: data.get("notes") || "",
+					sets: skipped ? [] : sets,
+				}),
+			}).catch(() => null)
+
+			if (response?.status === 201) {
+				location.reload()
+				return
+			}
+			const body = response ? await response.json().catch(() => null) : null
+			if (errorNote)
+				errorNote.textContent =
+					body?.error ?? `Failed (${response?.status ?? "network error"})`
+			if (submitButton) submitButton.disabled = false
+		})
+	}
+</script>

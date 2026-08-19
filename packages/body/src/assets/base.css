@@ -1,0 +1,88 @@
+/*
+  Dark mode follows the system (no toggle), so `dark:` keeps Tailwind's
+  default prefers-color-scheme variant.
+*/
+@import "tailwindcss";
+
+@theme {
+	--color-*: initial;
+	--color-font-light: #17181c;
+	--color-font-dark: #f2f2f3;
+
+	--color-body-light: #fafafa;
+	--color-body-dark: #101116;
+
+	--color-alt-light: #ececef;
+	--color-alt-dark: #1c1e26;
+
+	--color-muted-light: #6b6e78;
+	--color-muted-dark: #8b8e99;
+
+	--color-primary: #e95678;
+
+	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+	body {
+		@apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark font-sans antialiased;
+	}
+
+	/* Padded at the bottom so the fixed tab bar never overlaps. */
+	main {
+		@apply mx-auto w-full max-w-md px-5 pt-8 pb-32;
+	}
+
+	h1 {
+		@apply text-3xl font-black tracking-tight text-balance uppercase;
+	}
+
+	h2 {
+		@apply text-muted-light dark:text-muted-dark mt-10 mb-3 text-xs font-extrabold tracking-widest uppercase;
+	}
+
+	a {
+		@apply no-underline;
+	}
+
+	label,
+	legend {
+		@apply text-muted-light dark:text-muted-dark mb-2 block text-xs font-extrabold tracking-widest uppercase;
+	}
+
+	input[type="text"],
+	input[type="password"],
+	input[type="number"],
+	select,
+	textarea {
+		@apply bg-alt-light dark:bg-alt-dark focus:ring-primary w-full rounded-xl px-3.5 py-2.5 text-sm font-semibold outline-none focus:ring-2;
+	}
+
+	.choice {
+		@apply border-alt-light dark:border-alt-dark mb-0 block cursor-pointer rounded-xl border-2 px-3.5 py-2.5 text-sm font-bold tracking-normal normal-case;
+	}
+
+	.choice:has(input:checked) {
+		@apply border-primary text-primary;
+	}
+
+	.choice input {
+		@apply sr-only;
+	}
+
+	.panel {
+		@apply bg-alt-light dark:bg-alt-dark rounded-2xl p-5;
+	}
+
+	.button-primary {
+		@apply bg-font-light text-body-light dark:bg-font-dark dark:text-body-dark block w-full cursor-pointer rounded-2xl py-3.5 text-center text-sm font-extrabold tracking-widest uppercase disabled:cursor-default disabled:opacity-60;
+	}
+
+	.button-ghost {
+		@apply border-alt-light dark:border-alt-dark text-muted-light dark:text-muted-dark cursor-pointer rounded-xl border-2 px-3.5 py-2 text-xs font-extrabold tracking-widest uppercase;
+	}
+
+	.numeric {
+		font-variant-numeric: tabular-nums;
+	}
+}

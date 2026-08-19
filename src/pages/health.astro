@@ -1,0 +1,213 @@
+---
+import ReturnHome from "$components/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+
+/**
+ * Personal page about the habits I try to maintain to stay healthy.
+ */
+const pageTitle = "My health"
+---
+
+<Layout title={pageTitle}>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			Some tools and thoughts to maintain good habits. I don't want to obsess
+			over my health, but I do want to stay healthy enough to fully enjoy life.
+		</p>
+		<ReturnHome />
+	</section>
+	<section>
+		<h2 id="the_basics">The basics</h2>
+		<p>
+			Based on the strongest scientific literature, there are several habits
+			that can significantly improve my health: a balanced diet, daily physical
+			activity, regular sleep schedules,<sup>1</sup> no tobacco,<sup>2</sup> little
+			to none alcohol,<sup>3</sup> avoiding air pollution,<sup>4</sup> reducing UV
+			exposure,<sup>5</sup> and quality social relationships.<sup>6</sup
+			><side-note class="xl:-mt-16"
+				>1 – Regularity predicts mortality better than duration, with the most
+				regular sleepers showing 20 to 48% lower all-cause mortality than the
+				least regular ones ☞ Windred DP & al (2024). <i
+					>Sleep regularity is a stronger predictor of mortality risk than sleep
+					duration</i
+				>. Sleep 47(1) <a href="https://pubmed.ncbi.nlm.nih.gov/37738616/"
+					>Source</a
+				></side-note
+			><side-note
+				>2 – Smokers lose at least a decade of life expectancy, and quitting
+				before 40 removes about 90% of that excess risk ☞ Jha P & al (2013). <i
+					>21st-century hazards of smoking and benefits of cessation in the
+					United States</i
+				>. N Engl J Med 368(4) <a
+					href="https://pubmed.ncbi.nlm.nih.gov/23343063/">Source</a
+				></side-note
+			><side-note
+				>3 – Once the abstainer bias is corrected, the supposed benefit of
+				moderate drinking disappears. Worth knowing that the <abbr
+					title="National Academies of Sciences, Engineering, and Medicine"
+					>NASEM</abbr
+				> 2025 review concludes the opposite, so the debate is still open ☞ Zhao J
+				& al (2023). <i
+					>Association between daily alcohol intake and risk of all-cause
+					mortality</i
+				>. <abbr>JAMA</abbr> Netw Open 6(3) <a
+					href="https://pubmed.ncbi.nlm.nih.gov/37000449/">Source</a
+				></side-note
+			><side-note
+				>4 – I currently live in Toulouse, France, which has a good to moderate
+				air quality. But I plan to move to Helsinki, Finland, in the near
+				future, which has excellent to good air quality. Either way it is worth
+				the attention, as an extra 5 µg/m³ of <abbr
+					title="Fine particulate matter under 2.5 micrometres">PM2.5</abbr
+				> raises natural-cause mortality by 13%, and the effect holds below the regulatory
+				limits ☞ Strak M & al (2021). <i
+					>Long term exposure to low level air pollution and mortality in eight
+					European cohorts within the <abbr>ELAPSE</abbr> project</i
+				>. <abbr title="British Medical Journal">BMJ</abbr> 374 <a
+					href="https://pubmed.ncbi.nlm.nih.gov/34470785/">Source</a
+				></side-note
+			><side-note
+				>5 – In the only randomised trial on the question, daily sunscreen use
+				left about a quarter as many invasive melanomas after ten years of
+				follow-up (<abbr title="Hazard Ratio">HR</abbr> 0.27) ☞ Green AC & al (2011).
+				<i
+					>Reduced melanoma after regular sunscreen use: randomized trial
+					follow-up</i
+				>. J Clin Oncol 29(3) <a
+					href="https://pubmed.ncbi.nlm.nih.gov/21135266/">Source</a
+				></side-note
+			><side-note
+				>6 – The <abbr title="World Health Organization">WHO</abbr> links around 871,000
+				deaths a year to loneliness and social isolation, and a meta-analysis of 148
+				studies puts the survival advantage of good social relationships at 50% ☞
+				<abbr title="World Health Organization">WHO</abbr> Commission on Social Connection
+				(2025). <i
+					>From loneliness to social connection: charting a path to healthier
+					societies</i
+				>
+				<a
+					href="https://www.who.int/groups/commission-on-social-connection/report/"
+					>Source</a
+				>; Holt-Lunstad J & al (2010). <i
+					>Social relationships and mortality risk: a meta-analytic review</i
+				>. <abbr title="Public Library of Science">PLOS</abbr> Med 7(7) <a
+					href="https://pubmed.ncbi.nlm.nih.gov/20668659/">Source</a
+				></side-note
+			>
+		</p>
+		<p>
+			Everything else tends to be marginal, less proven, not actionable, or
+			irrelevant for me, when it isn't an outright marketing scam.
+		</p>
+		<p>
+			What I mean by a balanced diet is a diverse and mostly plant-based one,
+			with enough protein, fibre, and healthy fats. I don't want to avoid all
+			salty, processed, and sugary foods as long as they stay occasional, and
+			even less to follow strict diets that are hard to maintain,
+			guilt-inducing, and often not backed by science. To help me get there, I
+			first leaned on frozen ready vegetables, then on HelloFresh (more variety
+			and the pleasure of cooking, but for a higher price) and I keep a water
+			bottle at hand for hydration.
+		</p>
+	</section>
+	<section>
+		<h2 id="physical_activity">Physical activity</h2>
+		<p>
+			I got back into training in 2026 with a single goal, long-term health.
+			Most of the mortality benefit of muscle strengthening is captured in the
+			first hour a week,<sup>7</sup> and the dose-response curve flattens fast: the
+			frequency and volume that separate a decent programme from an optimal one barely
+			matter when I chase neither performance nor looks.<sup>8</sup> My constraint
+			has never been the stimulus, it has always been consistency.<side-note
+				>7 – Maximum risk reduction lands at roughly 30 to 60 minutes of muscle
+				strengthening a week. The curve rising again beyond that is most likely
+				an artefact of self-reported data, and is no reason to cap volume ☞
+				Momma H & al (2022). <i
+					>Muscle-strengthening activities are associated with lower risk and
+					mortality in major non-communicable diseases: a systematic review and
+					meta-analysis of cohort studies</i
+				>. Br J Sports Med 56(13) <a
+					href="https://pubmed.ncbi.nlm.nih.gov/35228201/">Source</a
+				></side-note
+			><side-note
+				>8 – At equated volume, frequency has a negligible effect on muscle
+				growth, volume shows sharply diminishing returns, and most of the
+				strength gain is already there at two sessions a week ☞ Pelland JC & al
+				(2026). <i
+					>The resistance training dose response: meta-regressions exploring the
+					effects of weekly volume and frequency on muscle hypertrophy and
+					strength gains</i
+				>. Sports Med 56 <a href="https://pubmed.ncbi.nlm.nih.gov/41343037/"
+					>Source</a
+				></side-note
+			>
+		</p>
+		<p>
+			In practice, a home base for cardio, core, and mobility (Darebee's Drifter
+			programme), plus two weekly strength sessions at the gym around loaded
+			compound movements (squat, deadlift, presses, and rows). Always two or
+			three reps in reserve, never to failure, which costs almost nothing and
+			buys recovery and technical margin.<sup>9</sup> Progression is written in advance,
+			so nothing depends on the mood of the day. The one thing I don't compromise
+			on is the intensity of the main lifts, as bone responds to load magnitude rather
+			than to volume or modality, and light exercise is inert for it.<sup
+				>10</sup
+			><side-note
+				>9 – Proximity to failure has no detectable effect on strength gains and
+				a trivial one on hypertrophy ☞ Robinson ZP & al (2024). <i
+					>Exploring the dose-response relationship between estimated resistance
+					training proximity to failure, strength gain, and muscle hypertrophy:
+					a series of meta-regressions</i
+				>. Sports Med 54(9) <a href="https://pubmed.ncbi.nlm.nih.gov/38970765/"
+					>Source</a
+				>; Refalo MC & al (2023). <i
+					>Influence of resistance training proximity-to-failure on skeletal
+					muscle hypertrophy: a systematic review with meta-analysis</i
+				>. Sports Med 53(3) <a href="https://pubmed.ncbi.nlm.nih.gov/36334240/"
+					>Source</a
+				></side-note
+			><side-note
+				>10 – Intensity is the discriminant. Low-intensity protocols are without
+				effect, and heavy resistance combined with impact is the most osteogenic
+				stimulus ☞ Kistler-Fischbacher M & al (2021). <i
+					>The effect of exercise intensity on bone in postmenopausal women
+					(part 2): a meta-analysis</i
+				>. Bone 143 <a href="https://pubmed.ncbi.nlm.nih.gov/33357834/"
+					>Source</a
+				>; Watson SL & al (2018). <i
+					>High-intensity resistance and impact training improves bone mineral
+					density and physical function in postmenopausal women with osteopenia
+					and osteoporosis: the LIFTMOR randomized controlled trial</i
+				>. J Bone Miner Res 33(2) <a href="https://doi.org/10.1002/jbmr.3284"
+					>Source</a
+				></side-note
+			>
+		</p>
+		<p>
+			The most useful step was auditing all of it against the primary literature
+			rather than the fitness media consensus. A good half of what gets argued
+			over online (free weights against machines, this progression method, that
+			piece of kit) has no measurable effect at twelve months. My expectations
+			follow: nothing visible before two or three months, early gains that are
+			mostly neural, and on bone, no perceptible feedback at all. It is a
+			deliberate bet on a mechanism, not on a sensation.
+		</p>
+		<p>
+			The programme runs on an automated tracker and planner at (work in
+			progress) <a href="https://body.goulven-clech.dev"
+				>body.goulven-clech.dev</a
+			> which also keeps a simple sleep log and holds me to a floor of 6,000 steps
+			a day, addressing separate but equally important problems.
+		</p>
+	</section>
+	<section>
+		<h2 id="mind_activity">Mind activity</h2>
+		<draft-section>
+			<p>
+				TODO: my media diet, my absence from social networks, and my continuous
+				learning programme.
+			</p>
+		</draft-section>
+	</section>
+</Layout>
