@@ -15,32 +15,37 @@ import { sync } from "./sync"
 const MUTED = "text-muted-light dark:text-muted-dark"
 const CAPTION = `${MUTED} text-xs font-extrabold tracking-widest uppercase`
 
-/** Set number, the three fields, then the skip toggle. */
-const SET_GRID = "grid grid-cols-[1rem_1fr_1fr_1fr_1.75rem] items-center gap-2"
+const SET_GRID = "grid grid-cols-[1rem_1fr_1fr_1fr_2.25rem] items-center gap-2"
 
 interface SetRow {
 	element: HTMLElement
 	kg: HTMLInputElement
 	reps: HTMLInputElement
 	rir: HTMLInputElement
-	isSkipped: () => boolean
+	setPosition: (position: number) => void
+	focusRemove: () => void
 }
 
-function setRow(plan: ExercisePlan, index: number): SetRow {
+const text = (value?: number) => (value === undefined ? "" : String(value))
+
+function setRow(
+	plan: ExercisePlan,
+	index: number,
+	onRemove: () => void,
+): SetRow {
 	// The engine filters history by unit, so the last set can seed the extra ones.
 	const previous =
 		plan.previous?.sets[index] ?? plan.previous?.sets.at(-1) ?? null
 	const prefill = plan.target ?? previous
-	const position = index + 1
 
+	const number = el("p", { class: `${MUTED} numeric text-xs font-extrabold` })
 	const kg = el("input", {
 		class: "set-kg",
 		type: "number",
 		inputmode: "decimal",
 		step: "any",
 		min: "0",
-		value: prefill === null ? "" : String(prefill.kg),
-		"aria-label": `Set ${position} load (kg)`,
+		value: text(prefill?.kg),
 	})
 	const reps = el("input", {
 		class: "set-reps",
@@ -48,8 +53,7 @@ function setRow(plan: ExercisePlan, index: number): SetRow {
 		inputmode: "numeric",
 		step: "1",
 		min: "1",
-		value: prefill === null ? "" : String(prefill.reps),
-		"aria-label": `Set ${position} ${UNIT_LABELS[plan.planned.unit]}`,
+		value: text(prefill?.reps ?? plan.planned.reps?.min),
 	})
 	// Targets carry no effort, so only the last session can suggest an RIR.
 	const rir = el("input", {
@@ -59,53 +63,82 @@ function setRow(plan: ExercisePlan, index: number): SetRow {
 		step: "1",
 		min: "0",
 		max: "10",
-		value: previous === null ? "" : String(previous.rir),
-		"aria-label": `Set ${position} reps in reserve`,
+		value: text(previous?.rir),
 	})
-
-	let skipped = false
-	const skip = el(
+	const remove = el(
 		"button",
 		{
 			type: "button",
-			class: `set-skip ${MUTED} cursor-pointer text-lg leading-none font-black`,
-			"aria-pressed": "false",
-			"aria-label": `Skip set ${position}`,
+			class: `set-remove ${MUTED} h-9 w-9 cursor-pointer text-lg leading-none font-black`,
 		},
-		["×"],
+		["\u00d7"],
 	)
+	remove.addEventListener("click", onRemove)
 
 	const element = el("div", { class: `set-row ${SET_GRID}` }, [
-		el("p", { class: `${MUTED} numeric text-xs font-extrabold` }, [
-			String(position),
-		]),
+		number,
 		kg,
 		reps,
 		rir,
-		skip,
+		remove,
 	])
 
-	skip.addEventListener("click", () => {
-		skipped = !skipped
-		for (const input of [kg, reps, rir]) input.disabled = skipped
-		element.classList.toggle("opacity-40", skipped)
-		skip.setAttribute("aria-pressed", String(skipped))
-		skip.setAttribute(
-			"aria-label",
-			`${skipped ? "Restore" : "Skip"} set ${position}`,
-		)
-	})
-
-	return { element, kg, reps, rir, isSkipped: () => skipped }
+	return {
+		element,
+		kg,
+		reps,
+		rir,
+		focusRemove: () => remove.focus(),
+		setPosition: (position) => {
+			number.textContent = String(position)
+			kg.setAttribute("aria-label", `Set ${position} load (kg)`)
+			reps.setAttribute(
+				"aria-label",
+				`Set ${position} ${UNIT_LABELS[plan.planned.unit]}`,
+			)
+			rir.setAttribute("aria-label", `Set ${position} reps in reserve`)
+			remove.setAttribute("aria-label", `Remove set ${position}`)
+		},
+	}
 }
 
 function exerciseFields(plan: ExercisePlan): {
 	element: HTMLElement
 	rows: SetRow[]
 } {
-	const rows = Array.from({ length: plan.planned.sets }, (_, index) =>
-		setRow(plan, index),
+	const rows: SetRow[] = []
+	const container = el("div", { class: "mt-2 space-y-2" })
+	const renumber = () =>
+		rows.forEach((row, index) => row.setPosition(index + 1))
+
+	const add = el(
+		"button",
+		{
+			type: "button",
+			class: "set-add button-ghost mt-3",
+			"aria-label": `Add set to ${plan.exercise.name}`,
+		},
+		["Add set"],
 	)
+
+	const addRow = () => {
+		const row: SetRow = setRow(plan, rows.length, () => {
+			const index = rows.indexOf(row)
+			if (index < 0) return
+			rows.splice(index, 1)
+			row.element.remove()
+			renumber()
+			const next = rows[index] ?? rows.at(-1)
+			if (next) next.focusRemove()
+			else add.focus()
+		})
+		rows.push(row)
+		container.append(row.element)
+		renumber()
+	}
+	add.addEventListener("click", addRow)
+	for (let set = 0; set < plan.planned.sets; set++) addRow()
+
 	const element = el("fieldset", { class: "mt-6" }, [
 		el("legend", {}, [plan.exercise.name]),
 		el("div", { class: SET_GRID, "aria-hidden": "true" }, [
@@ -115,11 +148,8 @@ function exerciseFields(plan: ExercisePlan): {
 			el("span", { class: CAPTION }, ["rir"]),
 			el("span", {}),
 		]),
-		el(
-			"div",
-			{ class: "mt-2 space-y-2" },
-			rows.map((row) => row.element),
-		),
+		container,
+		add,
 	])
 	return { element, rows }
 }
@@ -142,7 +172,7 @@ export function logDialog(
 		role: "alert",
 		class: "text-primary text-sm font-bold",
 	})
-	const cancel = el("button", { type: "button", class: "button-ghost" }, [
+	const cancel = el("button", { type: "button", class: "button-secondary" }, [
 		"Cancel",
 	])
 	const submit = el("button", { type: "submit", class: "button-primary" }, [
@@ -156,10 +186,7 @@ export function logDialog(
 		},
 		[
 			errorNote,
-			el("div", { class: "mt-4 flex items-center gap-3" }, [
-				cancel,
-				el("div", { class: "flex-1" }, [submit]),
-			]),
+			el("div", { class: "mt-4 grid grid-cols-2 gap-3" }, [cancel, submit]),
 		],
 	)
 	const form = el("form", {}, [
@@ -184,20 +211,16 @@ export function logDialog(
 
 		const entries: StrengthEntry[] = []
 		for (const { plan, rows } of blocks) {
-			// Skipped sets leave no gap in the numbering.
-			let position = 0
-			for (const row of rows) {
-				if (row.isSkipped()) continue
+			for (const [index, row] of rows.entries()) {
 				const blank = [row.kg, row.reps, row.rir].find(
 					(input) => input.value === "",
 				)
 				// A blank field would be lost silently: the exercise locks once logged.
 				if (blank) {
-					errorNote.textContent = `${plan.exercise.name} — complete the set, or skip it.`
+					errorNote.textContent = `${plan.exercise.name} — complete the set, or remove it.`
 					blank.focus()
 					return
 				}
-				position += 1
 				entries.push({
 					kind: "strength",
 					schemaVersion: LOG_SCHEMA_VERSION,
@@ -205,7 +228,7 @@ export function logDialog(
 					date: today,
 					session: session.id,
 					ref: plan.ref,
-					set: position,
+					set: index + 1,
 					kg: Number(row.kg.value),
 					reps: Number(row.reps.value),
 					rir: Number(row.rir.value),
@@ -215,7 +238,7 @@ export function logDialog(
 		}
 
 		if (entries.length === 0) {
-			errorNote.textContent = "Nothing to log — every set is skipped."
+			errorNote.textContent = "Nothing to log — every set was removed."
 			return
 		}
 

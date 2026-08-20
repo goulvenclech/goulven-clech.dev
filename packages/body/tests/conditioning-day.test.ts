@@ -19,8 +19,8 @@ async function renderThursday(): Promise<HTMLElement> {
 }
 
 /** Filled in full, so only the date guard can stop the write. */
-function fillWorkout(root: HTMLElement): void {
-	root.querySelector<HTMLInputElement>("#workout")!.value = "core"
+function fillWorkout(root: HTMLElement, workout = "core"): void {
+	root.querySelector<HTMLInputElement>("#workout")!.value = workout
 	root.querySelector<HTMLInputElement>("#level")!.value = "3"
 	root.querySelector<HTMLInputElement>("#sets")!.value = "4"
 }
@@ -56,12 +56,35 @@ it("logs the workout and shows it as done", async () => {
 		expect.objectContaining({
 			kind: "conditioning",
 			date: THURSDAY,
+			category: "Core",
 			workout: "core",
 			level: 3,
 			sets: 4,
 		}),
 	])
 	expect(root.textContent).toContain("Done")
+})
+
+it("keeps the plan's category when the workout is renamed", async () => {
+	const root = await renderThursday()
+	fillWorkout(root, "Ab Blaster")
+	submit(root)
+	await settle()
+
+	expect(await readLog()).toEqual([
+		expect.objectContaining({ category: "Core", workout: "Ab Blaster" }),
+	])
+})
+
+it("refuses a workout that is only whitespace", async () => {
+	const root = await renderThursday()
+	// Native validation lets this through; the schema is what rejects it.
+	fillWorkout(root, "   ")
+	submit(root)
+	await settle()
+
+	expect(await readLog()).toEqual([])
+	expect(alertsIn(root)).toContain("check the workout")
 })
 
 it("discards a workout submitted after midnight, and says so", async () => {

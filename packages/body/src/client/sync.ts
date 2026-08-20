@@ -3,6 +3,7 @@ import {
 	mergeEntries,
 	outboxEntries,
 	pendingCount,
+	recordPushFailure,
 } from "../logStore"
 import { LOG_SCHEMA_VERSION } from "../schemas"
 
@@ -19,6 +20,11 @@ const TOKEN_KEY = "body-sync-token"
 // never trusts its cursor — each version re-pulls from scratch.
 const CURSOR_KEY = `body-sync-cursor-v${LOG_SCHEMA_VERSION}`
 const PAGE = 500
+const ABANDONED_KEY = "body-sync-abandoned"
+// Only a refusal of the data itself is given up on; an outage answers 5xx
+// and keeps its place in the queue.
+const PUSH_ATTEMPTS = 3
+const RETRYABLE = new Set([408, 429])
 
 // localStorage can be absent or throw (private modes); sync then stays off.
 const storageGet = (key: string): string | null => {
@@ -40,6 +46,16 @@ const storageRemove = (key: string): void => {
 }
 
 export const syncToken = (): string | null => storageGet(TOKEN_KEY)
+
+/**
+ * Entries given up on since the last call. Kept across loads: the push that
+ * crosses the limit is usually fired by a screen with nowhere to say so.
+ */
+export function takeAbandoned(): number {
+	const stored = Number(storageGet(ABANDONED_KEY) ?? 0)
+	storageRemove(ABANDONED_KEY)
+	return Number.isInteger(stored) && stored > 0 ? stored : 0
+}
 
 export type AuthResult = "ok" | "unauthorized" | "offline"
 
@@ -67,6 +83,8 @@ export interface SyncResult {
 	authRequired: boolean
 	/** True when the server refused a batch; the entries stay local. */
 	rejected: boolean
+	/** Entries given up on after too many refusals; they stay local for good. */
+	abandoned: number
 	/** True when the backend could not be reached at all. */
 	offline: boolean
 }
@@ -76,9 +94,10 @@ export async function sync(): Promise<SyncResult> {
 	let pushed = 0
 	let authRequired = false
 	let rejected = false
+	let abandoned = 0
 	let offline = false
 	try {
-		;({ pushed, authRequired, rejected } = await push())
+		;({ pushed, authRequired, rejected, abandoned } = await push())
 	} catch {
 		offline = true
 	}
@@ -89,19 +108,21 @@ export async function sync(): Promise<SyncResult> {
 		offline = true
 	}
 	const pending = await pendingCount().catch(() => 0)
-	return { pulled, pushed, pending, authRequired, rejected, offline }
+	return { pulled, pushed, pending, authRequired, rejected, abandoned, offline }
 }
 
 async function push(): Promise<{
 	pushed: number
 	authRequired: boolean
 	rejected: boolean
+	abandoned: number
 }> {
 	const entries = await outboxEntries()
 	if (entries.length === 0)
-		return { pushed: 0, authRequired: false, rejected: false }
+		return { pushed: 0, authRequired: false, rejected: false, abandoned: 0 }
 	const token = syncToken()
-	if (!token) return { pushed: 0, authRequired: true, rejected: false }
+	if (!token)
+		return { pushed: 0, authRequired: true, rejected: false, abandoned: 0 }
 
 	let pushed = 0
 	for (let start = 0; start < entries.length; start += PAGE) {
@@ -117,16 +138,27 @@ async function push(): Promise<{
 		if (response.status === 401) {
 			// A rotated password invalidates the token: ask for it again.
 			storageRemove(TOKEN_KEY)
-			return { pushed, authRequired: true, rejected: false }
+			return { pushed, authRequired: true, rejected: false, abandoned: 0 }
 		}
-		if (!response.ok)
-			// The server refused the batch (schema drift, oversized entry):
-			// retrying can't fix it, and the data stays safe locally.
-			return { pushed, authRequired: false, rejected: true }
+		if (!response.ok) {
+			const permanent = response.status < 500 && !RETRYABLE.has(response.status)
+			const abandoned = permanent
+				? await recordPushFailure(
+						batch.map((entry) => entry.id),
+						PUSH_ATTEMPTS,
+					)
+				: 0
+			if (abandoned > 0)
+				storageSet(
+					ABANDONED_KEY,
+					String(Number(storageGet(ABANDONED_KEY) ?? 0) + abandoned),
+				)
+			return { pushed, authRequired: false, rejected: true, abandoned }
+		}
 		await clearOutbox(batch.map((entry) => entry.id))
 		pushed += batch.length
 	}
-	return { pushed, authRequired: false, rejected: false }
+	return { pushed, authRequired: false, rejected: false, abandoned: 0 }
 }
 
 async function pull(): Promise<number> {

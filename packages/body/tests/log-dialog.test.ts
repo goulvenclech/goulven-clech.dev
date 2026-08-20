@@ -56,7 +56,7 @@ const submitButton = (dialog: HTMLDialogElement) =>
 	dialog.querySelector<HTMLButtonElement>("button[type=submit]")!
 
 const cancelButton = (dialog: HTMLDialogElement) =>
-	dialog.querySelector<HTMLButtonElement>("button.button-ghost")!
+	dialog.querySelector<HTMLButtonElement>("button.button-secondary")!
 
 /** Told apart from the sync login dialog by its fieldsets. */
 const logDialogIn = (root: HTMLElement) =>
@@ -72,16 +72,47 @@ const openTrigger = (root: HTMLElement) =>
 const exercisesIn = (dialog: HTMLDialogElement) =>
 	[...dialog.querySelectorAll("legend")].map((legend) => legend.textContent)
 
-function rowsFor(dialog: HTMLDialogElement, name: string): HTMLElement[] {
+function fieldsetFor(dialog: HTMLDialogElement, name: string): HTMLElement {
 	const fieldset = [...dialog.querySelectorAll("fieldset")].find(
 		(candidate) => candidate.querySelector("legend")?.textContent === name,
 	)
 	if (!fieldset) throw new Error(`The dialog has no "${name}" fieldset`)
-	return [...fieldset.querySelectorAll<HTMLElement>(".set-row")]
+	return fieldset
+}
+
+const rowsFor = (dialog: HTMLDialogElement, name: string) => [
+	...fieldsetFor(dialog, name).querySelectorAll<HTMLElement>(".set-row"),
+]
+
+const addSetTo = (dialog: HTMLDialogElement, name: string) =>
+	fieldsetFor(dialog, name).querySelector<HTMLButtonElement>(".set-add")!
+
+/** Each click drops a row, so the list has to be re-queried every time. */
+function removeAllSets(dialog: HTMLDialogElement, name: string): void {
+	for (let left = rowsFor(dialog, name).length; left > 0; left--)
+		fieldIn(rowsFor(dialog, name)[0], ".set-remove").click()
+	expect(rowsFor(dialog, name)).toHaveLength(0)
 }
 
 const fieldIn = (row: HTMLElement, field: string) =>
 	row.querySelector<HTMLInputElement>(field)!
+
+const numbering = (dialog: HTMLDialogElement, name: string) =>
+	rowsFor(dialog, name).map((row) => [
+		row.querySelector("p")!.textContent,
+		fieldIn(row, ".set-kg").getAttribute("aria-label"),
+		fieldIn(row, ".set-reps").getAttribute("aria-label"),
+		fieldIn(row, ".set-rir").getAttribute("aria-label"),
+		fieldIn(row, ".set-remove").getAttribute("aria-label"),
+	])
+
+const numbered = (position: number, unit = "reps") => [
+	String(position),
+	`Set ${position} load (kg)`,
+	`Set ${position} ${unit}`,
+	`Set ${position} reps in reserve`,
+	`Remove set ${position}`,
+]
 
 const rowValues = (row: HTMLElement) =>
 	[".set-kg", ".set-reps", ".set-rir"].map((field) => fieldIn(row, field).value)
@@ -207,6 +238,16 @@ describe("the log dialog", () => {
 		])
 		// Manual exercise: prefilled from the last session, in its own unit.
 		expect(rowValues(rowsFor(dialog, "Plank")[0])).toEqual(["0", "45", "2"])
+
+		expect(numbering(dialog, "Back squat")).toEqual([
+			numbered(1),
+			numbered(2),
+			numbered(3),
+		])
+		expect(numbering(dialog, "Plank")).toEqual([
+			numbered(1, "seconds"),
+			numbered(2, "seconds"),
+		])
 	})
 
 	it("logs the whole session in one write when nothing is corrected", async () => {
@@ -231,15 +272,67 @@ describe("the log dialog", () => {
 		])
 	})
 
-	it("drops a skipped set and closes the gap in the set numbering", async () => {
+	it("removes a set and closes the gap in the numbering", async () => {
 		const { root, dialog } = await renderMonday()
 		openTrigger(root).click()
-		fieldIn(rowsFor(dialog, "Back squat")[1], ".set-skip").click()
+		fieldIn(rowsFor(dialog, "Back squat")[1], ".set-remove").click()
+
+		expect(numbering(dialog, "Back squat")).toEqual([numbered(1), numbered(2)])
+
 		submitButton(dialog).click()
 		await settle()
-
 		expect((await loggedToday("back-squat")).map((entry) => entry.set)).toEqual(
 			[1, 2],
+		)
+	})
+
+	it("submits from the log button alone, never from a row control", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		const kinds = [...dialog.querySelectorAll("button")].map((button) =>
+			button.getAttribute("type"),
+		)
+
+		expect(kinds.filter((kind) => kind === "submit")).toHaveLength(1)
+		expect(kinds.every((kind) => kind === "button" || kind === "submit")).toBe(
+			true,
+		)
+	})
+
+	it("keeps focus on a neighbouring control after a removal", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		fieldIn(rowsFor(dialog, "Back squat")[1], ".set-remove").click()
+		expect(document.activeElement).toBe(
+			fieldIn(rowsFor(dialog, "Back squat")[1], ".set-remove"),
+		)
+
+		const rows = rowsFor(dialog, "Back squat")
+		fieldIn(rows[rows.length - 1], ".set-remove").click()
+		expect(document.activeElement).toBe(
+			fieldIn(rowsFor(dialog, "Back squat")[0], ".set-remove"),
+		)
+
+		removeAllSets(dialog, "Back squat")
+		expect(document.activeElement).toBe(addSetTo(dialog, "Back squat"))
+	})
+
+	it("adds a set that logs alongside the planned ones", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		addSetTo(dialog, "Back squat").click()
+
+		expect(numbering(dialog, "Back squat")).toEqual([
+			numbered(1),
+			numbered(2),
+			numbered(3),
+			numbered(4),
+		])
+
+		submitButton(dialog).click()
+		await settle()
+		expect((await loggedToday("back-squat")).map((entry) => entry.set)).toEqual(
+			[1, 2, 3, 4],
 		)
 	})
 
@@ -282,11 +375,10 @@ describe("the log dialog", () => {
 		expect(alertsIn(dialog)).toBe("")
 	})
 
-	it("writes nothing when every set is skipped", async () => {
+	it("writes nothing when every set is removed", async () => {
 		const { root, dialog } = await renderMonday()
 		openTrigger(root).click()
-		for (const skip of dialog.querySelectorAll<HTMLButtonElement>(".set-skip"))
-			skip.click()
+		for (const name of exercisesIn(dialog)) removeAllSets(dialog, name!)
 		submitButton(dialog).click()
 		await settle()
 
@@ -328,6 +420,74 @@ describe("a previous session shorter than today's plan", () => {
 
 		expect(alertsIn(dialog)).toBe("")
 		expect(await loggedToday("back-squat")).toHaveLength(3)
+	})
+})
+
+describe("a previous session whose sets differ", () => {
+	// Plank is manual: its rows prefill per set, with no target flattening them.
+	beforeEach(async () => {
+		await seed(LAST_MONDAY.filter(([ref]) => ref !== "plank"))
+		await appendEntries(
+			[30, 45].map((reps, index) => ({
+				kind: "strength" as const,
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: LAST_SESSION,
+				session: "strength-a",
+				ref: "plank",
+				set: index + 1,
+				kg: 0,
+				reps,
+				rir: 2,
+				unit: "s" as const,
+			})),
+		)
+	})
+
+	it("seeds an added row from the last set, not the first", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		expect(rowValues(rowsFor(dialog, "Plank")[0])).toEqual(["0", "30", "2"])
+
+		addSetTo(dialog, "Plank").click()
+
+		const rows = rowsFor(dialog, "Plank")
+		expect(rows).toHaveLength(3)
+		expect(rowValues(rows[2])).toEqual(["0", "45", "2"])
+	})
+})
+
+describe("a first-ever session", () => {
+	it("seeds the reps from the plan and leaves the load to type", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+
+		expect(rowValues(rowsFor(dialog, "Back squat")[0])).toEqual(["", "5", ""])
+		expect(rowValues(rowsFor(dialog, "Barbell row")[0])).toEqual(["", "8", ""])
+		// Plank declares no rep range, so there is nothing to fall back to.
+		expect(rowValues(rowsFor(dialog, "Plank")[0])).toEqual(["", "", ""])
+	})
+
+	it("logs once the loads are typed", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		for (const name of [
+			"Bench press",
+			"Barbell row",
+			"Romanian deadlift",
+			"Plank",
+		])
+			removeAllSets(dialog, name)
+		for (const row of rowsFor(dialog, "Back squat")) {
+			fieldIn(row, ".set-kg").value = "60"
+			fieldIn(row, ".set-rir").value = "3"
+		}
+		submitButton(dialog).click()
+		await settle()
+
+		expect((await loggedToday("back-squat")).map((entry) => entry.kg)).toEqual([
+			60, 60, 60,
+		])
 	})
 })
 

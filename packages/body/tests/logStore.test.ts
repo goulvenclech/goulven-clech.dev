@@ -8,8 +8,9 @@ import {
 	outboxEntries,
 	pendingCount,
 	readLog,
+	recordPushFailure,
 } from "$src/logStore"
-import type { LogEntry } from "$src/schemas"
+import { logEntrySchema, type LogEntry } from "$src/schemas"
 
 const strengthEntry: LogEntry = {
 	kind: "strength",
@@ -25,11 +26,17 @@ const strengthEntry: LogEntry = {
 	unit: "reps",
 }
 
+/** The sync gate's per-entry cap, in src/bodyLog.ts on the main site. */
+const MAX_ENTRY_BYTES = 2048
+const MAX_CATEGORY = 64
+const MAX_WORKOUT = 200
+
 const conditioningEntry: LogEntry = {
 	kind: "conditioning",
 	schemaVersion: 1,
 	id: "22222222-2222-4222-8222-222222222222",
 	date: "2026-08-18",
+	category: "Cardio",
 	workout: "cardio",
 	level: 3,
 	sets: 5,
@@ -103,4 +110,59 @@ describe("outbox", () => {
 		expect(await pendingCount()).toBe(1)
 		expect(await outboxEntries()).toEqual([conditioningEntry])
 	})
+})
+
+it("keeps a maximal valid entry inside the sync gate's size cap", () => {
+	// Control characters cost six bytes each once JSON-escaped: the worst case.
+	const fill = (length: number) => "\u0000".repeat(length)
+	const biggest: LogEntry = {
+		...conditioningEntry,
+		category: fill(MAX_CATEGORY),
+		workout: fill(MAX_WORKOUT),
+		level: 5,
+		sets: Number.MAX_SAFE_INTEGER,
+	}
+
+	// The lengths the budget below assumes are the ones the schema enforces.
+	expect(() => logEntrySchema.parse(biggest)).not.toThrow()
+	expect(() =>
+		logEntrySchema.parse({ ...biggest, workout: fill(MAX_WORKOUT + 1) }),
+	).toThrow()
+
+	expect(new TextEncoder().encode(JSON.stringify(biggest)).length).toBeLessThan(
+		MAX_ENTRY_BYTES,
+	)
+})
+
+it("counts a refusal against an entry queued before attempts were tracked", async () => {
+	await appendEntries([conditioningEntry])
+	// The old shape: the value was a second copy of the key, not a count.
+	await new Promise<void>((resolve, reject) => {
+		const open = indexedDB.open("body", 2)
+		open.onsuccess = () => {
+			const db = open.result
+			const transaction = db.transaction("outbox", "readwrite")
+			transaction
+				.objectStore("outbox")
+				.put(conditioningEntry.id, conditioningEntry.id)
+			transaction.oncomplete = () => {
+				db.close()
+				resolve()
+			}
+			transaction.onerror = () => reject(transaction.error)
+		}
+		open.onerror = () => reject(open.error)
+	})
+
+	expect(await outboxEntries()).toContainEqual(conditioningEntry)
+	expect(await recordPushFailure([conditioningEntry.id], 3)).toBe(0)
+	expect(await pendingCount()).toBe(1)
+})
+
+it("leaves an entry a concurrent push already cleared alone", async () => {
+	await appendEntries([conditioningEntry])
+	await clearOutbox([conditioningEntry.id])
+
+	expect(await recordPushFailure([conditioningEntry.id], 3)).toBe(0)
+	expect(await pendingCount()).toBe(0)
 })

@@ -161,8 +161,11 @@ function conditioningSection(
 	if (logged)
 		return el("section", { class: "panel mt-8" }, [
 			el("p", { class: "text-lg font-black" }, ["Done"]),
-			el("p", { class: `numeric ${MUTED} mt-2 text-sm font-semibold` }, [
-				`${logged.workout} — level ${logged.level} · ${logged.sets} sets`,
+			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
+				el("span", { class: "font-extrabold" }, [logged.workout]),
+				el("span", { class: MUTED }, [
+					` level ${logged.level} · ${logged.sets} sets`,
+				]),
 			]),
 		])
 
@@ -221,6 +224,7 @@ function conditioningSection(
 			schemaVersion: LOG_SCHEMA_VERSION,
 			id: crypto.randomUUID(),
 			date: today,
+			category: title,
 			workout: String(data.get("workout") ?? "").trim(),
 			level: Number(data.get("level")),
 			sets: Number(data.get("sets")),
@@ -234,7 +238,7 @@ function conditioningSection(
 		} catch (error) {
 			form.querySelector<HTMLParagraphElement>("[role=alert]")!.textContent =
 				error instanceof ZodError
-					? "Could not save — check the values (level 1–5, sets ≥ 1)."
+					? "Could not save — check the workout, level (1–5) and sets."
 					: `Could not save — ${STORAGE_BLOCKED}.`
 			button.disabled = false
 		}

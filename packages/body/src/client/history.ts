@@ -1,12 +1,19 @@
 import { formatDayShort, localDateOf } from "../dates"
-import { mergeEntries, pendingCount, readLog } from "../logStore"
+import { mergeEntries, readLog } from "../logStore"
 import { EXERCISES, SESSIONS } from "../program"
-import type { LogEntry, StrengthEntry } from "../schemas"
+import type { ConditioningEntry, LogEntry, StrengthEntry } from "../schemas"
 import { STORAGE_BLOCKED, el, formatSet, storageErrorNote } from "./dom"
 import { loginDialog } from "./loginDialog"
-import { sync, syncToken } from "./sync"
+import { sync, syncToken, takeAbandoned } from "./sync"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
+
+function syncNote(abandoned: number, rejected: boolean): string | undefined {
+	if (abandoned > 0)
+		return `${abandoned} ${abandoned === 1 ? "entry" : "entries"} could not be synced and will stay on this device.`
+	if (rejected) return "Sync is failing — it will try again on the next visit."
+	return undefined
+}
 
 export async function renderHistory(
 	root: HTMLElement,
@@ -20,7 +27,6 @@ export async function renderHistory(
 		root.replaceChildren(storageErrorNote())
 		return
 	}
-	const pending = await pendingCount().catch(() => 0)
 	const rerender = (nextNote?: string) => renderHistory(root, false, nextNote)
 
 	const errorNote = el(
@@ -28,19 +34,25 @@ export async function renderHistory(
 		{ role: "alert", class: "text-primary mt-3 text-sm font-bold" },
 		note ? [note] : [],
 	)
-	const toolbar = el("div", { class: "mt-8 flex justify-between gap-2" }, [
-		syncControls(pending, rerender),
-		el("div", { class: "flex gap-2" }, [
-			// Import stays available on an empty log: that is when a backup matters.
-			importButton(errorNote, rerender),
-			...(log.length > 0 ? [exportButton(log)] : []),
-		]),
+	const enableSync = enableSyncControl(rerender)
+	const toolbar = el("div", { class: "mt-8 flex flex-wrap gap-2" }, [
+		...(enableSync ? [enableSync] : []),
+		// Import stays available on an empty log: that is when a backup matters.
+		importButton(errorNote, rerender),
+		...(log.length > 0 ? [exportButton(log)] : []),
 	])
 
 	// No in-progress inputs on this screen, so a re-render is safe.
 	if (autoSync)
 		void sync().then((result) => {
-			if (result.pulled > 0 || result.pushed > 0) rerender()
+			const failure = syncNote(takeAbandoned(), result.rejected)
+			// A 401 wiped the token after this render: rerender so "Enable sync"
+			// comes back. Without a token at render time the control is already
+			// there, and authRequired is the normal pending state — stay quiet.
+			if (result.authRequired && !enableSync)
+				rerender(failure ?? "Sync password needed again.")
+			else if (result.pulled > 0 || result.pushed > 0) rerender(failure)
+			else if (failure) errorNote.textContent = failure
 		})
 
 	if (log.length === 0) {
@@ -74,9 +86,32 @@ export async function renderHistory(
 }
 
 function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
-	const strength = entries.filter(
-		(entry): entry is StrengthEntry => entry.kind === "strength",
-	)
+	// The log carries no time of day, so the templates are the only stable order.
+	const plannedOrder = (entry: StrengthEntry) => {
+		const index = SESSIONS[entry.session]?.exercises.findIndex(
+			(planned) => planned.ref === entry.ref,
+		)
+		return index === undefined || index < 0 ? Number.MAX_SAFE_INTEGER : index
+	}
+
+	const strength = entries
+		.filter((entry): entry is StrengthEntry => entry.kind === "strength")
+		.sort(
+			(a, b) =>
+				a.session.localeCompare(b.session) ||
+				plannedOrder(a) - plannedOrder(b) ||
+				a.set - b.set,
+		)
+	const conditioning = entries
+		.filter(
+			(entry): entry is ConditioningEntry => entry.kind === "conditioning",
+		)
+		.sort(
+			(a, b) =>
+				a.category.localeCompare(b.category) ||
+				a.workout.localeCompare(b.workout),
+		)
+
 	const byExercise = new Map<string, StrengthEntry[]>()
 	for (const entry of strength) {
 		const sets = byExercise.get(entry.ref) ?? []
@@ -85,74 +120,47 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 	}
 
 	const labels = [
-		...new Set(
-			entries.map((entry) =>
-				entry.kind === "strength"
-					? (SESSIONS[entry.session]?.name ?? entry.session)
-					: "Conditioning",
-			),
-		),
+		...new Set([
+			...(strength.length > 0 ? ["Strength"] : []),
+			...conditioning.map((entry) => entry.category),
+		]),
 	]
 
 	return el("li", { class: "panel" }, [
 		el("div", { class: "flex items-baseline justify-between gap-3" }, [
-			el("p", { class: "text-sm font-extrabold" }, [formatDayShort(date)]),
+			el("p", { class: "shrink-0 text-sm font-extrabold" }, [
+				formatDayShort(date),
+			]),
 			el(
 				"p",
-				{ class: `${MUTED} text-xs font-extrabold tracking-widest uppercase` },
+				{
+					class: `${MUTED} min-w-0 truncate text-xs font-extrabold tracking-widest uppercase`,
+				},
 				[labels.join(" · ")],
 			),
 		]),
 		...[...byExercise.entries()].map(([ref, sets]) =>
 			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
 				el("span", { class: "font-extrabold" }, [EXERCISES[ref]?.name ?? ref]),
+				el("span", { class: MUTED }, [` ${sets.map(formatSet).join(" · ")}`]),
+			]),
+		),
+		...conditioning.map((entry) =>
+			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
+				el("span", { class: "font-extrabold" }, [entry.workout]),
 				el("span", { class: MUTED }, [
-					` ${sets
-						.sort((a, b) => a.set - b.set)
-						.map(formatSet)
-						.join(" · ")}`,
+					` level ${entry.level} · ${entry.sets} sets`,
 				]),
 			]),
 		),
-		...entries
-			.filter((entry) => entry.kind === "conditioning")
-			.map((entry) =>
-				el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
-					`${entry.workout} — level ${entry.level} · ${entry.sets} sets`,
-				]),
-			),
 	])
 }
 
-function syncControls(
-	pending: number,
-	onSynced: (note?: string) => void,
-): HTMLElement {
-	if (syncToken()) {
-		const status = el(
-			"p",
-			{ class: `${MUTED} numeric self-center text-xs font-extrabold` },
-			[pending > 0 ? `Sync · ${pending} pending` : "Sync on"],
-		)
-		const button = el("button", { class: "button-ghost" }, ["Sync now"])
-		button.addEventListener("click", async () => {
-			button.disabled = true
-			const result = await sync()
-			onSynced(
-				result.offline
-					? "Offline — will retry on the next visit."
-					: result.authRequired
-						? "Sync password needed again."
-						: result.rejected
-							? "The server refused some entries — they stay on this device."
-							: undefined,
-			)
-		})
-		return el("div", { class: "flex gap-2" }, [status, button])
-	}
+function enableSyncControl(onEnabled: () => void): HTMLElement | null {
+	if (syncToken()) return null
 
 	const login = loginDialog((authenticated) => {
-		if (authenticated) onSynced()
+		if (authenticated) onEnabled()
 	})
 	const enable = el("button", { class: "button-ghost" }, ["Enable sync"])
 	enable.addEventListener("click", login.open)

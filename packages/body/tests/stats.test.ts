@@ -42,6 +42,7 @@ const conditioning = (
 	schemaVersion: 1,
 	id: crypto.randomUUID(),
 	date: TODAY,
+	category: "Cardio",
 	workout: "cardio",
 	level: 3,
 	sets: 5,

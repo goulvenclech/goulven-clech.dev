@@ -94,7 +94,7 @@ describe("from History", () => {
 		expect(loginIn(root).open).toBe(true)
 	})
 
-	it("stores the token and turns sync on", async () => {
+	it("stores the token and drops the offer", async () => {
 		const root = await render(renderHistory)
 		buttonLabelled(root, "Enable sync").click()
 
@@ -107,7 +107,8 @@ describe("from History", () => {
 		await settle()
 
 		expect(syncToken()).toBe("tok")
-		expect(root.textContent).toContain("Sync on")
+		expect(root.textContent).not.toContain("Enable sync")
+		expect(root.querySelector("input[type=password]")).toBeNull()
 	})
 
 	it("keeps a wrong password in the dialog, with sync off", async () => {

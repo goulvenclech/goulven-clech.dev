@@ -26,6 +26,7 @@ const localEntry: LogEntry = {
 	schemaVersion: 1,
 	id: "22222222-2222-4222-8222-222222222222",
 	date: "2026-08-18",
+	category: "Cardio",
 	workout: "cardio",
 	level: 3,
 	sets: 5,

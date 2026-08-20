@@ -67,7 +67,7 @@ export async function appendEntries(
 		const outbox = transaction.objectStore(OUTBOX)
 		for (const entry of parsed) {
 			store.add(entry)
-			outbox.put(entry.id, entry.id)
+			outbox.put(0, entry.id)
 		}
 		await settled(transaction)
 	} finally {
@@ -101,7 +101,7 @@ export async function mergeEntries(
 		for (const entry of valid) {
 			if (existing.has(entry.id)) continue
 			store.put(entry)
-			if (options.queue) outbox.put(entry.id, entry.id)
+			if (options.queue) outbox.put(0, entry.id)
 			added++
 		}
 		await settled(transaction)
@@ -129,13 +129,46 @@ export async function outboxEntries(): Promise<LogEntry[]> {
 		const transaction = db.transaction([STORE, OUTBOX], "readonly")
 		const store = transaction.objectStore(STORE)
 		const ids = await result(
-			transaction.objectStore(OUTBOX).getAll() as IDBRequest<string[]>,
+			transaction.objectStore(OUTBOX).getAllKeys() as IDBRequest<string[]>,
 		)
 		const entries = await Promise.all(
 			ids.map((id) => result(store.get(id) as IDBRequest<LogEntry>)),
 		)
 		// An outbox id without its entry should never happen; skip defensively.
 		return entries.filter(Boolean)
+	} finally {
+		db.close()
+	}
+}
+
+/**
+ * Entries that reach `limit` refusals leave the outbox but stay in the log.
+ * Returns how many were given up on.
+ */
+export async function recordPushFailure(
+	ids: readonly string[],
+	limit: number,
+): Promise<number> {
+	const db = await openDatabase()
+	try {
+		const transaction = db.transaction(OUTBOX, "readwrite")
+		const outbox = transaction.objectStore(OUTBOX)
+		const counted = await Promise.all(
+			ids.map((id) => result(outbox.get(id) as IDBRequest<unknown>)),
+		)
+		let abandoned = 0
+		ids.forEach((id, index) => {
+			const stored = counted[index]
+			// A concurrent push may have cleared it; do not queue it again.
+			if (stored === undefined) return
+			const attempts = typeof stored === "number" ? stored + 1 : 1
+			if (attempts >= limit) {
+				outbox.delete(id)
+				abandoned++
+			} else outbox.put(attempts, id)
+		})
+		await settled(transaction)
+		return abandoned
 	} finally {
 		db.close()
 	}

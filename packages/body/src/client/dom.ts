@@ -12,7 +12,7 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 	return element
 }
 
-/** Opening resets transient state: not every engine dispatches `close`. */
+/** Opening clears stale feedback: not every engine dispatches `close`. */
 export interface Modal {
 	element: HTMLDialogElement
 	open: () => void

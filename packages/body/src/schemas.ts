@@ -9,6 +9,8 @@ const slug = z
 	.max(64)
 	.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "expected a kebab-case slug")
 
+const dayTitle = z.string().min(1).max(64)
+
 const dateString = z
 	.string()
 	.refine(isDateString, "expected a valid YYYY-MM-DD date")
@@ -110,7 +112,7 @@ export interface SessionTemplate extends SessionFile {
 
 export const planDaySchema = z.discriminatedUnion("kind", [
 	z.strictObject({ kind: z.literal("strength"), session: slug }),
-	z.strictObject({ kind: z.literal("conditioning"), title: z.string().min(1) }),
+	z.strictObject({ kind: z.literal("conditioning"), title: dayTitle }),
 	z.strictObject({ kind: z.literal("rest") }),
 ])
 
@@ -148,6 +150,8 @@ export const conditioningEntrySchema = z.strictObject({
 	schemaVersion: z.literal(LOG_SCHEMA_VERSION),
 	id: z.uuid(),
 	date: dateString,
+	/** The plan's day type at logging time; never edited. */
+	category: dayTitle,
 	// Bounded so client-valid always implies acceptable to the sync gate.
 	workout: z.string().min(1).max(200),
 	level: z.number().int().min(1).max(5),

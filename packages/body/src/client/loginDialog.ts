@@ -18,7 +18,7 @@ export function loginDialog(
 		role: "alert",
 		class: "text-primary mt-4 text-sm font-bold",
 	})
-	const cancel = el("button", { type: "button", class: "button-ghost" }, [
+	const cancel = el("button", { type: "button", class: "button-secondary" }, [
 		"Cancel",
 	])
 	const submit = el("button", { type: "submit", class: "button-primary" }, [
@@ -37,10 +37,7 @@ export function loginDialog(
 			password,
 		]),
 		errorNote,
-		el("div", { class: "mt-6 flex items-center gap-3" }, [
-			cancel,
-			el("div", { class: "flex-1" }, [submit]),
-		]),
+		el("div", { class: "mt-6 grid grid-cols-2 gap-3" }, [cancel, submit]),
 	])
 	const dialog = el("dialog", { "aria-labelledby": TITLE_ID }, [form])
 

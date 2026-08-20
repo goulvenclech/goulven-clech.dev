@@ -74,8 +74,17 @@
 		@apply bg-alt-light dark:bg-alt-dark rounded-2xl p-5;
 	}
 
+	.button-primary,
+	.button-secondary {
+		@apply block w-full cursor-pointer rounded-2xl py-3.5 text-center text-sm font-extrabold tracking-widest uppercase disabled:cursor-default disabled:opacity-60;
+	}
+
 	.button-primary {
-		@apply bg-font-light text-body-light dark:bg-font-dark dark:text-body-dark block w-full cursor-pointer rounded-2xl py-3.5 text-center text-sm font-extrabold tracking-widest uppercase disabled:cursor-default disabled:opacity-60;
+		@apply bg-font-light text-body-light dark:bg-font-dark dark:text-body-dark;
+	}
+
+	.button-secondary {
+		@apply bg-alt-light text-font-light dark:bg-alt-dark dark:text-font-dark;
 	}
 
 	.button-ghost {

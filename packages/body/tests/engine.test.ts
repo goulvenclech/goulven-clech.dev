@@ -243,6 +243,7 @@ describe("exercisePerformances", () => {
 				schemaVersion: 1,
 				id: crypto.randomUUID(),
 				date: "2026-08-17",
+				category: "Cardio",
 				workout: "cardio",
 				level: 3,
 				sets: 5,
