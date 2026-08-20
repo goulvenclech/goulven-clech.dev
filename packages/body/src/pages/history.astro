@@ -1,84 +1,19 @@
 ---
 import AppLayout from "$src/layouts/AppLayout.astro"
-import { getClient } from "$src/db"
-import { formatDayShort } from "$src/dates"
-import { exerciseBySlug } from "$src/program"
-import { listSessions, listSetsForSessions, type SetRow } from "$src/queries"
-import { KIND_LABELS, SKIP_REASON_LABELS, STATUS_LABELS } from "$src/labels"
-
-const client = getClient()
-const sessions = await listSessions(client, 60)
-const sets = await listSetsForSessions(
-	client,
-	sessions.map((session) => session.id),
-)
-
-const setsFor = (sessionId: number) => {
-	const byExercise = new Map<string, SetRow[]>()
-	for (const set of sets) {
-		if (set.session_id !== sessionId) continue
-		const group = byExercise.get(set.exercise) ?? []
-		group.push(set)
-		byExercise.set(set.exercise, group)
-	}
-	return [...byExercise.entries()]
-}
-
-const formatSet = (set: SetRow) =>
-	set.weight_kg === null ? `×${set.reps}` : `${set.weight_kg} kg × ${set.reps}`
 ---
 
 <AppLayout title="History">
 	<h1>History</h1>
-
-	{
-		sessions.length === 0 && (
-			<p class="text-muted-light dark:text-muted-dark mt-8 text-sm font-bold">
-				Nothing logged yet.
-			</p>
-		)
-	}
-
-	<ul class="mt-8 space-y-3">
-		{
-			sessions.map((session) => (
-				<li class="panel">
-					<div class="flex items-baseline justify-between gap-3">
-						<p class="text-sm font-extrabold">{formatDayShort(session.date)}</p>
-						<p
-							class:list={[
-								"text-xs font-extrabold tracking-widest uppercase",
-								session.status === "skipped"
-									? "text-primary"
-									: "text-muted-light dark:text-muted-dark",
-							]}
-						>
-							{STATUS_LABELS[session.status]}
-							{session.skip_reason &&
-								` — ${SKIP_REASON_LABELS[session.skip_reason]}`}
-						</p>
-					</div>
-					<p class="text-muted-light dark:text-muted-dark mt-1 text-xs font-bold tracking-widest uppercase">
-						{KIND_LABELS[session.kind]}
-					</p>
-					{setsFor(session.id).map(([slug, exerciseSets]) => (
-						<p class="numeric mt-2 text-sm font-semibold">
-							<span class="font-extrabold">
-								{exerciseBySlug(slug)?.name ?? slug}
-							</span>
-							<span class="text-muted-light dark:text-muted-dark">
-								{" "}
-								{exerciseSets.map(formatSet).join(" · ")}
-							</span>
-						</p>
-					))}
-					{session.notes && (
-						<p class="text-muted-light dark:text-muted-dark mt-2 text-sm font-semibold">
-							{session.notes}
-						</p>
-					)}
-				</li>
-			))
-		}
-	</ul>
+	<noscript>
+		<p class="mt-8 text-sm font-bold">
+			This tracker needs JavaScript — the log lives in your browser.
+		</p>
+	</noscript>
+	<div id="view"></div>
 </AppLayout>
+
+<script>
+	import { renderHistory } from "$src/client/history"
+
+	renderHistory(document.getElementById("view")!)
+</script>

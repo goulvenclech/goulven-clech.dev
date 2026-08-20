@@ -92,7 +92,22 @@ export function createMockDbClient(
 			}
 			return { rows: [] }
 		}),
-		batch: vi.fn(async () => []),
+		// Same matching as execute, one result per statement; rowsAffected
+		// mirrors the mocked row count so writes can signal affected rows.
+		batch: vi.fn(
+			async (stmts: (string | { sql: string; args?: unknown[] })[]) =>
+				stmts.map((stmt) => {
+					const sql = typeof stmt === "string" ? stmt : stmt.sql
+					const args = typeof stmt === "string" ? [] : (stmt.args ?? [])
+					for (const [pattern, rows] of Object.entries(mockResults)) {
+						if (sql.includes(pattern)) {
+							const matched = typeof rows === "function" ? rows(args) : rows
+							return { rows: matched, rowsAffected: matched.length }
+						}
+					}
+					return { rows: [], rowsAffected: 0 }
+				}),
+		),
 		close: vi.fn(),
 	} as unknown as Client
 }

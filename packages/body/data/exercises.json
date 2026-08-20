@@ -1,0 +1,62 @@
+{
+	"back-squat": {
+		"name": "Back squat",
+		"main": true,
+		"direction": "ascending"
+	},
+	"bench-press": {
+		"name": "Bench press",
+		"main": true,
+		"direction": "ascending"
+	},
+	"barbell-deadlift": {
+		"name": "Deadlift",
+		"main": true,
+		"direction": "ascending"
+	},
+	"overhead-press": {
+		"name": "Overhead press",
+		"main": true,
+		"direction": "ascending"
+	},
+	"barbell-row": {
+		"name": "Barbell row",
+		"main": false,
+		"direction": "ascending"
+	},
+	"romanian-deadlift": {
+		"name": "Romanian deadlift",
+		"main": false,
+		"direction": "ascending"
+	},
+	"lat-pulldown": {
+		"name": "Lat pulldown",
+		"main": false,
+		"direction": "ascending"
+	},
+	"bulgarian-split-squat": {
+		"name": "Bulgarian split squat",
+		"main": false,
+		"direction": "ascending"
+	},
+	"farmer-walk": {
+		"name": "Farmer's walk",
+		"main": false,
+		"direction": "ascending"
+	},
+	"plank": {
+		"name": "Plank",
+		"main": false,
+		"direction": "ascending"
+	},
+	"trap-bar-deadlift": {
+		"name": "Trap bar deadlift",
+		"main": true,
+		"direction": "ascending"
+	},
+	"leg-press": {
+		"name": "Leg press",
+		"main": false,
+		"direction": "ascending"
+	}
+}

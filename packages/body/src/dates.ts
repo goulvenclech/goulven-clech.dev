@@ -31,6 +31,15 @@ export function addDays(date: string, days: number): string {
 	return shifted.toISOString().slice(0, 10)
 }
 
+/** Signed day count from `from` to `to`; positive when `to` is later. */
+export function daysBetween(from: string, to: string): number {
+	return (
+		(new Date(`${to}T00:00:00Z`).getTime() -
+			new Date(`${from}T00:00:00Z`).getTime()) /
+		86_400_000
+	)
+}
+
 /** 0 = Monday … 6 = Sunday. */
 export function weekdayOf(date: string): number {
 	return (new Date(`${date}T00:00:00Z`).getUTCDay() + 6) % 7

@@ -1,0 +1,35 @@
+{
+	"name": "Strength A",
+	"exercises": [
+		{
+			"ref": "back-squat",
+			"sets": 3,
+			"reps": { "min": 5, "max": 8 },
+			"increment": 2.5
+		},
+		{
+			"ref": "bench-press",
+			"sets": 3,
+			"reps": { "min": 5, "max": 8 },
+			"increment": 1.25
+		},
+		{
+			"ref": "barbell-row",
+			"sets": 3,
+			"reps": { "min": 8, "max": 10 },
+			"increment": 2.5
+		},
+		{
+			"ref": "romanian-deadlift",
+			"sets": 2,
+			"reps": { "min": 8, "max": 10 },
+			"increment": 2.5
+		},
+		{
+			"ref": "plank",
+			"sets": 2,
+			"unit": "s",
+			"progression": "manual"
+		}
+	]
+}

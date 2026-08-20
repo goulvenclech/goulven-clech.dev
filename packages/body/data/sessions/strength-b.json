@@ -1,0 +1,35 @@
+{
+	"name": "Strength B",
+	"exercises": [
+		{
+			"ref": "barbell-deadlift",
+			"sets": 3,
+			"reps": { "min": 5, "max": 8 },
+			"increment": 2.5
+		},
+		{
+			"ref": "overhead-press",
+			"sets": 3,
+			"reps": { "min": 5, "max": 8 },
+			"increment": 1.25
+		},
+		{
+			"ref": "lat-pulldown",
+			"sets": 3,
+			"reps": { "min": 8, "max": 10 },
+			"increment": 2.5
+		},
+		{
+			"ref": "bulgarian-split-squat",
+			"sets": 2,
+			"reps": { "min": 8, "max": 10 },
+			"progression": "manual"
+		},
+		{
+			"ref": "farmer-walk",
+			"sets": 2,
+			"unit": "m",
+			"progression": "manual"
+		}
+	]
+}

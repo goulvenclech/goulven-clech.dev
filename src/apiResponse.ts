@@ -8,8 +8,12 @@ export function json(
 	payload: unknown,
 	status = 200,
 	cache: CachePolicy = 0,
+	extraHeaders: Record<string, string> = {},
 ): Response {
-	const headers: Record<string, string> = { "Content-Type": "application/json" }
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+		...extraHeaders,
+	}
 	if (cache === "no-store") headers["Cache-Control"] = "no-store"
 	// No `immutable`: it would suppress revalidation even on an explicit refresh.
 	else if (cache)

@@ -1,143 +1,19 @@
 ---
 import AppLayout from "$src/layouts/AppLayout.astro"
-import TrendChart from "$src/components/TrendChart.astro"
-import { getClient } from "$src/db"
-import { addDays, localDateOf } from "$src/dates"
-import { listSessionsSince, listSetsSince } from "$src/queries"
-import {
-	ADHERENCE_DAYS,
-	TREND_WEEKS,
-	adherence,
-	oneRepMaxTrends,
-	setsByPattern,
-	weeklyTonnage,
-} from "$src/stats"
-import { PATTERN_LABELS } from "$src/labels"
-
-const client = getClient()
-const today = localDateOf(new Date())
-
-// The oldest trailing ISO week can start up to six days before
-// today - 7·(weeks - 1), so -7·weeks always covers its Monday.
-const sets = await listSetsSince(client, addDays(today, -7 * TREND_WEEKS))
-const sessions = await listSessionsSince(
-	client,
-	addDays(today, -(ADHERENCE_DAYS - 1)),
-)
-
-const attendance = adherence(sessions, today)
-const tonnage = weeklyTonnage(sets, today)
-const patterns = setsByPattern(sets, today)
-
-// Halves are the finest plate increment worth displaying.
-const roundKg = (value: number) => Math.round(value * 2) / 2
-
-const trends = oneRepMaxTrends(sets, today).map((trend) => {
-	const lastPoint = [...trend.points]
-		.reverse()
-		.find((point) => point.value !== null)
-	return {
-		...trend,
-		latest: lastPoint?.value ?? null,
-		firstWeek: trend.points[0].week,
-		lastWeek: trend.points[trend.points.length - 1].week,
-	}
-})
-
-const maxTonnage = Math.max(...tonnage.map((point) => point.value ?? 0), 1)
-const maxPatternCount = Math.max(...patterns.map((entry) => entry.count), 1)
 ---
 
 <AppLayout title="Stats">
 	<h1>Stats</h1>
-
-	<h2>Adherence — last {ADHERENCE_DAYS} days</h2>
-	<section class="panel numeric">
-		<p class="text-5xl font-black">
-			{Math.round(attendance.ratio * 100)}<span class="text-2xl">%</span>
+	<noscript>
+		<p class="mt-8 text-sm font-bold">
+			This tracker needs JavaScript — the log lives in your browser.
 		</p>
-		<p class="text-muted-light dark:text-muted-dark mt-2 text-sm font-bold">
-			{attendance.done}/{attendance.planned} scheduled sessions
-		</p>
-	</section>
-
-	<h2>Estimated 1RM — {TREND_WEEKS} weeks, Epley</h2>
-	{
-		trends.length === 0 && (
-			<p class="text-muted-light dark:text-muted-dark text-sm font-bold">
-				No weighted sets logged yet.
-			</p>
-		)
-	}
-	<div class="space-y-3">
-		{
-			trends.map((trend) => (
-				<section class="panel">
-					<div class="flex items-baseline justify-between gap-3">
-						<p class="text-sm font-extrabold">{trend.exercise.name}</p>
-						<p class="numeric text-sm font-black">
-							{trend.latest === null ? "—" : `${roundKg(trend.latest)} kg`}
-						</p>
-					</div>
-					<div class="text-muted-light dark:text-muted-dark mt-3">
-						<TrendChart
-							points={trend.points}
-							label={`Estimated one-rep max for ${trend.exercise.name}, best per week`}
-						/>
-					</div>
-					<div class="text-muted-light dark:text-muted-dark mt-1 flex justify-between text-[10px] font-bold">
-						<p>{trend.firstWeek}</p>
-						<p>{trend.lastWeek}</p>
-					</div>
-				</section>
-			))
-		}
-	</div>
-
-	<h2>Weekly tonnage — {TREND_WEEKS} weeks</h2>
-	<section class="panel numeric space-y-2">
-		{
-			tonnage.map((point) => (
-				<div class="flex items-center gap-3">
-					<p class="text-muted-light dark:text-muted-dark w-14 text-[10px] font-extrabold">
-						{point.week.slice(5)}
-					</p>
-					<div class="bg-body-light dark:bg-body-dark h-2 flex-1 overflow-hidden rounded-full">
-						<div
-							class="bg-primary h-full rounded-full"
-							style={`width: ${((point.value ?? 0) / maxTonnage) * 100}%`}
-						/>
-					</div>
-					<p class="w-16 text-right text-[10px] font-bold">
-						{Math.round(point.value ?? 0)} kg
-					</p>
-				</div>
-			))
-		}
-	</section>
-
-	<h2>Sets per pattern — last 7 days</h2>
-	<section class="panel numeric space-y-2">
-		{
-			patterns.map((entry) => (
-				<div class="flex items-center gap-3">
-					<p class="text-muted-light dark:text-muted-dark w-24 text-[10px] font-extrabold tracking-widest uppercase">
-						{PATTERN_LABELS[entry.pattern]}
-					</p>
-					<div class="bg-body-light dark:bg-body-dark h-2 flex-1 overflow-hidden rounded-full">
-						<div
-							class="bg-primary h-full rounded-full"
-							style={`width: ${(entry.count / maxPatternCount) * 100}%`}
-						/>
-					</div>
-					<p class="w-8 text-right text-[10px] font-bold">{entry.count}</p>
-				</div>
-			))
-		}
-	</section>
-
-	<p class="text-muted-light dark:text-muted-dark mt-10 text-xs font-semibold">
-		WIP: next-target automation, stagnation detection, ascending sets and plate
-		math.
-	</p>
+	</noscript>
+	<div id="view"></div>
 </AppLayout>
+
+<script>
+	import { renderStats } from "$src/client/stats"
+
+	renderStats(document.getElementById("view")!)
+</script>

@@ -1,64 +1,78 @@
+import exercisesJson from "../data/exercises.json"
+import planJson from "../data/program.json"
 import { weekdayOf } from "./dates"
+import {
+	catalogueSchema,
+	sessionFileSchema,
+	weeklyPlanSchema,
+	type Catalogue,
+	type Exercise,
+	type PlanDay,
+	type SessionTemplate,
+	type WeeklyPlan,
+} from "./schemas"
 
-export const MOVEMENT_PATTERNS = [
-	"squat",
-	"hinge",
-	"push",
-	"pull",
-	"core",
-	"conditioning",
-] as const
+/**
+ * The programme lives in data/*.json, parsed and cross-checked at module
+ * load: a bad file fails `astro build`, never a session at the gym.
+ */
 
-export type MovementPattern = (typeof MOVEMENT_PATTERNS)[number]
+export const EXERCISES = catalogueSchema.parse(exercisesJson)
 
-export interface Exercise {
-	slug: string
-	name: string
-	pattern: MovementPattern
-	/** Main lifts get an estimated 1RM trend. */
-	main: boolean
+const sessionFiles = import.meta.glob("../data/sessions/*.json", {
+	eager: true,
+	import: "default",
+})
+
+export const SESSIONS: Record<string, SessionTemplate> = Object.fromEntries(
+	Object.entries(sessionFiles).map(([path, raw]) => {
+		const id = path
+			.split("/")
+			.at(-1)!
+			.replace(/\.json$/, "")
+		return [id, { id, ...sessionFileSchema.parse(raw) }]
+	}),
+)
+
+export const WEEKLY_PLAN = weeklyPlanSchema.parse(planJson)
+
+export function crossCheckProgram(
+	catalogue: Catalogue,
+	sessions: Record<string, SessionTemplate>,
+	plan: WeeklyPlan,
+): void {
+	const unitByRef = new Map<string, { unit: string; sessionId: string }>()
+	for (const session of Object.values(sessions))
+		for (const planned of session.exercises) {
+			const exercise = catalogue[planned.ref]
+			if (!exercise)
+				throw new Error(
+					`Session "${session.id}" references unknown exercise "${planned.ref}"`,
+				)
+			if (exercise.main && planned.progression !== "auto")
+				throw new Error(
+					`Main lift "${planned.ref}" in "${session.id}" must progress automatically: it drives the 1RM trend`,
+				)
+			// History merges by ref, so a ref must count the same unit everywhere.
+			const seen = unitByRef.get(planned.ref)
+			if (seen && seen.unit !== planned.unit)
+				throw new Error(
+					`Exercise "${planned.ref}" is counted in "${seen.unit}" in "${seen.sessionId}" but "${planned.unit}" in "${session.id}"`,
+				)
+			unitByRef.set(planned.ref, { unit: planned.unit, sessionId: session.id })
+		}
+
+	for (const day of plan)
+		if (day.kind === "strength" && !(day.session in sessions))
+			throw new Error(`Weekly plan references unknown session "${day.session}"`)
 }
 
-/** WIP: just enough of a catalogue to log gym work. */
-export const EXERCISES: readonly Exercise[] = [
-	{ slug: "squat", name: "Back squat", pattern: "squat", main: true },
-	{ slug: "bench-press", name: "Bench press", pattern: "push", main: true },
-	{ slug: "deadlift", name: "Deadlift", pattern: "hinge", main: true },
-	{
-		slug: "overhead-press",
-		name: "Overhead press",
-		pattern: "push",
-		main: true,
-	},
-	{ slug: "barbell-row", name: "Barbell row", pattern: "pull", main: true },
-	{ slug: "pull-up", name: "Pull-up", pattern: "pull", main: false },
-	{ slug: "push-up", name: "Push-up", pattern: "push", main: false },
-	{ slug: "plank", name: "Plank", pattern: "core", main: false },
-]
+crossCheckProgram(EXERCISES, SESSIONS, WEEKLY_PLAN)
 
-export function exerciseBySlug(slug: string): Exercise | null {
-	return EXERCISES.find((exercise) => exercise.slug === slug) ?? null
+export function exerciseByRef(ref: string): Exercise | null {
+	return EXERCISES[ref] ?? null
 }
 
-export type SessionKind = "strength" | "cardio" | "combat" | "core" | "rest"
-
-export interface ProgramDay {
-	title: string
-	kind: SessionKind
-	location: "gym" | "home" | null
-}
-
-/** Indexed by weekday, 0 = Monday … 6 = Sunday. */
-export const WEEKLY_PROGRAM: readonly ProgramDay[] = [
-	{ title: "Full Body Strength", kind: "strength", location: "gym" },
-	{ title: "Cardio", kind: "cardio", location: "home" },
-	{ title: "Combat", kind: "combat", location: "home" },
-	{ title: "Core", kind: "core", location: "home" },
-	{ title: "Full Body Strength", kind: "strength", location: "gym" },
-	{ title: "Cardio", kind: "cardio", location: "home" },
-	{ title: "Rest", kind: "rest", location: null },
-]
-
-export function programFor(date: string): ProgramDay {
-	return WEEKLY_PROGRAM[weekdayOf(date)]
+export function planFor(date: string): PlanDay {
+	return WEEKLY_PLAN[weekdayOf(date)]
 }

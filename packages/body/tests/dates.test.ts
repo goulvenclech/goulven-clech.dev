@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
 	addDays,
+	daysBetween,
 	isDateString,
 	isoWeekOf,
 	lastIsoWeeks,
@@ -40,6 +41,14 @@ describe("addDays", () => {
 		expect(addDays("2026-08-19", -1)).toBe("2026-08-18")
 		expect(addDays("2026-01-01", -1)).toBe("2025-12-31")
 		expect(addDays("2026-08-31", 1)).toBe("2026-09-01")
+	})
+})
+
+describe("daysBetween", () => {
+	it("counts signed days across boundaries", () => {
+		expect(daysBetween("2026-08-19", "2026-08-19")).toBe(0)
+		expect(daysBetween("2026-08-19", "2026-09-02")).toBe(14)
+		expect(daysBetween("2026-01-01", "2025-12-31")).toBe(-1)
 	})
 })
 

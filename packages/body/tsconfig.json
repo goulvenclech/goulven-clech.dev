@@ -4,7 +4,6 @@
 	"exclude": ["dist"],
 	"compilerOptions": {
 		"moduleResolution": "Bundler",
-		"types": ["astro/env"],
 		"paths": {
 			"$src/*": ["./src/*"],
 			"$assets/*": ["./src/assets/*"]
