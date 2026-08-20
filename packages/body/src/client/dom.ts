@@ -12,8 +12,23 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 	return element
 }
 
+/** Opening resets transient state: not every engine dispatches `close`. */
+export interface Modal {
+	element: HTMLDialogElement
+	open: () => void
+}
+
+export const UNIT_LABELS = { reps: "reps", m: "metres", s: "seconds" } as const
+
 export const STORAGE_BLOCKED =
 	"this browser is blocking storage (full or private mode?)"
+
+export const DAY_ROLLED_OVER =
+	"The day changed before you logged — nothing was saved."
+
+/** Shared with AppLayout, which renders the elements this fills. */
+export const PAGE_TITLE_ID = "page-title"
+export const PAGE_SUBTITLE_ID = "page-subtitle"
 
 export function formatSet(set: {
 	kg: number
@@ -33,4 +48,13 @@ export function storageErrorNote(): HTMLElement {
 		{ role: "alert", class: "text-primary mt-8 text-sm font-bold" },
 		[`Could not open the log — ${STORAGE_BLOCKED}.`],
 	)
+}
+
+export function setPageHeader(title: string, subtitle: string): void {
+	const setText = (id: string, text: string) => {
+		const element = document.getElementById(id)
+		if (element) element.textContent = text
+	}
+	setText(PAGE_TITLE_ID, title)
+	setText(PAGE_SUBTITLE_ID, subtitle)
 }

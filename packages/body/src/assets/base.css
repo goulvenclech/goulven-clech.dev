@@ -82,6 +82,14 @@
 		@apply border-alt-light dark:border-alt-dark text-muted-light dark:text-muted-dark cursor-pointer rounded-xl border-2 px-3.5 py-2 text-xs font-extrabold tracking-widest uppercase;
 	}
 
+	dialog {
+		@apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl p-5;
+	}
+
+	dialog::backdrop {
+		@apply bg-body-dark/70;
+	}
+
 	.numeric {
 		font-variant-numeric: tabular-nums;
 	}

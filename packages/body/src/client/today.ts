@@ -11,11 +11,22 @@ import {
 	LOG_SCHEMA_VERSION,
 	type ConditioningEntry,
 	type LogEntry,
-	type StrengthEntry,
+	type PlanDay,
 } from "../schemas"
 import { ZodError } from "zod"
-import { STORAGE_BLOCKED, el, formatSet, storageErrorNote } from "./dom"
-import { sync } from "./sync"
+import {
+	DAY_ROLLED_OVER,
+	STORAGE_BLOCKED,
+	UNIT_LABELS,
+	el,
+	formatSet,
+	type Modal,
+	setPageHeader,
+	storageErrorNote,
+} from "./dom"
+import { logDialog } from "./logDialog"
+import { loginDialog } from "./loginDialog"
+import { sync, syncToken } from "./sync"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 
@@ -26,9 +37,21 @@ const BASIS_LABELS: Record<TargetBasis, string> = {
 	"layoff-deload": "Deload — more than two weeks off",
 }
 
-export async function renderToday(root: HTMLElement): Promise<void> {
+function headerFor(day: PlanDay): { title: string; place: string } {
+	if (day.kind === "rest") return { title: "Rest", place: "day off" }
+	if (day.kind === "conditioning") return { title: day.title, place: "at home" }
+	return { title: SESSIONS[day.session].name, place: "at the gym" }
+}
+
+export async function renderToday(
+	root: HTMLElement,
+	note?: string,
+): Promise<void> {
 	const today = localDateOf(new Date())
 	const day = planFor(today)
+	const header = headerFor(day)
+	setPageHeader(header.title, `${formatDay(today)}, ${header.place}`)
+
 	let log: LogEntry[]
 	try {
 		log = await readLog()
@@ -36,49 +59,56 @@ export async function renderToday(root: HTMLElement): Promise<void> {
 		root.replaceChildren(storageErrorNote())
 		return
 	}
-	const rerender = () => renderToday(root)
+	const rerender = (nextNote?: string) => renderToday(root, nextNote)
 
-	const children: Node[] = [
-		el(
-			"p",
-			{ class: `${MUTED} text-xs font-extrabold tracking-widest uppercase` },
-			[formatDay(today)],
-		),
-	]
-
+	let children: Node[]
 	if (day.kind === "rest")
-		children.push(
-			el("h1", { class: "mt-2" }, ["Rest"]),
+		children = [
 			el("section", { class: "panel mt-8" }, [
 				el("p", { class: "text-sm font-bold" }, [
 					"Nothing to log today — see you tomorrow.",
 				]),
 			]),
-		)
+		]
 	else if (day.kind === "conditioning")
-		children.push(
-			el("h1", { class: "mt-2" }, [day.title]),
-			el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, ["At home"]),
-			conditioningSection(day.title, log, today, rerender),
-		)
+		children = [conditioningSection(day.title, log, today, rerender)]
 	else {
 		const session = todaysSession(SESSIONS[day.session], EXERCISES, log, today)
-		children.push(
-			el("h1", { class: "mt-2" }, [session.name]),
-			el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, ["At the gym"]),
-			...session.exercises.map((plan) =>
-				exerciseSection(plan, session.id, today, rerender),
-			),
-		)
+		children = session.exercises.map(exercisePanel)
+		const form = logDialog(session, today, rerender)
+		if (form) children.push(...logControls(form, today, rerender))
 	}
 
+	if (note)
+		children.unshift(
+			el("p", { role: "alert", class: "text-primary mt-8 text-sm font-bold" }, [
+				note,
+			]),
+		)
 	root.replaceChildren(...children)
 	// Fire and forget: pulled entries surface on the next navigation — a
-	// re-render here would wipe in-progress inputs.
+	// re-render here would wipe an open log dialog.
 	void sync()
 }
 
-const UNIT_LABELS = { reps: "reps", m: "metres", s: "seconds" } as const
+function logControls(
+	form: Modal,
+	today: string,
+	rerender: (note?: string) => void,
+): Node[] {
+	// Sync is optional: dismissing the offer still opens the log form.
+	const login = loginDialog(() => form.open())
+
+	const open = el("button", { class: "button-primary mt-8" }, ["Log session"])
+	open.addEventListener("click", () => {
+		// A tab left open overnight would otherwise log yesterday's plan.
+		if (localDateOf(new Date()) !== today)
+			rerender("The day changed — this is today's session.")
+		else if (syncToken()) form.open()
+		else login.open()
+	})
+	return [open, login.element, form.element]
+}
 
 const doneLine = (sets: readonly PerformedSet[]) =>
 	el("p", { class: "numeric mt-3 text-sm font-semibold" }, [
@@ -86,12 +116,7 @@ const doneLine = (sets: readonly PerformedSet[]) =>
 		el("span", { class: MUTED }, [` ${sets.map(formatSet).join(" · ")}`]),
 	])
 
-function exerciseSection(
-	plan: ExercisePlan,
-	sessionId: string,
-	today: string,
-	rerender: () => void,
-): HTMLElement {
+function exercisePanel(plan: ExercisePlan): HTMLElement {
 	const { planned, exercise, target, previous } = plan
 	const assist = exercise.direction === "descending" ? " assist" : ""
 
@@ -119,124 +144,7 @@ function exerciseSection(
 		]),
 	])
 
-	if (plan.loggedToday.length > 0) {
-		section.append(doneLine(plan.loggedToday))
-		return section
-	}
-
-	const rows = Array.from({ length: planned.sets }, (_, index) => {
-		const prefill = target ?? previous?.sets[index] ?? null
-		return el("div", { class: "set-row flex items-center gap-2" }, [
-			el("p", { class: `${MUTED} numeric w-4 text-xs font-extrabold` }, [
-				String(index + 1),
-			]),
-			el("input", {
-				class: "set-kg w-24!",
-				type: "number",
-				inputmode: "decimal",
-				step: "any",
-				min: "0",
-				placeholder: "kg",
-				value: prefill === null ? "" : String(prefill.kg),
-				"aria-label": `Set ${index + 1} load (kg)`,
-			}),
-			el("input", {
-				class: "set-reps w-20!",
-				type: "number",
-				inputmode: "numeric",
-				step: "1",
-				min: "1",
-				placeholder: planned.unit,
-				value: prefill === null ? "" : String(prefill.reps),
-				"aria-label": `Set ${index + 1} ${UNIT_LABELS[planned.unit]}`,
-			}),
-			el("input", {
-				class: "set-rir w-16!",
-				type: "number",
-				inputmode: "numeric",
-				step: "1",
-				min: "0",
-				max: "10",
-				placeholder: "RIR",
-				"aria-label": `Set ${index + 1} reps in reserve`,
-			}),
-		])
-	})
-
-	// Always rendered so screen readers announce failures reliably.
-	const errorNote = el("p", {
-		role: "alert",
-		class: "text-primary mt-3 text-sm font-bold",
-	})
-	const logButton = el("button", { class: "button-ghost mt-4" }, ["Log sets"])
-
-	logButton.addEventListener("click", async () => {
-		// Append-only: a write under yesterday's date could never be corrected.
-		if (localDateOf(new Date()) !== today) {
-			rerender()
-			return
-		}
-		const values = rows.map((row) => ({
-			kg: row.querySelector<HTMLInputElement>(".set-kg")!.value,
-			reps: row.querySelector<HTMLInputElement>(".set-reps")!.value,
-			rir: row.querySelector<HTMLInputElement>(".set-rir")!.value,
-		}))
-		// Untouched rows are skipped sets; a half-filled row must block, since
-		// logging the rest would silently lose it (the exercise locks once logged).
-		const touched = values.filter(
-			(row) => row.kg !== "" || row.reps !== "" || row.rir !== "",
-		)
-		if (
-			touched.some((row) => row.kg === "" || row.reps === "" || row.rir === "")
-		) {
-			errorNote.textContent =
-				"A set is half-filled — complete kg, reps and RIR, or clear it."
-			return
-		}
-		if (touched.length === 0) {
-			errorNote.textContent = "Nothing to log — fill in at least one set."
-			return
-		}
-
-		const entries: StrengthEntry[] = touched.map((row, index) => ({
-			kind: "strength",
-			schemaVersion: LOG_SCHEMA_VERSION,
-			id: crypto.randomUUID(),
-			date: today,
-			session: sessionId,
-			ref: plan.ref,
-			set: index + 1,
-			kg: Number(row.kg),
-			reps: Number(row.reps),
-			rir: Number(row.rir),
-			unit: planned.unit,
-		}))
-
-		logButton.disabled = true
-		try {
-			await appendEntries(entries)
-			void sync()
-			// Swap only this section: a full re-render would wipe in-progress
-			// inputs in the other sections.
-			setsContainer.remove()
-			errorNote.remove()
-			logButton.remove()
-			section.append(
-				doneLine(
-					entries.map(({ kg, reps, rir, unit }) => ({ kg, reps, rir, unit })),
-				),
-			)
-		} catch (error) {
-			errorNote.textContent =
-				error instanceof ZodError
-					? "Could not save — check the values (reps ≥ 1, RIR 0–10)."
-					: `Could not save — ${STORAGE_BLOCKED}.`
-			logButton.disabled = false
-		}
-	})
-
-	const setsContainer = el("div", { class: "mt-4 space-y-2" }, rows)
-	section.append(setsContainer, errorNote, logButton)
+	if (plan.loggedToday.length > 0) section.append(doneLine(plan.loggedToday))
 	return section
 }
 
@@ -244,7 +152,7 @@ function conditioningSection(
 	title: string,
 	log: readonly LogEntry[],
 	today: string,
-	onLogged: () => void,
+	onSettled: (note?: string) => void,
 ): HTMLElement {
 	const logged = log.find(
 		(entry): entry is ConditioningEntry =>
@@ -304,7 +212,7 @@ function conditioningSection(
 		event.preventDefault()
 		// Append-only: a write under yesterday's date could never be corrected.
 		if (localDateOf(new Date()) !== today) {
-			onLogged()
+			onSettled(DAY_ROLLED_OVER)
 			return
 		}
 		const data = new FormData(form)
@@ -322,7 +230,7 @@ function conditioningSection(
 		try {
 			await appendEntries([entry])
 			void sync()
-			onLogged()
+			onSettled()
 		} catch (error) {
 			form.querySelector<HTMLParagraphElement>("[role=alert]")!.textContent =
 				error instanceof ZodError

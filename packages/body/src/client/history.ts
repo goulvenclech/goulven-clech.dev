@@ -3,7 +3,8 @@ import { mergeEntries, pendingCount, readLog } from "../logStore"
 import { EXERCISES, SESSIONS } from "../program"
 import type { LogEntry, StrengthEntry } from "../schemas"
 import { STORAGE_BLOCKED, el, formatSet, storageErrorNote } from "./dom"
-import { requestSyncToken, sync, syncToken } from "./sync"
+import { loginDialog } from "./loginDialog"
+import { sync, syncToken } from "./sync"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 
@@ -28,7 +29,7 @@ export async function renderHistory(
 		note ? [note] : [],
 	)
 	const toolbar = el("div", { class: "mt-8 flex justify-between gap-2" }, [
-		syncControls(pending, errorNote, rerender),
+		syncControls(pending, rerender),
 		el("div", { class: "flex gap-2" }, [
 			// Import stays available on an empty log: that is when a backup matters.
 			importButton(errorNote, rerender),
@@ -125,7 +126,6 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 
 function syncControls(
 	pending: number,
-	errorNote: HTMLElement,
 	onSynced: (note?: string) => void,
 ): HTMLElement {
 	if (syncToken()) {
@@ -151,30 +151,12 @@ function syncControls(
 		return el("div", { class: "flex gap-2" }, [status, button])
 	}
 
-	const password = el("input", {
-		type: "password",
-		placeholder: "Sync password",
-		autocomplete: "current-password",
-		class: "w-40!",
-		"aria-label": "Sync password",
+	const login = loginDialog((authenticated) => {
+		if (authenticated) onSynced()
 	})
 	const enable = el("button", { class: "button-ghost" }, ["Enable sync"])
-	enable.addEventListener("click", async () => {
-		if (!password.value) return
-		enable.disabled = true
-		const auth = await requestSyncToken(password.value)
-		if (auth === "ok") {
-			await sync()
-			onSynced()
-		} else {
-			errorNote.textContent =
-				auth === "unauthorized"
-					? "Wrong password — sync stays off."
-					: "Couldn't reach sync — try again."
-			enable.disabled = false
-		}
-	})
-	return el("div", { class: "flex gap-2" }, [password, enable])
+	enable.addEventListener("click", login.open)
+	return el("div", { class: "flex gap-2" }, [enable, login.element])
 }
 
 function exportButton(log: LogEntry[]): HTMLElement {

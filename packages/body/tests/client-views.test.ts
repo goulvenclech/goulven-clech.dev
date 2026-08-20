@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { renderHistory } from "$src/client/history"
 import { renderStats } from "$src/client/stats"
 import { renderToday } from "$src/client/today"
@@ -19,6 +19,10 @@ beforeEach(() => {
 	} as unknown as IDBFactory
 })
 
+afterEach(() => {
+	vi.useRealTimers()
+})
+
 describe("client views when indexedDB refuses to open", () => {
 	const views = [
 		["renderToday", renderToday],
@@ -34,4 +38,22 @@ describe("client views when indexedDB refuses to open", () => {
 			expect(root.textContent).toContain("blocking storage")
 		},
 	)
+})
+
+describe("today's header", () => {
+	it("names the session and the day, even when storage is blocked", async () => {
+		// A Thursday, which the weekly plan schedules as conditioning at home.
+		// Fake only Date: the mocked indexedDB.open resolves via queueMicrotask.
+		vi.useFakeTimers({ toFake: ["Date"] })
+		vi.setSystemTime(new Date("2026-08-20T10:00:00Z"))
+		document.body.innerHTML =
+			'<h1><span id="page-title">Today</span></h1><p id="page-subtitle"></p>'
+
+		await renderToday(document.createElement("div"))
+
+		expect(document.getElementById("page-title")!.textContent).toBe("Core")
+		expect(document.getElementById("page-subtitle")!.textContent).toBe(
+			"Thursday 20 August, at home",
+		)
+	})
 })

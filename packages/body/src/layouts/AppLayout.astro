@@ -1,13 +1,19 @@
 ---
 import "$assets/base.css"
 import { Font } from "astro:assets"
+import { PAGE_SUBTITLE_ID, PAGE_TITLE_ID } from "$src/client/dom"
 
 interface Props {
 	title: string
 	description?: string
+	subtitle?: string
 }
 
-const { title, description = "Personal workout tracker." } = Astro.props
+const {
+	title,
+	description = "Personal workout tracker.",
+	subtitle,
+} = Astro.props
 
 const tabs = [
 	{ href: "/", label: "Today" },
@@ -49,6 +55,21 @@ const isCurrent = (href: string) =>
 	</head>
 	<body>
 		<main>
+			<header>
+				<!-- Glued on purpose: the wordmark runs into the title, BODYSTATS. -->
+				<h1>
+					<span class="text-primary">Body</span><span
+						id={PAGE_TITLE_ID}
+						class="italic">{title}</span
+					>
+				</h1>
+				<p
+					id={PAGE_SUBTITLE_ID}
+					class="text-muted-light dark:text-muted-dark mt-2 text-sm font-bold"
+				>
+					{subtitle}
+				</p>
+			</header>
 			<slot />
 		</main>
 		<nav
