@@ -12,6 +12,9 @@ export const TREND_WEEKS = 12
 export const ADHERENCE_DAYS = 28
 export const WELLNESS_DAYS = 28
 
+// Halves are the finest plate increment worth displaying.
+export const roundKg = (value: number): number => Math.round(value * 2) / 2
+
 export interface WeeklyPoint {
 	week: string
 	value: number | null

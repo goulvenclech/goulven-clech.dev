@@ -3,7 +3,7 @@ import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { sync } from "$src/client/sync"
-import { fetchLog } from "$src/pages/log.md"
+import { fetchLog } from "$src/remoteLog"
 import { memoryStorage } from "./memoryStorage"
 
 /**

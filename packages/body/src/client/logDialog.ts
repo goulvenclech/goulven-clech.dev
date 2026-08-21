@@ -1,6 +1,7 @@
 import type { DaySession, ExercisePlan } from "../engine"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "../schemas"
-import { UNIT_LABELS, el, type Modal } from "./dom"
+import { UNIT_LABELS } from "../dayLog"
+import { el, type Modal } from "./dom"
 import { submitDialog } from "./submitDialog"
 
 const MUTED = "text-muted-light dark:text-muted-dark"

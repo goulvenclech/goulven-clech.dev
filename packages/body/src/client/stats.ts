@@ -9,6 +9,7 @@ import {
 	adherence,
 	dailyWellnessTrend,
 	oneRepMaxTrends,
+	roundKg,
 	weeklyTonnage,
 	type DailyTrend,
 	type OneRepMaxTrend,
@@ -19,9 +20,6 @@ import { sync } from "./sync"
 import { trendChart } from "./trendChart"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
-
-// Halves are the finest plate increment worth displaying.
-const roundKg = (value: number) => Math.round(value * 2) / 2
 
 export async function renderStats(
 	root: HTMLElement,

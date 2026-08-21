@@ -66,6 +66,14 @@ export function lastIsoWeeks(date: string, count: number): string[] {
 	return weeks
 }
 
+/** "Wednesday" */
+export function weekdayName(date: string): string {
+	return new Intl.DateTimeFormat("en-GB", {
+		timeZone: "UTC",
+		weekday: "long",
+	}).format(new Date(`${date}T00:00:00Z`))
+}
+
 /** "Wednesday 19 August" */
 export function formatDay(date: string): string {
 	return new Intl.DateTimeFormat("en-GB", {

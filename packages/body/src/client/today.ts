@@ -1,6 +1,11 @@
-import { formatDay, formatDayShort, localDateOf } from "../dates"
-import { formatSet } from "../dayLog"
-import { todaysSession, type ExercisePlan, type TargetBasis } from "../engine"
+import { formatDay, localDateOf } from "../dates"
+import {
+	formatSet,
+	guidanceFor,
+	plannedSummary,
+	targetSummary,
+} from "../dayLog"
+import { todaysSession, type ExercisePlan } from "../engine"
 import { appendEntries, readLog } from "../logStore"
 import { EXERCISES, SESSIONS, planFor } from "../program"
 import { type ConditioningEntry, type LogEntry, type PlanDay } from "../schemas"
@@ -8,7 +13,6 @@ import { ZodError } from "zod"
 import {
 	DAY_ROLLED_OVER,
 	STORAGE_BLOCKED,
-	UNIT_LABELS,
 	el,
 	type Modal,
 	setPageHeader,
@@ -21,13 +25,6 @@ import { sync, syncToken } from "./sync"
 import { wellnessFields, type WellnessFields } from "./wellnessFields"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
-
-const BASIS_LABELS: Record<TargetBasis, string> = {
-	progress: "Load up — every set hit the top last time",
-	hold: "Same load — one more rep",
-	"stall-deload": "Deload — three identical sessions",
-	"layoff-deload": "Deload — more than two weeks off",
-}
 
 function headerFor(day: PlanDay): { title: string; place: string } {
 	if (day.kind === "rest") return { title: "Rest", place: "day off" }
@@ -146,30 +143,13 @@ const doneLine = (suffix: string) =>
 	])
 
 function exercisePanel(plan: ExercisePlan): HTMLElement {
-	const { planned, exercise, target, previous } = plan
-	const assist = exercise.direction === "descending" ? " assist" : ""
-
-	const setsInfo = planned.reps
-		? `${planned.sets} sets of ${planned.reps.min}–${planned.reps.max}`
-		: `${planned.sets} sets (${UNIT_LABELS[planned.unit]})`
-	const guidance =
-		planned.progression === "manual"
-			? previous
-				? `Manual — prefilled from ${formatDayShort(previous.date)}`
-				: "Manual — log what you did"
-			: target
-				? BASIS_LABELS[target.basis]
-				: "First time — pick a starting load"
-
 	const section = el("section", { class: "panel" }, [
 		el("div", { class: "flex items-baseline justify-between gap-3" }, [
-			el("p", { class: "text-sm font-extrabold" }, [exercise.name]),
-			el("p", { class: "numeric text-sm font-black" }, [
-				target ? `${target.kg} kg${assist} × ${target.reps}` : "—",
-			]),
+			el("p", { class: "text-sm font-extrabold" }, [plan.exercise.name]),
+			el("p", { class: "numeric text-sm font-black" }, [targetSummary(plan)]),
 		]),
 		el("p", { class: `${MUTED} mt-1 text-xs font-semibold` }, [
-			`${setsInfo} · ${guidance}`,
+			`${plannedSummary(plan.planned)} · ${guidanceFor(plan)}`,
 		]),
 	])
 

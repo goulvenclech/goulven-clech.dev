@@ -18,8 +18,6 @@ export interface Modal {
 	open: () => void
 }
 
-export const UNIT_LABELS = { reps: "reps", m: "metres", s: "seconds" } as const
-
 export const STORAGE_BLOCKED =
 	"this browser is blocking storage (full or private mode?)"
 

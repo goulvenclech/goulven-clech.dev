@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest"
 import { groupByDay } from "$src/dayLog"
 import {
 	buildLogQueryString,
-	fetchLog,
 	parseLogQuery,
 	renderDayBlock,
 	renderLog,
 	type LogView,
 } from "$src/pages/log.md"
+import { fetchLog } from "$src/remoteLog"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "$src/schemas"
 
 const SITE = "https://example.com"

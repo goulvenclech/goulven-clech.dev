@@ -16,7 +16,7 @@ function renderBody(site: string): string {
 - [Resume](${site}/resume): CV — work experience, education, languages
 - [Catalogue](${site}/catalogue.md): queryable log of books, movies, games, shows, and albums I've consumed (with URL params for filter/sort/pagination)
 - [To-do lists](${site}/catalogue/todo.md): progress through curated media lists — films to watch, games to play, books to read (queryable)
-- [Body](https://body.goulven-clech.dev/log.md): training and wellness log — strength sessions, conditioning workouts, sleep and steps (queryable)
+- [Body](https://body.goulven-clech.dev/index.md): training and wellness tracker — today's session, stats, and the full log (log queryable via URL params)
 - [Friends](${site}/friends): interactive graph of friends' personal websites
 - [RSS feed](${site}/feed.xml): subscribe to new posts
 `

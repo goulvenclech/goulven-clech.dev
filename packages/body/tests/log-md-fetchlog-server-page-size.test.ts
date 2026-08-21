@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { fetchLog } from "$src/pages/log.md"
+import { fetchLog } from "$src/remoteLog"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "$src/schemas"
 
 const entryId = (n: number) =>

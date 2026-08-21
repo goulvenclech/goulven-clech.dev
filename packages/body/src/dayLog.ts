@@ -1,10 +1,45 @@
+import { formatDayShort } from "./dates"
+import type { ExercisePlan, TargetBasis } from "./engine"
 import { SESSIONS } from "./program"
 import type {
 	ConditioningEntry,
 	LogEntry,
+	PlannedExercise,
 	StrengthEntry,
 	WellnessEntry,
 } from "./schemas"
+
+export const UNIT_LABELS = { reps: "reps", m: "metres", s: "seconds" } as const
+
+export const BASIS_LABELS: Record<TargetBasis, string> = {
+	progress: "Load up — every set hit the top last time",
+	hold: "Same load — one more rep",
+	"stall-deload": "Deload — three identical sessions",
+	"layoff-deload": "Deload — more than two weeks off",
+}
+
+export function plannedSummary(planned: PlannedExercise): string {
+	return planned.reps
+		? `${planned.sets} sets of ${planned.reps.min}–${planned.reps.max}`
+		: `${planned.sets} sets (${UNIT_LABELS[planned.unit]})`
+}
+
+export function targetSummary(plan: ExercisePlan): string {
+	const assist = plan.exercise.direction === "descending" ? " assist" : ""
+	return plan.target
+		? `${plan.target.kg} kg${assist} × ${plan.target.reps}`
+		: "—"
+}
+
+export function guidanceFor(plan: ExercisePlan): string {
+	if (plan.planned.progression === "manual")
+		return plan.previous
+			? `Manual — prefilled from ${formatDayShort(plan.previous.date)}`
+			: "Manual — log what you did"
+	return plan.target
+		? BASIS_LABELS[plan.target.basis]
+		: "First time — pick a starting load"
+}
 
 export interface DayLog {
 	date: string

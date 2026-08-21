@@ -1,6 +1,5 @@
 import type { APIContext } from "astro"
-import { API_BASE } from "../apiBase"
-import { weekdayOf } from "../dates"
+import { weekdayName } from "../dates"
 import {
 	conditioningSummary,
 	formatSet,
@@ -9,22 +8,12 @@ import {
 	type DayLog,
 } from "../dayLog"
 import { exerciseByRef } from "../program"
-import { logEntrySchema, type LogEntry } from "../schemas"
+import { fetchLog } from "../remoteLog"
 
 export const prerender = false
 
 const DEFAULT_LIMIT = 14
 const MAX_LIMIT = 90
-
-const WEEKDAYS = [
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-	"Sunday",
-]
 
 export interface ParsedLogQuery {
 	limit: number
@@ -94,7 +83,7 @@ export function renderApiDoc(
 export function renderDayBlock(day: DayLog): string {
 	const labels = day.labels.length ? ` — ${day.labels.join(" · ")}` : ""
 	return [
-		`## ${day.date} (${WEEKDAYS[weekdayOf(day.date)]})${labels}`,
+		`## ${day.date} (${weekdayName(day.date)})${labels}`,
 		"",
 		...day.strength.map(
 			({ ref, sets }) =>
@@ -113,9 +102,9 @@ function renderIntro(site: string): string {
 	return [
 		"# Body — training log",
 		"",
-		"Goulven Clec'h's personal workout tracker: a barbell strength programme with double progression, home conditioning workouts, and daily wellness (sleep hours, steps). Public by design — only writing is password-gated.",
+		"Goulven Clec'h's personal workout tracker: a barbell strength programme with double progression, home conditioning workouts, and daily wellness (sleep hours, steps).",
 		"",
-		`Markdown twin of ${site}/history/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/llms.txt (site map), https://goulven-clech.dev/llms.txt (main site).`,
+		`Markdown twin of ${site}/history/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/index.md (site entry and today's session), ${site}/stats.md (adherence, wellness, 1RM, tonnage), ${site}/llms.txt (site map).`,
 	].join("\n")
 }
 
@@ -180,36 +169,6 @@ export function renderLog(view: LogView): string {
 	].join("\n")
 
 	return [renderIntro(site), "", apiDoc, "", resultsBlock, ""].join("\n")
-}
-
-export async function fetchLog(
-	fetchFn: typeof fetch = fetch,
-): Promise<{ entries: LogEntry[]; skipped: number }> {
-	const entries: LogEntry[] = []
-	let skipped = 0
-	let cursor = 0
-	for (;;) {
-		const response = await fetchFn(`${API_BASE}/api/body/log?since=${cursor}`)
-		if (!response.ok) throw new Error(`log fetch failed (${response.status})`)
-		const body = (await response.json()) as {
-			entries: unknown[]
-			cursor: number
-			max: number
-		}
-		for (const raw of body.entries) {
-			const parsed = logEntrySchema.safeParse(raw)
-			if (parsed.success) entries.push(parsed.data)
-			else skipped += 1
-		}
-		const next = Number(body.cursor)
-		const max = Number(body.max)
-		// A malformed response (NaN compares false) or a cursor that stops
-		// advancing must end the loop rather than spin it.
-		if (!Number.isFinite(next) || !Number.isFinite(max) || next <= cursor)
-			return { entries, skipped }
-		cursor = next
-		if (cursor >= max) return { entries, skipped }
-	}
 }
 
 export async function GET(context: APIContext): Promise<Response> {
