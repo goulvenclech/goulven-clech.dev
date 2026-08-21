@@ -5,7 +5,7 @@ import {
 	pendingCount,
 	recordPushFailure,
 } from "../logStore"
-import { LOG_SCHEMA_VERSION } from "../schemas"
+import { LOG_WIRE_VERSION } from "../schemas"
 
 /**
  * IndexedDB stays the source of truth; offline is a normal state, so every
@@ -16,9 +16,7 @@ const API_BASE = import.meta.env.DEV
 	? "http://localhost:4321"
 	: "https://goulven-clech.dev"
 const TOKEN_KEY = "body-sync-token"
-// Versioned: a stale client drops entries it cannot parse, so newer code
-// never trusts its cursor — each version re-pulls from scratch.
-const CURSOR_KEY = `body-sync-cursor-v${LOG_SCHEMA_VERSION}`
+const CURSOR_KEY = `body-sync-cursor-v${LOG_WIRE_VERSION}`
 const PAGE = 500
 const ABANDONED_KEY = "body-sync-abandoned"
 // Only a refusal of the data itself is given up on; an outage answers 5xx

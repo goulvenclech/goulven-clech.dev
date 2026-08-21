@@ -158,11 +158,37 @@ export const conditioningEntrySchema = z.strictObject({
 	sets: z.number().int().positive(),
 })
 
+/** Sleep and steps for a calendar day, logged in passing the next morning. */
+export const wellnessEntrySchema = z
+	.strictObject({
+		kind: z.literal("wellness"),
+		schemaVersion: z.literal(LOG_SCHEMA_VERSION),
+		id: z.uuid(),
+		date: dateString,
+		sleepHours: z.number().positive().max(24).optional(),
+		steps: z.number().int().positive().optional(),
+	})
+	.refine(
+		(entry) => entry.sleepHours !== undefined || entry.steps !== undefined,
+		{ error: "a wellness entry needs sleep or steps" },
+	)
+
 export const logEntrySchema = z.discriminatedUnion("kind", [
 	strengthEntrySchema,
 	conditioningEntrySchema,
+	wellnessEntrySchema,
 ])
+
+/**
+ * Bump whenever `logEntrySchema` starts accepting more than it did (a new
+ * kind or field): a stale client drops entries it cannot parse while still
+ * advancing its pull cursor, so updated code must re-pull from scratch.
+ * Distinct from `LOG_SCHEMA_VERSION`, the literal stamped on stored entries —
+ * bumping that would stop existing history from parsing.
+ */
+export const LOG_WIRE_VERSION = 2
 
 export type StrengthEntry = z.infer<typeof strengthEntrySchema>
 export type ConditioningEntry = z.infer<typeof conditioningEntrySchema>
+export type WellnessEntry = z.infer<typeof wellnessEntrySchema>
 export type LogEntry = z.infer<typeof logEntrySchema>

@@ -1,9 +1,16 @@
 import { addDays, isoWeekOf, lastIsoWeeks, weekdayOf } from "./dates"
 import { estimateOneRepMax, exercisePerformances } from "./engine"
-import type { Catalogue, Exercise, LogEntry, WeeklyPlan } from "./schemas"
+import type {
+	Catalogue,
+	Exercise,
+	LogEntry,
+	WeeklyPlan,
+	WellnessEntry,
+} from "./schemas"
 
 export const TREND_WEEKS = 12
 export const ADHERENCE_DAYS = 28
+export const WELLNESS_DAYS = 28
 
 export interface WeeklyPoint {
 	week: string
@@ -76,6 +83,54 @@ export function weeklyTonnage(
 	return weekKeys.map((week) => ({ week, value: totals.get(week) ?? 0 }))
 }
 
+export interface DailyPoint {
+	date: string
+	value: number | null
+}
+
+export interface DailyTrend {
+	points: DailyPoint[]
+	/** Mean over logged days only; null when none. */
+	average: number | null
+}
+
+/**
+ * The window ends yesterday: entries describe the previous day, so today can
+ * never have a value yet.
+ */
+export function dailyWellnessTrend(
+	log: readonly LogEntry[],
+	metric: "sleepHours" | "steps",
+	today: string,
+	days = WELLNESS_DAYS,
+): DailyTrend {
+	const values = new Map<string, number>()
+	// Sorted by id so devices holding the same synced duplicates agree.
+	const wellness = log
+		.filter((entry): entry is WellnessEntry => entry.kind === "wellness")
+		.sort((a, b) => a.id.localeCompare(b.id))
+	for (const entry of wellness) {
+		const value = entry[metric]
+		if (value !== undefined) values.set(entry.date, value)
+	}
+
+	const end = addDays(today, -1)
+	const points: DailyPoint[] = []
+	for (let i = days - 1; i >= 0; i--) {
+		const date = addDays(end, -i)
+		points.push({ date, value: values.get(date) ?? null })
+	}
+
+	const present = points.flatMap((point) =>
+		point.value === null ? [] : [point.value],
+	)
+	const average =
+		present.length === 0
+			? null
+			: present.reduce((sum, value) => sum + value, 0) / present.length
+	return { points, average }
+}
+
 export interface Adherence {
 	done: number
 	planned: number
@@ -99,6 +154,8 @@ export function adherence(
 
 	const loggedDates = new Set(
 		log
+			// Wellness describes the previous day, not attendance on it.
+			.filter((entry) => entry.kind !== "wellness")
 			.map((entry) => entry.date)
 			.filter((date) => date >= from && date <= today),
 	)

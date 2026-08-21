@@ -27,6 +27,7 @@ import {
 import { logDialog } from "./logDialog"
 import { loginDialog } from "./loginDialog"
 import { sync, syncToken } from "./sync"
+import { wellnessFields, type WellnessFields } from "./wellnessFields"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 
@@ -40,7 +41,7 @@ const BASIS_LABELS: Record<TargetBasis, string> = {
 function headerFor(day: PlanDay): { title: string; place: string } {
 	if (day.kind === "rest") return { title: "Rest", place: "day off" }
 	if (day.kind === "conditioning") return { title: day.title, place: "at home" }
-	return { title: SESSIONS[day.session].name, place: "at the gym" }
+	return { title: "Strength", place: "at the gym" }
 }
 
 export async function renderToday(
@@ -62,7 +63,7 @@ export async function renderToday(
 	const rerender = (nextNote?: string) => renderToday(root, nextNote)
 
 	let children: Node[]
-	if (day.kind === "rest")
+	if (day.kind === "rest") {
 		children = [
 			el("section", { class: "panel mt-8" }, [
 				el("p", { class: "text-sm font-bold" }, [
@@ -70,12 +71,21 @@ export async function renderToday(
 				]),
 			]),
 		]
-	else if (day.kind === "conditioning")
+		// Without this, the day before a rest day could never be logged at all.
+		const wellness = wellnessFields(log, today)
+		if (wellness) children.push(restWellnessForm(wellness, today, rerender))
+	} else if (day.kind === "conditioning")
 		children = [conditioningSection(day.title, log, today, rerender)]
 	else {
 		const session = todaysSession(SESSIONS[day.session], EXERCISES, log, today)
-		children = session.exercises.map(exercisePanel)
-		const form = logDialog(session, today, rerender)
+		children = [
+			el(
+				"div",
+				{ class: "mt-8 space-y-3" },
+				session.exercises.map(exercisePanel),
+			),
+		]
+		const form = logDialog(session, today, log, rerender)
 		if (form) children.push(...logControls(form, today, rerender))
 	}
 
@@ -132,7 +142,7 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 				? BASIS_LABELS[target.basis]
 				: "First time — pick a starting load"
 
-	const section = el("section", { class: "panel mt-8" }, [
+	const section = el("section", { class: "panel" }, [
 		el("div", { class: "flex items-baseline justify-between gap-3" }, [
 			el("p", { class: "text-sm font-extrabold" }, [exercise.name]),
 			el("p", { class: "numeric text-sm font-black" }, [
@@ -146,6 +156,47 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 
 	if (plan.loggedToday.length > 0) section.append(doneLine(plan.loggedToday))
 	return section
+}
+
+function restWellnessForm(
+	wellness: WellnessFields,
+	today: string,
+	onSettled: (note?: string) => void,
+): HTMLElement {
+	const form = el("form", {}, [
+		wellness.element,
+		el("p", { role: "alert", class: "text-primary mt-4 text-sm font-bold" }),
+		el("button", { class: "button-primary mt-6" }, ["Log yesterday"]),
+	])
+
+	form.addEventListener("submit", async (event) => {
+		event.preventDefault()
+		// Append-only: a write under yesterday's date could never be corrected.
+		if (localDateOf(new Date()) !== today) {
+			onSettled(DAY_ROLLED_OVER)
+			return
+		}
+		const alert = form.querySelector<HTMLParagraphElement>("[role=alert]")!
+		const entry = wellness.entry()
+		if (!entry) {
+			alert.textContent = "Nothing to log — fill sleep or steps."
+			return
+		}
+		const button = form.querySelector<HTMLButtonElement>("button")!
+		button.disabled = true
+		try {
+			await appendEntries([entry])
+			void sync()
+			onSettled()
+		} catch (error) {
+			alert.textContent =
+				error instanceof ZodError
+					? "Could not save — check the sleep hours and steps."
+					: `Could not save — ${STORAGE_BLOCKED}.`
+			button.disabled = false
+		}
+	})
+	return form
 }
 
 function conditioningSection(
@@ -169,6 +220,7 @@ function conditioningSection(
 			]),
 		])
 
+	const wellness = wellnessFields(log, today)
 	const form = el("form", { class: "mt-8" }, [
 		el("div", {}, [
 			el("label", { for: "workout" }, ["Workout"]),
@@ -207,6 +259,7 @@ function conditioningSection(
 				}),
 			]),
 		]),
+		...(wellness ? [wellness.element] : []),
 		el("p", { role: "alert", class: "text-primary mt-4 text-sm font-bold" }),
 		el("button", { class: "button-primary mt-6" }, ["Log workout"]),
 	])
@@ -231,8 +284,9 @@ function conditioningSection(
 		}
 		const button = form.querySelector<HTMLButtonElement>("button")!
 		button.disabled = true
+		const wellnessEntry = wellness?.entry() ?? null
 		try {
-			await appendEntries([entry])
+			await appendEntries(wellnessEntry ? [entry, wellnessEntry] : [entry])
 			void sync()
 			onSettled()
 		} catch (error) {

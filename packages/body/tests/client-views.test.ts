@@ -56,4 +56,19 @@ describe("today's header", () => {
 			"Thursday 20 August, at home",
 		)
 	})
+
+	it("labels a strength day by its type, not the session name", async () => {
+		// A Friday, which the weekly plan schedules as strength-b.
+		vi.useFakeTimers({ toFake: ["Date"] })
+		vi.setSystemTime(new Date("2026-08-21T10:00:00Z"))
+		document.body.innerHTML =
+			'<h1><span id="page-title">Today</span></h1><p id="page-subtitle"></p>'
+
+		await renderToday(document.createElement("div"))
+
+		expect(document.getElementById("page-title")!.textContent).toBe("Strength")
+		expect(document.getElementById("page-subtitle")!.textContent).toBe(
+			"Friday 21 August, at the gym",
+		)
+	})
 })

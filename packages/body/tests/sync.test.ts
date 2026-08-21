@@ -4,7 +4,7 @@ import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { requestSyncToken, sync, syncToken } from "$src/client/sync"
 import { appendEntries, pendingCount, readLog } from "$src/logStore"
-import type { LogEntry } from "$src/schemas"
+import { LOG_WIRE_VERSION, type LogEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
 const remoteEntry: LogEntry = {
@@ -104,10 +104,7 @@ describe("sync", () => {
 	})
 
 	it("re-pulls from scratch when the server log was rebuilt", async () => {
-		localStorage.setItem(
-			`body-sync-cursor-v${remoteEntry.schemaVersion}`,
-			"999",
-		)
+		localStorage.setItem(`body-sync-cursor-v${LOG_WIRE_VERSION}`, "999")
 		const urls: string[] = []
 		vi.stubGlobal(
 			"fetch",

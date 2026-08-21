@@ -1,7 +1,12 @@
 import { formatDayShort, localDateOf } from "../dates"
 import { mergeEntries, readLog } from "../logStore"
 import { EXERCISES, SESSIONS } from "../program"
-import type { ConditioningEntry, LogEntry, StrengthEntry } from "../schemas"
+import type {
+	ConditioningEntry,
+	LogEntry,
+	StrengthEntry,
+	WellnessEntry,
+} from "../schemas"
 import { STORAGE_BLOCKED, el, formatSet, storageErrorNote } from "./dom"
 import { loginDialog } from "./loginDialog"
 import { sync, syncToken, takeAbandoned } from "./sync"
@@ -111,6 +116,9 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 				a.category.localeCompare(b.category) ||
 				a.workout.localeCompare(b.workout),
 		)
+	const wellness = entries.filter(
+		(entry): entry is WellnessEntry => entry.kind === "wellness",
+	)
 
 	const byExercise = new Map<string, StrengthEntry[]>()
 	for (const entry of strength) {
@@ -123,6 +131,7 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 		...new Set([
 			...(strength.length > 0 ? ["Strength"] : []),
 			...conditioning.map((entry) => entry.category),
+			...(wellness.length > 0 ? ["Wellness"] : []),
 		]),
 	]
 
@@ -150,6 +159,20 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 				el("span", { class: "font-extrabold" }, [entry.workout]),
 				el("span", { class: MUTED }, [
 					` level ${entry.level} · ${entry.sets} sets`,
+				]),
+			]),
+		),
+		...wellness.map((entry) =>
+			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
+				el("span", { class: "font-extrabold" }, ["Wellness"]),
+				el("span", { class: MUTED }, [
+					" " +
+						[
+							...(entry.sleepHours === undefined
+								? []
+								: [`${entry.sleepHours} h sleep`]),
+							...(entry.steps === undefined ? [] : [`${entry.steps} steps`]),
+						].join(" · "),
 				]),
 			]),
 		),

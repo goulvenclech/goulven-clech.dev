@@ -1,7 +1,7 @@
 import { localDateOf } from "../dates"
 import type { DaySession, ExercisePlan } from "../engine"
 import { appendEntries } from "../logStore"
-import { LOG_SCHEMA_VERSION, type StrengthEntry } from "../schemas"
+import { LOG_SCHEMA_VERSION, type LogEntry } from "../schemas"
 import { ZodError } from "zod"
 import {
 	DAY_ROLLED_OVER,
@@ -11,6 +11,7 @@ import {
 	type Modal,
 } from "./dom"
 import { sync } from "./sync"
+import { wellnessFields } from "./wellnessFields"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 const CAPTION = `${MUTED} text-xs font-extrabold tracking-widest uppercase`
@@ -159,6 +160,7 @@ const TITLE_ID = "log-dialog-title"
 export function logDialog(
 	session: DaySession,
 	today: string,
+	log: readonly LogEntry[],
 	onSettled: (note?: string) => void,
 ): Modal | null {
 	const pending = session.exercises.filter(
@@ -166,6 +168,7 @@ export function logDialog(
 	)
 	if (pending.length === 0) return null
 	const blocks = pending.map((plan) => ({ plan, ...exerciseFields(plan) }))
+	const wellness = wellnessFields(log, today)
 
 	// Always rendered so screen readers announce failures reliably.
 	const errorNote = el("p", {
@@ -191,9 +194,10 @@ export function logDialog(
 	)
 	const form = el("form", {}, [
 		el("h2", { id: TITLE_ID, class: "mt-0 mb-5 text-lg font-black" }, [
-			session.name,
+			"Strength",
 		]),
 		...blocks.map((block) => block.element),
+		...(wellness ? [wellness.element] : []),
 		actions,
 	])
 	const dialog = el("dialog", { "aria-labelledby": TITLE_ID }, [form])
@@ -209,7 +213,7 @@ export function logDialog(
 			return
 		}
 
-		const entries: StrengthEntry[] = []
+		const entries: LogEntry[] = []
 		for (const { plan, rows } of blocks) {
 			for (const [index, row] of rows.entries()) {
 				const blank = [row.kg, row.reps, row.rir].find(
@@ -236,6 +240,9 @@ export function logDialog(
 				})
 			}
 		}
+
+		const wellnessEntry = wellness?.entry() ?? null
+		if (wellnessEntry) entries.push(wellnessEntry)
 
 		if (entries.length === 0) {
 			errorNote.textContent = "Nothing to log — every set was removed."

@@ -1,13 +1,16 @@
-import { localDateOf } from "../dates"
+import { formatDayShort, localDateOf } from "../dates"
 import { readLog } from "../logStore"
 import { EXERCISES, WEEKLY_PLAN } from "../program"
 import type { LogEntry } from "../schemas"
 import {
 	ADHERENCE_DAYS,
 	TREND_WEEKS,
+	WELLNESS_DAYS,
 	adherence,
+	dailyWellnessTrend,
 	oneRepMaxTrends,
 	weeklyTonnage,
+	type DailyTrend,
 	type OneRepMaxTrend,
 	type WeeklyPoint,
 } from "../stats"
@@ -41,6 +44,8 @@ export async function renderStats(
 	const attendance = adherence(log, WEEKLY_PLAN, today)
 	const trends = oneRepMaxTrends(log, EXERCISES, today)
 	const tonnage = weeklyTonnage(log, EXERCISES, today)
+	const sleep = dailyWellnessTrend(log, "sleepHours", today)
+	const steps = dailyWellnessTrend(log, "steps", today)
 
 	root.replaceChildren(
 		el("h2", {}, [`Adherence — last ${ADHERENCE_DAYS} days`]),
@@ -65,7 +70,61 @@ export async function renderStats(
 
 		el("h2", {}, [`Weekly tonnage — ${TREND_WEEKS} weeks`]),
 		el("section", { class: "panel numeric space-y-2" }, tonnageBars(tonnage)),
+
+		el("h2", {}, [`Sleep — last ${WELLNESS_DAYS} days`]),
+		wellnessPanel(
+			sleep,
+			(average) => [String(Math.round(average * 10) / 10), " h"],
+			`Sleep per night over the last ${WELLNESS_DAYS} days`,
+		),
+
+		el("h2", {}, [`Steps — last ${WELLNESS_DAYS} days`]),
+		wellnessPanel(
+			steps,
+			(average) => [String(Math.round(average)), " steps"],
+			`Steps per day over the last ${WELLNESS_DAYS} days`,
+		),
 	)
+}
+
+function wellnessPanel(
+	trend: DailyTrend,
+	format: (average: number) => [big: string, unit: string],
+	label: string,
+): HTMLElement {
+	if (trend.average === null)
+		return el("p", { class: `${MUTED} text-sm font-bold` }, [
+			"Nothing logged yet.",
+		])
+
+	const logged = trend.points.filter((point) => point.value !== null).length
+	const [big, unit] = format(trend.average)
+	const first = trend.points[0].date
+	const last = trend.points[trend.points.length - 1].date
+
+	return el("section", { class: "panel" }, [
+		el("p", { class: "numeric text-5xl font-black" }, [
+			big,
+			el("span", { class: "text-2xl" }, [unit]),
+		]),
+		el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [
+			`average over ${logged} logged ${logged === 1 ? "day" : "days"}`,
+		]),
+		el("div", { class: `${MUTED} mt-3` }, [
+			trendChart(
+				trend.points.map((point) => point.value),
+				label,
+			),
+		]),
+		el(
+			"div",
+			{ class: `${MUTED} mt-1 flex justify-between text-[10px] font-bold` },
+			[
+				el("p", {}, [formatDayShort(first)]),
+				el("p", {}, [formatDayShort(last)]),
+			],
+		),
+	])
 }
 
 function trendPanel(trend: OneRepMaxTrend): HTMLElement {

@@ -9,7 +9,7 @@ import { appendEntries } from "$src/logStore"
 import { LOG_SCHEMA_VERSION, type StrengthEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
-/** Monday: the weekly plan schedules Strength A. */
+/** Monday: the weekly plan schedules strength-a. */
 const MONDAY = "2026-08-17T10:00:00Z"
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 100))

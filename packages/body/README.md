@@ -2,9 +2,6 @@
 
 Personal workout tracker at [body.goulven-clech.dev](https://body.goulven-clech.dev). A fully static Astro site: the training programme is JSON baked in at build time, and the only runtime state is an append-only log in the browser's IndexedDB. The rationale is explained on [/health#physical_activity](https://goulven-clech.dev/health#physical_activity).
 
-> [!WARNING]
-> Not deployed yet, so nothing here can conflict with production for now.
-
 ## How it works
 
 - `data/` holds the programme: the exercise catalogue, one JSON template per session, and the weekly plan. [src/program.ts](./src/program.ts) parses it all against the Zod schemas in [src/schemas.ts](./src/schemas.ts) at build time — an invalid file breaks CI, never a session at the gym. The field-level semantics live in the schemas' comments.

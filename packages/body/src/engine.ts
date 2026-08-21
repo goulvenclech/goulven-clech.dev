@@ -166,7 +166,6 @@ export interface ExercisePlan {
 
 export interface DaySession {
 	id: string
-	name: string
 	exercises: ExercisePlan[]
 }
 
@@ -179,7 +178,6 @@ export function todaysSession(
 ): DaySession {
 	return {
 		id: template.id,
-		name: template.name,
 		exercises: template.exercises.map((planned) => {
 			const exercise = catalogue[planned.ref]
 			// Unreachable for real data: program.ts cross-checks refs at build.

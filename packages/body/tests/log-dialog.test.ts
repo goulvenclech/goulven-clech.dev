@@ -8,7 +8,7 @@ import { appendEntries, readLog } from "$src/logStore"
 import { LOG_SCHEMA_VERSION, type StrengthEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
-/** Monday: the weekly plan schedules Strength A. */
+/** Monday: the weekly plan schedules strength-a. */
 const MONDAY = "2026-08-17"
 const LAST_SESSION = "2026-08-10"
 
@@ -70,7 +70,9 @@ const openTrigger = (root: HTMLElement) =>
 	)!
 
 const exercisesIn = (dialog: HTMLDialogElement) =>
-	[...dialog.querySelectorAll("legend")].map((legend) => legend.textContent)
+	[...dialog.querySelectorAll("fieldset:not(.wellness) legend")].map(
+		(legend) => legend.textContent,
+	)
 
 function fieldsetFor(dialog: HTMLDialogElement, name: string): HTMLElement {
 	const fieldset = [...dialog.querySelectorAll("fieldset")].find(

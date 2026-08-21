@@ -4,7 +4,7 @@ import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { sync } from "$src/client/sync"
 import { readLog } from "$src/logStore"
-import { LOG_SCHEMA_VERSION } from "$src/schemas"
+import { LOG_SCHEMA_VERSION, LOG_WIRE_VERSION } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
 /** Valid under a hypothetical v2 schema, invalid (and dropped) under v1. */
@@ -45,16 +45,16 @@ describe("pull cursor vs schema evolution", () => {
 		expect(urls[0]).toContain("since=0")
 	})
 
-	it("persists the pull cursor keyed by the log schema version", async () => {
+	it("persists the pull cursor keyed by the wire version", async () => {
 		vi.stubGlobal("fetch", async () =>
 			ok({ entries: [futureEntry], cursor: 9 }),
 		)
 
 		await sync()
 		expect(await readLog()).toEqual([])
-		expect(
-			localStorage.getItem(`body-sync-cursor-v${LOG_SCHEMA_VERSION}`),
-		).toBe("9")
+		expect(localStorage.getItem(`body-sync-cursor-v${LOG_WIRE_VERSION}`)).toBe(
+			"9",
+		)
 		expect(localStorage.getItem("body-sync-cursor")).toBeNull()
 	})
 })
