@@ -353,7 +353,7 @@ describe("the log dialog", () => {
 	it("refuses to log a half-cleared set, naming the exercise", async () => {
 		const { root, dialog } = await renderMonday()
 		openTrigger(root).click()
-		fieldIn(rowsFor(dialog, "Back squat")[0], ".set-rir").value = ""
+		fieldIn(rowsFor(dialog, "Back squat")[0], ".set-kg").value = ""
 		submitButton(dialog).click()
 		await settle()
 
@@ -362,10 +362,24 @@ describe("the log dialog", () => {
 		expect(await readLog()).toHaveLength(13)
 	})
 
-	it("forgets a past failure when the dialog is reopened", async () => {
+	it("logs a set with a blank RIR, leaving the effort unset", async () => {
 		const { root, dialog } = await renderMonday()
 		openTrigger(root).click()
 		fieldIn(rowsFor(dialog, "Back squat")[0], ".set-rir").value = ""
+		submitButton(dialog).click()
+		await settle()
+
+		expect(alertsIn(dialog)).toBe("")
+		const logged = await loggedToday("back-squat")
+		expect(logged).toHaveLength(3)
+		expect(logged[0].rir).toBeUndefined()
+		expect(logged.slice(1).map((entry) => entry.rir)).toEqual([2, 2])
+	})
+
+	it("forgets a past failure when the dialog is reopened", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		fieldIn(rowsFor(dialog, "Back squat")[0], ".set-kg").value = ""
 		submitButton(dialog).click()
 		await settle()
 		expect(alertsIn(dialog)).toContain("Back squat")

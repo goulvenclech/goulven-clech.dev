@@ -140,8 +140,8 @@ export const strengthEntrySchema = z.strictObject({
 	/** The count in `unit`: repetitions, metres, or seconds. */
 	reps: z.number().int().positive(),
 	unit: unitSchema.default("reps"),
-	/** Reps in reserve: how many more were left at the end of the set. */
-	rir: z.number().int().min(0).max(10),
+	/** Reps in reserve at the end of the set; blank when the effort is unknown. */
+	rir: z.number().int().min(0).max(10).optional(),
 })
 
 /** An attendance tick for home workouts; no progression is computed from them. */
@@ -186,7 +186,7 @@ export const logEntrySchema = z.discriminatedUnion("kind", [
  * Distinct from `LOG_SCHEMA_VERSION`, the literal stamped on stored entries —
  * bumping that would stop existing history from parsing.
  */
-export const LOG_WIRE_VERSION = 2
+export const LOG_WIRE_VERSION = 3
 
 export type StrengthEntry = z.infer<typeof strengthEntrySchema>
 export type ConditioningEntry = z.infer<typeof conditioningEntrySchema>

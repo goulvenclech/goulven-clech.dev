@@ -18,6 +18,10 @@ const preWellnessLogEntrySchema = z.discriminatedUnion("kind", [
 	conditioningEntrySchema,
 ])
 
+const preOptionalRirStrengthSchema = strengthEntrySchema.extend({
+	rir: z.number().int().min(0).max(10),
+})
+
 /** Valid under the new union, at the SAME schemaVersion the old union expects. */
 const wellnessEntry = {
 	kind: "wellness",
@@ -26,6 +30,19 @@ const wellnessEntry = {
 	date: "2026-08-20",
 	sleepHours: 7.5,
 	steps: 9000,
+}
+
+const rirlessStrengthEntry = {
+	kind: "strength",
+	schemaVersion: LOG_SCHEMA_VERSION,
+	id: "55555555-5555-4555-8555-555555555555",
+	date: "2026-08-20",
+	session: "strength-a",
+	ref: "back-squat",
+	set: 1,
+	kg: 60,
+	reps: 5,
+	unit: "reps",
 }
 
 const ok = (payload: unknown) => new Response(JSON.stringify(payload))
@@ -52,6 +69,37 @@ describe("wellness kind vs versioned pull cursor", () => {
 				const since = Number(new URL(url).searchParams.get("since") ?? 0)
 				if (since < 9)
 					return ok({ entries: [wellnessEntry], cursor: 9, max: 9 })
+				return ok({ entries: [], cursor: since, max: 9 })
+			}),
+		)
+
+		await sync()
+		expect(urls[0]).toContain("since=0")
+		expect(await readLog()).toHaveLength(1)
+	})
+})
+
+describe("optional rir vs versioned pull cursor", () => {
+	it("needs the wire bump: the old union rejects a rir-less strength entry", () => {
+		expect(
+			preOptionalRirStrengthSchema.safeParse(rirlessStrengthEntry).success,
+		).toBe(false)
+		// The new schema accepts it, so a stale client is the only one that drops it.
+		expect(strengthEntrySchema.safeParse(rirlessStrengthEntry).success).toBe(
+			true,
+		)
+	})
+
+	it("ignores the cursor a stale client advanced, and recovers the entry", async () => {
+		localStorage.setItem(`body-sync-cursor-v${LOG_WIRE_VERSION - 1}`, "9")
+		const urls: string[] = []
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (url: string) => {
+				urls.push(url)
+				const since = Number(new URL(url).searchParams.get("since") ?? 0)
+				if (since < 9)
+					return ok({ entries: [rirlessStrengthEntry], cursor: 9, max: 9 })
 				return ok({ entries: [], cursor: since, max: 9 })
 			}),
 		)

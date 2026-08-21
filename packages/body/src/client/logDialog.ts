@@ -169,15 +169,14 @@ export function logDialog(
 			const entries: LogEntry[] = []
 			for (const { plan, rows } of blocks) {
 				for (const [index, row] of rows.entries()) {
-					const blank = [row.kg, row.reps, row.rir].find(
-						(input) => input.value === "",
-					)
-					// A blank field would be lost silently: the exercise locks once logged.
+					const blank = [row.kg, row.reps].find((input) => input.value === "")
+					// A blank load or count would be lost silently: the exercise locks once logged.
 					if (blank)
 						return {
 							error: `${plan.exercise.name} — complete the set, or remove it.`,
 							focus: blank,
 						}
+					const rir = row.rir.value
 					entries.push({
 						kind: "strength",
 						schemaVersion: LOG_SCHEMA_VERSION,
@@ -188,7 +187,7 @@ export function logDialog(
 						set: index + 1,
 						kg: Number(row.kg.value),
 						reps: Number(row.reps.value),
-						rir: Number(row.rir.value),
+						...(rir === "" ? {} : { rir: Number(rir) }),
 						unit: plan.planned.unit,
 					})
 				}

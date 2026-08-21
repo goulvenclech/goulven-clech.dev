@@ -389,6 +389,16 @@ describe("estimateOneRepMax", () => {
 		).toBeNull()
 	})
 
+	it("ignores sets logged without a reps-in-reserve estimate", () => {
+		// A set with no RIR carries no distance-to-failure, so it cannot be scored.
+		const estimate = estimateOneRepMax([
+			{ kg: 80, reps: 5, rir: 2, unit: "reps" },
+			{ kg: 90, reps: 5, unit: "reps" },
+		])
+		expect(estimate).toBeCloseTo(80 * (1 + 7 / 30), 5)
+		expect(estimateOneRepMax([{ kg: 90, reps: 5, unit: "reps" }])).toBeNull()
+	})
+
 	it("returns null without sets", () => {
 		expect(estimateOneRepMax([])).toBeNull()
 	})

@@ -25,7 +25,8 @@ export interface PerformedSet {
 	kg: number
 	/** The count in `unit`: repetitions, metres, or seconds. */
 	reps: number
-	rir: number
+	/** Reps in reserve; undefined when logged without an effort estimate. */
+	rir?: number
 	unit: Unit
 }
 
@@ -216,8 +217,8 @@ export function estimateOneRepMax(
 ): number | null {
 	let best: { rir: number; estimate: number } | null = null
 	for (const set of sets) {
-		// Epley is meaningless for metres or seconds.
-		if (set.unit !== "reps") continue
+		// Epley is meaningless for metres or seconds, or without the reps in reserve.
+		if (set.unit !== "reps" || set.rir === undefined) continue
 		const total = set.reps + set.rir
 		const estimate = total === 1 ? set.kg : set.kg * (1 + total / 30)
 		if (
