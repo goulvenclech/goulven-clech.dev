@@ -1,18 +1,8 @@
 import { formatDay, formatDayShort, localDateOf } from "../dates"
-import {
-	todaysSession,
-	type ExercisePlan,
-	type PerformedSet,
-	type TargetBasis,
-} from "../engine"
+import { todaysSession, type ExercisePlan, type TargetBasis } from "../engine"
 import { appendEntries, readLog } from "../logStore"
 import { EXERCISES, SESSIONS, planFor } from "../program"
-import {
-	LOG_SCHEMA_VERSION,
-	type ConditioningEntry,
-	type LogEntry,
-	type PlanDay,
-} from "../schemas"
+import { type ConditioningEntry, type LogEntry, type PlanDay } from "../schemas"
 import { ZodError } from "zod"
 import {
 	DAY_ROLLED_OVER,
@@ -24,6 +14,7 @@ import {
 	setPageHeader,
 	storageErrorNote,
 } from "./dom"
+import { conditioningDialog } from "./conditioningDialog"
 import { logDialog } from "./logDialog"
 import { loginDialog } from "./loginDialog"
 import { sync, syncToken } from "./sync"
@@ -74,9 +65,18 @@ export async function renderToday(
 		// Without this, the day before a rest day could never be logged at all.
 		const wellness = wellnessFields(log, today)
 		if (wellness) children.push(restWellnessForm(wellness, today, rerender))
-	} else if (day.kind === "conditioning")
-		children = [conditioningSection(day.title, log, today, rerender)]
-	else {
+	} else if (day.kind === "conditioning") {
+		const logged =
+			log.find(
+				(entry): entry is ConditioningEntry =>
+					entry.kind === "conditioning" && entry.date === today,
+			) ?? null
+		children = [conditioningPanel(day.title, logged)]
+		if (!logged) {
+			const form = conditioningDialog(day.title, today, log, rerender)
+			children.push(...logControls(form, today, rerender, "Log workout"))
+		}
+	} else {
 		const session = todaysSession(SESSIONS[day.session], EXERCISES, log, today)
 		children = [
 			el(
@@ -105,11 +105,12 @@ function logControls(
 	form: Modal,
 	today: string,
 	rerender: (note?: string) => void,
+	label = "Log session",
 ): Node[] {
 	// Sync is optional: dismissing the offer still opens the log form.
 	const login = loginDialog(() => form.open())
 
-	const open = el("button", { class: "button-primary mt-8" }, ["Log session"])
+	const open = el("button", { class: "button-primary mt-8" }, [label])
 	open.addEventListener("click", () => {
 		// A tab left open overnight would otherwise log yesterday's plan.
 		if (localDateOf(new Date()) !== today)
@@ -120,10 +121,10 @@ function logControls(
 	return [open, login.element, form.element]
 }
 
-const doneLine = (sets: readonly PerformedSet[]) =>
+const doneLine = (suffix: string) =>
 	el("p", { class: "numeric mt-3 text-sm font-semibold" }, [
 		el("span", { class: "font-extrabold" }, ["Done"]),
-		el("span", { class: MUTED }, [` ${sets.map(formatSet).join(" · ")}`]),
+		el("span", { class: MUTED }, [` ${suffix}`]),
 	])
 
 function exercisePanel(plan: ExercisePlan): HTMLElement {
@@ -154,7 +155,8 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 		]),
 	])
 
-	if (plan.loggedToday.length > 0) section.append(doneLine(plan.loggedToday))
+	if (plan.loggedToday.length > 0)
+		section.append(doneLine(plan.loggedToday.map(formatSet).join(" · ")))
 	return section
 }
 
@@ -199,103 +201,57 @@ function restWellnessForm(
 	return form
 }
 
-function conditioningSection(
+const DAREBEE = "https://darebee.com/workout.html"
+
+const DAREBEE_FILTERS: Record<string, { label: string; url: string }[]> = {
+	Cardio: [
+		{ label: "Cardio", url: `${DAREBEE}#ty=cardio` },
+		{ label: "HIIT", url: `${DAREBEE}#ty=hiit` },
+	],
+	Combat: [{ label: "Combat", url: `${DAREBEE}#ty=combat` }],
+}
+
+// Titles are free text in the plan, so an unmapped one falls back to a search.
+const darebeeLinks = (title: string) =>
+	DAREBEE_FILTERS[title] ?? [
+		{
+			label: title,
+			url: `${DAREBEE}#q=${encodeURIComponent(title.toLowerCase())}`,
+		},
+	]
+
+function conditioningPanel(
 	title: string,
-	log: readonly LogEntry[],
-	today: string,
-	onSettled: (note?: string) => void,
+	logged: ConditioningEntry | null,
 ): HTMLElement {
-	const logged = log.find(
-		(entry): entry is ConditioningEntry =>
-			entry.kind === "conditioning" && entry.date === today,
+	const links = darebeeLinks(title).map(({ label, url }) =>
+		el(
+			"a",
+			{
+				class: "button-ghost inline-block",
+				href: url,
+				target: "_blank",
+				rel: "noreferrer",
+			},
+			[
+				label,
+				el("span", { "aria-hidden": "true" }, [" ↗"]),
+				el("span", { class: "sr-only" }, [" (opens in a new tab)"]),
+			],
+		),
 	)
-	if (logged)
-		return el("section", { class: "panel mt-8" }, [
-			el("p", { class: "text-lg font-black" }, ["Done"]),
-			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
-				el("span", { class: "font-extrabold" }, [logged.workout]),
-				el("span", { class: MUTED }, [
-					` level ${logged.level} · ${logged.sets} sets`,
-				]),
-			]),
-		])
-
-	const wellness = wellnessFields(log, today)
-	const form = el("form", { class: "mt-8" }, [
-		el("div", {}, [
-			el("label", { for: "workout" }, ["Workout"]),
-			el("input", {
-				id: "workout",
-				name: "workout",
-				type: "text",
-				value: title.toLowerCase(),
-				required: "",
-			}),
+	const section = el("section", { class: "panel mt-8" }, [
+		el("p", { class: "text-sm font-extrabold" }, ["Darebee"]),
+		el("p", { class: `${MUTED} mt-1 text-xs font-semibold` }, [
+			"Pick today's workout.",
 		]),
-		el("div", { class: "mt-6 flex gap-3" }, [
-			el("div", { class: "flex-1" }, [
-				el("label", { for: "level" }, ["Level"]),
-				el("input", {
-					id: "level",
-					name: "level",
-					type: "number",
-					inputmode: "numeric",
-					step: "1",
-					min: "1",
-					max: "5",
-					required: "",
-				}),
-			]),
-			el("div", { class: "flex-1" }, [
-				el("label", { for: "sets" }, ["Sets"]),
-				el("input", {
-					id: "sets",
-					name: "sets",
-					type: "number",
-					inputmode: "numeric",
-					step: "1",
-					min: "1",
-					required: "",
-				}),
-			]),
-		]),
-		...(wellness ? [wellness.element] : []),
-		el("p", { role: "alert", class: "text-primary mt-4 text-sm font-bold" }),
-		el("button", { class: "button-primary mt-6" }, ["Log workout"]),
+		el("div", { class: "mt-3 flex flex-wrap gap-2" }, links),
 	])
-
-	form.addEventListener("submit", async (event) => {
-		event.preventDefault()
-		// Append-only: a write under yesterday's date could never be corrected.
-		if (localDateOf(new Date()) !== today) {
-			onSettled(DAY_ROLLED_OVER)
-			return
-		}
-		const data = new FormData(form)
-		const entry: ConditioningEntry = {
-			kind: "conditioning",
-			schemaVersion: LOG_SCHEMA_VERSION,
-			id: crypto.randomUUID(),
-			date: today,
-			category: title,
-			workout: String(data.get("workout") ?? "").trim(),
-			level: Number(data.get("level")),
-			sets: Number(data.get("sets")),
-		}
-		const button = form.querySelector<HTMLButtonElement>("button")!
-		button.disabled = true
-		const wellnessEntry = wellness?.entry() ?? null
-		try {
-			await appendEntries(wellnessEntry ? [entry, wellnessEntry] : [entry])
-			void sync()
-			onSettled()
-		} catch (error) {
-			form.querySelector<HTMLParagraphElement>("[role=alert]")!.textContent =
-				error instanceof ZodError
-					? "Could not save — check the workout, level (1–5) and sets."
-					: `Could not save — ${STORAGE_BLOCKED}.`
-			button.disabled = false
-		}
-	})
-	return form
+	if (logged)
+		section.append(
+			doneLine(
+				`${logged.workout} · level ${logged.level} · ${logged.sets} sets`,
+			),
+		)
+	return section
 }

@@ -59,6 +59,22 @@ export async function renderStats(
 			]),
 		]),
 
+		el("h2", {}, [`Wellness — last ${WELLNESS_DAYS} days`]),
+		el("div", { class: "space-y-3" }, [
+			wellnessPanel(
+				sleep,
+				(average) => [String(Math.round(average * 10) / 10), " h"],
+				"No sleep logged yet.",
+				`Sleep per night over the last ${WELLNESS_DAYS} days`,
+			),
+			wellnessPanel(
+				steps,
+				(average) => [String(Math.round(average)), " steps"],
+				"No steps logged yet.",
+				`Steps per day over the last ${WELLNESS_DAYS} days`,
+			),
+		]),
+
 		el("h2", {}, [`Estimated 1RM — ${TREND_WEEKS} weeks, Epley`]),
 		...(trends.length === 0
 			? [
@@ -70,32 +86,18 @@ export async function renderStats(
 
 		el("h2", {}, [`Weekly tonnage — ${TREND_WEEKS} weeks`]),
 		el("section", { class: "panel numeric space-y-2" }, tonnageBars(tonnage)),
-
-		el("h2", {}, [`Sleep — last ${WELLNESS_DAYS} days`]),
-		wellnessPanel(
-			sleep,
-			(average) => [String(Math.round(average * 10) / 10), " h"],
-			`Sleep per night over the last ${WELLNESS_DAYS} days`,
-		),
-
-		el("h2", {}, [`Steps — last ${WELLNESS_DAYS} days`]),
-		wellnessPanel(
-			steps,
-			(average) => [String(Math.round(average)), " steps"],
-			`Steps per day over the last ${WELLNESS_DAYS} days`,
-		),
 	)
 }
 
 function wellnessPanel(
 	trend: DailyTrend,
 	format: (average: number) => [big: string, unit: string],
+	empty: string,
 	label: string,
 ): HTMLElement {
+	// Named per metric: two bare paragraphs share one heading.
 	if (trend.average === null)
-		return el("p", { class: `${MUTED} text-sm font-bold` }, [
-			"Nothing logged yet.",
-		])
+		return el("p", { class: `${MUTED} text-sm font-bold` }, [empty])
 
 	const logged = trend.points.filter((point) => point.value !== null).length
 	const [big, unit] = format(trend.average)

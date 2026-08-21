@@ -1,17 +1,7 @@
-import { localDateOf } from "../dates"
 import type { DaySession, ExercisePlan } from "../engine"
-import { appendEntries } from "../logStore"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "../schemas"
-import { ZodError } from "zod"
-import {
-	DAY_ROLLED_OVER,
-	STORAGE_BLOCKED,
-	UNIT_LABELS,
-	el,
-	type Modal,
-} from "./dom"
-import { sync } from "./sync"
-import { wellnessFields } from "./wellnessFields"
+import { UNIT_LABELS, el, type Modal } from "./dom"
+import { submitDialog } from "./submitDialog"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 const CAPTION = `${MUTED} text-xs font-extrabold tracking-widest uppercase`
@@ -155,8 +145,6 @@ function exerciseFields(plan: ExercisePlan): {
 	return { element, rows }
 }
 
-const TITLE_ID = "log-dialog-title"
-
 export function logDialog(
 	session: DaySession,
 	today: string,
@@ -168,112 +156,48 @@ export function logDialog(
 	)
 	if (pending.length === 0) return null
 	const blocks = pending.map((plan) => ({ plan, ...exerciseFields(plan) }))
-	const wellness = wellnessFields(log, today)
 
-	// Always rendered so screen readers announce failures reliably.
-	const errorNote = el("p", {
-		role: "alert",
-		class: "text-primary text-sm font-bold",
-	})
-	const cancel = el("button", { type: "button", class: "button-secondary" }, [
-		"Cancel",
-	])
-	const submit = el("button", { type: "submit", class: "button-primary" }, [
-		"Log session",
-	])
-	const actions = el(
-		"div",
-		{
-			class:
-				"bg-body-light dark:bg-body-dark sticky -bottom-5 -mx-5 -mb-5 mt-6 px-5 pt-4 pb-5",
-		},
-		[
-			errorNote,
-			el("div", { class: "mt-4 grid grid-cols-2 gap-3" }, [cancel, submit]),
-		],
-	)
-	const form = el("form", {}, [
-		el("h2", { id: TITLE_ID, class: "mt-0 mb-5 text-lg font-black" }, [
-			"Strength",
-		]),
-		...blocks.map((block) => block.element),
-		...(wellness ? [wellness.element] : []),
-		actions,
-	])
-	const dialog = el("dialog", { "aria-labelledby": TITLE_ID }, [form])
-
-	cancel.addEventListener("click", () => dialog.close())
-
-	form.addEventListener("submit", async (event) => {
-		event.preventDefault()
-		// Append-only: a write under yesterday's date could never be corrected.
-		if (localDateOf(new Date()) !== today) {
-			dialog.close()
-			onSettled(DAY_ROLLED_OVER)
-			return
-		}
-
-		const entries: LogEntry[] = []
-		for (const { plan, rows } of blocks) {
-			for (const [index, row] of rows.entries()) {
-				const blank = [row.kg, row.reps, row.rir].find(
-					(input) => input.value === "",
-				)
-				// A blank field would be lost silently: the exercise locks once logged.
-				if (blank) {
-					errorNote.textContent = `${plan.exercise.name} — complete the set, or remove it.`
-					blank.focus()
-					return
+	return submitDialog({
+		title: "Strength",
+		submitLabel: "Log session",
+		fields: blocks.map((block) => block.element),
+		log,
+		today,
+		invalidMessage: "Could not save — check the values (reps ≥ 1, RIR 0–10).",
+		onSettled,
+		build: (wellnessEntry) => {
+			const entries: LogEntry[] = []
+			for (const { plan, rows } of blocks) {
+				for (const [index, row] of rows.entries()) {
+					const blank = [row.kg, row.reps, row.rir].find(
+						(input) => input.value === "",
+					)
+					// A blank field would be lost silently: the exercise locks once logged.
+					if (blank)
+						return {
+							error: `${plan.exercise.name} — complete the set, or remove it.`,
+							focus: blank,
+						}
+					entries.push({
+						kind: "strength",
+						schemaVersion: LOG_SCHEMA_VERSION,
+						id: crypto.randomUUID(),
+						date: today,
+						session: session.id,
+						ref: plan.ref,
+						set: index + 1,
+						kg: Number(row.kg.value),
+						reps: Number(row.reps.value),
+						rir: Number(row.rir.value),
+						unit: plan.planned.unit,
+					})
 				}
-				entries.push({
-					kind: "strength",
-					schemaVersion: LOG_SCHEMA_VERSION,
-					id: crypto.randomUUID(),
-					date: today,
-					session: session.id,
-					ref: plan.ref,
-					set: index + 1,
-					kg: Number(row.kg.value),
-					reps: Number(row.reps.value),
-					rir: Number(row.rir.value),
-					unit: plan.planned.unit,
-				})
 			}
-		}
 
-		const wellnessEntry = wellness?.entry() ?? null
-		if (wellnessEntry) entries.push(wellnessEntry)
-
-		if (entries.length === 0) {
-			errorNote.textContent = "Nothing to log — every set was removed."
-			return
-		}
-
-		submit.disabled = true
-		try {
-			await appendEntries(entries)
-			void sync()
-			dialog.close()
-			onSettled()
-		} catch (error) {
-			const message =
-				error instanceof ZodError
-					? "Could not save — check the values (reps ≥ 1, RIR 0–10)."
-					: `Could not save — ${STORAGE_BLOCKED}.`
-			// Dismissed mid-write: the closed dialog can no longer carry the news.
-			if (!dialog.open) onSettled(message)
-			else {
-				errorNote.textContent = message
-				submit.disabled = false
-			}
-		}
-	})
-
-	return {
-		element: dialog,
-		open: () => {
-			errorNote.textContent = ""
-			dialog.showModal()
+			if (wellnessEntry) entries.push(wellnessEntry)
+			if (entries.length === 0)
+				return { error: "Nothing to log — every set was removed." }
+			return { entries }
 		},
-	}
+	})
 }

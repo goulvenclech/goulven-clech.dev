@@ -131,7 +131,6 @@ function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
 		...new Set([
 			...(strength.length > 0 ? ["Strength"] : []),
 			...conditioning.map((entry) => entry.category),
-			...(wellness.length > 0 ? ["Wellness"] : []),
 		]),
 	]
 

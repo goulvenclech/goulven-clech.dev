@@ -217,20 +217,21 @@ describe("in the strength log dialog", () => {
 	})
 })
 
-describe("in the conditioning form", () => {
+describe("in the conditioning log dialog", () => {
 	beforeEach(() => {
 		vi.setSystemTime(new Date(`${TUESDAY}T10:00:00Z`))
 	})
 
 	it("rides along the workout, dated the previous day", async () => {
-		const { root } = await render()
-		expect(legendsIn(root)).toContain("Yesterday — Mon 17 Aug")
+		const { root, dialog } = await render()
+		expect(legendsIn(dialog)).toContain("Yesterday — Mon 17 Aug")
 
-		root.querySelector<HTMLInputElement>("#level")!.value = "3"
-		root.querySelector<HTMLInputElement>("#sets")!.value = "4"
-		sleepInput(root)!.value = "8"
-		stepsInput(root)!.value = "12000"
-		root.querySelector<HTMLButtonElement>("form button")!.click()
+		openTrigger(root).click()
+		dialog.querySelector<HTMLInputElement>("#level")!.value = "3"
+		dialog.querySelector<HTMLInputElement>("#sets")!.value = "4"
+		sleepInput(dialog)!.value = "8"
+		stepsInput(dialog)!.value = "12000"
+		submitButton(dialog).click()
 		await settle()
 
 		expect(await wellnessLogged()).toEqual([
