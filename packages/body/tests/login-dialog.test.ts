@@ -150,17 +150,28 @@ describe("from the Today screen", () => {
 		expect(logFormIn(root)!.open).toBe(false)
 	})
 
-	it("still opens the log form when the offer is dismissed", async () => {
+	it("keeps the log form closed when the offer is dismissed", async () => {
 		const root = await render(renderToday)
 		buttonLabelled(root, "Log session").click()
 
 		buttonLabelled(loginIn(root), "Cancel").click()
 
 		expect(loginIn(root).open).toBe(false)
-		expect(logFormIn(root)!.open).toBe(true)
+		expect(logFormIn(root)!.open).toBe(false)
 	})
 
-	it("opens the log form directly once a token is stored", async () => {
+	it("keeps the log form closed on a wrong password", async () => {
+		const root = await render(renderToday)
+		buttonLabelled(root, "Log session").click()
+
+		vi.stubGlobal("fetch", async () => Response.json({}, { status: 401 }))
+		submitPassword(loginIn(root), "wrong")
+		await settle()
+
+		expect(logFormIn(root)!.open).toBe(false)
+	})
+
+	it("re-renders after login; the stored token then opens the form directly", async () => {
 		vi.stubGlobal("fetch", async (url: string) =>
 			String(url).includes("/auth")
 				? Response.json({ token: "tok" })
@@ -171,12 +182,11 @@ describe("from the Today screen", () => {
 		submitPassword(loginIn(root), "secret")
 		await settle()
 
+		expect(logFormIn(root)!.open).toBe(false)
+
+		buttonLabelled(root, "Log session").click()
+
+		expect(loginIn(root).open).toBe(false)
 		expect(logFormIn(root)!.open).toBe(true)
-
-		const next = await render(renderToday)
-		buttonLabelled(next, "Log session").click()
-
-		expect(loginIn(next).open).toBe(false)
-		expect(logFormIn(next)!.open).toBe(true)
 	})
 })

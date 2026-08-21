@@ -1,3 +1,4 @@
+import { API_BASE, LOG_PAGE } from "../apiBase"
 import {
 	clearOutbox,
 	mergeEntries,
@@ -12,12 +13,8 @@ import { LOG_WIRE_VERSION } from "../schemas"
  * network failure is swallowed.
  */
 
-const API_BASE = import.meta.env.DEV
-	? "http://localhost:4321"
-	: "https://goulven-clech.dev"
 const TOKEN_KEY = "body-sync-token"
 const CURSOR_KEY = `body-sync-cursor-v${LOG_WIRE_VERSION}`
-const PAGE = 500
 const ABANDONED_KEY = "body-sync-abandoned"
 // Only a refusal of the data itself is given up on; an outage answers 5xx
 // and keeps its place in the queue.
@@ -123,8 +120,8 @@ async function push(): Promise<{
 		return { pushed: 0, authRequired: true, rejected: false, abandoned: 0 }
 
 	let pushed = 0
-	for (let start = 0; start < entries.length; start += PAGE) {
-		const batch = entries.slice(start, start + PAGE)
+	for (let start = 0; start < entries.length; start += LOG_PAGE) {
+		const batch = entries.slice(start, start + LOG_PAGE)
 		const response = await fetch(`${API_BASE}/api/body/log`, {
 			method: "POST",
 			headers: {
@@ -179,8 +176,14 @@ async function pull(): Promise<number> {
 			continue
 		}
 		added += await mergeEntries(body.entries, { queue: false })
-		cursor = body.cursor
+		const next = Number(body.cursor)
+		const max = Number(body.max)
+		// A malformed response (NaN compares false) or a cursor that stops
+		// advancing must end the loop, and never be persisted.
+		if (!Number.isFinite(next) || !Number.isFinite(max) || next <= cursor)
+			return added
+		cursor = next
 		storageSet(CURSOR_KEY, String(cursor))
-		if (body.entries.length < PAGE) return added
+		if (cursor >= max) return added
 	}
 }

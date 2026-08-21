@@ -18,6 +18,7 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
+		"@astrojs/netlify": "^8.0.0",
 		"@tailwindcss/vite": "^4.3.1",
 		"astro": "^7.0.3",
 		"fake-indexeddb": "^6.2.5",

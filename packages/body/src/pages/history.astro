@@ -5,7 +5,9 @@ import AppLayout from "$src/layouts/AppLayout.astro"
 <AppLayout title="History" subtitle="Every set, newest first">
 	<noscript>
 		<p class="mt-8 text-sm font-bold">
-			This tracker needs JavaScript — the log lives in your browser.
+			This tracker needs JavaScript — views render from your browser's copy of
+			the log. Markdown version for crawlers, LLMs, and no-JS readers:
+			<a href="/log.md">/log.md</a>.
 		</p>
 	</noscript>
 	<div id="view"></div>

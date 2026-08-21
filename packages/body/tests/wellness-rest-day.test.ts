@@ -37,6 +37,7 @@ async function renderSunday(): Promise<HTMLElement> {
 beforeEach(() => {
 	globalThis.indexedDB = new IDBFactory()
 	vi.stubGlobal("localStorage", memoryStorage())
+	localStorage.setItem("body-sync-token", "tok")
 	vi.stubGlobal("fetch", () => Promise.reject(new Error("offline")))
 	// Fake only Date so IndexedDB's real timers still run.
 	vi.useFakeTimers({ toFake: ["Date"] })
@@ -89,6 +90,18 @@ describe("the rest day", () => {
 
 		expect(await readLog()).toEqual([])
 		expect(alertsIn(root)).toContain("nothing was saved")
+	})
+
+	it("gates logging behind the sync password", async () => {
+		localStorage.removeItem("body-sync-token")
+		const root = await renderSunday()
+
+		expect(sleepInput(root)).toBeNull()
+		const gate = [...root.querySelectorAll("button")].find(
+			(button) => button.textContent === "Log yesterday",
+		)!
+		gate.click()
+		expect(root.querySelector("dialog")!.open).toBe(true)
 	})
 
 	it("renders no form once both metrics are already logged", async () => {

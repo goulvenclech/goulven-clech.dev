@@ -1,4 +1,5 @@
 import { formatDay, formatDayShort, localDateOf } from "../dates"
+import { formatSet } from "../dayLog"
 import { todaysSession, type ExercisePlan, type TargetBasis } from "../engine"
 import { appendEntries, readLog } from "../logStore"
 import { EXERCISES, SESSIONS, planFor } from "../program"
@@ -9,7 +10,6 @@ import {
 	STORAGE_BLOCKED,
 	UNIT_LABELS,
 	el,
-	formatSet,
 	type Modal,
 	setPageHeader,
 	storageErrorNote,
@@ -64,7 +64,12 @@ export async function renderToday(
 		]
 		// Without this, the day before a rest day could never be logged at all.
 		const wellness = wellnessFields(log, today)
-		if (wellness) children.push(restWellnessForm(wellness, today, rerender))
+		if (wellness)
+			children.push(
+				...(syncToken()
+					? [restWellnessForm(wellness, today, rerender)]
+					: restSyncGate(rerender)),
+			)
 	} else if (day.kind === "conditioning") {
 		const logged =
 			log.find(
@@ -107,8 +112,11 @@ function logControls(
 	rerender: (note?: string) => void,
 	label = "Log session",
 ): Node[] {
-	// Sync is optional: dismissing the offer still opens the log form.
-	const login = loginDialog(() => form.open())
+	// Rerender rather than open: the form was built from the pre-pull log,
+	// and the login's own sync may have just filled it.
+	const login = loginDialog((authenticated) => {
+		if (authenticated) rerender()
+	})
 
 	const open = el("button", { class: "button-primary mt-8" }, [label])
 	open.addEventListener("click", () => {
@@ -119,6 +127,16 @@ function logControls(
 		else login.open()
 	})
 	return [open, login.element, form.element]
+}
+
+/** The rest-day form is inline, so its gate swaps the fields for a login. */
+function restSyncGate(rerender: (note?: string) => void): Node[] {
+	const login = loginDialog((authenticated) => {
+		if (authenticated) rerender()
+	})
+	const open = el("button", { class: "button-primary mt-6" }, ["Log yesterday"])
+	open.addEventListener("click", login.open)
+	return [open, login.element]
 }
 
 const doneLine = (suffix: string) =>

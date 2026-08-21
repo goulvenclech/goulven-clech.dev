@@ -57,7 +57,7 @@ export function bearerToken(request: Request): string | null {
 export const CREATE_BODY_LOG =
 	"CREATE TABLE IF NOT EXISTS body_log (id TEXT PRIMARY KEY, entry TEXT NOT NULL)"
 
-/** One page per request; the client loops while pages come back full. */
+/** One page per GET, batch cap per POST; clients pull until cursor reaches max. */
 export const BODY_LOG_PAGE = 500
 
 const MAX_ID_LENGTH = 64

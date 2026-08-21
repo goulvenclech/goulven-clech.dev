@@ -1,8 +1,11 @@
 import { defineConfig, fontProviders } from "astro/config"
+import netlify from "@astrojs/netlify"
 import tailwindcss from "@tailwindcss/vite"
 
 export default defineConfig({
 	site: "https://body.goulven-clech.dev",
+	// Only /log.md opts out of prerendering; every page stays static.
+	adapter: netlify(),
 
 	vite: {
 		plugins: [tailwindcss()],

@@ -90,6 +90,9 @@ importers:
       "@astrojs/check":
         specifier: ^0.9.9
         version: 0.9.9(prettier-plugin-astro@0.14.1)(prettier@3.9.1)(typescript@6.0.3)
+      "@astrojs/netlify":
+        specifier: ^8.0.0
+        version: 8.0.0(@types/node@26.0.1)(astro@7.0.3(@astrojs/markdown-remark@7.2.0(supports-color@7.2.0))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@netlify/blobs@10.7.9(supports-color@7.2.0))(@types/node@26.0.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0))(jiti@2.7.0)(rollup@4.62.2)(supports-color@7.2.0)(yaml@2.9.0)
       "@tailwindcss/vite":
         specifier: ^4.3.1
         version: 4.3.1(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))

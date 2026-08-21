@@ -30,7 +30,7 @@ export function loginDialog(
 			"Enable sync",
 		]),
 		el("p", { class: `${MUTED} mb-5 text-sm font-bold` }, [
-			"Optional — the log lives on this device either way.",
+			"Required to log from this browser — reading works without it.",
 		]),
 		el("div", {}, [
 			el("label", { for: PASSWORD_ID }, ["Sync password"]),

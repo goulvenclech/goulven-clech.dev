@@ -1,13 +1,15 @@
 import { formatDayShort, localDateOf } from "../dates"
+import {
+	conditioningSummary,
+	formatSet,
+	groupByDay,
+	wellnessSummary,
+	type DayLog,
+} from "../dayLog"
 import { mergeEntries, readLog } from "../logStore"
-import { EXERCISES, SESSIONS } from "../program"
-import type {
-	ConditioningEntry,
-	LogEntry,
-	StrengthEntry,
-	WellnessEntry,
-} from "../schemas"
-import { STORAGE_BLOCKED, el, formatSet, storageErrorNote } from "./dom"
+import { EXERCISES } from "../program"
+import type { LogEntry } from "../schemas"
+import { STORAGE_BLOCKED, el, storageErrorNote } from "./dom"
 import { loginDialog } from "./loginDialog"
 import { sync, syncToken, takeAbandoned } from "./sync"
 
@@ -71,108 +73,43 @@ export async function renderHistory(
 		return
 	}
 
-	const byDate = new Map<string, LogEntry[]>()
-	for (const entry of log) {
-		const day = byDate.get(entry.date) ?? []
-		day.push(entry)
-		byDate.set(entry.date, day)
-	}
-	const days = [...byDate.entries()].sort(([a], [b]) => b.localeCompare(a))
-
 	root.replaceChildren(
 		toolbar,
 		errorNote,
-		el(
-			"ul",
-			{ class: "mt-4 space-y-3" },
-			days.map(([date, entries]) => dayPanel(date, entries)),
-		),
+		el("ul", { class: "mt-4 space-y-3" }, groupByDay(log).map(dayPanel)),
 	)
 }
 
-function dayPanel(date: string, entries: LogEntry[]): HTMLElement {
-	// The log carries no time of day, so the templates are the only stable order.
-	const plannedOrder = (entry: StrengthEntry) => {
-		const index = SESSIONS[entry.session]?.exercises.findIndex(
-			(planned) => planned.ref === entry.ref,
-		)
-		return index === undefined || index < 0 ? Number.MAX_SAFE_INTEGER : index
-	}
-
-	const strength = entries
-		.filter((entry): entry is StrengthEntry => entry.kind === "strength")
-		.sort(
-			(a, b) =>
-				a.session.localeCompare(b.session) ||
-				plannedOrder(a) - plannedOrder(b) ||
-				a.set - b.set,
-		)
-	const conditioning = entries
-		.filter(
-			(entry): entry is ConditioningEntry => entry.kind === "conditioning",
-		)
-		.sort(
-			(a, b) =>
-				a.category.localeCompare(b.category) ||
-				a.workout.localeCompare(b.workout),
-		)
-	const wellness = entries.filter(
-		(entry): entry is WellnessEntry => entry.kind === "wellness",
-	)
-
-	const byExercise = new Map<string, StrengthEntry[]>()
-	for (const entry of strength) {
-		const sets = byExercise.get(entry.ref) ?? []
-		sets.push(entry)
-		byExercise.set(entry.ref, sets)
-	}
-
-	const labels = [
-		...new Set([
-			...(strength.length > 0 ? ["Strength"] : []),
-			...conditioning.map((entry) => entry.category),
-		]),
-	]
-
+function dayPanel(day: DayLog): HTMLElement {
 	return el("li", { class: "panel" }, [
 		el("div", { class: "flex items-baseline justify-between gap-3" }, [
 			el("p", { class: "shrink-0 text-sm font-extrabold" }, [
-				formatDayShort(date),
+				formatDayShort(day.date),
 			]),
 			el(
 				"p",
 				{
 					class: `${MUTED} min-w-0 truncate text-xs font-extrabold tracking-widest uppercase`,
 				},
-				[labels.join(" · ")],
+				[day.labels.join(" · ")],
 			),
 		]),
-		...[...byExercise.entries()].map(([ref, sets]) =>
+		...day.strength.map(({ ref, sets }) =>
 			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
 				el("span", { class: "font-extrabold" }, [EXERCISES[ref]?.name ?? ref]),
 				el("span", { class: MUTED }, [` ${sets.map(formatSet).join(" · ")}`]),
 			]),
 		),
-		...conditioning.map((entry) =>
+		...day.conditioning.map((entry) =>
 			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
 				el("span", { class: "font-extrabold" }, [entry.workout]),
-				el("span", { class: MUTED }, [
-					` level ${entry.level} · ${entry.sets} sets`,
-				]),
+				el("span", { class: MUTED }, [` ${conditioningSummary(entry)}`]),
 			]),
 		),
-		...wellness.map((entry) =>
+		...day.wellness.map((entry) =>
 			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
 				el("span", { class: "font-extrabold" }, ["Wellness"]),
-				el("span", { class: MUTED }, [
-					" " +
-						[
-							...(entry.sleepHours === undefined
-								? []
-								: [`${entry.sleepHours} h sleep`]),
-							...(entry.steps === undefined ? [] : [`${entry.steps} steps`]),
-						].join(" · "),
-				]),
+				el("span", { class: MUTED }, [` ${wellnessSummary(entry)}`]),
 			]),
 		),
 	])
@@ -220,7 +157,14 @@ function importButton(
 		tabindex: "-1",
 	})
 	const button = el("button", { class: "button-ghost" }, ["Import JSON"])
-	button.addEventListener("click", () => input.click())
+	button.addEventListener("click", () => {
+		// Import re-queues entries for push, so it needs the same right as logging.
+		if (!syncToken()) {
+			errorNote.textContent = "Import needs sync — enable it first."
+			return
+		}
+		input.click()
+	})
 	input.addEventListener("change", async () => {
 		const file = input.files?.[0]
 		// Clear now, before any await: re-picking the same file after a failure

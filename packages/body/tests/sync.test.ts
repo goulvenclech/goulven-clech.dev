@@ -103,6 +103,30 @@ describe("sync", () => {
 		expect(await readLog()).toHaveLength(501)
 	})
 
+	it("drains a server that pages smaller than the client expects", async () => {
+		const short = (index: number) => ({
+			...remoteEntry,
+			id: `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`,
+		})
+		const urls: string[] = []
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (url: string) => {
+				urls.push(url)
+				return url.includes("since=0")
+					? ok({ entries: [short(1), short(2)], cursor: 2, max: 3 })
+					: ok({ entries: [short(3)], cursor: 3, max: 3 })
+			}),
+		)
+
+		const result = await sync()
+		expect(urls).toEqual([
+			expect.stringContaining("since=0"),
+			expect.stringContaining("since=2"),
+		])
+		expect(result.pulled).toBe(3)
+	})
+
 	it("re-pulls from scratch when the server log was rebuilt", async () => {
 		localStorage.setItem(`body-sync-cursor-v${LOG_WIRE_VERSION}`, "999")
 		const urls: string[] = []
@@ -136,7 +160,7 @@ describe("sync", () => {
 				calls.push({ url, init })
 				return init?.method === "POST"
 					? ok({ inserted: 1 }, 201)
-					: ok({ entries: [], cursor: 0 })
+					: ok({ entries: [], cursor: 0, max: 0 })
 			}),
 		)
 
@@ -156,7 +180,7 @@ describe("sync", () => {
 		vi.stubGlobal("fetch", async (url: string, init?: RequestInit) =>
 			init?.method === "POST"
 				? ok({ error: "Unauthorized" }, 401)
-				: ok({ entries: [], cursor: 0 }),
+				: ok({ entries: [], cursor: 0, max: 0 }),
 		)
 
 		const result = await sync()

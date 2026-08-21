@@ -30,18 +30,6 @@ export const DAY_ROLLED_OVER =
 export const PAGE_TITLE_ID = "page-title"
 export const PAGE_SUBTITLE_ID = "page-subtitle"
 
-export function formatSet(set: {
-	kg: number
-	reps: number
-	unit?: "reps" | "m" | "s"
-}): string {
-	const unit = set.unit ?? "reps"
-	if (unit === "reps") return `${set.kg} kg × ${set.reps}`
-	return set.kg > 0
-		? `${set.kg} kg × ${set.reps} ${unit}`
-		: `${set.reps} ${unit}`
-}
-
 export function storageErrorNote(): HTMLElement {
 	return el(
 		"p",

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import { renderHistory } from "$src/client/history"
 import { appendEntries, readLog } from "$src/logStore"
 import type { LogEntry } from "$src/schemas"
+import { memoryStorage } from "./memoryStorage"
 
 const strengthEntry: LogEntry = {
 	kind: "strength",
@@ -32,6 +33,8 @@ const conditioningEntry: LogEntry = {
 
 beforeEach(() => {
 	globalThis.indexedDB = new IDBFactory()
+	vi.stubGlobal("localStorage", memoryStorage())
+	localStorage.setItem("body-sync-token", "tok")
 	vi.stubGlobal("fetch", () => Promise.reject(new Error("offline")))
 })
 
@@ -70,6 +73,20 @@ describe("history import", () => {
 		await vi.waitFor(() => {
 			expect(root.textContent).toContain("Import failed")
 		})
+		expect(await readLog()).toEqual([])
+	})
+
+	it("refuses to open the file picker without a sync token", async () => {
+		localStorage.removeItem("body-sync-token")
+		const root = document.createElement("div")
+		await renderHistory(root)
+
+		const button = [...root.querySelectorAll("button")].find(
+			(candidate) => candidate.textContent === "Import JSON",
+		)!
+		button.click()
+
+		expect(root.textContent).toContain("Import needs sync")
 		expect(await readLog()).toEqual([])
 	})
 })

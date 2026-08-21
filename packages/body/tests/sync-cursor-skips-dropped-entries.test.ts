@@ -37,7 +37,7 @@ describe("pull cursor vs schema evolution", () => {
 			"fetch",
 			vi.fn(async (url: string) => {
 				urls.push(url)
-				return ok({ entries: [], cursor: 999 })
+				return ok({ entries: [], cursor: 0, max: 0 })
 			}),
 		)
 
@@ -47,7 +47,7 @@ describe("pull cursor vs schema evolution", () => {
 
 	it("persists the pull cursor keyed by the wire version", async () => {
 		vi.stubGlobal("fetch", async () =>
-			ok({ entries: [futureEntry], cursor: 9 }),
+			ok({ entries: [futureEntry], cursor: 9, max: 9 }),
 		)
 
 		await sync()
