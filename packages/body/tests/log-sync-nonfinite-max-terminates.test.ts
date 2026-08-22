@@ -31,7 +31,10 @@ describe("pagination termination without a numeric max", () => {
 
 	it("fetchLog returns instead of refetching when max is absent", async () => {
 		const { stub, count } = finiteStub({ entries: [], cursor: 5 })
-		await expect(fetchLog(stub)).resolves.toEqual({ entries: [], skipped: 0 })
+		await expect(fetchLog(stub)).resolves.toEqual({
+			entries: [],
+			unreadable: 0,
+		})
 		expect(count()).toBeLessThanOrEqual(2)
 	})
 
@@ -45,7 +48,10 @@ describe("pagination termination without a numeric max", () => {
 
 	it("fetchLog returns when the cursor stops advancing below max", async () => {
 		const { stub, count } = finiteStub({ entries: [], cursor: 5, max: 9 })
-		await expect(fetchLog(stub)).resolves.toEqual({ entries: [], skipped: 0 })
+		await expect(fetchLog(stub)).resolves.toEqual({
+			entries: [],
+			unreadable: 0,
+		})
 		expect(count()).toBeLessThanOrEqual(2)
 	})
 

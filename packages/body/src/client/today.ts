@@ -3,12 +3,20 @@ import {
 	formatSet,
 	guidanceFor,
 	plannedSummary,
+	skippedOf,
+	skippedSummary,
 	targetSummary,
 } from "../dayLog"
 import { todaysSession, type ExercisePlan } from "../engine"
 import { appendEntries, readLog } from "../logStore"
-import { EXERCISES, SESSIONS, planFor } from "../program"
-import { type ConditioningEntry, type LogEntry, type PlanDay } from "../schemas"
+import { markMissedDays } from "../missedDays"
+import { EXERCISES, SESSIONS, planFor, planTitle } from "../program"
+import {
+	type ConditioningEntry,
+	type LogEntry,
+	type PlanDay,
+	type SkippedEntry,
+} from "../schemas"
 import { ZodError } from "zod"
 import {
 	DAY_ROLLED_OVER,
@@ -21,15 +29,20 @@ import {
 import { conditioningDialog } from "./conditioningDialog"
 import { logDialog } from "./logDialog"
 import { loginDialog } from "./loginDialog"
+import { skipDialog } from "./skipDialog"
 import { sync, syncToken } from "./sync"
 import { wellnessFields, type WellnessFields } from "./wellnessFields"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 
 function headerFor(day: PlanDay): { title: string; place: string } {
-	if (day.kind === "rest") return { title: "Rest", place: "day off" }
-	if (day.kind === "conditioning") return { title: day.title, place: "at home" }
-	return { title: "Strength", place: "at the gym" }
+	const place =
+		day.kind === "rest"
+			? "day off"
+			: day.kind === "conditioning"
+				? "at home"
+				: "at the gym"
+	return { title: planTitle(day), place }
 }
 
 export async function renderToday(
@@ -50,6 +63,13 @@ export async function renderToday(
 	}
 	const rerender = (nextNote?: string) => renderToday(root, nextNote)
 
+	const skipped =
+		skippedOf(log.filter((entry) => entry.date === today))[0] ?? null
+	const skip = () => ({
+		label: "Skip session",
+		form: skipDialog(planTitle(day), today, log, rerender),
+	})
+
 	let children: Node[]
 	if (day.kind === "rest") {
 		children = [
@@ -58,15 +78,10 @@ export async function renderToday(
 					"Nothing to log today — see you tomorrow.",
 				]),
 			]),
+			...inlineWellness(log, today, rerender),
 		]
-		// Without this, the day before a rest day could never be logged at all.
-		const wellness = wellnessFields(log, today)
-		if (wellness)
-			children.push(
-				...(syncToken()
-					? [restWellnessForm(wellness, today, rerender)]
-					: restSyncGate(rerender)),
-			)
+	} else if (skipped) {
+		children = [skippedPanel(skipped), ...inlineWellness(log, today, rerender)]
 	} else if (day.kind === "conditioning") {
 		const logged =
 			log.find(
@@ -76,7 +91,13 @@ export async function renderToday(
 		children = [conditioningPanel(day.title, logged)]
 		if (!logged) {
 			const form = conditioningDialog(day.title, today, log, rerender)
-			children.push(...logControls(form, today, rerender, "Log workout"))
+			children.push(
+				...logControls(
+					[{ label: "Log workout", form }, skip()],
+					today,
+					rerender,
+				),
+			)
 		}
 	} else {
 		const session = todaysSession(SESSIONS[day.session], EXERCISES, log, today)
@@ -88,7 +109,17 @@ export async function renderToday(
 			),
 		]
 		const form = logDialog(session, today, log, rerender)
-		if (form) children.push(...logControls(form, today, rerender))
+		const untouched = session.exercises.every(
+			(plan) => plan.loggedToday.length === 0,
+		)
+		if (form)
+			children.push(
+				...logControls(
+					[{ label: "Log session", form }, ...(untouched ? [skip()] : [])],
+					today,
+					rerender,
+				),
+			)
 	}
 
 	if (note)
@@ -101,33 +132,64 @@ export async function renderToday(
 	// Fire and forget: pulled entries surface on the next navigation — a
 	// re-render here would wipe an open log dialog.
 	void sync()
+		.then((result) => {
+			// A partial pull is full of holes that are not misses, and a visitor's
+			// writes would sit in an outbox that can never drain.
+			if (result.offline || !syncToken()) return
+			return markMissedDays(today)
+		})
+		.catch(() => {})
 }
 
 function logControls(
-	form: Modal,
+	actions: readonly { label: string; form: Modal }[],
 	today: string,
 	rerender: (note?: string) => void,
-	label = "Log session",
 ): Node[] {
-	// Rerender rather than open: the form was built from the pre-pull log,
+	// Rerender rather than open: the forms were built from the pre-pull log,
 	// and the login's own sync may have just filled it.
 	const login = loginDialog((authenticated) => {
 		if (authenticated) rerender()
 	})
 
-	const open = el("button", { class: "button-primary mt-8" }, [label])
-	open.addEventListener("click", () => {
-		// A tab left open overnight would otherwise log yesterday's plan.
-		if (localDateOf(new Date()) !== today)
-			rerender("The day changed — this is today's session.")
-		else if (syncToken()) form.open()
-		else login.open()
+	const buttons = actions.map(({ label, form }, index) => {
+		const open = el(
+			"button",
+			{ class: index === 0 ? "button-primary" : "button-secondary" },
+			[label],
+		)
+		open.addEventListener("click", () => {
+			// A tab left open overnight would otherwise log yesterday's plan.
+			if (localDateOf(new Date()) !== today)
+				rerender("The day changed — this is today's session.")
+			else if (syncToken()) form.open()
+			else login.open()
+		})
+		return open
 	})
-	return [open, login.element, form.element]
+
+	return [
+		el("div", { class: "mt-8 space-y-3" }, buttons),
+		login.element,
+		...actions.map(({ form }) => form.element),
+	]
 }
 
-/** The rest-day form is inline, so its gate swaps the fields for a login. */
-function restSyncGate(rerender: (note?: string) => void): Node[] {
+/** Without this, yesterday's sleep and steps could never be logged at all. */
+function inlineWellness(
+	log: readonly LogEntry[],
+	today: string,
+	rerender: (note?: string) => void,
+): Node[] {
+	const wellness = wellnessFields(log, today)
+	if (!wellness) return []
+	return syncToken()
+		? [wellnessForm(wellness, today, rerender)]
+		: wellnessSyncGate(rerender)
+}
+
+/** The inline form has no dialog, so its gate swaps the fields for a login. */
+function wellnessSyncGate(rerender: (note?: string) => void): Node[] {
 	const login = loginDialog((authenticated) => {
 		if (authenticated) rerender()
 	})
@@ -141,6 +203,15 @@ const doneLine = (suffix: string) =>
 		el("span", { class: "font-extrabold" }, ["Done"]),
 		el("span", { class: MUTED }, [` ${suffix}`]),
 	])
+
+function skippedPanel(entry: SkippedEntry): HTMLElement {
+	return el("section", { class: "panel mt-8" }, [
+		el("p", { class: "text-sm font-extrabold" }, [`${entry.planned} skipped`]),
+		el("p", { class: `${MUTED} mt-1 text-xs font-semibold` }, [
+			skippedSummary(entry),
+		]),
+	])
+}
 
 function exercisePanel(plan: ExercisePlan): HTMLElement {
 	const section = el("section", { class: "panel" }, [
@@ -158,7 +229,7 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 	return section
 }
 
-function restWellnessForm(
+function wellnessForm(
 	wellness: WellnessFields,
 	today: string,
 	onSettled: (note?: string) => void,

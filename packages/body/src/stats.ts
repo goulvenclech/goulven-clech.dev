@@ -142,10 +142,11 @@ export interface Adherence {
 }
 
 /**
- * Days with anything logged over the scheduled (non-rest) days in the window.
- * Today joins the denominator only once something is logged, so an unfinished
- * morning doesn't read as a miss. `planned` intentionally tracks the current
- * plan: after a plan change the ratio drifts, then self-heals.
+ * Days attended over the scheduled (non-rest) days in the window. Today joins
+ * the denominator only once it is settled — attended, or declared skipped —
+ * so an unfinished morning doesn't read as a miss. `planned` intentionally
+ * tracks the current plan: after a plan change the ratio drifts, then
+ * self-heals.
  */
 export function adherence(
 	log: readonly LogEntry[],
@@ -155,20 +156,30 @@ export function adherence(
 ): Adherence {
 	const from = addDays(today, -(days - 1))
 
-	const loggedDates = new Set(
+	const attended = new Set(
 		log
-			// Wellness describes the previous day, not attendance on it.
-			.filter((entry) => entry.kind !== "wellness")
+			// Wellness describes the previous day, not attendance on it, and a
+			// skipped session is the record of not attending.
+			.filter(
+				(entry) => entry.kind === "strength" || entry.kind === "conditioning",
+			)
 			.map((entry) => entry.date)
 			.filter((date) => date >= from && date <= today),
+	)
+
+	const skippedToday = log.some(
+		(entry) => entry.kind === "skipped" && entry.date === today,
 	)
 
 	let planned = 0
 	for (let i = 0; i < days - 1; i++)
 		if (plan[weekdayOf(addDays(from, i))].kind !== "rest") planned++
-	if (plan[weekdayOf(today)].kind !== "rest" && loggedDates.has(today))
+	if (
+		plan[weekdayOf(today)].kind !== "rest" &&
+		(attended.has(today) || skippedToday)
+	)
 		planned++
 
-	const done = loggedDates.size
+	const done = attended.size
 	return { done, planned, ratio: planned === 0 ? 0 : done / planned }
 }

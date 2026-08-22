@@ -173,10 +173,26 @@ export const wellnessEntrySchema = z
 		{ error: "a wellness entry needs sleep or steps" },
 	)
 
+/** A scheduled session that did not happen; a miss rather than a hole. */
+export const skippedEntrySchema = z.strictObject({
+	kind: z.literal("skipped"),
+	schemaVersion: z.literal(LOG_SCHEMA_VERSION),
+	id: z.uuid(),
+	date: dateString,
+	/** The plan's day type at skipping time; never edited. */
+	planned: dayTitle,
+	/**
+	 * Why it was missed, absent when the day was marked automatically. Bounded
+	 * so client-valid always implies acceptable to the sync gate.
+	 */
+	reason: z.string().min(1).max(200).optional(),
+})
+
 export const logEntrySchema = z.discriminatedUnion("kind", [
 	strengthEntrySchema,
 	conditioningEntrySchema,
 	wellnessEntrySchema,
+	skippedEntrySchema,
 ])
 
 /**
@@ -186,9 +202,10 @@ export const logEntrySchema = z.discriminatedUnion("kind", [
  * Distinct from `LOG_SCHEMA_VERSION`, the literal stamped on stored entries —
  * bumping that would stop existing history from parsing.
  */
-export const LOG_WIRE_VERSION = 3
+export const LOG_WIRE_VERSION = 4
 
 export type StrengthEntry = z.infer<typeof strengthEntrySchema>
 export type ConditioningEntry = z.infer<typeof conditioningEntrySchema>
 export type WellnessEntry = z.infer<typeof wellnessEntrySchema>
+export type SkippedEntry = z.infer<typeof skippedEntrySchema>
 export type LogEntry = z.infer<typeof logEntrySchema>

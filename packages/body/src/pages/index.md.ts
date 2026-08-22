@@ -5,12 +5,19 @@ import {
 	formatSet,
 	guidanceFor,
 	plannedSummary,
+	skippedOf,
+	skippedSummary,
 	targetSummary,
 } from "../dayLog"
 import { todaysSession, type DaySession } from "../engine"
 import { EXERCISES, SESSIONS, planFor } from "../program"
 import { fetchLog } from "../remoteLog"
-import type { ConditioningEntry, LogEntry, PlanDay } from "../schemas"
+import type {
+	ConditioningEntry,
+	LogEntry,
+	PlanDay,
+	SkippedEntry,
+} from "../schemas"
 
 export const prerender = false
 
@@ -20,6 +27,7 @@ export interface IndexView {
 	day: PlanDay
 	session: DaySession | null
 	conditioningLogged: ConditioningEntry | null
+	skipped: SkippedEntry | null
 }
 
 function renderIntro(site: string): string {
@@ -36,6 +44,12 @@ export function renderTodaySection(view: IndexView): string {
 	const heading = `## Today — ${view.date} (${weekdayName(view.date)})`
 	if (view.day.kind === "rest")
 		return [heading, "", "Rest day — nothing to log."].join("\n")
+	if (view.skipped)
+		return [
+			heading,
+			"",
+			`${view.skipped.planned} skipped — ${skippedSummary(view.skipped)}.`,
+		].join("\n")
 	if (view.day.kind === "conditioning")
 		return [
 			heading,
@@ -80,6 +94,8 @@ export function buildIndexView(
 			day.kind === "strength"
 				? todaysSession(SESSIONS[day.session], EXERCISES, entries, date)
 				: null,
+		skipped:
+			skippedOf(entries.filter((entry) => entry.date === date))[0] ?? null,
 		conditioningLogged:
 			day.kind === "conditioning"
 				? (entries.find(

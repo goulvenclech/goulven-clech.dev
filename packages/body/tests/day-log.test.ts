@@ -87,6 +87,45 @@ describe("groupByDay", () => {
 	})
 })
 
+describe("automatic skips", () => {
+	const marked = (date: string, reason?: string): LogEntry => ({
+		kind: "skipped",
+		schemaVersion: LOG_SCHEMA_VERSION,
+		id: crypto.randomUUID(),
+		date,
+		planned: "Strength",
+		...(reason === undefined ? {} : { reason }),
+	})
+
+	it("make way for a session that only synced in later", () => {
+		const [day] = groupByDay([marked("2026-08-17"), strength("2026-08-17", 1)])
+		expect(day.skipped).toEqual([])
+		expect(day.labels).toEqual(["Strength"])
+	})
+
+	it("stand on a day nothing else was logged", () => {
+		const [day] = groupByDay([marked("2026-08-17")])
+		expect(day.labels).toEqual(["Skipped"])
+	})
+
+	it("give way to a reason that synced in from another device", () => {
+		const [day] = groupByDay([
+			marked("2026-08-17"),
+			marked("2026-08-17", "ill"),
+		])
+		expect(day.skipped).toEqual([expect.objectContaining({ reason: "ill" })])
+	})
+
+	it("never overrule a reason the user gave", () => {
+		const [day] = groupByDay([
+			marked("2026-08-17", "ill"),
+			strength("2026-08-17", 1),
+		])
+		expect(day.skipped).toHaveLength(1)
+		expect(day.labels).toEqual(["Skipped", "Strength"])
+	})
+})
+
 describe("wellnessSummary", () => {
 	const wellness = (
 		fields: Partial<Extract<LogEntry, { kind: "wellness" }>>,

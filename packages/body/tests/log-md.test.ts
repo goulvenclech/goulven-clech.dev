@@ -39,6 +39,15 @@ const conditioningEntry: LogEntry = {
 	sets: 5,
 }
 
+const skippedEntry: LogEntry = {
+	kind: "skipped",
+	schemaVersion: LOG_SCHEMA_VERSION,
+	id: entryId(4),
+	date: "2026-08-18",
+	planned: "Cardio",
+	reason: "ill",
+}
+
 const wellnessEntry: LogEntry = {
 	kind: "wellness",
 	schemaVersion: LOG_SCHEMA_VERSION,
@@ -58,7 +67,7 @@ function view(overrides: Partial<LogView> = {}): LogView {
 		days,
 		totalDays: days.length,
 		totalEntries: 3,
-		skipped: 0,
+		unreadable: 0,
 		...overrides,
 	}
 }
@@ -95,6 +104,15 @@ describe("renderDayBlock", () => {
 			"- Back squat: 60 kg × 5",
 			"- cardio go (Cardio): level 3 · 5 sets",
 			"- Wellness: 9 h sleep · 4200 steps",
+		])
+	})
+
+	it("leads a skipped day with the plan it replaced", () => {
+		const [day] = groupByDay([skippedEntry])
+		expect(renderDayBlock(day).split("\n")).toEqual([
+			"## 2026-08-18 (Tuesday) — Skipped",
+			"",
+			"- Skipped Cardio: ill",
 		])
 	})
 
@@ -137,7 +155,7 @@ describe("renderLog", () => {
 	})
 
 	it("flags entries newer than this build instead of failing", () => {
-		expect(renderLog(view({ skipped: 2 }))).toContain(
+		expect(renderLog(view({ unreadable: 2 }))).toContain(
 			"2 entries use a newer format than this page understands and are omitted.",
 		)
 	})
@@ -156,14 +174,14 @@ describe("fetchLog", () => {
 				: page([strengthEntry, { kind: "teleportation" }], 502, 502)
 		}) as unknown as typeof fetch
 
-		const { entries, skipped } = await fetchLog(fetchFn)
+		const { entries, unreadable } = await fetchLog(fetchFn)
 
 		expect(calls).toEqual([
 			"http://localhost:4321/api/body/log?since=0",
 			"http://localhost:4321/api/body/log?since=500",
 		])
 		expect(entries).toHaveLength(2)
-		expect(skipped).toBe(1)
+		expect(unreadable).toBe(1)
 	})
 
 	it("throws on a failing backend", async () => {

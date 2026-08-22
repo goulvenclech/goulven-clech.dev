@@ -150,6 +150,38 @@ describe("adherence", () => {
 		})
 	})
 
+	it("counts a skipped session as a miss, not as a day done", () => {
+		const skipped = {
+			kind: "skipped" as const,
+			schemaVersion: 1 as const,
+			id: crypto.randomUUID(),
+			date: "2026-08-11",
+			planned: "Cardio",
+			reason: "ill",
+		}
+		expect(adherence([...pastEntries, skipped], plan, TODAY)).toEqual({
+			done: 3,
+			planned: 23,
+			ratio: 3 / 23,
+		})
+	})
+
+	it("counts today as planned once it is declared skipped", () => {
+		const skippedToday = {
+			kind: "skipped" as const,
+			schemaVersion: 1 as const,
+			id: crypto.randomUUID(),
+			date: TODAY,
+			planned: "Combat",
+			reason: "ill",
+		}
+		expect(adherence([...pastEntries, skippedToday], plan, TODAY)).toEqual({
+			done: 3,
+			planned: 24,
+			ratio: 3 / 24,
+		})
+	})
+
 	it("counts today as planned once something is logged", () => {
 		const result = adherence(
 			[...pastEntries, conditioning({ date: TODAY })],

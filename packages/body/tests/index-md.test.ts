@@ -33,6 +33,7 @@ function view(overrides: Partial<IndexView>): IndexView {
 		day: { kind: "rest" },
 		session: null,
 		conditioningLogged: null,
+		skipped: null,
 		...overrides,
 	}
 }
@@ -98,6 +99,25 @@ describe("renderTodaySection", () => {
 			"Done: cardio go · level 3 · 5 sets.",
 		])
 	})
+})
+
+it("renders a skipped day in place of the session it replaced", () => {
+	const skipped = view({
+		day: { kind: "conditioning", title: "Core" },
+		skipped: {
+			kind: "skipped",
+			schemaVersion: LOG_SCHEMA_VERSION,
+			id: "33333333-3333-4333-8333-333333333333",
+			date: "2026-08-17",
+			planned: "Core",
+			reason: "ill",
+		},
+	})
+	expect(renderTodaySection(skipped).split("\n")).toEqual([
+		"## Today — 2026-08-17 (Monday)",
+		"",
+		"Core skipped — ill.",
+	])
 })
 
 describe("renderBodyIndex", () => {
@@ -166,6 +186,24 @@ describe("buildIndexView", () => {
 			[done],
 		)
 		expect(otherDay.conditioningLogged).toBeNull()
+	})
+
+	it("picks today's skipped entry, and only today's", () => {
+		const skipped: LogEntry = {
+			kind: "skipped",
+			schemaVersion: LOG_SCHEMA_VERSION,
+			id: "33333333-3333-4333-8333-333333333333",
+			date: "2026-08-17",
+			planned: "Strength",
+			reason: "ill",
+		}
+		const day = { kind: "strength", session: "strength-a" } as const
+		expect(
+			buildIndexView(SITE, "2026-08-17", day, [skipped])?.skipped,
+		).toMatchObject({ planned: "Strength" })
+		expect(
+			buildIndexView(SITE, "2026-08-18", day, [skipped]).skipped,
+		).toBeNull()
 	})
 
 	it("carries nothing to compute on a rest day", () => {

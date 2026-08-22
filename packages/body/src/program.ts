@@ -76,3 +76,9 @@ export function exerciseByRef(ref: string): Exercise | null {
 export function planFor(date: string): PlanDay {
 	return WEEKLY_PLAN[weekdayOf(date)]
 }
+
+/** How a plan day is named on screen and stamped on a skipped entry. */
+export function planTitle(day: PlanDay): string {
+	if (day.kind === "rest") return "Rest"
+	return day.kind === "conditioning" ? day.title : "Strength"
+}

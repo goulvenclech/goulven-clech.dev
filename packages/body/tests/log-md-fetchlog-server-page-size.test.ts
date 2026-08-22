@@ -28,9 +28,9 @@ describe("fetchLog with a server page size smaller than the client's LOG_PAGE", 
 			return Response.json({ entries: rows, cursor, max: TOTAL })
 		}) as unknown as typeof fetch
 
-		const { entries, skipped } = await fetchLog(fetchFn)
+		const { entries, unreadable } = await fetchLog(fetchFn)
 
-		expect(skipped).toBe(0)
+		expect(unreadable).toBe(0)
 		expect(entries).toHaveLength(TOTAL)
 	})
 })

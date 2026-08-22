@@ -4,6 +4,7 @@ import {
 	conditioningSummary,
 	formatSet,
 	groupByDay,
+	skippedSummary,
 	wellnessSummary,
 	type DayLog,
 } from "../dayLog"
@@ -85,6 +86,9 @@ export function renderDayBlock(day: DayLog): string {
 	return [
 		`## ${day.date} (${weekdayName(day.date)})${labels}`,
 		"",
+		...day.skipped.map(
+			(entry) => `- Skipped ${entry.planned}: ${skippedSummary(entry)}`,
+		),
 		...day.strength.map(
 			({ ref, sets }) =>
 				`- ${exerciseByRef(ref)?.name ?? ref}: ${sets.map(formatSet).join(" · ")}`,
@@ -116,7 +120,8 @@ export interface LogView {
 	days: DayLog[]
 	totalDays: number
 	totalEntries: number
-	skipped: number
+	/** Entries this page's schemas could not parse, counted but not shown. */
+	unreadable: number
 }
 
 export function renderLog(view: LogView): string {
@@ -134,9 +139,9 @@ export function renderLog(view: LogView): string {
 		days.length === 0
 			? `Showing 0 of ${totalDays} days.`
 			: `Showing days ${offset + 1}–${offset + days.length} of ${totalDays} · ${totalEntries} entries in total.`
-	const skippedLine =
-		view.skipped > 0
-			? `${view.skipped} ${view.skipped === 1 ? "entry uses" : "entries use"} a newer format than this page understands and ${view.skipped === 1 ? "is" : "are"} omitted.`
+	const unreadableLine =
+		view.unreadable > 0
+			? `${view.unreadable} ${view.unreadable === 1 ? "entry uses" : "entries use"} a newer format than this page understands and ${view.unreadable === 1 ? "is" : "are"} omitted.`
 			: undefined
 
 	const body = days.length
@@ -162,7 +167,7 @@ export function renderLog(view: LogView): string {
 	const resultsBlock = [
 		"## Sessions",
 		"",
-		[rangeLine, skippedLine].filter(Boolean).join(" "),
+		[rangeLine, unreadableLine].filter(Boolean).join(" "),
 		"",
 		body,
 		...(paginationLines.length ? ["", paginationLines.join("\n")] : []),
@@ -177,7 +182,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		const { limit, offset } = parseLogQuery(context.url)
 		const showHelp = context.url.searchParams.get("help") !== "0"
 
-		const { entries, skipped } = await fetchLog()
+		const { entries, unreadable } = await fetchLog()
 		const days = groupByDay(entries)
 
 		const document = renderLog({
@@ -188,7 +193,7 @@ export async function GET(context: APIContext): Promise<Response> {
 			days: days.slice(offset, offset + limit),
 			totalDays: days.length,
 			totalEntries: entries.length,
-			skipped,
+			unreadable,
 		})
 
 		return new Response(document, {

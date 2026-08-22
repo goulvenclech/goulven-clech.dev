@@ -3,9 +3,9 @@ import { logEntrySchema, type LogEntry } from "./schemas"
 
 export async function fetchLog(
 	fetchFn: typeof fetch = fetch,
-): Promise<{ entries: LogEntry[]; skipped: number }> {
+): Promise<{ entries: LogEntry[]; unreadable: number }> {
 	const entries: LogEntry[] = []
-	let skipped = 0
+	let unreadable = 0
 	let cursor = 0
 	for (;;) {
 		const response = await fetchFn(`${API_BASE}/api/body/log?since=${cursor}`)
@@ -18,15 +18,15 @@ export async function fetchLog(
 		for (const raw of body.entries) {
 			const parsed = logEntrySchema.safeParse(raw)
 			if (parsed.success) entries.push(parsed.data)
-			else skipped += 1
+			else unreadable += 1
 		}
 		const next = Number(body.cursor)
 		const max = Number(body.max)
 		// A malformed response (NaN compares false) or a cursor that stops
 		// advancing must end the loop rather than spin it.
 		if (!Number.isFinite(next) || !Number.isFinite(max) || next <= cursor)
-			return { entries, skipped }
+			return { entries, unreadable }
 		cursor = next
-		if (cursor >= max) return { entries, skipped }
+		if (cursor >= max) return { entries, unreadable }
 	}
 }

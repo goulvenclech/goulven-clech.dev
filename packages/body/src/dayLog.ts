@@ -6,6 +6,7 @@ import type {
 	ConditioningEntry,
 	LogEntry,
 	PlannedExercise,
+	SkippedEntry,
 	StrengthEntry,
 	WellnessEntry,
 } from "./schemas"
@@ -45,6 +46,7 @@ export function guidanceFor(plan: ExercisePlan): string {
 export interface DayLog {
 	date: string
 	labels: string[]
+	skipped: SkippedEntry[]
 	strength: { ref: string; sets: StrengthEntry[] }[]
 	conditioning: ConditioningEntry[]
 	wellness: WellnessEntry[]
@@ -63,6 +65,25 @@ export function formatSet(set: {
 
 export function conditioningSummary(entry: ConditioningEntry): string {
 	return `level ${entry.level} · ${entry.sets} sets`
+}
+
+export function skippedSummary(entry: SkippedEntry): string {
+	return entry.reason ?? "never logged"
+}
+
+/**
+ * An automatic mark is only a guess that the day went unused, so a session or
+ * a reason syncing in later settles it. A reasoned skip always stands.
+ */
+export function skippedOf(entries: readonly LogEntry[]): SkippedEntry[] {
+	const skipped = entries.filter(
+		(entry): entry is SkippedEntry => entry.kind === "skipped",
+	)
+	const settled =
+		entries.some(
+			(entry) => entry.kind === "strength" || entry.kind === "conditioning",
+		) || skipped.some((entry) => entry.reason !== undefined)
+	return skipped.filter((entry) => entry.reason !== undefined || !settled)
 }
 
 export function wellnessSummary(entry: WellnessEntry): string {
@@ -116,6 +137,7 @@ function dayOf(date: string, entries: LogEntry[]): DayLog {
 	const wellness = entries.filter(
 		(entry): entry is WellnessEntry => entry.kind === "wellness",
 	)
+	const skipped = skippedOf(entries)
 
 	const byExercise = new Map<string, StrengthEntry[]>()
 	for (const entry of strength) {
@@ -128,10 +150,12 @@ function dayOf(date: string, entries: LogEntry[]): DayLog {
 		date,
 		labels: [
 			...new Set([
+				...(skipped.length > 0 ? ["Skipped"] : []),
 				...(strength.length > 0 ? ["Strength"] : []),
 				...conditioning.map((entry) => entry.category),
 			]),
 		],
+		skipped,
 		strength: [...byExercise.entries()].map(([ref, sets]) => ({ ref, sets })),
 		conditioning,
 		wellness,

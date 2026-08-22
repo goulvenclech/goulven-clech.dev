@@ -53,12 +53,22 @@ const conditioning = (
 	sets: 5,
 })
 
+const skippedEntry = (planned: string, reason?: string): LogEntry => ({
+	kind: "skipped",
+	schemaVersion: LOG_SCHEMA_VERSION,
+	id: crypto.randomUUID(),
+	date: "2026-08-20",
+	planned,
+	...(reason === undefined ? {} : { reason }),
+})
+
 const headerOf = (card: HTMLElement) => [
 	...card.querySelector("div")!.querySelectorAll("p"),
 ]
 
 const dayOf = (card: HTMLElement) => headerOf(card)[0].textContent
 const typeOf = (card: HTMLElement) => headerOf(card)[1].textContent
+const typeClassOf = (card: HTMLElement) => headerOf(card)[1].className
 
 const contentOf = (card: HTMLElement) =>
 	[...card.children]
@@ -153,6 +163,29 @@ it("keeps an exercise's sets in order, and retired lifts last", async () => {
 		"Back squat 60 kg × 5 · 62.5 kg × 5",
 		"Lat pulldown 50 kg × 10",
 	])
+})
+
+it("types a skipped day in the primary colour, with the plan and the reason", async () => {
+	await appendEntries([skippedEntry("Core", "sick in bed")])
+	const card = await cardFor("Thu 20 Aug")
+
+	expect(typeOf(card)).toBe("Skipped")
+	expect(typeClassOf(card)).toContain("text-primary")
+	expect(contentOf(card)).toEqual(["Core sick in bed"])
+})
+
+it("says as much when a day was skipped without anyone saying so", async () => {
+	await appendEntries([skippedEntry("Strength")])
+
+	expect(contentOf(await cardFor("Thu 20 Aug"))).toEqual([
+		"Strength never logged",
+	])
+})
+
+it("leaves an ordinary day's type muted", async () => {
+	await appendEntries([conditioning("Ab Blaster")])
+
+	expect(typeClassOf(await cardFor("Thu 20 Aug"))).not.toContain("text-primary")
 })
 
 it("labels both kinds when a day mixes a session with conditioning", async () => {

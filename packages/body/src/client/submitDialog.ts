@@ -6,8 +6,8 @@ import { DAY_ROLLED_OVER, STORAGE_BLOCKED, el, type Modal } from "./dom"
 import { sync } from "./sync"
 import { wellnessFields } from "./wellnessFields"
 
-// A day renders at most one log dialog, so a single id can label them all.
-const TITLE_ID = "log-dialog-title"
+// Logging and skipping can share a day, so each dialog labels itself.
+let dialogCount = 0
 
 export type BuildResult =
 	{ entries: LogEntry[] } | { error: string; focus?: HTMLElement }
@@ -25,6 +25,7 @@ export function submitDialog(options: {
 }): Modal {
 	const { today, onSettled } = options
 	const wellness = wellnessFields(options.log, today)
+	const titleId = `log-dialog-title-${++dialogCount}`
 
 	// Always rendered so screen readers announce failures reliably.
 	const errorNote = el("p", {
@@ -49,14 +50,14 @@ export function submitDialog(options: {
 		],
 	)
 	const form = el("form", {}, [
-		el("h2", { id: TITLE_ID, class: "mt-0 mb-5 text-lg font-black" }, [
+		el("h2", { id: titleId, class: "mt-0 mb-5 text-lg font-black" }, [
 			options.title,
 		]),
 		...options.fields,
 		...(wellness ? [wellness.element] : []),
 		actions,
 	])
-	const dialog = el("dialog", { "aria-labelledby": TITLE_ID }, [form])
+	const dialog = el("dialog", { "aria-labelledby": titleId }, [form])
 
 	cancel.addEventListener("click", () => dialog.close())
 

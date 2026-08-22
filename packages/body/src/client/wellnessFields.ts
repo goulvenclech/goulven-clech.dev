@@ -7,6 +7,9 @@ import {
 } from "../schemas"
 import { el } from "./dom"
 
+// Logging and skipping can share a day, so each block labels its own fields.
+let fieldsCount = 0
+
 export interface WellnessFields {
 	element: HTMLElement
 	/** The entry the filled inputs describe, or null when all left blank. */
@@ -33,6 +36,8 @@ export function wellnessFields(
 	today: string,
 ): WellnessFields | null {
 	const yesterday = addDays(today, -1)
+	const sleepId = `sleep-${++fieldsCount}`
+	const stepsId = `steps-${fieldsCount}`
 	let sleepLogged = false
 	let stepsLogged = false
 	for (const entry of log) {
@@ -45,7 +50,7 @@ export function wellnessFields(
 	const sleepHours = sleepLogged
 		? null
 		: numberInput({
-				id: "sleep",
+				id: sleepId,
 				class: "wellness-sleep",
 				min: "0",
 				// With the minutes capped at 59, no pair can exceed the stored max.
@@ -64,7 +69,7 @@ export function wellnessFields(
 			})
 	const steps = stepsLogged
 		? null
-		: numberInput({ id: "steps", class: "wellness-steps", min: "1" })
+		: numberInput({ id: stepsId, class: "wellness-steps", min: "1" })
 
 	const sleep =
 		sleepHours && sleepMinutes
@@ -89,8 +94,8 @@ export function wellnessFields(
 	const element = el("fieldset", { class: "wellness mt-6" }, [
 		el("legend", {}, [`Yesterday — ${formatDayShort(yesterday)}`]),
 		el("div", { class: "flex gap-3" }, [
-			...field(sleep, "Sleep (h / min)", "sleep", "flex-2"),
-			...field(steps, "Steps", "steps", "flex-1"),
+			...field(sleep, "Sleep (h / min)", sleepId, "flex-2"),
+			...field(steps, "Steps", stepsId, "flex-1"),
 		]),
 	])
 

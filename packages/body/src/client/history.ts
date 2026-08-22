@@ -3,6 +3,7 @@ import {
 	conditioningSummary,
 	formatSet,
 	groupByDay,
+	skippedSummary,
 	wellnessSummary,
 	type DayLog,
 } from "../dayLog"
@@ -14,6 +15,8 @@ import { loginDialog } from "./loginDialog"
 import { sync, syncToken, takeAbandoned } from "./sync"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
+const LABEL =
+	"min-w-0 truncate text-xs font-extrabold tracking-widest uppercase"
 
 function syncNote(abandoned: number, rejected: boolean): string | undefined {
 	if (abandoned > 0)
@@ -89,11 +92,17 @@ function dayPanel(day: DayLog): HTMLElement {
 			el(
 				"p",
 				{
-					class: `${MUTED} min-w-0 truncate text-xs font-extrabold tracking-widest uppercase`,
+					class: `${day.skipped.length > 0 ? "text-primary" : MUTED} ${LABEL}`,
 				},
 				[day.labels.join(" · ")],
 			),
 		]),
+		...day.skipped.map((entry) =>
+			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
+				el("span", { class: "font-extrabold" }, [entry.planned]),
+				el("span", { class: MUTED }, [` ${skippedSummary(entry)}`]),
+			]),
+		),
 		...day.strength.map(({ ref, sets }) =>
 			el("p", { class: "numeric mt-2 text-sm font-semibold" }, [
 				el("span", { class: "font-extrabold" }, [EXERCISES[ref]?.name ?? ref]),

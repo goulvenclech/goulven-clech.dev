@@ -11,7 +11,7 @@ const outOfRange: LogView = {
 	days: [],
 	totalDays: 1,
 	totalEntries: 3,
-	skipped: 0,
+	unreadable: 0,
 }
 
 describe("renderLog with an out-of-range offset", () => {
