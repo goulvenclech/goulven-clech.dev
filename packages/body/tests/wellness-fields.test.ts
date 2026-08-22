@@ -85,6 +85,8 @@ function removeAllSets(dialog: HTMLDialogElement): void {
 
 const sleepInput = (scope: ParentNode) =>
 	scope.querySelector<HTMLInputElement>(".wellness-sleep")
+const sleepMinutesInput = (scope: ParentNode) =>
+	scope.querySelector<HTMLInputElement>(".wellness-sleep-minutes")
 const stepsInput = (scope: ParentNode) =>
 	scope.querySelector<HTMLInputElement>(".wellness-steps")
 
@@ -144,7 +146,8 @@ describe("in the strength log dialog", () => {
 	it("logs sleep and steps for yesterday alongside the session", async () => {
 		const { root, dialog } = await render()
 		openTrigger(root).click()
-		sleepInput(dialog)!.value = "7.5"
+		sleepInput(dialog)!.value = "7"
+		sleepMinutesInput(dialog)!.value = "30"
 		stepsInput(dialog)!.value = "8432"
 		submitButton(dialog).click()
 		await settle()
@@ -152,6 +155,32 @@ describe("in the strength log dialog", () => {
 		expect(await wellnessLogged()).toEqual([
 			expect.objectContaining({ date: SUNDAY, sleepHours: 7.5, steps: 8432 }),
 		])
+		const strength = (await readLog()).filter(
+			(entry) => entry.kind === "strength" && entry.date === MONDAY,
+		)
+		expect(strength).toHaveLength(13)
+	})
+
+	it("takes the minutes alone as a fraction of an hour", async () => {
+		const { root, dialog } = await render()
+		openTrigger(root).click()
+		sleepMinutesInput(dialog)!.value = "45"
+		submitButton(dialog).click()
+		await settle()
+
+		expect(await wellnessLogged()).toEqual([
+			expect.objectContaining({ date: SUNDAY, sleepHours: 0.75 }),
+		])
+	})
+
+	it("reads a zero night as no answer, not as a value the log refuses", async () => {
+		const { root, dialog } = await render()
+		openTrigger(root).click()
+		sleepInput(dialog)!.value = "0"
+		submitButton(dialog).click()
+		await settle()
+
+		expect(await wellnessLogged()).toEqual([])
 		const strength = (await readLog()).filter(
 			(entry) => entry.kind === "strength" && entry.date === MONDAY,
 		)
@@ -197,6 +226,19 @@ describe("in the strength log dialog", () => {
 		expect(alertsIn(dialog)).toContain("Nothing to log")
 		expect(dialog.open).toBe(true)
 		expect(await wellnessLogged()).toEqual([])
+	})
+
+	it("points every field label at a control in the dialog", async () => {
+		const { dialog } = await render()
+
+		const labels = [...dialog.querySelectorAll("label[for]")]
+		expect(labels.map((label) => label.textContent)).toContain(
+			"Sleep (h / min)",
+		)
+		for (const label of labels)
+			expect(
+				dialog.querySelector(`input[id="${label.getAttribute("for")}"]`),
+			).not.toBeNull()
 	})
 
 	it("hides a metric already logged for yesterday", async () => {

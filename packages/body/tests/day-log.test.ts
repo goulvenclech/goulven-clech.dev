@@ -40,6 +40,11 @@ describe("formatSet", () => {
 	it("keeps the load when a timed set is weighted", () => {
 		expect(formatSet({ kg: 20, reps: 30, unit: "s" })).toBe("20 kg × 30 s")
 	})
+
+	it("reads a hold past a minute on the clock", () => {
+		expect(formatSet({ kg: 0, reps: 90, unit: "s" })).toBe("1 min 30")
+		expect(formatSet({ kg: 20, reps: 120, unit: "s" })).toBe("20 kg × 2 min")
+	})
 })
 
 describe("groupByDay", () => {
@@ -99,5 +104,9 @@ describe("wellnessSummary", () => {
 		)
 		expect(wellnessSummary(wellness({ sleepHours: 9 }))).toBe("9 h sleep")
 		expect(wellnessSummary(wellness({ steps: 4200 }))).toBe("4200 steps")
+	})
+
+	it("reads a night that is not a whole hour on the clock", () => {
+		expect(wellnessSummary(wellness({ sleepHours: 7.5 }))).toBe("7 h 30 sleep")
 	})
 })

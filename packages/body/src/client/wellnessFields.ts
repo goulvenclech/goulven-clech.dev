@@ -1,4 +1,5 @@
 import { addDays, formatDayShort } from "../dates"
+import { hoursOf } from "../duration"
 import {
 	LOG_SCHEMA_VERSION,
 	type LogEntry,
@@ -11,6 +12,17 @@ export interface WellnessFields {
 	/** The entry the filled inputs describe, or null when all left blank. */
 	entry: () => WellnessEntry | null
 }
+
+const numberInput = (attributes: Record<string, string>) =>
+	el("input", {
+		type: "number",
+		inputmode: "numeric",
+		step: "1",
+		...attributes,
+	})
+
+const enteredCount = (input: HTMLInputElement | null) =>
+	input && input.value !== "" ? Number(input.value) : undefined
 
 /**
  * The log is append-only, so each metric disappears once logged; once both
@@ -30,34 +42,46 @@ export function wellnessFields(
 	}
 	if (sleepLogged && stepsLogged) return null
 
-	const sleep = sleepLogged
+	const sleepHours = sleepLogged
 		? null
-		: el("input", {
+		: numberInput({
 				id: "sleep",
 				class: "wellness-sleep",
-				type: "number",
-				inputmode: "decimal",
-				step: "any",
-				min: "0.1",
-				max: "24",
+				min: "0",
+				// With the minutes capped at 59, no pair can exceed the stored max.
+				max: "23",
+				placeholder: "h",
+				"aria-label": "Sleep hours",
+			})
+	const sleepMinutes = sleepLogged
+		? null
+		: numberInput({
+				class: "wellness-sleep-minutes",
+				min: "0",
+				max: "59",
+				placeholder: "min",
+				"aria-label": "Sleep minutes",
 			})
 	const steps = stepsLogged
 		? null
-		: el("input", {
-				id: "steps",
-				class: "wellness-steps",
-				type: "number",
-				inputmode: "numeric",
-				step: "1",
-				min: "1",
-			})
+		: numberInput({ id: "steps", class: "wellness-steps", min: "1" })
 
-	const field = (input: HTMLInputElement | null, label: string) =>
-		input
+	const sleep =
+		sleepHours && sleepMinutes
+			? el("div", { class: "flex gap-2" }, [sleepHours, sleepMinutes])
+			: null
+
+	const field = (
+		control: Node | null,
+		label: string,
+		id: string,
+		width: string,
+	) =>
+		control
 			? [
-					el("div", { class: "flex-1" }, [
-						el("label", { for: input.id }, [label]),
-						input,
+					el("div", { class: width }, [
+						el("label", { for: id }, [label]),
+						control,
 					]),
 				]
 			: []
@@ -65,23 +89,24 @@ export function wellnessFields(
 	const element = el("fieldset", { class: "wellness mt-6" }, [
 		el("legend", {}, [`Yesterday — ${formatDayShort(yesterday)}`]),
 		el("div", { class: "flex gap-3" }, [
-			...field(sleep, "Sleep (h)"),
-			...field(steps, "Steps"),
+			...field(sleep, "Sleep (h / min)", "sleep", "flex-2"),
+			...field(steps, "Steps", "steps", "flex-1"),
 		]),
 	])
 
 	const entry = (): WellnessEntry | null => {
-		const sleepHours =
-			sleep && sleep.value !== "" ? Number(sleep.value) : undefined
-		const stepCount =
-			steps && steps.value !== "" ? Number(steps.value) : undefined
-		if (sleepHours === undefined && stepCount === undefined) return null
+		const slept = hoursOf(
+			enteredCount(sleepHours) ?? 0,
+			enteredCount(sleepMinutes) ?? 0,
+		)
+		const stepCount = enteredCount(steps)
+		if (slept === 0 && stepCount === undefined) return null
 		return {
 			kind: "wellness",
 			schemaVersion: LOG_SCHEMA_VERSION,
 			id: crypto.randomUUID(),
 			date: yesterday,
-			...(sleepHours === undefined ? {} : { sleepHours }),
+			...(slept === 0 ? {} : { sleepHours: slept }),
 			...(stepCount === undefined ? {} : { steps: stepCount }),
 		}
 	}

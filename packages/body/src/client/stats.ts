@@ -1,4 +1,5 @@
 import { formatDayShort, localDateOf } from "../dates"
+import { hoursParts } from "../duration"
 import { readLog } from "../logStore"
 import { EXERCISES, WEEKLY_PLAN } from "../program"
 import type { LogEntry } from "../schemas"
@@ -61,7 +62,7 @@ export async function renderStats(
 		el("div", { class: "space-y-3" }, [
 			wellnessPanel(
 				sleep,
-				(average) => [String(Math.round(average * 10) / 10), " h"],
+				hoursParts,
 				"No sleep logged yet.",
 				`Sleep per night over the last ${WELLNESS_DAYS} days`,
 			),
@@ -89,7 +90,7 @@ export async function renderStats(
 
 function wellnessPanel(
 	trend: DailyTrend,
-	format: (average: number) => [big: string, unit: string],
+	format: (average: number) => [lead: string, tail: string],
 	empty: string,
 	label: string,
 ): HTMLElement {
@@ -98,14 +99,14 @@ function wellnessPanel(
 		return el("p", { class: `${MUTED} text-sm font-bold` }, [empty])
 
 	const logged = trend.points.filter((point) => point.value !== null).length
-	const [big, unit] = format(trend.average)
+	const [lead, tail] = format(trend.average)
 	const first = trend.points[0].date
 	const last = trend.points[trend.points.length - 1].date
 
 	return el("section", { class: "panel" }, [
 		el("p", { class: "numeric text-5xl font-black" }, [
-			big,
-			el("span", { class: "text-2xl" }, [unit]),
+			lead,
+			el("span", { class: "text-2xl" }, [tail]),
 		]),
 		el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [
 			`average over ${logged} logged ${logged === 1 ? "day" : "days"}`,

@@ -1,4 +1,5 @@
 import { formatDayShort } from "./dates"
+import { formatHours, formatSeconds } from "./duration"
 import type { ExercisePlan, TargetBasis } from "./engine"
 import { SESSIONS } from "./program"
 import type {
@@ -56,9 +57,8 @@ export function formatSet(set: {
 }): string {
 	const unit = set.unit ?? "reps"
 	if (unit === "reps") return `${set.kg} kg × ${set.reps}`
-	return set.kg > 0
-		? `${set.kg} kg × ${set.reps} ${unit}`
-		: `${set.reps} ${unit}`
+	const count = unit === "s" ? formatSeconds(set.reps) : `${set.reps} ${unit}`
+	return set.kg > 0 ? `${set.kg} kg × ${count}` : count
 }
 
 export function conditioningSummary(entry: ConditioningEntry): string {
@@ -67,7 +67,9 @@ export function conditioningSummary(entry: ConditioningEntry): string {
 
 export function wellnessSummary(entry: WellnessEntry): string {
 	return [
-		...(entry.sleepHours === undefined ? [] : [`${entry.sleepHours} h sleep`]),
+		...(entry.sleepHours === undefined
+			? []
+			: [`${formatHours(entry.sleepHours)} sleep`]),
 		...(entry.steps === undefined ? [] : [`${entry.steps} steps`]),
 	].join(" · ")
 }

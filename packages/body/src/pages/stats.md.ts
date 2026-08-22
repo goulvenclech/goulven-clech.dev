@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { localDateOf } from "../dates"
+import { formatHours } from "../duration"
 import { EXERCISES, WEEKLY_PLAN } from "../program"
 import { fetchLog } from "../remoteLog"
 import {
@@ -30,25 +31,26 @@ export interface StatsView {
 
 const series = (
 	values: readonly (number | null)[],
-	round: (value: number) => number,
+	format: (value: number) => string,
 ): string =>
-	values
-		.map((value) => (value === null ? "—" : String(round(value))))
-		.join(" · ")
+	values.map((value) => (value === null ? "—" : format(value))).join(" · ")
+
+const rounded = (value: number) => String(Math.round(value))
 
 function wellnessLine(
 	label: string,
 	trend: DailyTrend,
-	format: (average: number) => string,
+	format: (value: number) => string,
 	empty: string,
+	averageUnit = "",
 ): string {
 	if (trend.average === null) return `- ${label}: ${empty}`
 	const logged = trend.points.filter((point) => point.value !== null).length
 	const first = trend.points[0].date
 	const last = trend.points[trend.points.length - 1].date
-	return `- ${label}: ${format(trend.average)} average over ${logged} logged ${logged === 1 ? "day" : "days"}. Daily (${first} → ${last}): ${series(
+	return `- ${label}: ${format(trend.average)}${averageUnit} average over ${logged} logged ${logged === 1 ? "day" : "days"}. Daily (${first} → ${last}): ${series(
 		trend.points.map((point) => point.value),
-		(value) => value,
+		format,
 	)}`
 }
 
@@ -60,7 +62,7 @@ function trendLine(trend: OneRepMaxTrend): string {
 	const last = trend.points[trend.points.length - 1].week
 	return `- ${trend.exercise.name}: latest ${latest == null ? "—" : `${roundKg(latest)} kg`}. Weekly best (${first} → ${last}): ${series(
 		trend.points.map((point) => point.value),
-		roundKg,
+		(value) => String(roundKg(value)),
 	)}`
 }
 
@@ -69,7 +71,7 @@ export function renderStatsMd(view: StatsView): string {
 
 	const tonnageLine = `Total kg per week (${tonnage[0].week} → ${tonnage[tonnage.length - 1].week}): ${series(
 		tonnage.map((point) => point.value),
-		Math.round,
+		rounded,
 	)}`
 
 	return [
@@ -83,18 +85,8 @@ export function renderStatsMd(view: StatsView): string {
 		"",
 		`## Wellness — last ${WELLNESS_DAYS} days`,
 		"",
-		wellnessLine(
-			"Sleep",
-			sleep,
-			(average) => `${Math.round(average * 10) / 10} h`,
-			"No sleep logged yet.",
-		),
-		wellnessLine(
-			"Steps",
-			steps,
-			(average) => `${Math.round(average)} steps`,
-			"No steps logged yet.",
-		),
+		wellnessLine("Sleep", sleep, formatHours, "No sleep logged yet."),
+		wellnessLine("Steps", steps, rounded, "No steps logged yet.", " steps"),
 		"",
 		`## Estimated 1RM — ${TREND_WEEKS} weeks, Epley, best per week`,
 		"",

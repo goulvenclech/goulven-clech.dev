@@ -35,7 +35,20 @@ describe("renderStatsMd", () => {
 			average: (7.5 + 6.8) / 2,
 		}
 		expect(renderStatsMd(view({ sleep }))).toContain(
-			"- Sleep: 7.2 h average over 2 logged days. Daily (2026-08-15 → 2026-08-17): 7.5 · — · 6.8",
+			"- Sleep: 7 h 09 average over 2 logged days. Daily (2026-08-15 → 2026-08-17): 7 h 30 · — · 6 h 48",
+		)
+	})
+
+	it("names the unit on the average, not on every daily point", () => {
+		const steps = {
+			points: [
+				{ date: "2026-08-16", value: 9000 },
+				{ date: "2026-08-17", value: 8432 },
+			],
+			average: (9000 + 8432) / 2,
+		}
+		expect(renderStatsMd(view({ steps }))).toContain(
+			"- Steps: 8716 steps average over 2 logged days. Daily (2026-08-16 → 2026-08-17): 9000 · 8432",
 		)
 	})
 
