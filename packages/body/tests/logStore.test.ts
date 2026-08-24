@@ -79,26 +79,24 @@ describe("appendEntries", () => {
 describe("mergeEntries", () => {
 	it("unions by id, skipping entries already present", async () => {
 		await appendEntries([strengthEntry])
-		const added = await mergeEntries(
-			[strengthEntry, conditioningEntry, { garbage: true }],
-			{ queue: false },
-		)
+		const added = await mergeEntries([
+			strengthEntry,
+			conditioningEntry,
+			{ garbage: true },
+		])
 		expect(added).toBe(1)
 		expect(await readLog()).toHaveLength(2)
 		expect(await pendingCount()).toBe(1)
 	})
 
-	it("queues imported entries so a restored backup gets pushed", async () => {
-		const added = await mergeEntries([strengthEntry, conditioningEntry], {
-			queue: true,
-		})
-		expect(added).toBe(2)
-		expect(await pendingCount()).toBe(2)
+	it("leaves what it merges out of the outbox", async () => {
+		await mergeEntries([strengthEntry, conditioningEntry])
+		expect(await pendingCount()).toBe(0)
 	})
 
 	it("is idempotent", async () => {
-		await mergeEntries([strengthEntry], { queue: false })
-		expect(await mergeEntries([strengthEntry], { queue: false })).toBe(0)
+		await mergeEntries([strengthEntry])
+		expect(await mergeEntries([strengthEntry])).toBe(0)
 		expect(await readLog()).toHaveLength(1)
 	})
 })

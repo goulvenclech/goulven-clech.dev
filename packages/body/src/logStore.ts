@@ -76,14 +76,12 @@ export async function appendEntries(
 }
 
 /**
- * Union by id: entries already present are left as they are, invalid
- * candidates are dropped. Queue pulled-from-remote merges with `queue: false`
- * (they are already upstream); queue imported backups so they get pushed.
- * Returns the number of entries that were actually new.
+ * Union by id, returning how many entries were new. Nothing is queued for
+ * push: merged entries only ever come from a pull, so they are already
+ * upstream.
  */
 export async function mergeEntries(
 	candidates: readonly unknown[],
-	options: { queue: boolean },
 ): Promise<number> {
 	const valid = candidates.flatMap((candidate) => {
 		const parsed = logEntrySchema.safeParse(candidate)
@@ -93,15 +91,13 @@ export async function mergeEntries(
 
 	const db = await openDatabase()
 	try {
-		const transaction = db.transaction([STORE, OUTBOX], "readwrite")
+		const transaction = db.transaction(STORE, "readwrite")
 		const store = transaction.objectStore(STORE)
-		const outbox = transaction.objectStore(OUTBOX)
 		const existing = new Set(await result(store.getAllKeys()))
 		let added = 0
 		for (const entry of valid) {
 			if (existing.has(entry.id)) continue
 			store.put(entry)
-			if (options.queue) outbox.put(0, entry.id)
 			added++
 		}
 		await settled(transaction)

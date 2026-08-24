@@ -2,11 +2,8 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { renderLog } from "$src/client/log"
 import { renderToday } from "$src/client/today"
 import { syncToken } from "$src/client/sync"
-import { appendEntries } from "$src/logStore"
-import { LOG_SCHEMA_VERSION, type StrengthEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
 /** Monday: the weekly plan schedules strength-a. */
@@ -47,23 +44,6 @@ async function render(
 	return root
 }
 
-async function seedOneSet(): Promise<void> {
-	const entry: StrengthEntry = {
-		kind: "strength",
-		schemaVersion: LOG_SCHEMA_VERSION,
-		id: crypto.randomUUID(),
-		date: "2026-08-10",
-		session: "strength-a",
-		ref: "back-squat",
-		set: 1,
-		kg: 60,
-		reps: 8,
-		rir: 2,
-		unit: "reps",
-	}
-	await appendEntries([entry])
-}
-
 beforeEach(() => {
 	globalThis.indexedDB = new IDBFactory()
 	vi.stubGlobal("localStorage", memoryStorage())
@@ -78,67 +58,6 @@ afterEach(() => {
 	vi.unstubAllGlobals()
 })
 
-describe("from the log screen", () => {
-	beforeEach(seedOneSet)
-
-	it("asks for the password in a dialog, not in the toolbar", async () => {
-		const root = await render(renderLog)
-
-		const fields = [...root.querySelectorAll("input[type=password]")]
-		expect(fields).toHaveLength(1)
-		expect(fields[0].closest("dialog")).not.toBeNull()
-		expect(loginIn(root).open).toBe(false)
-
-		buttonLabelled(root, "Enable sync").click()
-		expect(loginIn(root).open).toBe(true)
-	})
-
-	it("stores the token and drops the offer", async () => {
-		const root = await render(renderLog)
-		buttonLabelled(root, "Enable sync").click()
-
-		vi.stubGlobal("fetch", async (url: string) =>
-			String(url).includes("/auth")
-				? Response.json({ token: "tok" })
-				: Response.json({ entries: [], cursor: 0, max: 0 }),
-		)
-		submitPassword(loginIn(root), "secret")
-		await settle()
-
-		expect(syncToken()).toBe("tok")
-		expect(root.textContent).not.toContain("Enable sync")
-		expect(root.querySelector("input[type=password]")).toBeNull()
-	})
-
-	it("keeps a wrong password in the dialog, with sync off", async () => {
-		const root = await render(renderLog)
-		buttonLabelled(root, "Enable sync").click()
-		const login = loginIn(root)
-
-		vi.stubGlobal("fetch", async () => Response.json({}, { status: 401 }))
-		submitPassword(login, "wrong")
-		await settle()
-
-		expect(syncToken()).toBeNull()
-		expect(alertsIn(login)).toContain("Wrong password")
-		expect(login.open).toBe(true)
-	})
-
-	it("forgets the typed password once dismissed", async () => {
-		const root = await render(renderLog)
-		buttonLabelled(root, "Enable sync").click()
-		const login = loginIn(root)
-		login.querySelector<HTMLInputElement>("#sync-password")!.value = "secret"
-
-		buttonLabelled(login, "Cancel").click()
-
-		expect(login.querySelector<HTMLInputElement>("#sync-password")!.value).toBe(
-			"",
-		)
-		expect(login.open).toBe(false)
-	})
-})
-
 describe("from the Today screen", () => {
 	it("offers sync before the log form when no token is stored", async () => {
 		const root = await render(renderToday)
@@ -149,24 +68,33 @@ describe("from the Today screen", () => {
 		expect(logFormIn(root)!.open).toBe(false)
 	})
 
-	it("keeps the log form closed when the offer is dismissed", async () => {
+	it("forgets the typed password once the offer is dismissed", async () => {
 		const root = await render(renderToday)
 		buttonLabelled(root, "Log session").click()
+		const login = loginIn(root)
+		login.querySelector<HTMLInputElement>("#sync-password")!.value = "secret"
 
-		buttonLabelled(loginIn(root), "Cancel").click()
+		buttonLabelled(login, "Cancel").click()
 
-		expect(loginIn(root).open).toBe(false)
+		expect(login.querySelector<HTMLInputElement>("#sync-password")!.value).toBe(
+			"",
+		)
+		expect(login.open).toBe(false)
 		expect(logFormIn(root)!.open).toBe(false)
 	})
 
-	it("keeps the log form closed on a wrong password", async () => {
+	it("keeps a wrong password in the dialog, with sync off", async () => {
 		const root = await render(renderToday)
 		buttonLabelled(root, "Log session").click()
+		const login = loginIn(root)
 
 		vi.stubGlobal("fetch", async () => Response.json({}, { status: 401 }))
-		submitPassword(loginIn(root), "wrong")
+		submitPassword(login, "wrong")
 		await settle()
 
+		expect(syncToken()).toBeNull()
+		expect(alertsIn(login)).toContain("Wrong password")
+		expect(login.open).toBe(true)
 		expect(logFormIn(root)!.open).toBe(false)
 	})
 

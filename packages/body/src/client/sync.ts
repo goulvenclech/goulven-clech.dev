@@ -175,7 +175,7 @@ async function pull(): Promise<number> {
 			storageSet(CURSOR_KEY, "0")
 			continue
 		}
-		added += await mergeEntries(body.entries, { queue: false })
+		added += await mergeEntries(body.entries)
 		const next = Number(body.cursor)
 		const max = Number(body.max)
 		// A malformed response (NaN compares false) or a cursor that stops

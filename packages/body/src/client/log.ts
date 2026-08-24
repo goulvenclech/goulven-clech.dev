@@ -1,4 +1,4 @@
-import { formatDayShort, localDateOf } from "../dates"
+import { formatDayShort } from "../dates"
 import {
 	conditioningSummary,
 	formatSet,
@@ -7,11 +7,10 @@ import {
 	wellnessSummary,
 	type DayLog,
 } from "../dayLog"
-import { mergeEntries, readLog } from "../logStore"
+import { readLog } from "../logStore"
 import { EXERCISES } from "../program"
 import type { LogEntry } from "../schemas"
-import { STORAGE_BLOCKED, el, storageErrorNote } from "./dom"
-import { loginDialog } from "./loginDialog"
+import { el, storageErrorNote } from "./dom"
 import { sync, syncToken, takeAbandoned } from "./sync"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
@@ -41,33 +40,27 @@ export async function renderLog(
 
 	const errorNote = el(
 		"p",
-		{ role: "alert", class: "text-primary mt-3 text-sm font-bold" },
+		{ role: "alert", class: "text-primary mt-8 text-sm font-bold" },
 		note ? [note] : [],
 	)
-	const enableSync = enableSyncControl(rerender)
-	const toolbar = el("div", { class: "mt-8 flex flex-wrap gap-2" }, [
-		...(enableSync ? [enableSync] : []),
-		// Import stays available on an empty log: that is when a backup matters.
-		importButton(errorNote, rerender),
-		...(log.length > 0 ? [exportButton(log)] : []),
-	])
+	// A 401 wipes the token mid-sync, so afterwards a lost password looks like
+	// a device that never had one — and only the former is worth saying.
+	const hadToken = Boolean(syncToken())
 
 	// No in-progress inputs on this screen, so a re-render is safe.
 	if (autoSync)
 		void sync().then((result) => {
 			const failure = syncNote(takeAbandoned(), result.rejected)
-			// A 401 wiped the token after this render: rerender so "Enable sync"
-			// comes back. Without a token at render time the control is already
-			// there, and authRequired is the normal pending state — stay quiet.
-			if (result.authRequired && !enableSync)
-				rerender(failure ?? "Sync password needed again.")
-			else if (result.pulled > 0 || result.pushed > 0) rerender(failure)
-			else if (failure) errorNote.textContent = failure
+			const nextNote =
+				result.authRequired && hadToken
+					? (failure ?? "Sync password needed again.")
+					: failure
+			if (result.pulled > 0 || result.pushed > 0) rerender(nextNote)
+			else if (nextNote) errorNote.textContent = nextNote
 		})
 
 	if (log.length === 0) {
 		root.replaceChildren(
-			toolbar,
 			errorNote,
 			el("p", { class: `${MUTED} mt-4 text-sm font-bold` }, [
 				"Nothing logged yet.",
@@ -77,7 +70,6 @@ export async function renderLog(
 	}
 
 	root.replaceChildren(
-		toolbar,
 		errorNote,
 		el("ul", { class: "mt-4 space-y-3" }, groupByDay(log).map(dayPanel)),
 	)
@@ -122,81 +114,4 @@ function dayPanel(day: DayLog): HTMLElement {
 			]),
 		),
 	])
-}
-
-function enableSyncControl(onEnabled: () => void): HTMLElement | null {
-	if (syncToken()) return null
-
-	const login = loginDialog((authenticated) => {
-		if (authenticated) onEnabled()
-	})
-	const enable = el("button", { class: "button-ghost" }, ["Enable sync"])
-	enable.addEventListener("click", login.open)
-	return el("div", { class: "flex gap-2" }, [enable, login.element])
-}
-
-function exportButton(log: LogEntry[]): HTMLElement {
-	const button = el("button", { class: "button-ghost" }, ["Export JSON"])
-	button.addEventListener("click", () => {
-		const blob = new Blob([JSON.stringify(log, null, "\t")], {
-			type: "application/json",
-		})
-		const url = URL.createObjectURL(blob)
-		const link = el("a", {
-			href: url,
-			download: `body-log-${localDateOf(new Date())}.json`,
-		})
-		link.click()
-		// Revoking in the same task can cancel the download (notably WebKit);
-		// give the browser time to capture the blob first.
-		setTimeout(() => URL.revokeObjectURL(url), 1000)
-	})
-	return button
-}
-
-function importButton(
-	errorNote: HTMLElement,
-	onImported: () => void,
-): HTMLElement {
-	const input = el("input", {
-		type: "file",
-		accept: "application/json,.json",
-		class: "sr-only",
-		"aria-hidden": "true",
-		tabindex: "-1",
-	})
-	const button = el("button", { class: "button-ghost" }, ["Import JSON"])
-	button.addEventListener("click", () => {
-		// Import re-queues entries for push, so it needs the same right as logging.
-		if (!syncToken()) {
-			errorNote.textContent = "Import needs sync — enable it first."
-			return
-		}
-		input.click()
-	})
-	input.addEventListener("change", async () => {
-		const file = input.files?.[0]
-		// Clear now, before any await: re-picking the same file after a failure
-		// would otherwise never fire change again.
-		input.value = ""
-		if (!file) return
-		try {
-			const parsed: unknown = JSON.parse(await file.text())
-			if (!Array.isArray(parsed) || parsed.length === 0)
-				throw new Error("expected a non-empty array")
-			const added = await mergeEntries(parsed, { queue: true })
-			void sync()
-			if (added === 0) {
-				errorNote.textContent = "Nothing new to import."
-				return
-			}
-			onImported()
-		} catch (error) {
-			errorNote.textContent =
-				error instanceof DOMException
-					? `Import failed — ${STORAGE_BLOCKED}.`
-					: "Import failed — not a valid log export."
-		}
-	})
-	return el("span", {}, [input, button])
 }
