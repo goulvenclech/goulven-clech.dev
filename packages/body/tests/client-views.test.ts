@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { renderStats } from "$src/client/stats"
 import { renderToday } from "$src/client/today"
 
@@ -26,7 +26,7 @@ afterEach(() => {
 describe("client views when indexedDB refuses to open", () => {
 	const views = [
 		["renderToday", renderToday],
-		["renderHistory", renderHistory],
+		["renderLog", renderLog],
 		["renderStats", renderStats],
 	] as const
 

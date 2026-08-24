@@ -2,7 +2,7 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { appendEntries } from "$src/logStore"
 import type { LogEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
@@ -42,7 +42,7 @@ it("surfaces a way back into sync when auto-sync hits a 401", async () => {
 	)
 
 	const root = document.createElement("div")
-	await renderHistory(root, true)
+	await renderLog(root, true)
 
 	await vi.waitFor(() =>
 		expect(localStorage.getItem("body-sync-token")).toBeNull(),

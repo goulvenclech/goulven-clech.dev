@@ -25,7 +25,7 @@ function syncNote(abandoned: number, rejected: boolean): string | undefined {
 	return undefined
 }
 
-export async function renderHistory(
+export async function renderLog(
 	root: HTMLElement,
 	autoSync = true,
 	note?: string,
@@ -37,7 +37,7 @@ export async function renderHistory(
 		root.replaceChildren(storageErrorNote())
 		return
 	}
-	const rerender = (nextNote?: string) => renderHistory(root, false, nextNote)
+	const rerender = (nextNote?: string) => renderLog(root, false, nextNote)
 
 	const errorNote = el(
 		"p",

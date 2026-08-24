@@ -106,9 +106,9 @@ function renderIntro(site: string): string {
 	return [
 		"# Body — training log",
 		"",
-		"Goulven Clec'h's personal workout tracker: a barbell strength programme with double progression, home conditioning workouts, and daily wellness (sleep hours, steps).",
+		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and daily wellness (sleep hours, steps), with automated agenda and double progression.",
 		"",
-		`Markdown twin of ${site}/history/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/index.md (site entry and today's session), ${site}/stats.md (adherence, wellness, 1RM, tonnage), ${site}/llms.txt (site map).`,
+		`Markdown twin of ${site}/log/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/index.md (site entry and today's session), ${site}/stats.md (adherence, wellness, 1RM, tonnage), ${site}/llms.txt (site map).`,
 	].join("\n")
 }
 
@@ -124,7 +124,7 @@ export interface LogView {
 	unreadable: number
 }
 
-export function renderLog(view: LogView): string {
+export function renderLogMd(view: LogView): string {
 	const { site, limit, offset, showHelp, days, totalDays, totalEntries } = view
 
 	const apiDoc = showHelp
@@ -185,7 +185,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		const { entries, unreadable } = await fetchLog()
 		const days = groupByDay(entries)
 
-		const document = renderLog({
+		const document = renderLogMd({
 			site,
 			limit,
 			offset,
@@ -203,7 +203,7 @@ export async function GET(context: APIContext): Promise<Response> {
 				// Shorter-lived than the main site's twins: a session logged an
 				// hour ago is exactly what an analysis agent will ask about.
 				"Cache-Control": "public, max-age=300, stale-while-revalidate=1800",
-				Link: `<${site}/history/>; rel="canonical"`,
+				Link: `<${site}/log/>; rel="canonical"`,
 				"X-Robots-Tag": "noindex",
 			},
 		})

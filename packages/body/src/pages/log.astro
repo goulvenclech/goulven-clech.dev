@@ -2,7 +2,7 @@
 import AppLayout from "$src/layouts/AppLayout.astro"
 ---
 
-<AppLayout title="History" subtitle="Every set, newest first" twin="/log.md">
+<AppLayout title="Log" subtitle="Every set, newest first" twin="/log.md">
 	<noscript>
 		<p class="mt-8 text-sm font-bold">
 			This tracker needs JavaScript — views render from your browser's copy of
@@ -14,7 +14,7 @@ import AppLayout from "$src/layouts/AppLayout.astro"
 </AppLayout>
 
 <script>
-	import { renderHistory } from "$src/client/history"
+	import { renderLog } from "$src/client/log"
 
-	renderHistory(document.getElementById("view")!)
+	renderLog(document.getElementById("view")!)
 </script>

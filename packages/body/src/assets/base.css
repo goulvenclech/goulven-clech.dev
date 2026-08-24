@@ -58,16 +58,9 @@
 		@apply bg-alt-light dark:bg-alt-dark focus:ring-primary w-full rounded-xl px-3.5 py-2.5 text-sm font-semibold outline-none focus:ring-2;
 	}
 
-	.choice {
-		@apply border-alt-light dark:border-alt-dark mb-0 block cursor-pointer rounded-xl border-2 px-3.5 py-2.5 text-sm font-bold tracking-normal normal-case;
-	}
-
-	.choice:has(input:checked) {
-		@apply border-primary text-primary;
-	}
-
-	.choice input {
-		@apply sr-only;
+	/* Prose links: the app's primary reads as an alert, and fails contrast. */
+	.link {
+		@apply hover:text-primary underline decoration-dotted decoration-[0.1rem] underline-offset-[3px];
 	}
 
 	.panel {

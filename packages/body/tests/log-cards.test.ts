@@ -2,7 +2,7 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { appendEntries } from "$src/logStore"
 import {
 	LOG_SCHEMA_VERSION,
@@ -77,7 +77,7 @@ const contentOf = (card: HTMLElement) =>
 
 async function cardFor(date: string): Promise<HTMLElement> {
 	const root = document.createElement("div")
-	await renderHistory(root, false)
+	await renderLog(root, false)
 	const card = [...root.querySelectorAll<HTMLElement>("li.panel")].find(
 		(day) => dayOf(day) === date,
 	)
@@ -163,6 +163,24 @@ it("keeps an exercise's sets in order, and retired lifts last", async () => {
 		"Back squat 60 kg × 5 · 62.5 kg × 5",
 		"Lat pulldown 50 kg × 10",
 	])
+})
+
+it("types a rest day by its plan, muted like any other", async () => {
+	await appendEntries([
+		{
+			kind: "wellness",
+			schemaVersion: LOG_SCHEMA_VERSION,
+			id: crypto.randomUUID(),
+			// Sunday, the plan's day off.
+			date: "2026-08-23",
+			sleepHours: 7,
+			steps: 4935,
+		},
+	])
+	const card = await cardFor("Sun 23 Aug")
+
+	expect(typeOf(card)).toBe("Rest")
+	expect(typeClassOf(card)).not.toContain("text-primary")
 })
 
 it("types a skipped day in the primary colour, with the plan and the reason", async () => {

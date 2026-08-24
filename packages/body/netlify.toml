@@ -1,3 +1,13 @@
 [build]
 command = "pnpm build"
 publish = "dist"
+
+[[redirects]]
+from = "/history"
+to = "/log"
+status = 301
+
+[[redirects]]
+from = "/history/"
+to = "/log/"
+status = 301

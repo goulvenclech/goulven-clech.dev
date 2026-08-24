@@ -1,7 +1,7 @@
 import { formatDayShort } from "./dates"
 import { formatHours, formatSeconds } from "./duration"
 import type { ExercisePlan, TargetBasis } from "./engine"
-import { SESSIONS } from "./program"
+import { SESSIONS, planFor } from "./program"
 import type {
 	ConditioningEntry,
 	LogEntry,
@@ -146,15 +146,18 @@ function dayOf(date: string, entries: LogEntry[]): DayLog {
 		byExercise.set(entry.ref, sets)
 	}
 
+	const labels = [
+		...new Set([
+			...(skipped.length > 0 ? ["Skipped"] : []),
+			...(strength.length > 0 ? ["Strength"] : []),
+			...conditioning.map((entry) => entry.category),
+		]),
+	]
+	if (labels.length === 0 && planFor(date).kind === "rest") labels.push("Rest")
+
 	return {
 		date,
-		labels: [
-			...new Set([
-				...(skipped.length > 0 ? ["Skipped"] : []),
-				...(strength.length > 0 ? ["Strength"] : []),
-				...conditioning.map((entry) => entry.category),
-			]),
-		],
+		labels,
 		skipped,
 		strength: [...byExercise.entries()].map(([ref, sets]) => ({ ref, sets })),
 		conditioning,

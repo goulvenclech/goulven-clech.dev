@@ -4,7 +4,7 @@ import {
 	buildLogQueryString,
 	parseLogQuery,
 	renderDayBlock,
-	renderLog,
+	renderLogMd,
 	type LogView,
 } from "$src/pages/log.md"
 import { fetchLog } from "$src/remoteLog"
@@ -122,40 +122,51 @@ describe("renderDayBlock", () => {
 	})
 })
 
-describe("renderLog", () => {
+describe("renderLogMd", () => {
+	it("links the HTML twin and the other endpoints as absolute URLs", () => {
+		const document = renderLogMd(view())
+		for (const url of [
+			`${SITE}/log/`,
+			`${SITE}/index.md`,
+			`${SITE}/stats.md`,
+			`${SITE}/llms.txt`,
+		])
+			expect(document).toContain(url)
+	})
+
 	it("counts days and entries in the range line", () => {
-		expect(renderLog(view())).toContain(
+		expect(renderLogMd(view())).toContain(
 			"Showing days 1–1 of 1 · 3 entries in total.",
 		)
 	})
 
 	it("says so when nothing is logged", () => {
 		const empty = view({ days: [], totalDays: 0, totalEntries: 0 })
-		expect(renderLog(empty)).toContain("Showing 0 of 0 days.")
-		expect(renderLog(empty)).toContain("Nothing logged yet.")
+		expect(renderLogMd(empty)).toContain("Showing 0 of 0 days.")
+		expect(renderLogMd(empty)).toContain("Nothing logged yet.")
 	})
 
 	it("prints absolute pagination links", () => {
 		const paged = view({ limit: 1, offset: 1, totalDays: 3 })
-		const document = renderLog(paged)
+		const document = renderLogMd(paged)
 		expect(document).toContain(`Next page: ${SITE}/log.md?limit=1&offset=2`)
 		expect(document).toContain(`Previous page: ${SITE}/log.md?limit=1`)
 		expect(document).toContain(`Max page size: ${SITE}/log.md?limit=90`)
 	})
 
 	it("collapses the API section behind an absolute link", () => {
-		const hidden = renderLog(view({ showHelp: false }))
+		const hidden = renderLogMd(view({ showHelp: false }))
 		expect(hidden).toContain(
 			`API guide hidden. Show pagination options: ${SITE}/log.md`,
 		)
 		expect(hidden).not.toContain("Free-form parameters")
-		expect(renderLog(view())).toContain(
+		expect(renderLogMd(view())).toContain(
 			`Hide this API section: ${SITE}/log.md?help=0`,
 		)
 	})
 
 	it("flags entries newer than this build instead of failing", () => {
-		expect(renderLog(view({ unreadable: 2 }))).toContain(
+		expect(renderLogMd(view({ unreadable: 2 }))).toContain(
 			"2 entries use a newer format than this page understands and are omitted.",
 		)
 	})

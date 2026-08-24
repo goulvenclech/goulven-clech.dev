@@ -125,6 +125,7 @@ describe("renderBodyIndex", () => {
 		const document = renderBodyIndex(view({}))
 		expect(document).toContain(`${SITE}/log.md`)
 		expect(document).toContain(`${SITE}/stats.md`)
+		expect(document).toContain(`${SITE}/about/`)
 		expect(document).toContain(`${SITE}/llms.txt`)
 	})
 })

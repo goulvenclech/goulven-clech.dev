@@ -297,7 +297,7 @@ function conditioningPanel(
 		el(
 			"a",
 			{
-				class: "button-ghost inline-block",
+				class: "link text-sm font-bold",
 				href: url,
 				target: "_blank",
 				rel: "noreferrer",
@@ -314,7 +314,7 @@ function conditioningPanel(
 		el("p", { class: `${MUTED} mt-1 text-xs font-semibold` }, [
 			"Pick today's workout.",
 		]),
-		el("div", { class: "mt-3 flex flex-wrap gap-2" }, links),
+		el("div", { class: "mt-3 flex flex-wrap gap-4" }, links),
 	])
 	if (logged)
 		section.append(

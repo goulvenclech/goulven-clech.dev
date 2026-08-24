@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { appendEntries, readLog } from "$src/logStore"
 import type { LogEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
@@ -39,7 +39,7 @@ beforeEach(() => {
 })
 
 async function importFile(root: HTMLElement, contents: string): Promise<void> {
-	await renderHistory(root)
+	await renderLog(root)
 	const input = root.querySelector<HTMLInputElement>('input[type="file"]')
 	if (!input) throw new Error("file input not rendered")
 	Object.defineProperty(input, "files", {
@@ -49,7 +49,7 @@ async function importFile(root: HTMLElement, contents: string): Promise<void> {
 	input.dispatchEvent(new Event("change"))
 }
 
-describe("history import", () => {
+describe("log import", () => {
 	it("round-trips an exported log back into storage", async () => {
 		const exported = [strengthEntry, conditioningEntry]
 		await appendEntries(exported)
@@ -79,7 +79,7 @@ describe("history import", () => {
 	it("refuses to open the file picker without a sync token", async () => {
 		localStorage.removeItem("body-sync-token")
 		const root = document.createElement("div")
-		await renderHistory(root)
+		await renderLog(root)
 
 		const button = [...root.querySelectorAll("button")].find(
 			(candidate) => candidate.textContent === "Import JSON",

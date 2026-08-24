@@ -2,7 +2,7 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { sync } from "$src/client/sync"
 import { appendEntries, pendingCount, readLog } from "$src/logStore"
 import { logEntrySchema, type LogEntry } from "$src/schemas"
@@ -130,7 +130,7 @@ describe("server-rejected pushes", () => {
 		expect(await pendingCount()).toBe(0)
 
 		const root = document.createElement("div")
-		await renderHistory(root)
+		await renderLog(root)
 		await new Promise((resolve) => setTimeout(resolve, 100))
 
 		expect(root.textContent).toContain(
@@ -148,7 +148,7 @@ describe("server-rejected pushes", () => {
 		)
 
 		const root = document.createElement("div")
-		await renderHistory(root)
+		await renderLog(root)
 		await new Promise((resolve) => setTimeout(resolve, 100))
 
 		expect(root.textContent).toContain("try again on the next visit")

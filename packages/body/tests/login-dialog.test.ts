@@ -2,7 +2,7 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { renderHistory } from "$src/client/history"
+import { renderLog } from "$src/client/log"
 import { renderToday } from "$src/client/today"
 import { syncToken } from "$src/client/sync"
 import { appendEntries } from "$src/logStore"
@@ -47,7 +47,6 @@ async function render(
 	return root
 }
 
-/** One logged set, so History has something to push and a toolbar to show. */
 async function seedOneSet(): Promise<void> {
 	const entry: StrengthEntry = {
 		kind: "strength",
@@ -79,11 +78,11 @@ afterEach(() => {
 	vi.unstubAllGlobals()
 })
 
-describe("from History", () => {
+describe("from the log screen", () => {
 	beforeEach(seedOneSet)
 
 	it("asks for the password in a dialog, not in the toolbar", async () => {
-		const root = await render(renderHistory)
+		const root = await render(renderLog)
 
 		const fields = [...root.querySelectorAll("input[type=password]")]
 		expect(fields).toHaveLength(1)
@@ -95,7 +94,7 @@ describe("from History", () => {
 	})
 
 	it("stores the token and drops the offer", async () => {
-		const root = await render(renderHistory)
+		const root = await render(renderLog)
 		buttonLabelled(root, "Enable sync").click()
 
 		vi.stubGlobal("fetch", async (url: string) =>
@@ -112,7 +111,7 @@ describe("from History", () => {
 	})
 
 	it("keeps a wrong password in the dialog, with sync off", async () => {
-		const root = await render(renderHistory)
+		const root = await render(renderLog)
 		buttonLabelled(root, "Enable sync").click()
 		const login = loginIn(root)
 
@@ -126,7 +125,7 @@ describe("from History", () => {
 	})
 
 	it("forgets the typed password once dismissed", async () => {
-		const root = await render(renderHistory)
+		const root = await render(renderLog)
 		buttonLabelled(root, "Enable sync").click()
 		const login = loginIn(root)
 		login.querySelector<HTMLInputElement>("#sync-password")!.value = "secret"

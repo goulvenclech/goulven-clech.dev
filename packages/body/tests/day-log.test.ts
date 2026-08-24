@@ -87,6 +87,27 @@ describe("groupByDay", () => {
 	})
 })
 
+describe("rest days", () => {
+	const wellnessOn = (date: string): LogEntry => ({
+		kind: "wellness",
+		schemaVersion: LOG_SCHEMA_VERSION,
+		id: crypto.randomUUID(),
+		date,
+		sleepHours: 8,
+	})
+
+	it("type the card the wellness alone would have left blank", () => {
+		// Sunday, the plan's day off.
+		const [day] = groupByDay([wellnessOn("2026-08-23")])
+		expect(day.labels).toEqual(["Rest"])
+	})
+
+	it("say nothing about a scheduled day that only carries wellness", () => {
+		const [day] = groupByDay([wellnessOn("2026-08-17")])
+		expect(day.labels).toEqual([])
+	})
+})
+
 describe("automatic skips", () => {
 	const marked = (date: string, reason?: string): LogEntry => ({
 		kind: "skipped",

@@ -34,9 +34,9 @@ function renderIntro(site: string): string {
 	return [
 		"# Body",
 		"",
-		"Goulven Clec'h's personal workout tracker: a barbell strength programme with double progression, home conditioning workouts, and daily wellness (sleep hours, steps).",
+		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and daily wellness (sleep hours, steps), with automated agenda and double progression.",
 		"",
-		`Markdown entry point of ${site}/, for crawlers, LLMs, and no-JS readers. Full log by day: ${site}/log.md. Adherence, wellness, 1RM, and tonnage: ${site}/stats.md. Site map: ${site}/llms.txt. Main site: https://goulven-clech.dev/llms.txt.`,
+		`Markdown entry point of ${site}/, for crawlers, LLMs, and no-JS readers. Full log by day: ${site}/log.md. Adherence, wellness, 1RM, and tonnage: ${site}/stats.md. What this is and who it is for: ${site}/about/. Site map: ${site}/llms.txt. Main site: https://goulven-clech.dev/llms.txt.`,
 	].join("\n")
 }
 
