@@ -171,7 +171,7 @@ it("types a rest day by its plan, muted like any other", async () => {
 			kind: "wellness",
 			schemaVersion: LOG_SCHEMA_VERSION,
 			id: crypto.randomUUID(),
-			// Sunday, the plan's day off.
+			// Sunday, a plan day off.
 			date: "2026-08-23",
 			sleepHours: 7,
 			steps: 4935,
@@ -200,7 +200,7 @@ it("says as much when a day was skipped without anyone saying so", async () => {
 	])
 })
 
-it("leaves an ordinary day's type muted", async () => {
+it("leaves a logged day's type muted", async () => {
 	await appendEntries([conditioning("Ab Blaster")])
 
 	expect(typeClassOf(await cardFor("Thu 20 Aug"))).not.toContain("text-primary")

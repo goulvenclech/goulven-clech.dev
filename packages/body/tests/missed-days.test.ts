@@ -44,7 +44,6 @@ describe("missedDays", () => {
 		).toEqual([
 			["2026-08-18", "Cardio"],
 			["2026-08-19", "Combat"],
-			["2026-08-20", "Core"],
 			["2026-08-21", "Strength"],
 		])
 	})
@@ -83,7 +82,7 @@ describe("missedDays", () => {
 	})
 
 	it("catches up over one plan cycle, no further", () => {
-		// The seven days before Saturday, less the plan's Sunday off.
+		// The seven days before Saturday, less the plan's Thursday and Sunday off.
 		expect(
 			missedDays([strength("2026-01-01")], SATURDAY).map((entry) => entry.date),
 		).toEqual([
@@ -91,7 +90,6 @@ describe("missedDays", () => {
 			"2026-08-17",
 			"2026-08-18",
 			"2026-08-19",
-			"2026-08-20",
 			"2026-08-21",
 		])
 	})

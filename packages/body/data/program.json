@@ -2,7 +2,7 @@
 	{ "kind": "strength", "session": "strength-a" },
 	{ "kind": "conditioning", "title": "Cardio" },
 	{ "kind": "conditioning", "title": "Combat" },
-	{ "kind": "conditioning", "title": "Core" },
+	{ "kind": "rest" },
 	{ "kind": "strength", "session": "strength-b" },
 	{ "kind": "conditioning", "title": "Cardio" },
 	{ "kind": "rest" }

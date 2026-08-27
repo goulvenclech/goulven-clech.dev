@@ -97,7 +97,7 @@ describe("rest days", () => {
 	})
 
 	it("type the card the wellness alone would have left blank", () => {
-		// Sunday, the plan's day off.
+		// Sunday, one of the plan's days off.
 		const [day] = groupByDay([wellnessOn("2026-08-23")])
 		expect(day.labels).toEqual(["Rest"])
 	})

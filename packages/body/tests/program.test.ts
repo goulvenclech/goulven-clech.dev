@@ -43,6 +43,11 @@ describe("planFor", () => {
 		expect(planFor("2026-08-17")).toEqual(WEEKLY_PLAN[0]) // Monday
 		expect(planFor("2026-08-23")).toEqual(WEEKLY_PLAN[6]) // Sunday
 	})
+
+	it("takes Thursday and Sunday off", () => {
+		expect(planFor("2026-08-20").kind).toBe("rest")
+		expect(planFor("2026-08-23").kind).toBe("rest")
+	})
 })
 
 describe("exerciseByRef", () => {

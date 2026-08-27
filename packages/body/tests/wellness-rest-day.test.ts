@@ -7,7 +7,7 @@ import { appendEntries, readLog } from "$src/logStore"
 import { LOG_SCHEMA_VERSION } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
-/** Sunday: the weekly plan's rest day. */
+/** Sunday: a rest day in the weekly plan. */
 const SUNDAY = "2026-08-23"
 const SATURDAY = "2026-08-22"
 

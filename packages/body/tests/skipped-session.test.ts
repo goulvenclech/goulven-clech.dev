@@ -7,9 +7,11 @@ import { appendEntries, readLog } from "$src/logStore"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
-/** Thursday: the weekly plan schedules Core. */
-const THURSDAY = "2026-08-20"
+/** Wednesday: the weekly plan schedules Combat. */
 const WEDNESDAY = "2026-08-19"
+const TUESDAY = "2026-08-18"
+/** Thursday: the plan's midweek day off. */
+const THURSDAY = "2026-08-20"
 /** Monday: the weekly plan schedules strength-a. */
 const MONDAY = "2026-08-17"
 
@@ -73,7 +75,7 @@ beforeEach(() => {
 	vi.stubGlobal("fetch", () => Promise.reject(new Error("offline")))
 	// Fake only Date so IndexedDB's real timers still run.
 	vi.useFakeTimers({ toFake: ["Date"] })
-	vi.setSystemTime(new Date(`${THURSDAY}T10:00:00Z`))
+	vi.setSystemTime(new Date(`${WEDNESDAY}T10:00:00Z`))
 })
 
 afterEach(() => {
@@ -91,12 +93,12 @@ describe("skipping today's session", () => {
 		expect(await readLog()).toEqual([
 			expect.objectContaining({
 				kind: "skipped",
-				date: THURSDAY,
-				planned: "Core",
+				date: WEDNESDAY,
+				planned: "Combat",
 				reason: "sick in bed",
 			}),
 		])
-		expect(root.textContent).toContain("Core skipped")
+		expect(root.textContent).toContain("Combat skipped")
 		expect(root.textContent).toContain("sick in bed")
 	})
 
@@ -133,10 +135,10 @@ describe("skipping today's session", () => {
 		// The log comes back in id order, so the pair is asserted unordered.
 		expect(await readLog()).toEqual(
 			expect.arrayContaining([
-				expect.objectContaining({ kind: "skipped", date: THURSDAY }),
+				expect.objectContaining({ kind: "skipped", date: WEDNESDAY }),
 				expect.objectContaining({
 					kind: "wellness",
-					date: WEDNESDAY,
+					date: TUESDAY,
 					sleepHours: 9,
 					steps: 4200,
 				}),
@@ -151,14 +153,14 @@ describe("skipping today's session", () => {
 				kind: "skipped",
 				schemaVersion: LOG_SCHEMA_VERSION,
 				id: crypto.randomUUID(),
-				date: THURSDAY,
-				planned: "Core",
+				date: WEDNESDAY,
+				planned: "Combat",
 				reason: "ill",
 			},
 		])
 		const root = await render()
 
-		expect(root.textContent).toContain("Yesterday — Wed 19 Aug")
+		expect(root.textContent).toContain("Yesterday — Tue 18 Aug")
 		root.querySelector<HTMLInputElement>(".wellness-sleep")!.value = "8"
 		root.querySelector<HTMLButtonElement>("form button")!.click()
 		await settle()
@@ -166,7 +168,7 @@ describe("skipping today's session", () => {
 		expect(await readLog()).toContainEqual(
 			expect.objectContaining({
 				kind: "wellness",
-				date: WEDNESDAY,
+				date: TUESDAY,
 				sleepHours: 8,
 			}),
 		)
@@ -178,8 +180,8 @@ describe("skipping today's session", () => {
 				kind: "skipped",
 				schemaVersion: LOG_SCHEMA_VERSION,
 				id: crypto.randomUUID(),
-				date: THURSDAY,
-				planned: "Core",
+				date: WEDNESDAY,
+				planned: "Combat",
 				reason: "ill",
 			},
 			// Both metrics in: not even the wellness form is left.
@@ -187,7 +189,7 @@ describe("skipping today's session", () => {
 				kind: "wellness",
 				schemaVersion: LOG_SCHEMA_VERSION,
 				id: crypto.randomUUID(),
-				date: WEDNESDAY,
+				date: TUESDAY,
 				sleepHours: 8,
 				steps: 9000,
 			},
@@ -236,6 +238,7 @@ describe("skipping today's session", () => {
 
 describe("catching up on missed days", () => {
 	beforeEach(async () => {
+		vi.setSystemTime(new Date(`${THURSDAY}T10:00:00Z`))
 		await appendEntries([strengthSet(MONDAY)])
 	})
 

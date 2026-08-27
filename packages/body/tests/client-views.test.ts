@@ -42,18 +42,17 @@ describe("client views when indexedDB refuses to open", () => {
 
 describe("today's header", () => {
 	it("names the session and the day, even when storage is blocked", async () => {
-		// A Thursday, which the weekly plan schedules as conditioning at home.
 		// Fake only Date: the mocked indexedDB.open resolves via queueMicrotask.
 		vi.useFakeTimers({ toFake: ["Date"] })
-		vi.setSystemTime(new Date("2026-08-20T10:00:00Z"))
+		vi.setSystemTime(new Date("2026-08-19T10:00:00Z"))
 		document.body.innerHTML =
 			'<h1><span id="page-title">Today</span></h1><p id="page-subtitle"></p>'
 
 		await renderToday(document.createElement("div"))
 
-		expect(document.getElementById("page-title")!.textContent).toBe("Core")
+		expect(document.getElementById("page-title")!.textContent).toBe("Combat")
 		expect(document.getElementById("page-subtitle")!.textContent).toBe(
-			"Thursday 20 August, at home",
+			"Wednesday 19 August, at home",
 		)
 	})
 
@@ -69,6 +68,20 @@ describe("today's header", () => {
 		expect(document.getElementById("page-title")!.textContent).toBe("Strength")
 		expect(document.getElementById("page-subtitle")!.textContent).toBe(
 			"Friday 21 August, at the gym",
+		)
+	})
+
+	it("marks a rest day as a day off", async () => {
+		vi.useFakeTimers({ toFake: ["Date"] })
+		vi.setSystemTime(new Date("2026-08-20T10:00:00Z"))
+		document.body.innerHTML =
+			'<h1><span id="page-title">Today</span></h1><p id="page-subtitle"></p>'
+
+		await renderToday(document.createElement("div"))
+
+		expect(document.getElementById("page-title")!.textContent).toBe("Rest")
+		expect(document.getElementById("page-subtitle")!.textContent).toBe(
+			"Thursday 20 August, day off",
 		)
 	})
 })

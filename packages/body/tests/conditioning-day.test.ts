@@ -7,8 +7,8 @@ import { requestSyncToken } from "$src/client/sync"
 import { readLog } from "$src/logStore"
 import { memoryStorage } from "./memoryStorage"
 
-/** Thursday: the weekly plan schedules Core, a conditioning day. */
-const THURSDAY = "2026-08-20"
+/** Wednesday: the weekly plan schedules Combat. */
+const WEDNESDAY = "2026-08-19"
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -32,7 +32,7 @@ const openTrigger = (root: HTMLElement) =>
 	)!
 
 /** Filled in full, so only the date guard can stop the write. */
-function fillWorkout(dialog: HTMLDialogElement, workout = "core"): void {
+function fillWorkout(dialog: HTMLDialogElement, workout = "combat"): void {
 	dialog.querySelector<HTMLInputElement>("#workout")!.value = workout
 	dialog.querySelector<HTMLInputElement>("#level")!.value = "3"
 	dialog.querySelector<HTMLInputElement>("#sets")!.value = "4"
@@ -60,7 +60,7 @@ beforeEach(async () => {
 	vi.stubGlobal("fetch", () => Promise.reject(new Error("offline")))
 	// Fake only Date so IndexedDB's real timers still run.
 	vi.useFakeTimers({ toFake: ["Date"] })
-	vi.setSystemTime(new Date(`${THURSDAY}T10:00:00Z`))
+	vi.setSystemTime(new Date(`${WEDNESDAY}T10:00:00Z`))
 })
 
 afterEach(() => {
@@ -78,13 +78,6 @@ it("presents a single Darebee card, with logging behind a closed dialog", async 
 	expect(dialog.open).toBe(false)
 })
 
-it("points a core day at the Darebee core search", async () => {
-	const root = await render()
-	expect(linksIn(root)).toEqual(["https://darebee.com/workout.html#q=core"])
-	for (const anchor of root.querySelectorAll("section.panel a"))
-		expect(anchor.getAttribute("target")).toBe("_blank")
-})
-
 it("points a cardio day at the cardio and HIIT filters", async () => {
 	vi.setSystemTime(new Date("2026-08-22T10:00:00Z"))
 	const root = await render()
@@ -95,9 +88,10 @@ it("points a cardio day at the cardio and HIIT filters", async () => {
 })
 
 it("points a combat day at the combat filter", async () => {
-	vi.setSystemTime(new Date("2026-08-19T10:00:00Z"))
 	const root = await render()
 	expect(linksIn(root)).toEqual(["https://darebee.com/workout.html#ty=combat"])
+	for (const anchor of root.querySelectorAll("section.panel a"))
+		expect(anchor.getAttribute("target")).toBe("_blank")
 })
 
 it("logs the workout and shows it as done", async () => {
@@ -113,9 +107,9 @@ it("logs the workout and shows it as done", async () => {
 	expect(await readLog()).toEqual([
 		expect.objectContaining({
 			kind: "conditioning",
-			date: THURSDAY,
-			category: "Core",
-			workout: "core",
+			date: WEDNESDAY,
+			category: "Combat",
+			workout: "combat",
 			level: 3,
 			sets: 4,
 		}),
@@ -138,7 +132,7 @@ it("keeps the plan's category when the workout is renamed", async () => {
 	await settle()
 
 	expect(await readLog()).toEqual([
-		expect.objectContaining({ category: "Core", workout: "Ab Blaster" }),
+		expect.objectContaining({ category: "Combat", workout: "Ab Blaster" }),
 	])
 })
 
@@ -181,12 +175,13 @@ it("discards a workout submitted after midnight, and says so", async () => {
 	openTrigger(root).click()
 	fillWorkout(dialog)
 
-	vi.setSystemTime(new Date("2026-08-21T07:00:00Z"))
+	vi.setSystemTime(new Date("2026-08-20T07:00:00Z"))
 	submitButton(dialog).click()
 	await settle()
 
 	expect(await readLog()).toEqual([])
 	expect(alertsIn(root)).toContain("nothing was saved")
-	// Friday is a strength day: the conditioning dialog is gone.
+	// Thursday is a rest day.
 	expect(root.querySelector("#workout")).toBeNull()
+	expect(root.textContent).toContain("Nothing to log today")
 })
