@@ -22,6 +22,27 @@ describe("sparkline", () => {
 		expect(path.match(/M/g)).toHaveLength(1)
 	})
 
+	it("frames values on the given bounds rather than on the data", () => {
+		expect(sparkline([6, 7, 8], { min: 5, max: 9 }).path).toBe(
+			"M6.0 45.0 L144.0 32.0 L282.0 19.0",
+		)
+	})
+
+	it("hands the edge to a value that overshoots the bounds", () => {
+		expect(sparkline([6, 10], { min: 5, max: 9 }).path).toBe(
+			"M6.0 47.6 L282.0 6.0",
+		)
+		expect(sparkline([4, 7], { min: 5, max: 9 }).path).toBe(
+			"M6.0 58.0 L282.0 26.8",
+		)
+	})
+
+	it("keeps a constant series at its own height in the frame", () => {
+		expect(sparkline([6, 6], { min: 5, max: 9 }).path).toBe(
+			"M6.0 45.0 L282.0 45.0",
+		)
+	})
+
 	it("centres a single value", () => {
 		expect(sparkline([42])).toEqual({
 			path: "M144.0 32.0",

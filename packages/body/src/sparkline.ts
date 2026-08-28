@@ -8,10 +8,20 @@ export interface Sparkline {
 	last: { x: number; y: number } | null
 }
 
-export function sparkline(values: readonly (number | null)[]): Sparkline {
+/** Floor and ceiling the scale always spans; values outside push them out. */
+export interface SparklineBounds {
+	min: number
+	max: number
+}
+
+export function sparkline(
+	values: readonly (number | null)[],
+	bounds?: SparklineBounds,
+): Sparkline {
 	const present = values.flatMap((value) => (value === null ? [] : [value]))
-	const max = Math.max(...present)
-	const min = Math.min(...present)
+	const scale = bounds ? [...present, bounds.min, bounds.max] : present
+	const max = Math.max(...scale)
+	const min = Math.min(...scale)
 
 	const x = (index: number) =>
 		values.length === 1

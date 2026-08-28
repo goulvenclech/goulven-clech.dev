@@ -3,6 +3,7 @@ import { hoursParts } from "../duration"
 import { readLog } from "../logStore"
 import { EXERCISES, WEEKLY_PLAN } from "../program"
 import type { LogEntry } from "../schemas"
+import type { SparklineBounds } from "../sparkline"
 import {
 	ADHERENCE_DAYS,
 	TREND_WEEKS,
@@ -21,6 +22,10 @@ import { sync } from "./sync"
 import { trendChart } from "./trendChart"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
+
+// Default scale, so an ordinary week reads calm rather than jagged.
+const SLEEP_BOUNDS: SparklineBounds = { min: 5, max: 9 }
+const STEPS_BOUNDS: SparklineBounds = { min: 5000, max: 9000 }
 
 export async function renderStats(
 	root: HTMLElement,
@@ -60,18 +65,22 @@ export async function renderStats(
 
 		el("h2", {}, [`Wellness — last ${WELLNESS_DAYS} days`]),
 		el("div", { class: "space-y-3" }, [
-			wellnessPanel(
-				sleep,
-				hoursParts,
-				"No sleep logged yet.",
-				`Sleep per night over the last ${WELLNESS_DAYS} days`,
-			),
-			wellnessPanel(
-				steps,
-				(average) => [String(Math.round(average)), " steps"],
-				"No steps logged yet.",
-				`Steps per day over the last ${WELLNESS_DAYS} days`,
-			),
+			wellnessPanel({
+				trend: sleep,
+				format: hoursParts,
+				caption: "average sleep per night",
+				empty: "No sleep logged yet.",
+				label: `Sleep per night over the last ${WELLNESS_DAYS} days`,
+				bounds: SLEEP_BOUNDS,
+			}),
+			wellnessPanel({
+				trend: steps,
+				format: (average) => [String(Math.round(average))],
+				caption: "average steps per day",
+				empty: "No steps logged yet.",
+				label: `Steps per day over the last ${WELLNESS_DAYS} days`,
+				bounds: STEPS_BOUNDS,
+			}),
 		]),
 
 		el("h2", {}, [`Estimated 1RM — ${TREND_WEEKS} weeks, Epley`]),
@@ -88,17 +97,27 @@ export async function renderStats(
 	)
 }
 
-function wellnessPanel(
-	trend: DailyTrend,
-	format: (average: number) => [lead: string, tail: string],
-	empty: string,
-	label: string,
-): HTMLElement {
+interface WellnessPanel {
+	trend: DailyTrend
+	format: (average: number) => [lead: string, tail?: string]
+	caption: string
+	empty: string
+	label: string
+	bounds: SparklineBounds
+}
+
+function wellnessPanel({
+	trend,
+	format,
+	caption,
+	empty,
+	label,
+	bounds,
+}: WellnessPanel): HTMLElement {
 	// Named per metric: two bare paragraphs share one heading.
 	if (trend.average === null)
 		return el("p", { class: `${MUTED} text-sm font-bold` }, [empty])
 
-	const logged = trend.points.filter((point) => point.value !== null).length
 	const [lead, tail] = format(trend.average)
 	const first = trend.points[0].date
 	const last = trend.points[trend.points.length - 1].date
@@ -106,15 +125,14 @@ function wellnessPanel(
 	return el("section", { class: "panel" }, [
 		el("p", { class: "numeric text-5xl font-black" }, [
 			lead,
-			el("span", { class: "text-2xl" }, [tail]),
+			...(tail ? [el("span", { class: "text-2xl" }, [tail])] : []),
 		]),
-		el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [
-			`average over ${logged} logged ${logged === 1 ? "day" : "days"}`,
-		]),
+		el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [caption]),
 		el("div", { class: `${MUTED} mt-3` }, [
 			trendChart(
 				trend.points.map((point) => point.value),
 				label,
+				bounds,
 			),
 		]),
 		el(

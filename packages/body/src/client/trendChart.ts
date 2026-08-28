@@ -1,12 +1,18 @@
-import { SPARKLINE_HEIGHT, SPARKLINE_WIDTH, sparkline } from "../sparkline"
+import {
+	SPARKLINE_HEIGHT,
+	SPARKLINE_WIDTH,
+	sparkline,
+	type SparklineBounds,
+} from "../sparkline"
 
 const SVG_NS = "http://www.w3.org/2000/svg"
 
 export function trendChart(
 	values: readonly (number | null)[],
 	label: string,
+	bounds?: SparklineBounds,
 ): SVGSVGElement {
-	const { path, last } = sparkline(values)
+	const { path, last } = sparkline(values, bounds)
 
 	const svg = document.createElementNS(SVG_NS, "svg")
 	svg.setAttribute("viewBox", `0 0 ${SPARKLINE_WIDTH} ${SPARKLINE_HEIGHT}`)
