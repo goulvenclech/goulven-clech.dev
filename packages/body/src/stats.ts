@@ -98,8 +98,8 @@ export interface DailyTrend {
 }
 
 /**
- * The window ends yesterday: entries describe the previous day, so today can
- * never have a value yet.
+ * The window ends yesterday: sleep and steps describe the previous day, so
+ * today can never have a value yet.
  */
 export function dailyWellnessTrend(
 	log: readonly LogEntry[],
@@ -134,6 +134,51 @@ export function dailyWellnessTrend(
 	return { points, average }
 }
 
+export interface WeightTrend {
+	latest: { date: string; kg: number } | null
+	/** Mean of the week's readings. */
+	points: WeeklyPoint[]
+}
+
+/** Weight is read twice a week at best, so days would be mostly holes. */
+export function weightTrend(
+	log: readonly LogEntry[],
+	today: string,
+	weeks = TREND_WEEKS,
+): WeightTrend {
+	const weekKeys = lastIsoWeeks(today, weeks)
+
+	// One reading per day, sorted by id so every device keeps the same one.
+	const daily = new Map<string, number>()
+	const wellness = log
+		.filter((entry): entry is WellnessEntry => entry.kind === "wellness")
+		.sort((a, b) => a.id.localeCompare(b.id))
+	for (const entry of wellness) {
+		if (entry.weightKg === undefined) continue
+		if (!weekKeys.includes(isoWeekOf(entry.date))) continue
+		daily.set(entry.date, entry.weightKg)
+	}
+
+	const readings = new Map<string, number[]>()
+	let latest: { date: string; kg: number } | null = null
+	for (const [date, kg] of daily) {
+		const week = isoWeekOf(date)
+		readings.set(week, [...(readings.get(week) ?? []), kg])
+		if (latest === null || date > latest.date) latest = { date, kg }
+	}
+
+	const points = weekKeys.map((week) => {
+		const values = readings.get(week)
+		return {
+			week,
+			value: values
+				? values.reduce((sum, value) => sum + value, 0) / values.length
+				: null,
+		}
+	})
+	return { latest, points }
+}
+
 export interface Adherence {
 	done: number
 	planned: number
@@ -158,7 +203,7 @@ export function adherence(
 
 	const attended = new Set(
 		log
-			// Wellness describes the previous day, not attendance on it, and a
+			// A weigh-in precedes a session that may still be abandoned, and a
 			// skipped session is the record of not attending.
 			.filter(
 				(entry) => entry.kind === "strength" || entry.kind === "conditioning",

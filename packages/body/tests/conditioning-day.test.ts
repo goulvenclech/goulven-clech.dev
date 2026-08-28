@@ -4,11 +4,13 @@ import { IDBFactory } from "fake-indexeddb"
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
 import { renderToday } from "$src/client/today"
 import { requestSyncToken } from "$src/client/sync"
-import { readLog } from "$src/logStore"
+import { appendEntries, readLog } from "$src/logStore"
+import { LOG_SCHEMA_VERSION } from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
 /** Wednesday: the weekly plan schedules Combat. */
 const WEDNESDAY = "2026-08-19"
+const TUESDAY = "2026-08-18"
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -26,10 +28,12 @@ const workoutDialogIn = (root: HTMLElement) =>
 		dialog.querySelector("#workout"),
 	)!
 
-const openTrigger = (root: HTMLElement) =>
-	[...root.querySelectorAll("button")].find(
+const triggersIn = (root: HTMLElement) =>
+	[...root.querySelectorAll("button")].filter(
 		(button) => !button.closest("dialog"),
-	)!
+	)
+
+const openTrigger = (root: HTMLElement) => triggersIn(root)[0]
 
 /** Filled in full, so only the date guard can stop the write. */
 function fillWorkout(dialog: HTMLDialogElement, workout = "combat"): void {
@@ -115,12 +119,31 @@ it("logs the workout and shows it as done", async () => {
 		}),
 	])
 	expect(root.textContent).toContain("Done")
-	// Logged days offer no second write.
-	expect(
-		[...root.querySelectorAll("button")].filter(
-			(button) => !button.closest("dialog"),
-		),
-	).toHaveLength(0)
+	expect(root.querySelector("#workout")).toBeNull()
+	expect(triggersIn(root).map((button) => button.textContent)).toEqual([
+		"Log yesterday",
+	])
+})
+
+it("offers nothing once the workout and yesterday are both logged", async () => {
+	await appendEntries([
+		{
+			kind: "wellness",
+			schemaVersion: LOG_SCHEMA_VERSION,
+			id: crypto.randomUUID(),
+			date: TUESDAY,
+			sleepHours: 8,
+			steps: 9000,
+		},
+	])
+	const root = await render()
+	const dialog = workoutDialogIn(root)
+	openTrigger(root).click()
+	fillWorkout(dialog)
+	submitButton(dialog).click()
+	await settle()
+
+	expect(triggersIn(root)).toHaveLength(0)
 })
 
 it("keeps the plan's category when the workout is renamed", async () => {

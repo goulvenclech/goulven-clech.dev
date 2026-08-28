@@ -9,6 +9,7 @@ import {
 	conditioningEntrySchema,
 	LOG_SCHEMA_VERSION,
 	LOG_WIRE_VERSION,
+	skippedEntrySchema,
 	strengthEntrySchema,
 	wellnessEntrySchema,
 } from "$src/schemas"
@@ -23,6 +24,22 @@ const preSkippedLogEntrySchema = z.discriminatedUnion("kind", [
 	strengthEntrySchema,
 	conditioningEntrySchema,
 	wellnessEntrySchema,
+])
+
+const preWeightWellnessSchema = z.strictObject({
+	kind: z.literal("wellness"),
+	schemaVersion: z.literal(LOG_SCHEMA_VERSION),
+	id: z.uuid(),
+	date: z.string(),
+	sleepHours: z.number().positive().max(24).optional(),
+	steps: z.number().int().positive().optional(),
+})
+
+const preWeightLogEntrySchema = z.discriminatedUnion("kind", [
+	strengthEntrySchema,
+	conditioningEntrySchema,
+	preWeightWellnessSchema,
+	skippedEntrySchema,
 ])
 
 const preOptionalRirStrengthSchema = strengthEntrySchema.extend({
@@ -59,6 +76,14 @@ const skippedEntry = {
 	date: "2026-08-20",
 	planned: "Core",
 	reason: "ill",
+}
+
+const weightEntry = {
+	kind: "wellness",
+	schemaVersion: LOG_SCHEMA_VERSION,
+	id: "77777777-7777-4777-8777-777777777777",
+	date: "2026-08-20",
+	weightKg: 72.4,
 }
 
 const ok = (payload: unknown) => new Response(JSON.stringify(payload))
@@ -140,6 +165,31 @@ describe("skipped kind vs versioned pull cursor", () => {
 				urls.push(url)
 				const since = Number(new URL(url).searchParams.get("since") ?? 0)
 				if (since < 9) return ok({ entries: [skippedEntry], cursor: 9, max: 9 })
+				return ok({ entries: [], cursor: since, max: 9 })
+			}),
+		)
+
+		await sync()
+		expect(urls[0]).toContain("since=0")
+		expect(await readLog()).toHaveLength(1)
+	})
+})
+
+describe("weight field vs versioned pull cursor", () => {
+	it("needs the wire bump: the old union rejects a weight entry", () => {
+		expect(preWeightLogEntrySchema.safeParse(weightEntry).success).toBe(false)
+		expect(wellnessEntrySchema.safeParse(weightEntry).success).toBe(true)
+	})
+
+	it("ignores the cursor a stale client advanced, and recovers the entry", async () => {
+		localStorage.setItem(`body-sync-cursor-v${LOG_WIRE_VERSION - 1}`, "9")
+		const urls: string[] = []
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (url: string) => {
+				urls.push(url)
+				const since = Number(new URL(url).searchParams.get("since") ?? 0)
+				if (since < 9) return ok({ entries: [weightEntry], cursor: 9, max: 9 })
 				return ok({ entries: [], cursor: since, max: 9 })
 			}),
 		)

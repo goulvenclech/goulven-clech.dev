@@ -5,11 +5,10 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest"
 import { renderStats } from "$src/client/stats"
 import { appendEntries } from "$src/logStore"
 import type { StrengthEntry, WellnessEntry } from "$src/schemas"
-import { ADHERENCE_DAYS, TREND_WEEKS, WELLNESS_DAYS } from "$src/stats"
 
 const wellness = (
 	date: string,
-	metrics: { sleepHours?: number; steps?: number },
+	metrics: { sleepHours?: number; steps?: number; weightKg?: number },
 ): WellnessEntry => ({
 	kind: "wellness",
 	schemaVersion: 1,
@@ -54,19 +53,48 @@ afterEach(() => {
 	vi.useRealTimers()
 })
 
-it("groups sleep and steps under one wellness heading, before the 1RM", async () => {
+it("groups sleep, steps and weight under one wellness heading, before the 1RM", async () => {
 	const root = document.createElement("div")
 	document.body.replaceChildren(root)
 	await renderStats(root)
 
 	expect([...root.querySelectorAll("h2")].map((h) => h.textContent)).toEqual([
-		`Adherence — last ${ADHERENCE_DAYS} days`,
-		`Wellness — last ${WELLNESS_DAYS} days`,
-		`Estimated 1RM — ${TREND_WEEKS} weeks, Epley`,
-		`Weekly tonnage — ${TREND_WEEKS} weeks`,
+		"Adherence",
+		"Wellness",
+		"Estimated 1RM (Epley)",
+		"Weekly tonnage",
 	])
-	expect(root.textContent).toContain("No sleep logged yet.")
-	expect(root.textContent).toContain("No steps logged yet.")
+	expect(root.querySelector("section.panel p:last-child")?.textContent).toMatch(
+		/^\d+ of the last \d+ scheduled sessions$/,
+	)
+
+	const wellness = [...root.querySelectorAll("h2")].find(
+		(heading) => heading.textContent === "Wellness",
+	)!.nextElementSibling!
+	expect(wellness.textContent).toContain("No sleep logged yet.")
+	expect(wellness.textContent).toContain("No steps logged yet.")
+	expect(wellness.textContent).toContain("No weight logged yet.")
+})
+
+it("frames weight on a 4 kg window around the weigh-ins, headed by the last", async () => {
+	vi.useFakeTimers({ toFake: ["Date"] })
+	vi.setSystemTime(new Date("2026-08-19T10:00:00Z"))
+	await appendEntries([
+		wellness("2026-08-14", { weightKg: 71.5 }),
+		wellness("2026-08-19", { weightKg: 72.5 }),
+	])
+
+	const root = document.createElement("div")
+	document.body.replaceChildren(root)
+	await renderStats(root, false)
+
+	expect(chartPath(root, "Body weight")).toBe("M256.9 38.5 L282.0 25.5")
+	expect(
+		panelOf(root, "Body weight")?.querySelector("p.numeric")?.textContent,
+	).toBe("72.5 kg")
+	expect(panelOf(root, "Body weight")?.textContent).toContain(
+		"weighed in on Wed 19 Aug",
+	)
 })
 
 it("frames wellness on 5–9 h and 5000–9000 steps, captioned per metric", async () => {

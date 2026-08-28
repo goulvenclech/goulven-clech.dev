@@ -10,7 +10,7 @@ const TODAY = "2026-08-19"
 
 const wellness = (
 	date: string,
-	metrics: { sleepHours?: number; steps?: number },
+	metrics: { sleepHours?: number; steps?: number; weightKg?: number },
 ): WellnessEntry => ({
 	kind: "wellness",
 	schemaVersion: 1,
@@ -85,6 +85,19 @@ describe("dailyWellnessTrend", () => {
 		expect(trend.points.every((point) => point.value === null)).toBe(true)
 	})
 
+	it("reads past a weigh-in sharing the day, which carries neither metric", () => {
+		const slept = {
+			...wellness("2026-08-18", { sleepHours: 7.5, steps: 9000 }),
+			id: "a",
+		}
+		const weighed = { ...wellness("2026-08-18", { weightKg: 72.4 }), id: "z" }
+
+		const last = (metric: "sleepHours" | "steps") =>
+			dailyWellnessTrend([slept, weighed], metric, TODAY, 5).points.at(-1)
+		expect(last("sleepHours")).toEqual({ date: "2026-08-18", value: 7.5 })
+		expect(last("steps")).toEqual({ date: "2026-08-18", value: 9000 })
+	})
+
 	it("resolves same-day duplicates the same way on every device", () => {
 		const low = { ...wellness("2026-08-18", { sleepHours: 6 }), id: "a" }
 		const high = { ...wellness("2026-08-18", { sleepHours: 8 }), id: "b" }
@@ -126,6 +139,10 @@ describe("wellnessEntrySchema", () => {
 		expect(
 			wellnessEntrySchema.safeParse(wellness(TODAY, { steps: 12000 })).success,
 		).toBe(true)
+		expect(
+			wellnessEntrySchema.safeParse(wellness(TODAY, { weightKg: 72.4 }))
+				.success,
+		).toBe(true)
 	})
 
 	it("refuses an entry carrying neither metric", () => {
@@ -134,8 +151,12 @@ describe("wellnessEntrySchema", () => {
 		)
 	})
 
-	it("bounds sleep to a day and steps to whole positive counts", () => {
-		const refuses = (metrics: { sleepHours?: number; steps?: number }) =>
+	it("bounds sleep to a day, steps to whole counts, and weight to a body", () => {
+		const refuses = (metrics: {
+			sleepHours?: number
+			steps?: number
+			weightKg?: number
+		}) =>
 			expect(
 				wellnessEntrySchema.safeParse(wellness(TODAY, metrics)).success,
 			).toBe(false)
@@ -143,5 +164,8 @@ describe("wellnessEntrySchema", () => {
 		refuses({ sleepHours: 0 })
 		refuses({ steps: 0 })
 		refuses({ steps: 7.5 })
+		refuses({ weightKg: 0 })
+		refuses({ weightKg: 7.24 })
+		refuses({ weightKg: 725 })
 	})
 })

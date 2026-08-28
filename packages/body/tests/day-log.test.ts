@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest"
-import { formatSet, groupByDay, wellnessSummary } from "$src/dayLog"
+import {
+	APP_GUIDANCE,
+	type GuidanceLabels,
+	PLAIN_GUIDANCE,
+	formatSet,
+	groupByDay,
+	guidanceFor,
+	wellnessSummary,
+} from "$src/dayLog"
+import type { ExercisePlan } from "$src/engine"
 import { LOG_SCHEMA_VERSION, type LogEntry } from "$src/schemas"
 
 const strength = (
@@ -164,9 +173,91 @@ describe("wellnessSummary", () => {
 		)
 		expect(wellnessSummary(wellness({ sleepHours: 9 }))).toBe("9 h sleep")
 		expect(wellnessSummary(wellness({ steps: 4200 }))).toBe("4200 steps")
+		expect(wellnessSummary(wellness({ weightKg: 72.4 }))).toBe(
+			"72.4 kg body weight",
+		)
+		expect(
+			wellnessSummary(wellness({ sleepHours: 9, steps: 4200, weightKg: 72.4 })),
+		).toBe("9 h sleep · 4200 steps · 72.4 kg body weight")
 	})
 
 	it("reads a night that is not a whole hour on the clock", () => {
 		expect(wellnessSummary(wellness({ sleepHours: 7.5 }))).toBe("7 h 30 sleep")
+	})
+})
+
+describe("guidanceFor", () => {
+	const plan = (overrides: Partial<ExercisePlan> = {}): ExercisePlan => ({
+		ref: "back-squat",
+		exercise: { name: "Back squat", main: true, direction: "ascending" },
+		planned: {
+			ref: "back-squat",
+			sets: 3,
+			progression: "auto",
+			unit: "reps",
+			reps: { min: 5, max: 8 },
+			increment: 2.5,
+		},
+		target: { kg: 60, reps: 8, basis: "hold" },
+		previous: null,
+		loggedToday: [],
+		...overrides,
+	})
+
+	const both = (overrides: Partial<ExercisePlan> = {}) => [
+		guidanceFor(plan(overrides), APP_GUIDANCE),
+		guidanceFor(plan(overrides), PLAIN_GUIDANCE),
+	]
+
+	it("speaks to the lifter on screen and spells it out for the twin", () => {
+		expect(both()).toEqual(["One more rep 💪", "Same load, one more rep"])
+	})
+
+	it("keeps the twin's voice clear of the screen's emoji", () => {
+		const emoji = /\p{Extended_Pictographic}/u
+		for (const line of Object.values(PLAIN_GUIDANCE.basis))
+			expect(line).not.toMatch(emoji)
+		expect(PLAIN_GUIDANCE.firstTime).not.toMatch(emoji)
+	})
+
+	it("reads every basis off the table it was handed", () => {
+		const voice: GuidanceLabels = {
+			basis: {
+				progress: "up",
+				hold: "same",
+				"stall-deload": "stalled",
+				"layoff-deload": "off",
+			},
+			firstTime: "new",
+		}
+		const bases = ["progress", "hold", "stall-deload", "layoff-deload"] as const
+		expect(
+			bases.map((basis) =>
+				guidanceFor(plan({ target: { kg: 60, reps: 5, basis } }), voice),
+			),
+		).toEqual(["up", "same", "stalled", "off"])
+	})
+
+	it("greets an exercise with no history the same way, auto or manual", () => {
+		const auto = both({ target: null })
+		const manual = both({
+			target: null,
+			planned: { ...plan().planned, progression: "manual" },
+		})
+		expect(auto).toEqual(["First time ✨", "First time, no history yet"])
+		expect(manual).toEqual(auto)
+	})
+
+	it("points a manual exercise at the session its fields came from", () => {
+		expect(
+			both({
+				target: null,
+				planned: { ...plan().planned, progression: "manual" },
+				previous: {
+					date: "2026-08-10",
+					sets: [{ kg: 60, reps: 5, unit: "reps" }],
+				},
+			}),
+		).toEqual(["Prefilled from Mon 10 Aug", "Prefilled from Mon 10 Aug"])
 	})
 })

@@ -1,5 +1,6 @@
 import { formatDay, localDateOf } from "../dates"
 import {
+	APP_GUIDANCE,
 	formatSet,
 	guidanceFor,
 	plannedSummary,
@@ -31,6 +32,7 @@ import { logDialog } from "./logDialog"
 import { loginDialog } from "./loginDialog"
 import { skipDialog } from "./skipDialog"
 import { sync, syncToken } from "./sync"
+import { weightField, type WeightField } from "./weightField"
 import { wellnessFields, type WellnessFields } from "./wellnessFields"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
@@ -98,7 +100,7 @@ export async function renderToday(
 					rerender,
 				),
 			)
-		}
+		} else children.push(...inlineWellness(log, today, rerender))
 	} else {
 		const session = todaysSession(SESSIONS[day.session], EXERCISES, log, today)
 		children = [
@@ -119,6 +121,10 @@ export async function renderToday(
 					today,
 					rerender,
 				),
+			)
+		else
+			children.push(
+				...inlineWellness(log, today, rerender, weightField(log, today)),
 			)
 	}
 
@@ -175,25 +181,30 @@ function logControls(
 	]
 }
 
-/** Without this, yesterday's sleep and steps could never be logged at all. */
+/** Without this, yesterday's sleep and the weigh-in could never be logged. */
 function inlineWellness(
 	log: readonly LogEntry[],
 	today: string,
 	rerender: (note?: string) => void,
+	weight: WeightField | null = null,
 ): Node[] {
 	const wellness = wellnessFields(log, today)
-	if (!wellness) return []
+	if (!wellness && !weight) return []
+	const label = weight ? "Log wellness" : "Log yesterday"
 	return syncToken()
-		? [wellnessForm(wellness, today, rerender)]
-		: wellnessSyncGate(rerender)
+		? [wellnessForm(wellness, weight, today, label, rerender)]
+		: wellnessSyncGate(label, rerender)
 }
 
 /** The inline form has no dialog, so its gate swaps the fields for a login. */
-function wellnessSyncGate(rerender: (note?: string) => void): Node[] {
+function wellnessSyncGate(
+	label: string,
+	rerender: (note?: string) => void,
+): Node[] {
 	const login = loginDialog((authenticated) => {
 		if (authenticated) rerender()
 	})
-	const open = el("button", { class: "button-primary mt-6" }, ["Log yesterday"])
+	const open = el("button", { class: "button-primary mt-6" }, [label])
 	open.addEventListener("click", login.open)
 	return [open, login.element]
 }
@@ -220,7 +231,7 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 			el("p", { class: "numeric text-sm font-black" }, [targetSummary(plan)]),
 		]),
 		el("p", { class: `${MUTED} mt-1 text-xs font-semibold` }, [
-			`${plannedSummary(plan.planned)} · ${guidanceFor(plan)}`,
+			`${plannedSummary(plan.planned)} · ${guidanceFor(plan, APP_GUIDANCE)}`,
 		]),
 	])
 
@@ -230,14 +241,17 @@ function exercisePanel(plan: ExercisePlan): HTMLElement {
 }
 
 function wellnessForm(
-	wellness: WellnessFields,
+	wellness: WellnessFields | null,
+	weight: WeightField | null,
 	today: string,
+	label: string,
 	onSettled: (note?: string) => void,
 ): HTMLElement {
 	const form = el("form", {}, [
-		wellness.element,
+		...(weight ? [weight.element] : []),
+		...(wellness ? [wellness.element] : []),
 		el("p", { role: "alert", class: "text-primary mt-4 text-sm font-bold" }),
-		el("button", { class: "button-primary mt-6" }, ["Log yesterday"]),
+		el("button", { class: "button-primary mt-6" }, [label]),
 	])
 
 	form.addEventListener("submit", async (event) => {
@@ -248,15 +262,21 @@ function wellnessForm(
 			return
 		}
 		const alert = form.querySelector<HTMLParagraphElement>("[role=alert]")!
-		const entry = wellness.entry()
-		if (!entry) {
-			alert.textContent = "Nothing to log — fill sleep or steps."
+		const entries = [weight?.entry(), wellness?.entry()].flatMap((entry) =>
+			entry ? [entry] : [],
+		)
+		if (entries.length === 0) {
+			const blocks = [
+				...(weight ? ["the weigh-in"] : []),
+				...(wellness ? ["sleep or steps"] : []),
+			]
+			alert.textContent = `Nothing to log — fill ${blocks.join(", ")}.`
 			return
 		}
 		const button = form.querySelector<HTMLButtonElement>("button")!
 		button.disabled = true
 		try {
-			await appendEntries([entry])
+			await appendEntries(entries)
 			void sync()
 			onSettled()
 		} catch (error) {

@@ -158,7 +158,7 @@ export const conditioningEntrySchema = z.strictObject({
 	sets: z.number().int().positive(),
 })
 
-/** Sleep and steps for a calendar day, logged in passing the next morning. */
+/** Sleep and steps describe the day just past; weight, the day itself. */
 export const wellnessEntrySchema = z
 	.strictObject({
 		kind: z.literal("wellness"),
@@ -167,10 +167,14 @@ export const wellnessEntrySchema = z
 		date: dateString,
 		sleepHours: z.number().positive().max(24).optional(),
 		steps: z.number().int().positive().optional(),
+		weightKg: z.number().min(30).max(300).optional(),
 	})
 	.refine(
-		(entry) => entry.sleepHours !== undefined || entry.steps !== undefined,
-		{ error: "a wellness entry needs sleep or steps" },
+		(entry) =>
+			entry.sleepHours !== undefined ||
+			entry.steps !== undefined ||
+			entry.weightKg !== undefined,
+		{ error: "a wellness entry needs sleep, steps or weight" },
 	)
 
 /** A scheduled session that did not happen; a miss rather than a hole. */
@@ -202,7 +206,7 @@ export const logEntrySchema = z.discriminatedUnion("kind", [
  * Distinct from `LOG_SCHEMA_VERSION`, the literal stamped on stored entries —
  * bumping that would stop existing history from parsing.
  */
-export const LOG_WIRE_VERSION = 4
+export const LOG_WIRE_VERSION = 5
 
 export type StrengthEntry = z.infer<typeof strengthEntrySchema>
 export type ConditioningEntry = z.infer<typeof conditioningEntrySchema>

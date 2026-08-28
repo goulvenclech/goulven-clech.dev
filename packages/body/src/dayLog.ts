@@ -13,11 +13,29 @@ import type {
 
 export const UNIT_LABELS = { reps: "reps", m: "metres", s: "seconds" } as const
 
-export const BASIS_LABELS: Record<TargetBasis, string> = {
-	progress: "Load up — every set hit the top last time",
-	hold: "Same load — one more rep",
-	"stall-deload": "Deload — three identical sessions",
-	"layoff-deload": "Deload — more than two weeks off",
+export interface GuidanceLabels {
+	basis: Record<TargetBasis, string>
+	firstTime: string
+}
+
+export const APP_GUIDANCE: GuidanceLabels = {
+	basis: {
+		progress: "Load up 🎉",
+		hold: "One more rep 💪",
+		"stall-deload": "Deload — stalled three sessions",
+		"layoff-deload": "Deload — two weeks off",
+	},
+	firstTime: "First time ✨",
+}
+
+export const PLAIN_GUIDANCE: GuidanceLabels = {
+	basis: {
+		progress: "Load up, every set topped out last time",
+		hold: "Same load, one more rep",
+		"stall-deload": "Deload, stalled three sessions",
+		"layoff-deload": "Deload, two weeks off",
+	},
+	firstTime: "First time, no history yet",
 }
 
 export function plannedSummary(planned: PlannedExercise): string {
@@ -33,14 +51,16 @@ export function targetSummary(plan: ExercisePlan): string {
 		: "—"
 }
 
-export function guidanceFor(plan: ExercisePlan): string {
+// Passed in rather than defaulted, so a new surface has to pick its voice.
+export function guidanceFor(
+	plan: ExercisePlan,
+	labels: GuidanceLabels,
+): string {
 	if (plan.planned.progression === "manual")
 		return plan.previous
-			? `Manual — prefilled from ${formatDayShort(plan.previous.date)}`
-			: "Manual — log what you did"
-	return plan.target
-		? BASIS_LABELS[plan.target.basis]
-		: "First time — pick a starting load"
+			? `Prefilled from ${formatDayShort(plan.previous.date)}`
+			: labels.firstTime
+	return plan.target ? labels.basis[plan.target.basis] : labels.firstTime
 }
 
 export interface DayLog {
@@ -92,6 +112,9 @@ export function wellnessSummary(entry: WellnessEntry): string {
 			? []
 			: [`${formatHours(entry.sleepHours)} sleep`]),
 		...(entry.steps === undefined ? [] : [`${entry.steps} steps`]),
+		...(entry.weightKg === undefined
+			? []
+			: [`${entry.weightKg} kg body weight`]),
 	].join(" · ")
 }
 

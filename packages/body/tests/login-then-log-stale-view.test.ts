@@ -63,7 +63,7 @@ describe("first login from the Today gate", () => {
 		document.body.replaceChildren(root)
 		await renderToday(root)
 
-		expect(root.textContent).toContain("First time — pick a starting load")
+		expect(root.textContent).toContain("First time ✨")
 		expect(root.textContent).not.toContain("60 kg × 8")
 
 		buttonLabelled(root, "Log session").click()

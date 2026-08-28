@@ -3,9 +3,8 @@ import { hoursParts } from "../duration"
 import { readLog } from "../logStore"
 import { EXERCISES, WEEKLY_PLAN } from "../program"
 import type { LogEntry } from "../schemas"
-import type { SparklineBounds } from "../sparkline"
+import { spanningBounds, type SparklineBounds } from "../sparkline"
 import {
-	ADHERENCE_DAYS,
 	TREND_WEEKS,
 	WELLNESS_DAYS,
 	adherence,
@@ -13,9 +12,11 @@ import {
 	oneRepMaxTrends,
 	roundKg,
 	weeklyTonnage,
+	weightTrend,
 	type DailyTrend,
 	type OneRepMaxTrend,
 	type WeeklyPoint,
+	type WeightTrend,
 } from "../stats"
 import { el, storageErrorNote } from "./dom"
 import { sync } from "./sync"
@@ -26,6 +27,7 @@ const MUTED = "text-muted-light dark:text-muted-dark"
 // Default scale, so an ordinary week reads calm rather than jagged.
 const SLEEP_BOUNDS: SparklineBounds = { min: 5, max: 9 }
 const STEPS_BOUNDS: SparklineBounds = { min: 5000, max: 9000 }
+const WEIGHT_SPAN_KG = 4
 
 export async function renderStats(
 	root: HTMLElement,
@@ -50,20 +52,21 @@ export async function renderStats(
 	const tonnage = weeklyTonnage(log, EXERCISES, today)
 	const sleep = dailyWellnessTrend(log, "sleepHours", today)
 	const steps = dailyWellnessTrend(log, "steps", today)
+	const weight = weightTrend(log, today)
 
 	root.replaceChildren(
-		el("h2", {}, [`Adherence — last ${ADHERENCE_DAYS} days`]),
+		el("h2", {}, ["Adherence"]),
 		el("section", { class: "panel numeric" }, [
 			el("p", { class: "text-5xl font-black" }, [
 				String(Math.round(attendance.ratio * 100)),
 				el("span", { class: "text-2xl" }, ["%"]),
 			]),
 			el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [
-				`${attendance.done}/${attendance.planned} scheduled sessions`,
+				`${attendance.done} of the last ${attendance.planned} scheduled sessions`,
 			]),
 		]),
 
-		el("h2", {}, [`Wellness — last ${WELLNESS_DAYS} days`]),
+		el("h2", {}, ["Wellness"]),
 		el("div", { class: "space-y-3" }, [
 			wellnessPanel({
 				trend: sleep,
@@ -81,9 +84,10 @@ export async function renderStats(
 				label: `Steps per day over the last ${WELLNESS_DAYS} days`,
 				bounds: STEPS_BOUNDS,
 			}),
+			weightPanel(weight),
 		]),
 
-		el("h2", {}, [`Estimated 1RM — ${TREND_WEEKS} weeks, Epley`]),
+		el("h2", {}, ["Estimated 1RM (Epley)"]),
 		...(trends.length === 0
 			? [
 					el("p", { class: `${MUTED} text-sm font-bold` }, [
@@ -92,7 +96,7 @@ export async function renderStats(
 				]
 			: [el("div", { class: "space-y-3" }, trends.map(trendPanel))]),
 
-		el("h2", {}, [`Weekly tonnage — ${TREND_WEEKS} weeks`]),
+		el("h2", {}, ["Weekly tonnage"]),
 		el("section", { class: "panel numeric space-y-2" }, tonnageBars(tonnage)),
 	)
 }
@@ -114,7 +118,7 @@ function wellnessPanel({
 	label,
 	bounds,
 }: WellnessPanel): HTMLElement {
-	// Named per metric: two bare paragraphs share one heading.
+	// Named per metric: the empty states all share one heading.
 	if (trend.average === null)
 		return el("p", { class: `${MUTED} text-sm font-bold` }, [empty])
 
@@ -135,13 +139,35 @@ function wellnessPanel({
 				bounds,
 			),
 		]),
-		el(
-			"div",
-			{ class: `${MUTED} mt-1 flex justify-between text-[10px] font-bold` },
-			[
-				el("p", {}, [formatDayShort(first)]),
-				el("p", {}, [formatDayShort(last)]),
-			],
+		axisLabels(formatDayShort(first), formatDayShort(last)),
+	])
+}
+
+function weightPanel(trend: WeightTrend): HTMLElement {
+	if (trend.latest === null)
+		return el("p", { class: `${MUTED} text-sm font-bold` }, [
+			"No weight logged yet.",
+		])
+
+	const values = trend.points.map((point) => point.value)
+	return el("section", { class: "panel" }, [
+		el("p", { class: "numeric text-5xl font-black" }, [
+			String(trend.latest.kg),
+			el("span", { class: "text-2xl" }, [" kg"]),
+		]),
+		el("p", { class: `${MUTED} mt-2 text-sm font-bold` }, [
+			`weighed in on ${formatDayShort(trend.latest.date)}`,
+		]),
+		el("div", { class: `${MUTED} mt-3` }, [
+			trendChart(
+				values,
+				`Body weight, average per week over ${TREND_WEEKS} weeks`,
+				spanningBounds(values, WEIGHT_SPAN_KG),
+			),
+		]),
+		axisLabels(
+			trend.points[0].week,
+			trend.points[trend.points.length - 1].week,
 		),
 	])
 }
@@ -161,18 +187,22 @@ function trendPanel(trend: OneRepMaxTrend): HTMLElement {
 		el("div", { class: `${MUTED} mt-3` }, [
 			trendChart(
 				trend.points.map((point) => point.value),
-				`Estimated one-rep max for ${trend.exercise.name}, best per week`,
+				`Estimated one-rep max for ${trend.exercise.name}, best per week over ${TREND_WEEKS} weeks`,
 			),
 		]),
-		el(
-			"div",
-			{ class: `${MUTED} mt-1 flex justify-between text-[10px] font-bold` },
-			[
-				el("p", {}, [trend.points[0].week]),
-				el("p", {}, [trend.points[trend.points.length - 1].week]),
-			],
+		axisLabels(
+			trend.points[0].week,
+			trend.points[trend.points.length - 1].week,
 		),
 	])
+}
+
+function axisLabels(first: string, last: string): HTMLElement {
+	return el(
+		"div",
+		{ class: `${MUTED} mt-1 flex justify-between text-[10px] font-bold` },
+		[el("p", {}, [first]), el("p", {}, [last])],
+	)
 }
 
 function tonnageBars(tonnage: WeeklyPoint[]): HTMLElement[] {

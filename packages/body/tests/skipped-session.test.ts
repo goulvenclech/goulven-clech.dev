@@ -200,6 +200,29 @@ describe("skipping today's session", () => {
 		expect(root.querySelector("dialog")).toBeNull()
 	})
 
+	it("offers no gym weigh-in for a strength session that was skipped", async () => {
+		vi.setSystemTime(new Date(`${MONDAY}T10:00:00Z`))
+		await appendEntries([
+			{
+				kind: "skipped",
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: MONDAY,
+				planned: "Strength",
+				reason: "ill",
+			},
+		])
+		const root = await render()
+
+		expect(
+			[...root.querySelectorAll("legend")].map((legend) => legend.textContent),
+		).toEqual(["Yesterday — Sun 16 Aug"])
+		expect(root.querySelector(".wellness-weight")).toBeNull()
+		expect(buttonsIn(root).map((button) => button.textContent)).toEqual([
+			"Log yesterday",
+		])
+	})
+
 	it("offers no skip once part of the session is logged", async () => {
 		vi.setSystemTime(new Date(`${MONDAY}T10:00:00Z`))
 		await appendEntries([strengthSet(MONDAY)])

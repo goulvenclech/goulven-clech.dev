@@ -5,11 +5,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { renderToday } from "$src/client/today"
 import { requestSyncToken } from "$src/client/sync"
 import { appendEntries, readLog } from "$src/logStore"
-import { LOG_SCHEMA_VERSION, type StrengthEntry } from "$src/schemas"
+import {
+	LOG_SCHEMA_VERSION,
+	type LogEntry,
+	type StrengthEntry,
+} from "$src/schemas"
 import { memoryStorage } from "./memoryStorage"
 
 /** Monday: the weekly plan schedules strength-a. */
 const MONDAY = "2026-08-17"
+const SUNDAY = "2026-08-16"
 const LAST_SESSION = "2026-08-10"
 
 type SeededExercise = [
@@ -68,6 +73,9 @@ const openTrigger = (root: HTMLElement) =>
 	[...root.querySelectorAll("button")].find(
 		(button) => !button.closest("dialog"),
 	)!
+
+const legendsIn = (scope: ParentNode) =>
+	[...scope.querySelectorAll("legend")].map((legend) => legend.textContent)
 
 const exercisesIn = (dialog: HTMLDialogElement) =>
 	[...dialog.querySelectorAll("fieldset:not(.wellness) legend")].map(
@@ -130,6 +138,13 @@ async function loggedToday(ref: string): Promise<StrengthEntry[]> {
 		.sort((a, b) => a.set - b.set)
 }
 
+const weighIns = (log: LogEntry[]) =>
+	log.flatMap((entry) =>
+		entry.kind === "wellness" && entry.weightKg !== undefined
+			? [{ date: entry.date, weightKg: entry.weightKg }]
+			: [],
+	)
+
 const alertsIn = (root: ParentNode) =>
 	[...root.querySelectorAll("[role=alert]")]
 		.map((node) => node.textContent)
@@ -176,7 +191,7 @@ describe("the day's plan", () => {
 		expect(dialog.open).toBe(false)
 	})
 
-	it("offers no way to log a session that is already logged", async () => {
+	it("locks a logged session, leaving what the day still owes", async () => {
 		const { root, dialog } = await renderMonday()
 		openTrigger(root).click()
 		submitButton(dialog).click()
@@ -186,8 +201,97 @@ describe("the day's plan", () => {
 		document.body.replaceChildren(relogged)
 		await renderToday(relogged)
 
-		expect(relogged.querySelector("fieldset")).toBeNull()
 		expect(relogged.textContent).toContain("Done")
+		expect(relogged.querySelector("dialog")).toBeNull()
+		expect(legendsIn(relogged)).toEqual(["Weigh-in", "Yesterday — Sun 16 Aug"])
+		expect(relogged.querySelector("form button")?.textContent).toBe(
+			"Log wellness",
+		)
+	})
+
+	it("logs the weigh-in on its own once the session is done", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		submitButton(dialog).click()
+		await settle()
+
+		const relogged = document.createElement("div")
+		document.body.replaceChildren(relogged)
+		await renderToday(relogged)
+		relogged.querySelector<HTMLInputElement>(".wellness-weight")!.value = "72.4"
+		relogged.querySelector<HTMLButtonElement>("form button")!.click()
+		await settle()
+
+		expect(weighIns(await readLog())).toEqual([
+			{ date: MONDAY, weightKg: 72.4 },
+		])
+		expect(legendsIn(relogged)).toEqual(["Yesterday — Sun 16 Aug"])
+		expect(relogged.querySelector("form button")?.textContent).toBe(
+			"Log yesterday",
+		)
+	})
+
+	it("asks for the weigh-in alone when yesterday is already in", async () => {
+		await appendEntries([
+			{
+				kind: "wellness",
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: SUNDAY,
+				sleepHours: 8,
+				steps: 9000,
+			},
+		])
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		submitButton(dialog).click()
+		await settle()
+
+		const relogged = document.createElement("div")
+		document.body.replaceChildren(relogged)
+		await renderToday(relogged)
+
+		expect(legendsIn(relogged)).toEqual(["Weigh-in"])
+		expect(relogged.querySelector("form button")?.textContent).toBe(
+			"Log wellness",
+		)
+
+		relogged.querySelector<HTMLButtonElement>("form button")!.click()
+		await settle()
+
+		expect(alertsIn(relogged)).toContain("Nothing to log — fill the weigh-in.")
+		expect(weighIns(await readLog())).toEqual([])
+	})
+
+	it("offers nothing once the session, the weigh-in and yesterday are in", async () => {
+		await appendEntries([
+			{
+				kind: "wellness",
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: MONDAY,
+				weightKg: 72.4,
+			},
+			{
+				kind: "wellness",
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: SUNDAY,
+				sleepHours: 8,
+				steps: 9000,
+			},
+		])
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		submitButton(dialog).click()
+		await settle()
+
+		const relogged = document.createElement("div")
+		document.body.replaceChildren(relogged)
+		await renderToday(relogged)
+
+		expect(relogged.querySelector("form")).toBeNull()
+		expect(relogged.querySelector("fieldset")).toBeNull()
 	})
 
 	it("keeps offering the exercises a partly logged session has left", async () => {
@@ -389,6 +493,43 @@ describe("the log dialog", () => {
 		expect(dialog.open).toBe(true)
 
 		expect(alertsIn(dialog)).toBe("")
+	})
+
+	it("logs the weigh-in with the session, under today's date", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		dialog.querySelector<HTMLInputElement>(".wellness-weight")!.value = "72.4"
+		submitButton(dialog).click()
+		await settle()
+
+		expect(weighIns(await readLog())).toEqual([
+			{ date: MONDAY, weightKg: 72.4 },
+		])
+	})
+
+	it("logs the session alone when the scale went unread", async () => {
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+		submitButton(dialog).click()
+		await settle()
+
+		expect(weighIns(await readLog())).toEqual([])
+	})
+
+	it("stops asking once today's weigh-in is in", async () => {
+		await appendEntries([
+			{
+				kind: "wellness",
+				schemaVersion: LOG_SCHEMA_VERSION,
+				id: crypto.randomUUID(),
+				date: MONDAY,
+				weightKg: 72.4,
+			},
+		])
+		const { root, dialog } = await renderMonday()
+		openTrigger(root).click()
+
+		expect(dialog.querySelector(".wellness-weight")).toBeNull()
 	})
 
 	it("writes nothing when every set is removed", async () => {

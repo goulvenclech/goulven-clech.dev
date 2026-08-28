@@ -106,9 +106,9 @@ function renderIntro(site: string): string {
 	return [
 		"# Body — training log",
 		"",
-		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and daily wellness (sleep hours, steps), with automated agenda and double progression.",
+		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and wellness (sleep hours, steps, body weight), with automated agenda and double progression.",
 		"",
-		`Markdown twin of ${site}/log/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/index.md (site entry and today's session), ${site}/stats.md (adherence, wellness, 1RM, tonnage), ${site}/llms.txt (site map).`,
+		`Markdown twin of ${site}/log/, for crawlers, LLMs, and no-JS readers. Days are listed newest first. Other entry points: ${site}/index.md (site entry and today's session), ${site}/stats.md (adherence, wellness, body weight, 1RM, tonnage), ${site}/llms.txt (site map).`,
 	].join("\n")
 }
 

@@ -49,7 +49,7 @@ describe("renderTodaySection", () => {
 			"",
 			"Strength at the gym — session strength-a.",
 			"",
-			"- Back squat: target 60 kg × 8 · 3 sets of 5–8 · Same load — one more rep",
+			"- Back squat: target 60 kg × 8 · 3 sets of 5–8 · Same load, one more rep",
 		])
 	})
 
@@ -68,7 +68,7 @@ describe("renderTodaySection", () => {
 			},
 		})
 		expect(renderTodaySection(logged)).toContain(
-			"- Back squat: target — · 3 sets of 5–8 · First time — pick a starting load · done: 60 kg × 8",
+			"- Back squat: target — · 3 sets of 5–8 · First time, no history yet · done: 60 kg × 8",
 		)
 	})
 

@@ -3,6 +3,7 @@ import { LOG_SCHEMA_VERSION, type LogEntry } from "../schemas"
 import { UNIT_LABELS } from "../dayLog"
 import { el, type Modal } from "./dom"
 import { submitDialog } from "./submitDialog"
+import { weightField } from "./weightField"
 
 const MUTED = "text-muted-light dark:text-muted-dark"
 const CAPTION = `${MUTED} text-xs font-extrabold tracking-widest uppercase`
@@ -157,11 +158,15 @@ export function logDialog(
 	)
 	if (pending.length === 0) return null
 	const blocks = pending.map((plan) => ({ plan, ...exerciseFields(plan) }))
+	const weight = weightField(log, today)
 
 	return submitDialog({
 		title: "Strength",
 		submitLabel: "Log session",
-		fields: blocks.map((block) => block.element),
+		fields: [
+			...(weight ? [weight.element] : []),
+			...blocks.map((block) => block.element),
+		],
 		log,
 		today,
 		invalidMessage: "Could not save — check the values (reps ≥ 1, RIR 0–10).",
@@ -194,6 +199,8 @@ export function logDialog(
 				}
 			}
 
+			const weightEntry = weight?.entry() ?? null
+			if (weightEntry) entries.push(weightEntry)
 			if (wellnessEntry) entries.push(wellnessEntry)
 			if (entries.length === 0)
 				return { error: "Nothing to log — every set was removed." }

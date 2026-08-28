@@ -14,6 +14,16 @@ export interface SparklineBounds {
 	max: number
 }
 
+export function spanningBounds(
+	values: readonly (number | null)[],
+	span: number,
+): SparklineBounds | undefined {
+	const present = values.flatMap((value) => (value === null ? [] : [value]))
+	if (present.length === 0) return undefined
+	const middle = (Math.min(...present) + Math.max(...present)) / 2
+	return { min: middle - span / 2, max: middle + span / 2 }
+}
+
 export function sparkline(
 	values: readonly (number | null)[],
 	bounds?: SparklineBounds,

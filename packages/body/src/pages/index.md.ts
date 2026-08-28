@@ -1,6 +1,7 @@
 import type { APIContext } from "astro"
 import { localDateOf, weekdayName } from "../dates"
 import {
+	PLAIN_GUIDANCE,
 	conditioningSummary,
 	formatSet,
 	guidanceFor,
@@ -34,9 +35,9 @@ function renderIntro(site: string): string {
 	return [
 		"# Body",
 		"",
-		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and daily wellness (sleep hours, steps), with automated agenda and double progression.",
+		"Goulven Clec'h's personal workout tracker: strength sessions at the gym, conditioning workouts at home, and wellness (sleep hours, steps, body weight), with automated agenda and double progression.",
 		"",
-		`Markdown entry point of ${site}/, for crawlers, LLMs, and no-JS readers. Full log by day: ${site}/log.md. Adherence, wellness, 1RM, and tonnage: ${site}/stats.md. What this is and who it is for: ${site}/about/. Site map: ${site}/llms.txt. Main site: https://goulven-clech.dev/llms.txt.`,
+		`Markdown entry point of ${site}/, for crawlers, LLMs, and no-JS readers. Full log by day: ${site}/log.md. Adherence, wellness, body weight, 1RM, and tonnage: ${site}/stats.md. What this is and who it is for: ${site}/about/. Site map: ${site}/llms.txt. Main site: https://goulven-clech.dev/llms.txt.`,
 	].join("\n")
 }
 
@@ -71,7 +72,7 @@ export function renderTodaySection(view: IndexView): string {
 				plan.loggedToday.length > 0
 					? ` · done: ${plan.loggedToday.map(formatSet).join(" · ")}`
 					: ""
-			return `- ${plan.exercise.name}: target ${targetSummary(plan)} · ${plannedSummary(plan.planned)} · ${guidanceFor(plan)}${done}`
+			return `- ${plan.exercise.name}: target ${targetSummary(plan)} · ${plannedSummary(plan.planned)} · ${guidanceFor(plan, PLAIN_GUIDANCE)}${done}`
 		}),
 	].join("\n")
 }

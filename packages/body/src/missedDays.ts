@@ -21,7 +21,8 @@ export function missedDays(
 	log: readonly LogEntry[],
 	today: string,
 ): SkippedEntry[] {
-	// Wellness describes the previous day, so it says nothing about attendance.
+	// No wellness entry proves attendance: a weigh-in precedes a session that
+	// may still be abandoned.
 	const recorded = new Set(
 		log
 			.filter(

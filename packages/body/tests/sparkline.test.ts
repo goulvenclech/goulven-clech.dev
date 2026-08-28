@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { sparkline } from "$src/sparkline"
+import { sparkline, spanningBounds } from "$src/sparkline"
 
 describe("sparkline", () => {
 	it("draws one continuous polyline over contiguous values", () => {
@@ -52,5 +52,29 @@ describe("sparkline", () => {
 
 	it("returns an empty path and no last point when all values are null", () => {
 		expect(sparkline([null, null])).toEqual({ path: "", last: null })
+	})
+})
+
+describe("spanningBounds", () => {
+	it("centres a window of the asked width on the values", () => {
+		expect(spanningBounds([71, 73], 4)).toEqual({ min: 70, max: 74 })
+	})
+
+	it("skips the gaps when centring", () => {
+		expect(spanningBounds([null, 71, null, 73, null], 4)).toEqual({
+			min: 70,
+			max: 74,
+		})
+	})
+
+	it("leaves a wider series on its own scale", () => {
+		const values = [70, 80]
+		expect(sparkline(values, spanningBounds(values, 4)).path).toBe(
+			sparkline(values).path,
+		)
+	})
+
+	it("has no window to offer when nothing is logged", () => {
+		expect(spanningBounds([null, null], 4)).toBeUndefined()
 	})
 })
