@@ -3,10 +3,13 @@ const SECONDS_PER_MINUTE = 60
 
 const pad = (value: number) => String(value).padStart(2, "0")
 
-export function hoursParts(hours: number): [lead: string, tail: string] {
+export function splitHours(hours: number): [whole: number, minutes: number] {
 	const total = Math.round(hours * MINUTES_PER_HOUR)
-	const whole = Math.floor(total / MINUTES_PER_HOUR)
-	const minutes = total % MINUTES_PER_HOUR
+	return [Math.floor(total / MINUTES_PER_HOUR), total % MINUTES_PER_HOUR]
+}
+
+export function hoursParts(hours: number): [lead: string, tail: string] {
+	const [whole, minutes] = splitHours(hours)
 	if (whole === 0) return [String(minutes), " min"]
 	return [String(whole), minutes === 0 ? " h" : ` h ${pad(minutes)}`]
 }

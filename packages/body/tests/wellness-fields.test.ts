@@ -269,8 +269,8 @@ describe("in the conditioning log dialog", () => {
 		expect(legendsIn(dialog)).toContain("Yesterday — Mon 17 Aug")
 
 		openTrigger(root).click()
-		dialog.querySelector<HTMLInputElement>("#level")!.value = "3"
-		dialog.querySelector<HTMLInputElement>("#sets")!.value = "4"
+		dialog.querySelector<HTMLInputElement>(".level")!.value = "3"
+		dialog.querySelector<HTMLInputElement>(".sets")!.value = "4"
 		sleepInput(dialog)!.value = "8"
 		stepsInput(dialog)!.value = "12000"
 		submitButton(dialog).click()

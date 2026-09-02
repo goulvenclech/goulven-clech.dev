@@ -4,11 +4,12 @@ import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { z } from "zod"
 import { sync } from "$src/client/sync"
-import { readLog } from "$src/logStore"
+import { mergeEntries, readLog } from "$src/logStore"
 import {
 	conditioningEntrySchema,
 	LOG_SCHEMA_VERSION,
 	LOG_WIRE_VERSION,
+	retractionEntrySchema,
 	skippedEntrySchema,
 	strengthEntrySchema,
 	wellnessEntrySchema,
@@ -45,6 +46,13 @@ const preWeightLogEntrySchema = z.discriminatedUnion("kind", [
 const preOptionalRirStrengthSchema = strengthEntrySchema.extend({
 	rir: z.number().int().min(0).max(10),
 })
+
+const preRetractionLogEntrySchema = z.discriminatedUnion("kind", [
+	strengthEntrySchema,
+	conditioningEntrySchema,
+	wellnessEntrySchema,
+	skippedEntrySchema,
+])
 
 /** Valid under the new union, at the SAME schemaVersion the old union expects. */
 const wellnessEntry = {
@@ -84,6 +92,14 @@ const weightEntry = {
 	id: "77777777-7777-4777-8777-777777777777",
 	date: "2026-08-20",
 	weightKg: 72.4,
+}
+
+const retractionEntry = {
+	kind: "retraction",
+	schemaVersion: LOG_SCHEMA_VERSION,
+	id: "88888888-8888-4888-8888-888888888888",
+	date: "2026-08-20",
+	retracts: rirlessStrengthEntry.id,
 }
 
 const ok = (payload: unknown) => new Response(JSON.stringify(payload))
@@ -197,5 +213,31 @@ describe("weight field vs versioned pull cursor", () => {
 		await sync()
 		expect(urls[0]).toContain("since=0")
 		expect(await readLog()).toHaveLength(1)
+	})
+})
+
+describe("retraction kind vs versioned pull cursor", () => {
+	it("needs the wire bump: the old union rejects a retraction", () => {
+		expect(preRetractionLogEntrySchema.safeParse(retractionEntry).success).toBe(
+			false,
+		)
+		expect(retractionEntrySchema.safeParse(retractionEntry).success).toBe(true)
+	})
+
+	it("ignores the cursor a stale client advanced, and applies the retraction", async () => {
+		await mergeEntries([rirlessStrengthEntry])
+		localStorage.setItem(`body-sync-cursor-v${LOG_WIRE_VERSION - 1}`, "9")
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async (url: string) => {
+				const since = Number(new URL(url).searchParams.get("since") ?? 0)
+				if (since < 9)
+					return ok({ entries: [retractionEntry], cursor: 9, max: 9 })
+				return ok({ entries: [], cursor: since, max: 9 })
+			}),
+		)
+
+		await sync()
+		expect(await readLog()).toEqual([])
 	})
 })

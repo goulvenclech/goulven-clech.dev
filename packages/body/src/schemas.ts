@@ -192,11 +192,26 @@ export const skippedEntrySchema = z.strictObject({
 	reason: z.string().min(1).max(200).optional(),
 })
 
+/**
+ * The log is append-only, so a correction is a retraction plus the
+ * replacement, and readers see only what stands.
+ */
+export const retractionEntrySchema = z.strictObject({
+	kind: z.literal("retraction"),
+	schemaVersion: z.literal(LOG_SCHEMA_VERSION),
+	id: z.uuid(),
+	/** The withdrawn entry's day, so every entry carries one. */
+	date: dateString,
+	/** Final: a retraction aimed at a retraction changes nothing. */
+	retracts: z.uuid(),
+})
+
 export const logEntrySchema = z.discriminatedUnion("kind", [
 	strengthEntrySchema,
 	conditioningEntrySchema,
 	wellnessEntrySchema,
 	skippedEntrySchema,
+	retractionEntrySchema,
 ])
 
 /**
@@ -206,10 +221,11 @@ export const logEntrySchema = z.discriminatedUnion("kind", [
  * Distinct from `LOG_SCHEMA_VERSION`, the literal stamped on stored entries —
  * bumping that would stop existing history from parsing.
  */
-export const LOG_WIRE_VERSION = 5
+export const LOG_WIRE_VERSION = 6
 
 export type StrengthEntry = z.infer<typeof strengthEntrySchema>
 export type ConditioningEntry = z.infer<typeof conditioningEntrySchema>
 export type WellnessEntry = z.infer<typeof wellnessEntrySchema>
 export type SkippedEntry = z.infer<typeof skippedEntrySchema>
+export type RetractionEntry = z.infer<typeof retractionEntrySchema>
 export type LogEntry = z.infer<typeof logEntrySchema>

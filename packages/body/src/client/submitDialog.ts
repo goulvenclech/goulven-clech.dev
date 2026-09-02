@@ -1,14 +1,15 @@
 import { localDateOf } from "../dates"
-import { appendEntries } from "../logStore"
+import { appendEntries, readLog } from "../logStore"
 import type { LogEntry, WellnessEntry } from "../schemas"
 import { ZodError } from "zod"
 import { DAY_ROLLED_OVER, STORAGE_BLOCKED, el, type Modal } from "./dom"
 import { sync } from "./sync"
-import { wellnessFields } from "./wellnessFields"
+import type { WellnessFields } from "./wellnessFields"
 
 // Logging and skipping can share a day, so each dialog labels itself.
 let dialogCount = 0
 
+/** Empty entries mean nothing to write: the dialog just closes. */
 export type BuildResult =
 	{ entries: LogEntry[] } | { error: string; focus?: HTMLElement }
 
@@ -16,15 +17,17 @@ export function submitDialog(options: {
 	title: string
 	submitLabel: string
 	fields: readonly Node[]
-	log: readonly LogEntry[]
-	today: string
+	wellness: WellnessFields | null
 	/** Shown when the schema refuses the write. */
 	invalidMessage: string
-	build: (wellnessEntry: WellnessEntry | null) => BuildResult
+	/** Handed the log as it stands at the write, not as the form was built. */
+	build: (
+		wellnessEntry: WellnessEntry | null,
+		log: readonly LogEntry[],
+	) => BuildResult
 	onSettled: (note?: string) => void
 }): Modal {
-	const { today, onSettled } = options
-	const wellness = wellnessFields(options.log, today)
+	const { wellness, onSettled } = options
 	const titleId = `log-dialog-title-${++dialogCount}`
 
 	// Always rendered so screen readers announce failures reliably.
@@ -61,24 +64,31 @@ export function submitDialog(options: {
 
 	cancel.addEventListener("click", () => dialog.close())
 
+	// Left open overnight, the form would write about a day the screen no longer shows.
+	let openedOn = localDateOf(new Date())
+
 	form.addEventListener("submit", async (event) => {
 		event.preventDefault()
-		// Append-only: a write under yesterday's date could never be corrected.
-		if (localDateOf(new Date()) !== today) {
+		if (localDateOf(new Date()) !== openedOn) {
 			dialog.close()
 			onSettled(DAY_ROLLED_OVER)
 			return
 		}
 
-		const built = options.build(wellness?.entry() ?? null)
-		if ("error" in built) {
-			errorNote.textContent = built.error
-			built.focus?.focus()
-			return
-		}
-
 		submit.disabled = true
 		try {
+			const built = options.build(wellness?.entry() ?? null, await readLog())
+			if ("error" in built) {
+				errorNote.textContent = built.error
+				submit.disabled = false
+				built.focus?.focus()
+				return
+			}
+			if (built.entries.length === 0) {
+				dialog.close()
+				onSettled()
+				return
+			}
 			await appendEntries(built.entries)
 			void sync()
 			dialog.close()
@@ -101,6 +111,7 @@ export function submitDialog(options: {
 		element: dialog,
 		open: () => {
 			errorNote.textContent = ""
+			openedOn = localDateOf(new Date())
 			dialog.showModal()
 		},
 	}

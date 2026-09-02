@@ -1,9 +1,6 @@
-import {
-	LOG_SCHEMA_VERSION,
-	type LogEntry,
-	type WellnessEntry,
-} from "../schemas"
+import type { LogEntry, WellnessEntry } from "../schemas"
 import { el } from "./dom"
+import { weightInput, wellnessEntryFrom } from "./wellnessInputs"
 
 // The dialog can be rebuilt after a partial log, so each block labels its own.
 let fieldsCount = 0
@@ -27,16 +24,7 @@ export function weightField(
 	if (logged) return null
 
 	const id = `weight-${++fieldsCount}`
-	const input = el("input", {
-		id,
-		class: "wellness-weight",
-		type: "number",
-		inputmode: "decimal",
-		step: "any",
-		min: "30",
-		max: "300",
-		placeholder: "kg",
-	})
+	const input = weightInput(id)
 
 	const element = el("fieldset", { class: "wellness mt-6" }, [
 		el("legend", {}, ["Weigh-in"]),
@@ -48,16 +36,5 @@ export function weightField(
 		]),
 	])
 
-	const entry = (): WellnessEntry | null =>
-		input.value === ""
-			? null
-			: {
-					kind: "wellness",
-					schemaVersion: LOG_SCHEMA_VERSION,
-					id: crypto.randomUUID(),
-					date: today,
-					weightKg: Number(input.value),
-				}
-
-	return { element, entry }
+	return { element, entry: () => wellnessEntryFrom({ weight: input }, today) }
 }

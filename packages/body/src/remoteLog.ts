@@ -1,4 +1,5 @@
 import { API_BASE } from "./apiBase"
+import { liveEntries } from "./corrections"
 import { logEntrySchema, type LogEntry } from "./schemas"
 
 export async function fetchLog(
@@ -24,9 +25,9 @@ export async function fetchLog(
 		const max = Number(body.max)
 		// A malformed response (NaN compares false) or a cursor that stops
 		// advancing must end the loop rather than spin it.
-		if (!Number.isFinite(next) || !Number.isFinite(max) || next <= cursor)
-			return { entries, unreadable }
+		if (!Number.isFinite(next) || !Number.isFinite(max) || next <= cursor) break
 		cursor = next
-		if (cursor >= max) return { entries, unreadable }
+		if (cursor >= max) break
 	}
+	return { entries: liveEntries(entries), unreadable }
 }

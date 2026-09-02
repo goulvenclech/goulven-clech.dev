@@ -1,9 +1,10 @@
+import { liveEntries } from "./corrections"
 import { logEntrySchema, type LogEntry } from "./schemas"
 
 /**
  * IndexedDB adapter for the append-only log — the only persisted runtime
- * state. Deliberately no update or delete: history is written once and only
- * ever read back.
+ * state. Deliberately no update or delete: history is written once, and a
+ * correction is itself an entry, applied on read.
  */
 
 const DB_NAME = "body"
@@ -107,11 +108,14 @@ export async function mergeEntries(
 	}
 }
 
+/** Only the outbox ever sees the raw rows. */
 export async function readLog(): Promise<LogEntry[]> {
 	const db = await openDatabase()
 	try {
-		return await result(
-			db.transaction(STORE, "readonly").objectStore(STORE).getAll(),
+		return liveEntries(
+			await result(
+				db.transaction(STORE, "readonly").objectStore(STORE).getAll(),
+			),
 		)
 	} finally {
 		db.close()

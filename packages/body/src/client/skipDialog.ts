@@ -5,6 +5,7 @@ import {
 } from "../schemas"
 import { el, type Modal } from "./dom"
 import { submitDialog } from "./submitDialog"
+import { wellnessFields } from "./wellnessFields"
 
 export function skipDialog(
 	planned: string,
@@ -25,8 +26,7 @@ export function skipDialog(
 		fields: [
 			el("div", {}, [el("label", { for: "skip-reason" }, ["Reason"]), reason]),
 		],
-		log,
-		today,
+		wellness: wellnessFields(log, today),
 		invalidMessage: "Could not save — check the reason.",
 		onSettled,
 		build: (wellnessEntry) => {

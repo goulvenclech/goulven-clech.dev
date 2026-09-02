@@ -25,7 +25,7 @@ async function render(): Promise<HTMLElement> {
 /** Told apart from the sync login dialog by its workout input. */
 const workoutDialogIn = (root: HTMLElement) =>
 	[...root.querySelectorAll("dialog")].find((dialog) =>
-		dialog.querySelector("#workout"),
+		dialog.querySelector(".workout"),
 	)!
 
 const triggersIn = (root: HTMLElement) =>
@@ -37,9 +37,9 @@ const openTrigger = (root: HTMLElement) => triggersIn(root)[0]
 
 /** Filled in full, so only the date guard can stop the write. */
 function fillWorkout(dialog: HTMLDialogElement, workout = "combat"): void {
-	dialog.querySelector<HTMLInputElement>("#workout")!.value = workout
-	dialog.querySelector<HTMLInputElement>("#level")!.value = "3"
-	dialog.querySelector<HTMLInputElement>("#sets")!.value = "4"
+	dialog.querySelector<HTMLInputElement>(".workout")!.value = workout
+	dialog.querySelector<HTMLInputElement>(".level")!.value = "3"
+	dialog.querySelector<HTMLInputElement>(".sets")!.value = "4"
 }
 
 const submitButton = (dialog: HTMLDialogElement) =>
@@ -119,7 +119,7 @@ it("logs the workout and shows it as done", async () => {
 		}),
 	])
 	expect(root.textContent).toContain("Done")
-	expect(root.querySelector("#workout")).toBeNull()
+	expect(root.querySelector(".workout")).toBeNull()
 	expect(triggersIn(root).map((button) => button.textContent)).toEqual([
 		"Log yesterday",
 	])
@@ -205,6 +205,6 @@ it("discards a workout submitted after midnight, and says so", async () => {
 	expect(await readLog()).toEqual([])
 	expect(alertsIn(root)).toContain("nothing was saved")
 	// Thursday is a rest day.
-	expect(root.querySelector("#workout")).toBeNull()
+	expect(root.querySelector(".workout")).toBeNull()
 	expect(root.textContent).toContain("Nothing to log today")
 })

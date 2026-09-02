@@ -1,11 +1,12 @@
 import { addDays, formatDayShort } from "../dates"
-import { hoursOf } from "../duration"
-import {
-	LOG_SCHEMA_VERSION,
-	type LogEntry,
-	type WellnessEntry,
-} from "../schemas"
+import type { LogEntry, WellnessEntry } from "../schemas"
 import { el } from "./dom"
+import {
+	sleepHoursInput,
+	sleepMinutesInput,
+	stepsInput,
+	wellnessEntryFrom,
+} from "./wellnessInputs"
 
 // Logging and skipping can share a day, so each block labels its own fields.
 let fieldsCount = 0
@@ -15,17 +16,6 @@ export interface WellnessFields {
 	/** The entry the filled inputs describe, or null when all left blank. */
 	entry: () => WellnessEntry | null
 }
-
-const numberInput = (attributes: Record<string, string>) =>
-	el("input", {
-		type: "number",
-		inputmode: "numeric",
-		step: "1",
-		...attributes,
-	})
-
-const enteredCount = (input: HTMLInputElement | null) =>
-	input && input.value !== "" ? Number(input.value) : undefined
 
 /**
  * The log is append-only, so each metric disappears once logged; once both
@@ -47,29 +37,9 @@ export function wellnessFields(
 	}
 	if (sleepLogged && stepsLogged) return null
 
-	const sleepHours = sleepLogged
-		? null
-		: numberInput({
-				id: sleepId,
-				class: "wellness-sleep",
-				min: "0",
-				// With the minutes capped at 59, no pair can exceed the stored max.
-				max: "23",
-				placeholder: "h",
-				"aria-label": "Sleep hours",
-			})
-	const sleepMinutes = sleepLogged
-		? null
-		: numberInput({
-				class: "wellness-sleep-minutes",
-				min: "0",
-				max: "59",
-				placeholder: "min",
-				"aria-label": "Sleep minutes",
-			})
-	const steps = stepsLogged
-		? null
-		: numberInput({ id: stepsId, class: "wellness-steps", min: "1" })
+	const sleepHours = sleepLogged ? null : sleepHoursInput(sleepId)
+	const sleepMinutes = sleepLogged ? null : sleepMinutesInput()
+	const steps = stepsLogged ? null : stepsInput(stepsId)
 
 	const sleep =
 		sleepHours && sleepMinutes
@@ -99,22 +69,12 @@ export function wellnessFields(
 		]),
 	])
 
-	const entry = (): WellnessEntry | null => {
-		const slept = hoursOf(
-			enteredCount(sleepHours) ?? 0,
-			enteredCount(sleepMinutes) ?? 0,
-		)
-		const stepCount = enteredCount(steps)
-		if (slept === 0 && stepCount === undefined) return null
-		return {
-			kind: "wellness",
-			schemaVersion: LOG_SCHEMA_VERSION,
-			id: crypto.randomUUID(),
-			date: yesterday,
-			...(slept === 0 ? {} : { sleepHours: slept }),
-			...(stepCount === undefined ? {} : { steps: stepCount }),
-		}
+	return {
+		element,
+		entry: () =>
+			wellnessEntryFrom(
+				{ hours: sleepHours, minutes: sleepMinutes, steps },
+				yesterday,
+			),
 	}
-
-	return { element, entry }
 }

@@ -12,6 +12,9 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 	return element
 }
 
+export const inputValue = (value?: number) =>
+	value === undefined ? "" : String(value)
+
 /** Opening clears stale feedback: not every engine dispatches `close`. */
 export interface Modal {
 	element: HTMLDialogElement

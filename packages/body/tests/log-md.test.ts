@@ -195,6 +195,27 @@ describe("fetchLog", () => {
 		expect(unreadable).toBe(1)
 	})
 
+	it("keeps a withdrawn entry out of the twins", async () => {
+		const retraction: LogEntry = {
+			kind: "retraction",
+			schemaVersion: LOG_SCHEMA_VERSION,
+			id: entryId(5),
+			date: strengthEntry.date,
+			retracts: strengthEntry.id,
+		}
+		const fetchFn = (async () =>
+			page(
+				[strengthEntry, retraction, wellnessEntry],
+				3,
+				3,
+			)) as unknown as typeof fetch
+
+		const { entries, unreadable } = await fetchLog(fetchFn)
+
+		expect(entries).toEqual([wellnessEntry])
+		expect(unreadable).toBe(0)
+	})
+
 	it("throws on a failing backend", async () => {
 		const fetchFn = (async () =>
 			new Response("nope", { status: 500 })) as unknown as typeof fetch

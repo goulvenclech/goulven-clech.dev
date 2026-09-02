@@ -1,6 +1,7 @@
 import "fake-indexeddb/auto"
 import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it } from "vitest"
+import { retractionOf } from "$src/corrections"
 import {
 	appendEntries,
 	clearOutbox,
@@ -107,6 +108,20 @@ describe("outbox", () => {
 		await clearOutbox([strengthEntry.id])
 		expect(await pendingCount()).toBe(1)
 		expect(await outboxEntries()).toEqual([conditioningEntry])
+	})
+})
+
+describe("corrections", () => {
+	it("reads back only what stands, while pushing the retraction too", async () => {
+		await appendEntries([strengthEntry, third])
+		const retraction = retractionOf(strengthEntry)
+		await appendEntries([retraction])
+
+		expect(await readLog()).toEqual([third])
+		expect(await outboxEntries()).toEqual(
+			expect.arrayContaining([strengthEntry, third, retraction]),
+		)
+		expect(await pendingCount()).toBe(3)
 	})
 })
 
