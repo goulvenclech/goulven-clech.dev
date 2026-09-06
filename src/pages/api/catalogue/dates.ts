@@ -2,12 +2,13 @@ import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
 import { json } from "$src/apiResponse"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 
 export const prerender = false // API routes should not be pre-rendered
 
 /** Distinct days (`yyyy-mm-dd`, UTC) that already carry a review. */
 export async function GET(
-	_context: APIContext,
+	context: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
 	try {
@@ -18,8 +19,14 @@ export async function GET(
 			(row) => row.day,
 		)
 
-		// No cache: the form reads this live to avoid reusing an existing day.
-		return json(days, 200, "no-store")
+		// The form reads this live, so no browser cache; the CDN copy is purged
+		// on write.
+		return json(
+			days,
+			200,
+			"no-store",
+			cacheAtEdge(context, { tags: [CATALOGUE_CACHE_TAG] }),
+		)
 	} catch (error) {
 		console.error("Failed to fetch review dates:", error)
 		return json({ error: "Failed to fetch dates" }, 500)

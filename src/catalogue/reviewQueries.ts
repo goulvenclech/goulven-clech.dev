@@ -12,6 +12,20 @@ export interface ReviewFilters {
 }
 
 export const MAX_LIMIT = 100
+
+/** Every parameter parseReviewQuery reads; the CDN cache key is narrowed to them. */
+export const REVIEW_QUERY_PARAMS = [
+	"query",
+	"rating",
+	"emotion",
+	"source",
+	"sort",
+	"limit",
+	"offset",
+	"year",
+	"after",
+	"before",
+] as const
 const VALID_SOURCES = Object.keys(sourceNouns)
 
 const YEAR_RE = /^\d{4}$/
@@ -185,12 +199,4 @@ export function buildSelectQuery(
 	const sql = `SELECT * FROM reviews${where}${orderBy} LIMIT ? OFFSET ?`
 	args.push(filters.limit, filters.offset ?? 0)
 	return { sql, args }
-}
-
-export function buildCountQuery(filters: ReviewFilters): {
-	sql: string
-	args: (string | number)[]
-} {
-	const { where, args } = buildWhereClause(filters)
-	return { sql: `SELECT COUNT(*) AS total FROM reviews${where}`, args }
 }

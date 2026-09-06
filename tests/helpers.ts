@@ -33,6 +33,13 @@ export function createMockAPIContext(
 			merge: vi.fn(),
 			headers: vi.fn(() => []),
 		},
+		cache: {
+			enabled: true,
+			set: vi.fn(),
+			tags: [],
+			options: {},
+			invalidate: vi.fn(async () => {}),
+		},
 		preferredLocale: undefined,
 		preferredLocaleList: undefined,
 		currentLocale: undefined,

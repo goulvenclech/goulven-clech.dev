@@ -1,0 +1,11 @@
+# Query-string views of the markdown twins and the API hit the database, so
+# crawlers stay on the base pages.
+User-agent: *
+Disallow: /catalogue.md?
+Disallow: /catalogue/todo.md?
+Disallow: /index.md?
+Disallow: /api/
+
+# Claude's fetcher honours robots.txt but must follow the twins' filter links.
+User-agent: Claude-User
+Allow: /

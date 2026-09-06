@@ -38,21 +38,25 @@ export interface TodoReviewIndex {
 	emotionsById: Map<string, TodoEmotion>
 }
 
-/**
- * The catalogue reviews the lists need, indexed per source. A failed query
- * degrades to "nothing done": the lists are static and still worth showing.
- */
-export async function loadTodoReviews(
-	client: Client,
-	lists: TodoList[],
-): Promise<TodoReviewIndex> {
-	const index: TodoReviewIndex = {
+export function emptyTodoReviewIndex(): TodoReviewIndex {
+	return {
 		doneBySource: new Map(),
 		reviewsBySource: new Map(),
 		namesBySource: new Map(),
 		postersBySource: new Map(),
 		emotionsById: new Map(),
 	}
+}
+
+/**
+ * The catalogue reviews the lists need, indexed per source. Null on a failed
+ * query: callers may still show the static lists, but must not cache them.
+ */
+export async function loadTodoReviews(
+	client: Client,
+	lists: TodoList[],
+): Promise<TodoReviewIndex | null> {
+	const index = emptyTodoReviewIndex()
 	try {
 		const emotionRows = await client.execute(
 			"SELECT id, emoji, name FROM emotions WHERE is_deleted = false",
@@ -82,6 +86,7 @@ export async function loadTodoReviews(
 		}
 	} catch (error) {
 		console.error("catalogue to-do: could not load reviews", error)
+		return null
 	}
 	return index
 }

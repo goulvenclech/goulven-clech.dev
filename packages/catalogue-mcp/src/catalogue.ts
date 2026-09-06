@@ -109,7 +109,7 @@ const REQUEST_TIMEOUT_MS = 10_000
 /** MAX_LIMIT of the reviews API; we never ask for more in one page. */
 export const PAGE_SIZE = 100
 /** Backstop against a server that never reports the end of the results. */
-const MAX_PAGES = 50
+export const MAX_PAGES = 50
 
 /**
  * Caps for callers that don't ask for one: a whole catalogue or list runs to

@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { getClient } from "$src/db"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 import {
 	RATING_ORDER,
 	ratingLabels,
@@ -8,10 +9,10 @@ import {
 	sourcePlurals,
 } from "$src/catalogue/reviewUtils"
 import {
-	buildCountQuery,
 	buildSelectQuery,
 	MAX_LIMIT,
 	parseReviewQuery,
+	REVIEW_QUERY_PARAMS,
 	type ReviewFilters,
 } from "$src/catalogue/reviewQueries"
 
@@ -228,22 +229,12 @@ export interface CatalogueView {
 	showHelp: boolean
 	items: DbReviewRow[]
 	hasMore: boolean
-	total: number
 	emotions: EmotionRow[]
 }
 
 export function renderCatalogue(view: CatalogueView): string {
-	const {
-		site,
-		filters,
-		limit,
-		offset,
-		showHelp,
-		items,
-		hasMore,
-		total,
-		emotions,
-	} = view
+	const { site, filters, limit, offset, showHelp, items, hasMore, emotions } =
+		view
 
 	const emotionsById = new Map<number, EmotionRow>(
 		emotions.map((e) => [Number(e.id), e]),
@@ -274,8 +265,8 @@ export function renderCatalogue(view: CatalogueView): string {
 	)
 	const rangeLine =
 		items.length === 0
-			? `Showing 0 of ${total}.`
-			: `Showing ${offset + 1}–${offset + items.length} of ${total}.`
+			? "Showing 0."
+			: `Showing ${offset + 1}–${offset + items.length}.`
 
 	const body = items.length
 		? items.map((r) => renderReviewLine(r, emotionsById)).join("\n\n")
@@ -290,7 +281,7 @@ export function renderCatalogue(view: CatalogueView): string {
 		paginationLines.push(
 			`Previous page: ${buildUrl(site, filters, limit, Math.max(0, offset - limit), showHelp)}`,
 		)
-	if (limit < MAX_LIMIT && total > limit)
+	if (limit < MAX_LIMIT && (hasMore || offset > 0))
 		paginationLines.push(
 			`Max page size: ${buildUrl(site, filters, MAX_LIMIT, 0, showHelp)}`,
 		)
@@ -321,11 +312,9 @@ export async function GET(context: APIContext): Promise<Response> {
 			limit: limit + 1, // one extra row → hasMore flag
 			offset,
 		})
-		const { sql: countSql, args: countArgs } = buildCountQuery(filters)
 
-		const [reviewsRes, countRes, emotionsRes] = await Promise.all([
+		const [reviewsRes, emotionsRes] = await Promise.all([
 			client.execute({ sql: selectSql, args: selectArgs }),
-			client.execute({ sql: countSql, args: countArgs }),
 			client.execute(
 				"SELECT id, emoji, name FROM emotions WHERE is_deleted = false ORDER BY name",
 			),
@@ -335,10 +324,6 @@ export async function GET(context: APIContext): Promise<Response> {
 		const hasMore = rows.length > limit
 		const items = rows.slice(0, limit)
 
-		const total = Number(
-			(countRes.rows[0] as unknown as { total: number | bigint }).total,
-		)
-
 		const document = renderCatalogue({
 			site,
 			filters,
@@ -347,7 +332,6 @@ export async function GET(context: APIContext): Promise<Response> {
 			showHelp,
 			items,
 			hasMore,
-			total,
 			emotions: emotionsRes.rows as unknown as EmotionRow[],
 		})
 
@@ -357,6 +341,10 @@ export async function GET(context: APIContext): Promise<Response> {
 				"Content-Type": "text/markdown; charset=utf-8",
 				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
 				Link: `<${site}/catalogue>; rel="canonical"`,
+				...cacheAtEdge(context, {
+					tags: [CATALOGUE_CACHE_TAG],
+					params: [...REVIEW_QUERY_PARAMS, "help"],
+				}),
 			},
 		})
 	} catch (err) {

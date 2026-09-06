@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
+import { createEndpointContext, createMockDbClient } from "../helpers"
+import { getClient } from "../../src/db"
 import {
 	buildTodoItems,
 	type TodoItem,
@@ -7,6 +9,7 @@ import {
 import {
 	buildFacetUrl,
 	buildTodoQueryString,
+	GET,
 	parseTodoQuery,
 	renderApiDoc,
 	renderFilterSummary,
@@ -15,6 +18,8 @@ import {
 	type TodoListSummary,
 	type TodoView,
 } from "../../src/pages/catalogue/todo.md"
+
+vi.mock("../../src/db", () => ({ getClient: vi.fn() }))
 
 const urlOf = (qs: string) =>
 	new URL(`http://localhost:4321/catalogue/todo.md${qs}`)
@@ -472,7 +477,7 @@ describe("renderTodo", () => {
 	it("joins the filter summary and range on one line", () => {
 		const lines = renderTodo(detailView).split("\n")
 		expect(lines).toContain(
-			"Filters: list=ghibli (remove: https://example.com/catalogue/todo.md?status=todo&limit=100&help=0 ), status=todo (remove: https://example.com/catalogue/todo.md?list=ghibli&limit=100&help=0 ). Showing 21–21 of 30.",
+			"Filters: list=ghibli (remove: https://example.com/catalogue/todo.md?status=todo&limit=100&help=0 ), status=todo (remove: https://example.com/catalogue/todo.md?list=ghibli&limit=100&help=0 ). Showing 21–21.",
 		)
 	})
 
@@ -518,7 +523,58 @@ describe("renderTodo", () => {
 			offset: 0,
 			detail: { ...detailView.detail!, matched: 0, items: [] },
 		})
-		expect(out).toContain("Showing 0 of 0.")
+		expect(out).toContain("Showing 0.")
 		expect(out).toContain("No items match these filters.")
+	})
+})
+
+describe("GET /catalogue/todo.md", () => {
+	async function serve(path: string) {
+		const context = createEndpointContext(path)
+		const res = await GET(context)
+		return { context, res }
+	}
+
+	it("caches at the CDN under the catalogue tag, keyed on its own params only", async () => {
+		vi.mocked(getClient).mockReturnValue(
+			createMockDbClient({ "FROM reviews": [] }),
+		)
+		const { context, res } = await serve("/catalogue/todo.md?status=done")
+
+		expect(res.status).toBe(200)
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
+		expect(res.headers.get("Netlify-Vary")).toBe(
+			"query=list|query|status|sort|limit|offset|help",
+		)
+	})
+
+	it("never caches a degraded render, which would pin zeros at the CDN", async () => {
+		vi.mocked(getClient).mockReturnValue({
+			execute: async () => {
+				throw new Error("db down")
+			},
+		} as unknown as ReturnType<typeof getClient>)
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+		const { context, res } = await serve("/catalogue/todo.md")
+
+		expect(res.status).toBe(200)
+		expect(context.cache.set).not.toHaveBeenCalled()
+		expect(res.headers.get("Cache-Control")).toBe("no-store")
+		expect(res.headers.get("Netlify-Vary")).toBeNull()
+		errorSpy.mockRestore()
+	})
+
+	it("returns 500 without arming the CDN when no client can be built", async () => {
+		vi.mocked(getClient).mockImplementation(() => {
+			throw new Error("TURSO_URL unset")
+		})
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+		const { context, res } = await serve("/catalogue/todo.md")
+
+		expect(res.status).toBe(500)
+		expect(context.cache.set).not.toHaveBeenCalled()
+		errorSpy.mockRestore()
 	})
 })

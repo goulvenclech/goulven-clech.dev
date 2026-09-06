@@ -28,10 +28,20 @@ describe("GET /api/catalogue/dates", () => {
 		expect(sql).toContain("substr(inserted_at, 1, 10)")
 	})
 
-	it("is not cached, so a just-saved day is visible at once", async () => {
+	it("is never cached by the browser, so a just-saved day is visible at once", async () => {
 		const client = createMockDbClient({ "FROM reviews": [] })
 		const res = await GET(createEndpointContext("/api/catalogue/dates"), client)
 		expect(res.headers.get("Cache-Control")).toBe("no-store")
+	})
+
+	it("is cached at the CDN under the tag the reviews POST purges", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const context = createEndpointContext("/api/catalogue/dates")
+		await GET(context, client)
+
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
 	})
 
 	it("returns 500 when the query fails", async () => {
