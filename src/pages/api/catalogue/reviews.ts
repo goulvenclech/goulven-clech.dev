@@ -2,9 +2,11 @@ import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
 import { json } from "$src/apiResponse"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 import {
 	buildSelectQuery,
 	parseReviewQuery,
+	REVIEW_QUERY_PARAMS,
 } from "$src/catalogue/reviewQueries"
 import { sourceResolvers } from "$src/catalogue/sources/resolvers"
 import type { Review } from "$src/catalogue/apiTypes"
@@ -41,11 +43,11 @@ export const prerender = false // API routes should not be pre-rendered
  * Retrieves reviews with optional filters.
  */
 export async function GET(
-	{ url }: APIContext,
+	context: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
 	try {
-		const { filters, limit, offset } = parseReviewQuery(url, 5)
+		const { filters, limit, offset } = parseReviewQuery(context.url, 5)
 
 		const { sql, args } = buildSelectQuery({
 			...filters,
@@ -59,7 +61,15 @@ export async function GET(
 		const hasMore = rows.length > limit
 		const reviews = rows.slice(0, limit).map(mapRow)
 
-		return json({ reviews, hasMore }, 200, 60) // 1 min cache
+		return json(
+			{ reviews, hasMore },
+			200,
+			60,
+			cacheAtEdge(context, {
+				tags: [CATALOGUE_CACHE_TAG],
+				params: REVIEW_QUERY_PARAMS,
+			}),
+		)
 	} catch (err) {
 		console.error("GET /reviews failed:", err)
 		return json({ error: "Failed to fetch reviews" }, 500)
@@ -70,13 +80,13 @@ export async function GET(
  * Inserts a new review.
  */
 export async function POST(
-	{ request }: APIContext,
+	context: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
 	// Parsed outside the main try so a malformed body is a 400, not a 500.
 	let body
 	try {
-		body = await request.json()
+		body = await context.request.json()
 	} catch (err) {
 		// Warn, not error: any anonymous caller can trigger this before auth.
 		console.warn("POST /reviews could not read the body:", err)
@@ -145,6 +155,13 @@ export async function POST(
 				date ? new Date(date).toISOString() : new Date().toISOString(),
 			],
 		})
+
+		// The row is in: a failed purge only delays the cache by its max-age.
+		try {
+			await context.cache.invalidate({ tags: [CATALOGUE_CACHE_TAG] })
+		} catch (err) {
+			console.error("POST /reviews could not purge the CDN cache:", err)
+		}
 
 		return json({ ok: true }, 201)
 	} catch (err) {

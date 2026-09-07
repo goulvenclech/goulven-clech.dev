@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { getClient } from "$src/db"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 import {
 	buildTodoItems,
 	computeTodoProgress,
@@ -17,6 +18,7 @@ import {
 } from "$src/catalogue/todo"
 import { DEFAULT_SORT, DEFAULT_STATUS } from "$components/catalogue/todoFilters"
 import {
+	emptyTodoReviewIndex,
 	INACTIVE_LIST_IDS,
 	loadTodoReviews,
 	todoLists,
@@ -27,6 +29,17 @@ export const prerender = false
 
 const DEFAULT_LIMIT = 20
 const MAX_LIMIT = 100
+
+/** Every parameter this route reads; the CDN cache key is narrowed to them. */
+const TODO_QUERY_PARAMS = [
+	"list",
+	"query",
+	"status",
+	"sort",
+	"limit",
+	"offset",
+	"help",
+] as const
 
 export interface TodoPageFilters {
 	list?: string
@@ -368,8 +381,8 @@ function renderDetailBlock(
 	const progressLine = `Progress: ${p.doneCount}/${p.total} done (${p.percent}%).${statsLine ? ` ${statsLine}` : ""}`
 	const rangeLine =
 		items.length === 0
-			? `Showing 0 of ${matched}.`
-			: `Showing ${offset + 1}–${offset + items.length} of ${matched}.`
+			? "Showing 0."
+			: `Showing ${offset + 1}–${offset + items.length}.`
 
 	const body = items.length
 		? items.map((item) => renderTodoItemLine(item, site)).join("\n")
@@ -417,8 +430,9 @@ export async function GET(context: APIContext): Promise<Response> {
 		// Loads every source even in detail state, unlike the JSON API: keeping all
 		// summaries in `lists` real (not silently zeroed) is worth two extra
 		// queries on a cache miss.
+		const index = await loadTodoReviews(getClient(), todoLists)
 		const { doneBySource, reviewsBySource, namesBySource, emotionsById } =
-			await loadTodoReviews(getClient(), todoLists)
+			index ?? emptyTodoReviewIndex()
 
 		const itemsByList = new Map<string, TodoItem[]>(
 			todoLists.map((list) => [
@@ -478,12 +492,22 @@ export async function GET(context: APIContext): Promise<Response> {
 			detail,
 		})
 
+		const cacheHeaders = index
+			? {
+					"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
+					...cacheAtEdge(context, {
+						tags: [CATALOGUE_CACHE_TAG],
+						params: TODO_QUERY_PARAMS,
+					}),
+				}
+			: { "Cache-Control": "no-store" }
+
 		return new Response(document, {
 			status: 200,
 			headers: {
 				"Content-Type": "text/markdown; charset=utf-8",
-				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
 				Link: `<${site}/catalogue/todo>; rel="canonical"`,
+				...cacheHeaders,
 			},
 		})
 	} catch (err) {

@@ -60,6 +60,29 @@ describe("GET /api/catalogue/emotions", () => {
 		expect(cacheControl).not.toContain("immutable")
 	})
 
+	it("caches at the CDN under the catalogue tag", async () => {
+		const client = createMockDbClient({ "FROM emotions": rows })
+		const context = createEndpointContext("/api/catalogue/emotions")
+		await GET(context, client)
+
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
+	})
+
+	it("leaves the CDN alone when the query fails", async () => {
+		const client = {
+			execute: vi.fn().mockRejectedValue(new Error("db down")),
+		} as unknown as Client
+		const context = createEndpointContext("/api/catalogue/emotions")
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+
+		await GET(context, client)
+
+		expect(context.cache.set).not.toHaveBeenCalled()
+		errorSpy.mockRestore()
+	})
+
 	it("returns 500 when the query fails", async () => {
 		const client = {
 			execute: async () => {

@@ -1,8 +1,10 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
+import { createEndpointContext } from "../helpers"
 import {
 	buildFacetUrl,
 	buildHomeQueryString,
 	collectFacets,
+	GET,
 	parseHomeQuery,
 	renderApiDoc,
 	renderEntryBlock,
@@ -12,6 +14,27 @@ import {
 	type HomeFilters,
 	type HomeView,
 } from "../../src/pages/index.md"
+
+const { getCollection } = vi.hoisted(() => {
+	const entry = {
+		id: "2025/pour-over",
+		data: {
+			title: "Pour-over notes",
+			abstract: "Grind, bloom, pour.",
+			date: new Date("2025-03-01"),
+			tags: ["coffee"],
+			published: "1.8.0",
+		},
+	}
+	return {
+		getCollection: vi.fn(
+			async (_collection: string, filter?: (e: typeof entry) => boolean) =>
+				filter ? [entry].filter(filter) : [entry],
+		),
+	}
+})
+
+vi.mock("astro:content", () => ({ getCollection }))
 
 const urlOf = (qs: string) => new URL(`http://localhost:4321/index.md${qs}`)
 
@@ -376,7 +399,7 @@ describe("renderHome", () => {
 			entries: [],
 			total: 0,
 		})
-		expect(out).toContain("No filters. Showing 0 of 0.")
+		expect(out).toContain("No filters. Showing 0.")
 		expect(out).toContain("No entries match these filters.")
 	})
 })
@@ -425,5 +448,36 @@ describe("renderEntryBlock", () => {
 		const out = renderEntryBlock(entry, site)
 		expect(out).not.toContain("\n")
 		expect(out).toContain("« line one ## fake heading line two »")
+	})
+})
+
+describe("GET /index.md", () => {
+	async function serve(path: string) {
+		const context = createEndpointContext(path)
+		const res = await GET(context)
+		return { context, res }
+	}
+
+	it("caches at the CDN without the catalogue tag, keyed on its own params only", async () => {
+		const { context, res } = await serve("/index.md?tag=coffee")
+
+		expect(res.status).toBe(200)
+		expect(await res.text()).toContain("Pour-over notes")
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: [] }),
+		)
+		expect(res.headers.get("Netlify-Vary")).toBe(
+			"query=query|tag|year|limit|offset|help",
+		)
+	})
+
+	it("returns 500 without arming the CDN when the collection fails to load", async () => {
+		getCollection.mockRejectedValueOnce(new Error("content down"))
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+		const { context, res } = await serve("/index.md")
+
+		expect(res.status).toBe(500)
+		expect(context.cache.set).not.toHaveBeenCalled()
+		errorSpy.mockRestore()
 	})
 })

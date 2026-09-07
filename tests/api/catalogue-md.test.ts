@@ -1,6 +1,8 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
+import type { Client } from "@libsql/client"
+import { createEndpointContext, createMockDbClient } from "../helpers"
+import { getClient } from "../../src/db"
 import {
-	buildCountQuery,
 	buildSelectQuery,
 	parseReviewQuery,
 	type ReviewFilters,
@@ -8,6 +10,7 @@ import {
 import {
 	buildFacetUrl,
 	buildQueryString,
+	GET,
 	renderApiDoc,
 	renderCatalogue,
 	renderFilterSummary,
@@ -16,6 +19,8 @@ import {
 	type DbReviewRow,
 	type EmotionRow,
 } from "../../src/pages/catalogue.md"
+
+vi.mock("../../src/db", () => ({ getClient: vi.fn() }))
 
 const urlOf = (qs: string) => new URL(`http://localhost:4321/catalogue.md${qs}`)
 
@@ -93,32 +98,6 @@ describe("buildSelectQuery", () => {
 			20,
 			0,
 		])
-	})
-})
-
-describe("buildCountQuery", () => {
-	it("produces SELECT COUNT(*) with no WHERE when no filters", () => {
-		const { sql, args } = buildCountQuery({})
-		expect(sql).toBe("SELECT COUNT(*) AS total FROM reviews")
-		expect(args).toEqual([])
-	})
-
-	it("shares the same WHERE clause and arg ordering as buildSelectQuery", () => {
-		const filters: ReviewFilters = {
-			search: "x",
-			rating: 5,
-			emotion: 2,
-			source: "BGG",
-			sort: "date",
-		}
-		const { sql: countSql, args: countArgs } = buildCountQuery(filters)
-		const { args: selectArgs } = buildSelectQuery({ ...filters, limit: 1 })
-
-		expect(
-			countSql.startsWith("SELECT COUNT(*) AS total FROM reviews WHERE"),
-		).toBe(true)
-		// SELECT args = WHERE args + [limit, offset]; COUNT args = WHERE args only
-		expect(countArgs).toEqual(selectArgs.slice(0, -2))
 	})
 })
 
@@ -468,7 +447,6 @@ describe("renderCatalogue", () => {
 		showHelp: false,
 		items: [sampleRow],
 		hasMore: true,
-		total: 182,
 		emotions: testEmotions,
 	}
 
@@ -516,6 +494,8 @@ describe("renderCatalogue", () => {
 		expect(lines).toContain(
 			"Max page size: https://example.com/catalogue.md?source=IGDB&limit=100&help=0",
 		)
+		const lastPage = renderCatalogue({ ...baseView, hasMore: false })
+		expect(lastPage).toContain("Max page size:")
 	})
 
 	it("drops the max-page-size link once everything fits", () => {
@@ -523,11 +503,15 @@ describe("renderCatalogue", () => {
 			...baseView,
 			offset: 0,
 			hasMore: false,
-			total: 15,
 		})
 		expect(onePage).not.toContain("Max page size:")
 		const maxed = renderCatalogue({ ...baseView, offset: 0, limit: 100 })
 		expect(maxed).not.toContain("Max page size:")
+	})
+
+	it("reports the shown range without a total, which would cost a full scan", () => {
+		const lines = renderCatalogue(baseView).split("\n")
+		expect(lines.some((l) => l.endsWith(" Showing 21–21."))).toBe(true)
 	})
 
 	it("renders the empty state", () => {
@@ -538,9 +522,8 @@ describe("renderCatalogue", () => {
 			showHelp: true,
 			items: [],
 			hasMore: false,
-			total: 0,
 		})
-		expect(out).toContain("No filters. Showing 0 of 0.")
+		expect(out).toContain("No filters. Showing 0.")
 		expect(out).toContain("No reviews match these filters.")
 	})
 })
@@ -595,5 +578,53 @@ describe("renderReviewLine", () => {
 	it("tolerates a malformed emotions JSON blob", () => {
 		const row = { ...baseRow, emotions: "not-json" }
 		expect(renderReviewLine(row, emotionsById)).not.toContain("felt")
+	})
+})
+
+describe("GET /catalogue.md", () => {
+	const dbRow: DbReviewRow = {
+		source: "IGDB",
+		source_name: "The Witness (2016)",
+		rating: 5,
+		emotions: "[1]",
+		comment: null,
+		inserted_at: "2024-01-01T00:00:00Z",
+	}
+
+	async function serve(path: string, client: Client) {
+		vi.mocked(getClient).mockReturnValue(client)
+		const context = createEndpointContext(path)
+		const res = await GET(context)
+		return { context, res }
+	}
+
+	it("caches at the CDN under the catalogue tag, keyed on its own params only", async () => {
+		const { context, res } = await serve(
+			"/catalogue.md?source=IGDB",
+			createMockDbClient({
+				"FROM reviews": [dbRow],
+				"FROM emotions": testEmotions,
+			}),
+		)
+
+		expect(res.status).toBe(200)
+		expect(await res.text()).toContain("The Witness (2016)")
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
+		expect(res.headers.get("Netlify-Vary")).toBe(
+			"query=query|rating|emotion|source|sort|limit|offset|year|after|before|help",
+		)
+	})
+
+	it("returns 500 without arming the CDN when the query fails", async () => {
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+		const { context, res } = await serve("/catalogue.md", {
+			execute: vi.fn().mockRejectedValue(new Error("db down")),
+		} as unknown as Client)
+
+		expect(res.status).toBe(500)
+		expect(context.cache.set).not.toHaveBeenCalled()
+		errorSpy.mockRestore()
 	})
 })

@@ -127,6 +127,19 @@ describe("GET /api/catalogue/reviews", () => {
 		expect(res.headers.get("Cache-Control")).toContain("max-age=60")
 	})
 
+	it("caches at the CDN under the catalogue tag, keyed on its own params only", async () => {
+		const client = createMockDbClient({ "FROM reviews": [dbRow] })
+		const context = createEndpointContext("/api/catalogue/reviews?limit=2")
+		const res = await GET(context, client)
+
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
+		expect(res.headers.get("Netlify-Vary")).toBe(
+			"query=query|rating|emotion|source|sort|limit|offset|year|after|before",
+		)
+	})
+
 	it("returns 500 when the query fails", async () => {
 		const client = {
 			execute: vi.fn().mockRejectedValue(new Error("db down")),
@@ -280,6 +293,60 @@ describe("POST /api/catalogue/reviews", () => {
 			"metroidvania",
 			new Date("2025-01-02").toISOString(),
 		])
+	})
+
+	it("purges the catalogue from the CDN once the row is in", async () => {
+		vi.mocked(sourceResolvers.IGDB).mockResolvedValue({
+			source_name: "Hollow Knight (2017)",
+			source_link: "https://www.igdb.com/games/hollow-knight",
+			source_img: "https://img/cover.jpg",
+			meta: "metroidvania",
+		})
+		const context = postCtx(validBody)
+		const res = await POST(context, createMockDbClient())
+
+		expect(res.status).toBe(201)
+		expect(context.cache.invalidate).toHaveBeenCalledWith({
+			tags: ["catalogue"],
+		})
+	})
+
+	it("still answers 201 when the purge fails, since the row is saved", async () => {
+		vi.mocked(sourceResolvers.IGDB).mockResolvedValue({
+			source_name: "Hollow Knight (2017)",
+			source_link: "https://www.igdb.com/games/hollow-knight",
+			source_img: "https://img/cover.jpg",
+			meta: "metroidvania",
+		})
+		const context = postCtx(validBody)
+		vi.mocked(context.cache.invalidate).mockRejectedValue(new Error("purge"))
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+
+		const res = await POST(context, createMockDbClient())
+
+		expect(res.status).toBe(201)
+		expect(errorSpy).toHaveBeenCalled()
+		errorSpy.mockRestore()
+	})
+
+	it("does not purge when the insert fails", async () => {
+		vi.mocked(sourceResolvers.IGDB).mockResolvedValue({
+			source_name: "Hollow Knight (2017)",
+			source_link: "https://www.igdb.com/games/hollow-knight",
+			source_img: "https://img/cover.jpg",
+			meta: "metroidvania",
+		})
+		const client = {
+			execute: vi.fn().mockRejectedValue(new Error("db down")),
+		} as unknown as Client
+		const context = postCtx(validBody)
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+
+		const res = await POST(context, client)
+
+		expect(res.status).toBe(500)
+		expect(context.cache.invalidate).not.toHaveBeenCalled()
+		errorSpy.mockRestore()
 	})
 
 	it("trims a padded source_id before resolving and inserting", async () => {

@@ -5,6 +5,7 @@ import fs from "node:fs"
 import tailwindcss from "@tailwindcss/vite"
 
 import netlify from "@astrojs/netlify"
+import { cacheNetlify } from "@astrojs/netlify/cache"
 
 // Astro Expressive Code - Used to style code blocks
 /** @type {import('astro-expressive-code').AstroExpressiveCodeOptions} */
@@ -101,6 +102,8 @@ export default defineConfig({
 	adapter: netlify({
 		imageCDN: false, // Conflict with our image service
 	}),
+
+	cache: { provider: cacheNetlify() },
 
 	// "true" preserves whitespace between inline elements; the "jsx" default
 	// strips it, breaking spacing around our inline typography.

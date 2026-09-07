@@ -1,5 +1,6 @@
 import type { APIContext } from "astro"
 import { getCollection } from "astro:content"
+import { cacheAtEdge } from "$src/cdnCache"
 import { isEntryPublished, type BlogEntry } from "../blogUtils"
 import {
 	filterBlogEntries,
@@ -12,6 +13,16 @@ export const prerender = false
 
 const DEFAULT_LIMIT = 5
 const MAX_LIMIT = 50
+
+/** Every parameter this route reads; the CDN cache key is narrowed to them. */
+const HOME_QUERY_PARAMS = [
+	"query",
+	"tag",
+	"year",
+	"limit",
+	"offset",
+	"help",
+] as const
 
 export interface HomeFilters {
 	query?: string
@@ -286,8 +297,8 @@ export function renderHome(view: HomeView): string {
 	const filterLine = renderFilterSummary(filters, site, limit, showHelp)
 	const rangeLine =
 		entries.length === 0
-			? `Showing 0 of ${total}.`
-			: `Showing ${offset + 1}–${offset + entries.length} of ${total}.`
+			? "Showing 0."
+			: `Showing ${offset + 1}–${offset + entries.length}.`
 
 	const body = entries.length
 		? entries.map((e) => renderEntryBlock(e, site)).join("\n\n")
@@ -381,6 +392,7 @@ export async function GET(context: APIContext): Promise<Response> {
 				"Content-Type": "text/markdown; charset=utf-8",
 				"Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
 				Link: `<${site}/>; rel="canonical"`,
+				...cacheAtEdge(context, { params: HOME_QUERY_PARAMS }),
 			},
 		})
 	} catch (err) {

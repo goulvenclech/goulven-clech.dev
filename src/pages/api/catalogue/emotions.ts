@@ -2,12 +2,13 @@ import type { APIContext } from "astro"
 import type { Client } from "@libsql/client"
 import { getClient } from "$src/db"
 import { json } from "$src/apiResponse"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 import type { Emotion } from "$src/catalogue/apiTypes"
 
 export const prerender = false // API routes should not be pre-rendered
 
 export async function GET(
-	_context: APIContext,
+	context: APIContext,
 	client: Client = getClient(),
 ): Promise<Response> {
 	try {
@@ -20,7 +21,12 @@ export async function GET(
 		)
 
 		// Emotions rarely change, but a new one should land without a long wait.
-		return json(emotionsRows, 200, 3600)
+		return json(
+			emotionsRows,
+			200,
+			3600,
+			cacheAtEdge(context, { tags: [CATALOGUE_CACHE_TAG] }),
+		)
 	} catch (error) {
 		console.error("Failed to fetch emotions:", error)
 		return json({ error: "Failed to fetch emotions" }, 500)

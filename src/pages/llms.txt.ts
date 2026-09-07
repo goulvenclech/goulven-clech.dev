@@ -1,4 +1,5 @@
 import type { APIContext } from "astro"
+import { cacheAtEdge } from "$src/cdnCache"
 
 export const prerender = false
 
@@ -28,6 +29,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		headers: {
 			"Content-Type": "text/plain; charset=utf-8",
 			"Cache-Control": "public, max-age=86400, stale-while-revalidate=43200",
+			...cacheAtEdge(context),
 		},
 	})
 }

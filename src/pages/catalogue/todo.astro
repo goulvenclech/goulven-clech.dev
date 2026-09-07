@@ -11,6 +11,7 @@ import {
 } from "$src/catalogue/todo"
 import { defaultTodoListId } from "$components/catalogue/todoFilters"
 import {
+	emptyTodoReviewIndex,
 	INACTIVE_LIST_IDS,
 	loadTodoReviews,
 	todoLists as lists,
@@ -27,7 +28,7 @@ const {
 	namesBySource,
 	postersBySource,
 	emotionsById,
-} = await loadTodoReviews(getClient(), lists)
+} = (await loadTodoReviews(getClient(), lists)) ?? emptyTodoReviewIndex()
 
 const views = lists.map((list) => {
 	const items = buildTodoItems(

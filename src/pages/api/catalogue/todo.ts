@@ -6,8 +6,13 @@ import {
 	computeTodoProgress,
 	type TodoList,
 } from "$src/catalogue/todo"
-import { loadTodoReviews, todoLists } from "$src/catalogue/todoData"
+import {
+	emptyTodoReviewIndex,
+	loadTodoReviews,
+	todoLists,
+} from "$src/catalogue/todoData"
 import { json } from "$src/apiResponse"
+import { cacheAtEdge, CATALOGUE_CACHE_TAG } from "$src/cdnCache"
 
 export const prerender = false // Reads the live catalogue, must not prerender.
 
@@ -21,12 +26,13 @@ const normalise = (value: string) => value.trim().toLowerCase().normalize("NFC")
  * omits the entries. An unknown list answers 404 rather than an empty result.
  */
 export async function GET(
-	{ url }: APIContext,
+	context: APIContext,
 	client: Client = getClient(),
 	lists: TodoList[] = todoLists,
 ): Promise<Response> {
-	const withItems = url.searchParams.get("items") !== "false"
-	const wanted = url.searchParams.get("list")
+	const { searchParams } = context.url
+	const withItems = searchParams.get("items") !== "false"
+	const wanted = searchParams.get("list")
 	const key = wanted === null ? null : normalise(wanted)
 
 	const selected =
@@ -46,8 +52,9 @@ export async function GET(
 			404,
 		)
 
+	const index = await loadTodoReviews(client, selected)
 	const { doneBySource, namesBySource, postersBySource } =
-		await loadTodoReviews(client, selected)
+		index ?? emptyTodoReviewIndex()
 
 	const payload = selected.map((list) => {
 		const items = buildTodoItems(
@@ -67,5 +74,14 @@ export async function GET(
 		}
 	})
 
-	return json({ lists: payload }, 200, 3600)
+	if (!index) return json({ lists: payload }, 200, "no-store")
+	return json(
+		{ lists: payload },
+		200,
+		3600,
+		cacheAtEdge(context, {
+			tags: [CATALOGUE_CACHE_TAG],
+			params: ["list", "items"],
+		}),
+	)
 }

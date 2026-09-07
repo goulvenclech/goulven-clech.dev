@@ -84,6 +84,20 @@ describe("GET /api/catalogue/todo", () => {
 		expect(data.lists[0].items.every((i) => !i.done)).toBe(true)
 	})
 
+	it("never caches a degraded render, which would pin zeros at the CDN", async () => {
+		const client = {
+			execute: async () => {
+				throw new Error("db down")
+			},
+		} as unknown as Parameters<typeof GET>[1]
+		const context = createEndpointContext("/api/catalogue/todo")
+		const res = await GET(context, client, lists)
+
+		expect(context.cache.set).not.toHaveBeenCalled()
+		expect(res.headers.get("Cache-Control")).toBe("no-store")
+		expect(res.headers.get("Netlify-Vary")).toBeNull()
+	})
+
 	it("serves a BCE year as the raw negative number, not as display text", async () => {
 		const ancient: TodoList[] = [
 			{
@@ -121,6 +135,17 @@ describe("GET /api/catalogue/todo", () => {
 			lists,
 		)
 		expect(res.headers.get("Cache-Control")).toContain("max-age=3600")
+	})
+
+	it("caches at the CDN under the catalogue tag, keyed on list and items", async () => {
+		const client = createMockDbClient({ "FROM reviews": [] })
+		const context = createEndpointContext("/api/catalogue/todo?items=false")
+		const res = await GET(context, client, lists)
+
+		expect(context.cache.set).toHaveBeenCalledWith(
+			expect.objectContaining({ tags: ["catalogue"] }),
+		)
+		expect(res.headers.get("Netlify-Vary")).toBe("query=list|items")
 	})
 
 	it("omits the entries when asked for a summary", async () => {
