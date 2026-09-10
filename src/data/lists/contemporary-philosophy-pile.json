@@ -181,12 +181,12 @@
 			"meta": "Derk Pereboom | Cambridge University Press"
 		},
 		{
-			"id": "OL812538M",
-			"name": "The Significance of Free Will",
-			"year": 1996,
-			"poster": "https://covers.openlibrary.org/b/id/123342-L.jpg",
-			"link": "https://openlibrary.org/books/OL812538M",
-			"meta": "Kane, Robert | Oxford University Press | Responsibility, Free will and determinism, Nonfiction, Philosophy, Libre arbitre et déterminisme"
+			"id": "OL8405896M",
+			"name": "Four Views on Free Will",
+			"year": 2007,
+			"poster": "https://covers.openlibrary.org/b/id/1752769-L.jpg",
+			"link": "https://openlibrary.org/books/OL8405896M",
+			"meta": "John Martin Fischer, Robert Kane, Derk Pereboom, Manuel Vargas | Blackwell Publishing Limited | Free will and determinism"
 		},
 		{
 			"id": "OL25103586M",
@@ -261,36 +261,92 @@
 			"meta": "Charles Taylor | Belknap Press of Harvard University Press | Religion and culture, Secularism, Secularisatie (maatschappij), Christendom, Religieus bewustzijn"
 		},
 		{
-			"id": "OL2855163M",
-			"name": "Making Sense of Marx",
-			"year": 1985,
-			"poster": "https://covers.openlibrary.org/b/id/332612-L.jpg",
-			"link": "https://openlibrary.org/books/OL2855163M",
-			"meta": "Jon Elster | Cambridge University Press, Editions de la Maison des sciences de l'homme | Marxian school of sociology, Socialism, Marx, karl, 1818-1883"
+			"id": "OL5465605M",
+			"name": "A Theory of Justice",
+			"year": 1971,
+			"poster": "https://covers.openlibrary.org/b/id/4516035-L.jpg",
+			"link": "https://openlibrary.org/books/OL5465605M",
+			"meta": "John Rawls | Belknap Press of Harvard University Press | Justice, Philosophy, Ethics, Law, Political science"
 		},
 		{
-			"id": "OL1731255M",
-			"name": "Time, Labor, and Social Domination",
-			"year": 1993,
-			"poster": "https://covers.openlibrary.org/b/id/4003984-L.jpg",
-			"link": "https://openlibrary.org/books/OL1731255M",
-			"meta": "Moishe Postone | Cambridge University Press | Critical theory, Frankfurt school of sociology, Marxian economics, Sociology, germany, Marxist criticism"
+			"id": "OL5441312M",
+			"name": "Anarchy, State, and Utopia",
+			"year": 1974,
+			"poster": "https://covers.openlibrary.org/b/olid/OL5441312M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL5441312M",
+			"meta": "Robert Nozick | Basic Books | Human rights, Anarchism, Utopias, Civil rights, The State"
 		},
 		{
-			"id": "OL25430118M",
-			"name": "Postcolonial Theory and the Specter of Capital",
-			"year": 2013,
-			"poster": "https://covers.openlibrary.org/b/id/7261121-L.jpg",
-			"link": "https://openlibrary.org/books/OL25430118M",
-			"meta": "Vivek Chibber | Verso | Postcolonialism, Capitalism, Developing countries, politics and government, Postcolonialism--developing countries, Capitalism--developing countries"
+			"id": "OL1122167M",
+			"name": "Self-Ownership, Freedom, and Equality",
+			"year": 1995,
+			"poster": "https://covers.openlibrary.org/b/id/3889623-L.jpg",
+			"link": "https://openlibrary.org/books/OL1122167M",
+			"meta": "G. A. Cohen | Cambridge University Press, Maison des sciences de l'homme | Libertarianism, Marxian economics, Equality, Liberty, Capitalism"
 		},
 		{
-			"id": "OL27371864M",
-			"name": "Critique of Forms of Life",
-			"year": 2014,
-			"poster": "https://covers.openlibrary.org/b/id/8835054-L.jpg",
-			"link": "https://openlibrary.org/books/OL27371864M",
-			"meta": "Rahel Jaeggi | Belknap Press: An Imprint of Harvard University Press | Social sciences, philosophy, Social history, Social change, Social ethics, Criticism (philosophy)"
+			"id": "OL37986480M",
+			"name": "Exploitation as Domination",
+			"year": 2023,
+			"poster": null,
+			"link": "https://openlibrary.org/books/OL37986480M",
+			"meta": "Nicholas Vrousalis | Oxford University Press"
+		},
+		{
+			"id": "OL27847267M",
+			"name": "Why Does Inequality Matter?",
+			"year": 2018,
+			"poster": "https://covers.openlibrary.org/b/olid/OL27847267M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL27847267M",
+			"meta": "Leo J. Scanlon | Oxford | Equality, SOCIAL SCIENCE / Discrimination & Race Relations, SOCIAL SCIENCE / Minority Studies, Social stratification"
+		},
+		{
+			"id": "OL23212755M",
+			"name": "The Idea of Justice",
+			"year": 2009,
+			"poster": "https://covers.openlibrary.org/b/id/14593039-L.jpg",
+			"link": "https://openlibrary.org/books/OL23212755M",
+			"meta": "Amartya Sen | Belknap Press of Harvard University Press | Ethics, Nonfiction, Philosophy"
+		},
+		{
+			"id": "OL2217310M",
+			"name": "Justice, Gender, and the Family",
+			"year": 1989,
+			"poster": "https://covers.openlibrary.org/b/id/4095041-L.jpg",
+			"link": "https://openlibrary.org/books/OL2217310M",
+			"meta": "Susan Moller Okin | Basic Books | Sex discrimination against women, Sex role, Women's rights, open_syllabus_project, Domestic relations"
+		},
+		{
+			"id": "OL11182857M",
+			"name": "Democratic Authority",
+			"year": 2008,
+			"poster": "https://covers.openlibrary.org/b/id/2549097-L.jpg",
+			"link": "https://openlibrary.org/books/OL11182857M",
+			"meta": "David M. Estlund | Princeton University Press | Philosophy, Democracy, Authority, POLITICAL SCIENCE, Political Ideologies"
+		},
+		{
+			"id": "OL27209930M",
+			"name": "Democracy for Realists",
+			"year": 2016,
+			"poster": "https://covers.openlibrary.org/b/olid/OL27209930M-L.jpg?default=false",
+			"link": "https://openlibrary.org/books/OL27209930M",
+			"meta": "Christopher H. Achen | Princeton University Press | Politics and government, Representative government and representation, Democracy, Voting, Elections"
+		},
+		{
+			"id": "OL669956M",
+			"name": "The Racial Contract",
+			"year": 1997,
+			"poster": "https://covers.openlibrary.org/b/id/564321-L.jpg",
+			"link": "https://openlibrary.org/books/OL669956M",
+			"meta": "Charles W. Mills | Cornell University Press | Race relations, White supremacy movements, Political science, Philosophy, Social contract"
+		},
+		{
+			"id": "OL31833841M",
+			"name": "Climate Matters",
+			"year": 2012,
+			"poster": "https://covers.openlibrary.org/b/id/10532634-L.jpg",
+			"link": "https://openlibrary.org/books/OL31833841M",
+			"meta": "John Broome | W W Norton & Company | Environmental ethics, Climatic changes, Moral and ethical aspects, Climate Change, Global Warming"
 		},
 		{
 			"id": "OL62427759M",

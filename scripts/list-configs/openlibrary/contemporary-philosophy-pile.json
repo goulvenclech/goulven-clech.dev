@@ -32,7 +32,11 @@
 		["The Conscious Mind", "David Chalmers", 1996],
 		["Consciousness and Fundamental Reality", "Philip Goff", 2017],
 		["Living Without Free Will", "Derk Pereboom", 2001],
-		["The Significance of Free Will", "Robert Kane", 1996],
+		[
+			"Four Views on Free Will",
+			"John Martin Fischer, Robert Kane, Derk Pereboom & Manuel Vargas",
+			2007
+		],
 		["Taking Morality Seriously", "David Enoch", 2011],
 		["Ethics and the Limits of Philosophy", "Bernard Williams", 1985],
 		["The Existence of God", "Richard Swinburne", 2004],
@@ -47,10 +51,22 @@
 			"Sharon Street",
 			2006
 		],
-		["Making Sense of Marx", "Jon Elster", 1985],
-		["Time, Labor, and Social Domination", "Moishe Postone", 1993],
-		["Postcolonial Theory and the Specter of Capital", "Vivek Chibber", 2013],
-		["Critique of Forms of Life", "Rahel Jaeggi", 2014],
+		["A Theory of Justice", "John Rawls", 1971],
+		["Anarchy, State, and Utopia", "Robert Nozick", 1974, "OL5441312M"],
+		["Self-Ownership, Freedom, and Equality", "G. A. Cohen", 1995],
+		["Exploitation as Domination", "Nicholas Vrousalis", 2023],
+		["Why Does Inequality Matter?", "T. M. Scanlon", 2018, "OL27847267M"],
+		["The Idea of Justice", "Amartya Sen", 2009],
+		["Justice, Gender, and the Family", "Susan Moller Okin", 1989],
+		["Democratic Authority", "David Estlund", 2008],
+		[
+			"Democracy for Realists",
+			"Christopher Achen & Larry Bartels",
+			2016,
+			"OL27209930M"
+		],
+		["The Racial Contract", "Charles Mills", 1997],
+		["Climate Matters", "John Broome", 2012],
 		["La parole aux machines", "Thibaut Giraud", 2025, "OL62427759M"],
 		["The People's Republic of Walmart", "Leigh Phillips", 2019],
 		[
