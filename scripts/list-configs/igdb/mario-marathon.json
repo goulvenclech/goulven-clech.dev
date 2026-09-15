@@ -1,7 +1,7 @@
 {
 	"id": "mario-marathon",
 	"title": "Marathon Mario",
-	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs. Not started yet.",
+	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs.",
 	"source": "IGDB",
 	"url": "https://en.wikipedia.org/wiki/Mario_(franchise)",
 	"games": [
@@ -41,6 +41,7 @@
 			2005
 		],
 		["Super Princess Peach", "Super Princess Peach", 2005],
+		["Mario Party 7", "Mario Party 7", 2005],
 		["New Super Mario Bros.", "New Super Mario Bros.", 2006],
 		["Yoshi's Island DS", "Yoshi's Island DS", 2006],
 		["Super Mario Galaxy", "Super Mario Galaxy", 2007],

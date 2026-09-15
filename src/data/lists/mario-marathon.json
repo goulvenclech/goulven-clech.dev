@@ -1,7 +1,7 @@
 {
 	"id": "mario-marathon",
 	"title": "Marathon Mario",
-	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs. Not started yet.",
+	"description": "A Mario marathon with my friend Erika, from the early platformers through Paper Mario, Wario Land, Yoshi, and the spin-offs.",
 	"source": "IGDB",
 	"url": "https://en.wikipedia.org/wiki/Mario_(franchise)",
 	"entries": [
@@ -43,7 +43,7 @@
 			"year": 1988,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co7ozx.jpg",
 			"link": "https://www.igdb.com/games/super-mario-bros-3",
-			"meta": "Platform | SMB3 | Nintendo R&D4 | Nintendo, Playtronic | Arcade, Nintendo 3DS, Wii, Family Computer, Wii U, Nintendo Entertainment System"
+			"meta": "Platform, Adventure | SMB3 | Nintendo R&D4 | Nintendo, Playtronic | Arcade, Nintendo 3DS, Wii, Family Computer, Wii U, Nintendo Entertainment System"
 		},
 		{
 			"id": 1069,
@@ -83,7 +83,7 @@
 			"year": 1995,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2kn9.jpg",
 			"link": "https://www.igdb.com/games/super-mario-world-2-yoshi-s-island",
-			"meta": "Platform | Nintendo Entertainment Analysis & Development | Nintendo, Hyundai, St. GIGA, Playtronic | Satellaview, Super Nintendo Entertainment System, Super Famicom"
+			"meta": "Platform, Adventure | Nintendo Entertainment Analysis & Development | Nintendo, Hyundai, St. GIGA, Playtronic | Satellaview, Super Nintendo Entertainment System, Super Famicom"
 		},
 		{
 			"id": 5418,
@@ -147,7 +147,7 @@
 			"year": 2001,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wr1.jpg",
 			"link": "https://www.igdb.com/games/luigi-s-mansion",
-			"meta": "Adventure | Nintendo Entertainment Analysis & Development | Nintendo, Gradiente | Nintendo GameCube"
+			"meta": "Adventure | Nintendo Entertainment Analysis & Development | Nintendo | Nintendo GameCube, Nintendo 3DS"
 		},
 		{
 			"id": 1075,
@@ -196,6 +196,14 @@
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1wsg.jpg",
 			"link": "https://www.igdb.com/games/super-princess-peach",
 			"meta": "Platform | Tose, Nintendo SPD Production Group No. 2 | Nintendo | Nintendo DS"
+		},
+		{
+			"id": 2334,
+			"name": "Mario Party 7",
+			"year": 2005,
+			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co21z3.jpg",
+			"link": "https://www.igdb.com/games/mario-party-7",
+			"meta": "Puzzle, Card & Board Game | Hudson Soft | Nintendo | Nintendo GameCube"
 		},
 		{
 			"id": 1076,
@@ -267,7 +275,7 @@
 			"year": 2011,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobab1.jpg",
 			"link": "https://www.igdb.com/games/super-mario-3d-land",
-			"meta": "Platform | SM3DL | Nintendo Entertainment Analysis & Development, Brownie Brown, Nintendo | Nintendo, iQue | Nintendo 3DS"
+			"meta": "Platform, Adventure | SM3DL | Nintendo Entertainment Analysis & Development, Brownie Brown, Nintendo | Nintendo, iQue | Nintendo 3DS"
 		},
 		{
 			"id": 1080,
@@ -275,7 +283,7 @@
 			"year": 2012,
 			"poster": "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobaah.jpg",
 			"link": "https://www.igdb.com/games/new-super-mario-bros-2",
-			"meta": "Platform, Adventure | NSMB2 | Nintendo SPD, Nintendo Entertainment Analysis & Development | Nintendo | Nintendo 3DS"
+			"meta": "Platform, Adventure | NSMB2 | Nintendo Entertainment Analysis & Development | Nintendo | Nintendo 3DS"
 		},
 		{
 			"id": 2171,

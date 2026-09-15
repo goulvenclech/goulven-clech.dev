@@ -11,19 +11,21 @@ import {
 	type TodoReview,
 } from "$src/catalogue/todo"
 
-/** Every curated list, alphabetical. */
+export const HIDDEN_LIST_IDS: ReadonlySet<string> = new Set(["007-films"])
+
+/** Every curated list shown on the site, alphabetical. */
 export const todoLists: TodoList[] = Object.values(
 	import.meta.glob<{ default: TodoList }>("/src/data/lists/*.json", {
 		eager: true,
 	}),
 )
 	.map((module) => module.default)
+	.filter((list) => !HIDDEN_LIST_IDS.has(list.id))
 	.sort((a, b) => a.title.localeCompare(b.title))
 
 /** Lists on hold rather than actively pursued. */
 export const INACTIVE_LIST_IDS: ReadonlySet<string> = new Set([
 	"asterix-films",
-	"mario-marathon",
 	"pokemon-marathon",
 	"sniper-elite-marathon",
 	"studio-ghibli-films",
