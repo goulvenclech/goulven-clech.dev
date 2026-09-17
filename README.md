@@ -16,13 +16,15 @@ That tension between exploration and durability shapes the project. The codebase
 
 ## Notable features
 
-At its heart, this project looks like any Astro project, you can start by reading my entry « [Launching a blog with Astro](https://goulven-clech.dev/2023/launching-blog-astro) ». But, little by little, I added some original features that might interest you, here are the main ones:
+At its heart, this project looks like any Astro project, you can start by reading my entry « [Launching a blog with Astro](https://goulven-clech.dev/2023/launching-blog-astro) ». But, little by little, I added some original features that might interest you, here are the main ones:
 
 - [Search bar](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/home/Search.astro): made with Astro and Web Components only, with full-text search, multi-criteria filters (category, year), pagination, and reset button. Should be commented and tested enough to be easily copied and adapted to your needs.
 
 - [Catalogue](https://goulven-clech.dev/catalogue): personal media log with full-text search, multi-criteria filters (source, emotions, rating), pagination, and reset button. Alongside it, a private form to log reviews, [to-do lists](https://goulven-clech.dev/catalogue/todo) tracking progress across sources, and a [year wrapped](https://goulven-clech.dev/catalogue/wrapped).
 
 - [Catalogue API](https://github.com/goulvenclech/goulven-clech.dev/tree/main/src/pages/api/catalogue): Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database. Also read by a [local MCP server](https://github.com/goulvenclech/goulven-clech.dev/tree/main/packages/catalogue-mcp), letting an assistant browse the catalogue and to-do lists. See [this entry](https://goulven-clech.dev/2025/catalogue-astro-turso) for the full story and technical details.
+
+- [Body](https://body.goulven-clech.dev): personal workout tracker at `body.goulven-clech.dev`, with a log stored in IndexedDB.
 
 - [Friends](https://goulven-clech.dev/friends): interactive graph visualisation of my and my friends' websites, powered by [GraphGarden](https://github.com/bruits/graphgarden).
 
