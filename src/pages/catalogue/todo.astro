@@ -84,9 +84,8 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			Lists I'm slowly working my way through for my <a href="/catalogue"
-				>catalogue</a
-			>. Pick one below.
+			Lists I'm slowly working my way through for my
+			<a href="/catalogue">catalogue</a>. Pick one below.
 		</p>
 		<p>
 			<ReturnHome />
@@ -99,22 +98,20 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 			class="w-full border-b-[0.1rem] border-dotted text-sm"
 		>
 			<optgroup label="active">
-				{
-					activeOptions.map(({ view, index }) => (
-						<option value={index} selected={view.id === initial.id}>
-							{view.title}
-						</option>
-					))
-				}
+				{activeOptions.map(({ view, index }) => <option
+					value={index}
+					selected={view.id === initial.id}
+				>
+					{view.title}
+				</option>)}
 			</optgroup>
 			<optgroup label="inactive">
-				{
-					inactiveOptions.map(({ view, index }) => (
-						<option value={index} selected={view.id === initial.id}>
-							{view.title}
-						</option>
-					))
-				}
+				{inactiveOptions.map(({ view, index }) => <option
+					value={index}
+					selected={view.id === initial.id}
+				>
+					{view.title}
+				</option>)}
 			</optgroup>
 		</select>
 
@@ -145,13 +142,12 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 					id="todo-bar"
 					class="bg-primary h-full rounded-full"
 					style={`width: ${initial.progress.percent}%`}
-				>
-				</div>
+				></div>
 			</div>
 			<span class="whitespace-nowrap opacity-70">
-				<span id="todo-done">{initial.progress.doneCount}</span>/<span
-					id="todo-total">{initial.progress.total}</span
-				> · <span id="todo-percent">{initial.progress.percent}</span>%
+				<span id="todo-done">{initial.progress.doneCount}</span
+				>/<span id="todo-total">{initial.progress.total}</span> ·
+				<span id="todo-percent">{initial.progress.percent}</span>%
 			</span>
 		</div>
 
@@ -185,27 +181,33 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 
 		<div id="todo-grid" class="grid grid-cols-3 gap-2 sm:grid-cols-4"></div>
 		<empty-state id="todo-empty" hidden></empty-state>
-		<button id="load-more" class="button" type="button" hidden>Load more</button
-		>
+		<button id="load-more" class="button" type="button" hidden>
+			Load more
+		</button>
 
 		<side-note>
-			Images and datas are fetched from <a href="https://igdb.com/"
+			Images and datas are fetched from
+			<a href="https://igdb.com/"
 				><abbr title="The Internet Game Database">IGDB</abbr></a
-			> for video games, <a href="https://boardgamegeek.com"
+			>
+			for video games,
+			<a href="https://boardgamegeek.com"
 				><abbr title="Board Game Geek">BGG</abbr></a
-			> for board games, <a href="https://themoviedb.org/"
+			>
+			for board games,
+			<a href="https://themoviedb.org/"
 				><abbr title="The Movie DataBase">TMDB</abbr></a
-			> for movies and shows, <a href="https://spotify.com/">Spotify</a> for albums,
-			and <a href="https://openlibrary.org/">Open Library</a> for books. Their licenses
-			apply.
+			>
+			for movies and shows, <a href="https://spotify.com/">Spotify</a> for
+			albums, and <a href="https://openlibrary.org/">Open Library</a> for books.
+			Their licenses apply.
 		</side-note>
 
 		<noscript>
 			<p>
 				This to-do grid needs JavaScript to filter and sort. Markdown version
-				for crawlers, LLMs, and no-JS readers: <a href="/catalogue/todo.md"
-					>/catalogue/todo.md</a
-				>
+				for crawlers, LLMs, and no-JS readers:
+				<a href="/catalogue/todo.md">/catalogue/todo.md</a>
 			</p>
 		</noscript>
 	</section>
@@ -215,8 +217,7 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 		id="todo-views"
 		is:inline
 		set:html={viewsJson}
-	/>
-
+	></script>
 	<script>
 		import "../../components/ResetButton.ts"
 		import "../../components/EmptyState.ts"
@@ -435,5 +436,4 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 		queryInput.form?.dispatchEvent(new Event("change", { bubbles: true }))
 		render()
 		syncUrl()
-	</script>
-</Layout>
+	</script></Layout>

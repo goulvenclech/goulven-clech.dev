@@ -75,9 +75,11 @@ try {
 
 <Block
 	image={photoUrl}
-	imageAlt={place.displayName?.text
-		? `Photo of ${place.displayName.text}`
-		: "Place photo"}
+	imageAlt={
+		place.displayName?.text
+			? `Photo of ${place.displayName.text}`
+			: "Place photo"
+	}
 	to={place.googleMapsUri}
 	imageWidth={imageWidth}
 	imageHeight={imageHeight}
@@ -96,11 +98,9 @@ try {
 			{openingHoursDisplay}
 		</li>
 		<li>
-			{
-				[...Array(Math.round(place.rating || 0))].map(() => (
-					<i class="fas fa-star text-xs" />
-				))
-			}{" "}
+			{[...Array(Math.round(place.rating || 0))].map(() => (
+				<i class="fas fa-star text-xs" />
+			))}{" "}
 			({place.userRatingCount} reviews)
 		</li>
 	</ul>

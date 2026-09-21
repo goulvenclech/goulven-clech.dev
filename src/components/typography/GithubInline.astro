@@ -43,13 +43,11 @@ const avatarImg = await getImage({
 })
 ---
 
-{
-	userName ? (
-		// Keep <a>, <img> and {userName} on a single line: any whitespace between
-		// them becomes a text node inside the anchor and inherits the dotted underline.
-		// prettier-ignore
-		<a href={userUrl} class="github-inline no-icon hover:text-primary dark:hover:text-primary print:dark:text-font-light whitespace-nowrap print:no-underline"><img src={avatarImg.src} width="48" height="48" alt="" loading="lazy" decoding="async" class="inline h-6 w-6 rounded-full print:mr-0 mr-1 print:hidden" />{userName.trim()}</a>
-	) : (
-		<span class="text-font-light">[unknown GitHub user]</span>
-	)
-}
+{userName ? (
+	// Keep <a>, <img> and {userName} on a single line: any whitespace between
+	// them becomes a text node inside the anchor and inherits the dotted underline.
+	// prettier-ignore
+	<a href={userUrl} class="github-inline no-icon hover:text-primary dark:hover:text-primary print:dark:text-font-light whitespace-nowrap print:no-underline"><img src={avatarImg.src} width="48" height="48" alt="" loading="lazy" decoding="async" class="inline h-6 w-6 rounded-full print:mr-0 mr-1 print:hidden" />{userName.trim()}</a>
+) : (
+	<span class="text-font-light">[unknown GitHub user]</span>
+)}

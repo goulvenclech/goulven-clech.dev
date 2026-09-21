@@ -28,42 +28,33 @@ const chartWidth =
 	role="img"
 	aria-label="Bar chart of top emotions felt this year"
 >
-	{
-		emotions.map((emotion, i) => {
-			const barHeight = (emotion.count / maxCount) * CHART_HEIGHT
-			const x = CHART_PADDING + i * (BAR_WIDTH + BAR_GAP)
-			const y = CHART_HEIGHT - barHeight + 24
-			return (
-				<g>
-					<title>
+	{emotions.map((emotion, i) => {
+		const barHeight = (emotion.count / maxCount) * CHART_HEIGHT
+		const x = CHART_PADDING + i * (BAR_WIDTH + BAR_GAP)
+		const y = CHART_HEIGHT - barHeight + 24
+		return <g>
+			<title>
 						{emotion.name} ({emotion.count})
 					</title>
-					<text
-						x={x + BAR_WIDTH / 2}
-						y={y - 4}
-						text-anchor="middle"
-						font-size="18"
-					>
-						{emotion.emoji}
-					</text>
-					<rect
-						x={x}
-						y={y}
-						width={BAR_WIDTH}
-						height={barHeight}
-						rx="4"
-						class="fill-primary"
-					/>
-					<text
-						x={x + BAR_WIDTH / 2}
-						y={y + 16}
-						text-anchor="middle"
-						class="fill-body-light text-xs font-medium"
-					>
-						{emotion.count}
-					</text>
-				</g>
-			)
-		})
-	}
+			<text x={x + BAR_WIDTH / 2} y={y - 4} text-anchor="middle" font-size="18">
+				{emotion.emoji}
+			</text>
+			<rect
+				x={x}
+				y={y}
+				width={BAR_WIDTH}
+				height={barHeight}
+				rx="4"
+				class="fill-primary"
+			/>
+			<text
+				x={x + BAR_WIDTH / 2}
+				y={y + 16}
+				text-anchor="middle"
+				class="fill-body-light text-xs font-medium"
+			>
+				{emotion.count}
+			</text>
+		</g>
+	})}
 </svg>

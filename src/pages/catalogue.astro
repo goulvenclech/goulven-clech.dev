@@ -30,9 +30,9 @@ const canonical = new URL("/catalogue", Astro.site).href
 			biased.
 		</p>
 		<p>
-			<ReturnHome /> - <a href="/2025/catalogue-astro-turso">Learn more</a> - <a
-				href="/catalogue/todo">To-do</a
-			> - <a href="/catalogue/wrapped">Yearly Wrap</a>
+			<ReturnHome /> - <a href="/2025/catalogue-astro-turso">Learn more</a> -
+			<a href="/catalogue/todo">To-do</a> -
+			<a href="/catalogue/wrapped">Yearly Wrap</a>
 		</p>
 	</section>
 	<section>
@@ -96,23 +96,28 @@ const canonical = new URL("/catalogue", Astro.site).href
 			Load more
 		</button>
 		<side-note>
-			Images and datas are fetched from <a href="https://igdb.com/"
+			Images and datas are fetched from
+			<a href="https://igdb.com/"
 				><abbr title="The Internet Game Database">IGDB</abbr></a
-			> for video games, <a href="https://boardgamegeek.com"
+			>
+			for video games,
+			<a href="https://boardgamegeek.com"
 				><abbr title="Board Game Geek">BGG</abbr></a
-			> for board games, <a href="https://themoviedb.org/"
+			>
+			for board games,
+			<a href="https://themoviedb.org/"
 				><abbr title="The Movie DataBase">TMDB</abbr></a
-			> for movies and shows, <a href="https://spotify.com/">Spotify</a> for albums,
-			and <a href="https://openlibrary.org/">Open Library</a> for books. Their licenses
-			apply.
+			>
+			for movies and shows, <a href="https://spotify.com/">Spotify</a> for
+			albums, and <a href="https://openlibrary.org/">Open Library</a> for books.
+			Their licenses apply.
 		</side-note>
 	</section>
 
 	<noscript>
 		<p>
-			Markdown version for crawlers, LLMs, and no-JS readers: <a
-				href="/catalogue.md">/catalogue.md</a
-			>
+			Markdown version for crawlers, LLMs, and no-JS readers:
+			<a href="/catalogue.md">/catalogue.md</a>
 		</p>
 	</noscript>
 
@@ -120,5 +125,4 @@ const canonical = new URL("/catalogue", Astro.site).href
 		import { initCatalogue } from "../components/catalogue/catalogueClient"
 
 		initCatalogue()
-	</script>
-</Layout>
+	</script></Layout>

@@ -15,15 +15,15 @@ const { count = 3 } = Astro.props
 
 {
 	// Create the specified number of skeleton cards
-	Array.from({ length: count }).map((_, index) => (
+	Array.from({ length: count }).map((_, index) => <div
+		class="flex animate-pulse gap-5 py-5"
+		style={{
+			animationDelay: `${index * 0.66}s`,
+		}}
+	>
 		<div
-			class="flex animate-pulse gap-5 py-5"
-			style={{
-				animationDelay: `${index * 0.66}s`,
-			}}
-		>
-			<div class="bg-alt-light dark:bg-alt-dark hidden h-40 w-37.5 flex-none sm:block" />
-			<article class="bg-alt-light dark:bg-alt-dark h-40 w-full min-w-0 p-0" />
-		</div>
-	))
+			class="bg-alt-light dark:bg-alt-dark hidden h-40 w-37.5 flex-none sm:block"
+		/>
+		<article class="bg-alt-light dark:bg-alt-dark h-40 w-full min-w-0 p-0" />
+	</div>)
 }

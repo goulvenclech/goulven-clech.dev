@@ -42,19 +42,15 @@ const AMAZON_FALLBACK_SIZE = 1500
 		{name}
 	</h3>
 	<ul class="m-0 flex list-none flex-col p-0">
-		<li>
-			By {brand}
-		</li>
+		<li>By {brand}</li>
 		<li>
 			{price}
 		</li>
 		<li>
-			{
-				[...Array(Math.round(rating))].map(() => (
-					<i class="fas fa-star text-xs" />
-				))
-			} ({ratings_total}
-			reviews)
+			{[...Array(Math.round(rating))].map(() => (
+				<i class="fas fa-star text-xs" />
+			))}
+			({ratings_total} reviews)
 		</li>
 	</ul>
 </Block>

@@ -20,30 +20,26 @@ const RATING_EMOJI: Record<number, string> = { 6: "⭐", 5: "😍", 4: "😀" }
 ---
 
 <div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-	{
-		reviews.map((r) => (
-			<a
-				href={r.source_link}
-				target="_blank"
-				rel="noopener"
-				class="no-icon relative aspect-3/4 overflow-hidden"
-				data-tooltip={`${r.source_name} — ${r.detail}`}
-			>
-				<img
-					src={r.source_img}
-					alt={r.source_name}
-					class="h-full w-full object-cover"
-				/>
-				<span class="sr-only">{r.detail}</span>
-				<span
-					aria-hidden="true"
-					class="absolute top-1 right-1 text-lg drop-shadow-md"
-				>
-					{RATING_EMOJI[r.rating]}
-				</span>
-			</a>
-		))
-	}
+	{reviews.map((r) => <a
+		href={r.source_link}
+		target="_blank"
+		rel="noopener"
+		class="no-icon relative aspect-3/4 overflow-hidden"
+		data-tooltip={`${r.source_name} — ${r.detail}`}
+	>
+		<img
+			src={r.source_img}
+			alt={r.source_name}
+			class="h-full w-full object-cover"
+		/>
+		<span class="sr-only">{r.detail}</span>
+		<span
+			aria-hidden="true"
+			class="absolute top-1 right-1 text-lg drop-shadow-md"
+		>
+			{RATING_EMOJI[r.rating]}
+		</span>
+	</a>)}
 </div>
 
 <script>

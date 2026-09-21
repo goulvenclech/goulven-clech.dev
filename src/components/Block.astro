@@ -50,23 +50,19 @@ if (image && typeof image !== "string" && image.format !== "svg") {
 ---
 
 <a href={to} class="card">
-	{
-		image && (
-			<div class="card-image">
-				<InternalImage
-					source={image}
-					alt={imageAlt}
-					formats={formats}
-					widths={cardImageWidths}
-					sizes={cardImageSizes}
-					quality={cardImageQuality}
-					placeholderURL={placeholderURL}
-					width={imageWidth}
-					height={imageHeight}
-				/>
-			</div>
-		)
-	}
+	{image && <div class="card-image">
+		<InternalImage
+			source={image}
+			alt={imageAlt}
+			formats={formats}
+			widths={cardImageWidths}
+			sizes={cardImageSizes}
+			quality={cardImageQuality}
+			placeholderURL={placeholderURL}
+			width={imageWidth}
+			height={imageHeight}
+		/>
+	</div>}
 	<article>
 		<slot />
 	</article>

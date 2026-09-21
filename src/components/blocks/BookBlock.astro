@@ -63,20 +63,17 @@ const coverSize = (await probeImageSize(coverUrl)) ?? {
 	</h3>
 	<ul class="flex flex-col">
 		<li>
-			By {
-				authors ??
-					book.details.authors.map((author: any) => author.name).join(" & ")
-			}
+			By
+			{authors ??
+				book.details.authors.map((author: any) => author.name).join(" & ")}
 		</li>
 		<li>
-			{book.details.publishers.join(" & ")} ({
-				new Date(book.details.publish_date).getFullYear()
-			})
+			{book.details.publishers.join(" & ")}
+			({new Date(book.details.publish_date).getFullYear()})
 		</li>
 		<li>
-			<abbr title="International Standard Book Number">ISBN</abbr>: {
-				book.details.isbn_13
-			}
+			<abbr title="International Standard Book Number">ISBN</abbr>:
+			{book.details.isbn_13}
 		</li>
 	</ul>
 </Block>

@@ -16,14 +16,10 @@ const { caption, source, className } = Astro.props
 	<div class="gallery-grid grid gap-2.5 gap-y-1">
 		<slot />
 	</div>
-	{
-		(caption || source) && (
-			<figcaption class="legend">
-				{caption}
-				{source && <a href={source}>Source</a>}
-			</figcaption>
-		)
-	}
+	{(caption || source) && <figcaption class="legend">
+		{caption}
+		{source && <a href={source}>Source</a>}
+	</figcaption>}
 </figure>
 
 <style is:global>

@@ -98,8 +98,20 @@ if (srcDark) {
 
 <span class="inline-block w-full">
 	<span class="relative inline-block overflow-hidden">
-		{
-			!srcDark ? (
+		{!srcDark ? (
+			<InternalImage
+				{...rest}
+				source={src}
+				alt={alt}
+				goodQualityURL={goodQualityURL}
+				width={imageWidth}
+				height={height}
+				formats={formats}
+				placeholderURL={placeholderURL}
+				markers={markers}
+			/>
+		) : (
+			<>
 				<InternalImage
 					{...rest}
 					source={src}
@@ -108,70 +120,47 @@ if (srcDark) {
 					width={imageWidth}
 					height={height}
 					formats={formats}
+					class="dark:hidden"
 					placeholderURL={placeholderURL}
 					markers={markers}
 				/>
-			) : (
-				<>
-					<InternalImage
-						{...rest}
-						source={src}
-						alt={alt}
-						goodQualityURL={goodQualityURL}
-						width={imageWidth}
-						height={height}
-						formats={formats}
-						class="dark:hidden"
-						placeholderURL={placeholderURL}
-						markers={markers}
-					/>
-					<InternalImage
-						{...rest}
-						source={srcDark}
-						alt={alt}
-						goodQualityURL={goodQualityURLDark!}
-						width={widthDark!}
-						height={height}
-						formats={formats}
-						class="hidden dark:block"
-						placeholderURL={placeholderURLDark}
-						markers={markers}
-					/>
-				</>
-			)
-		}
+				<InternalImage
+					{...rest}
+					source={srcDark}
+					alt={alt}
+					goodQualityURL={goodQualityURLDark!}
+					width={widthDark!}
+					height={height}
+					formats={formats}
+					class="hidden dark:block"
+					placeholderURL={placeholderURLDark}
+					markers={markers}
+				/>
+			</>
+		)}
 
-		{
-			markers.map((marker) => {
-				const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
-				return (
-					<Component
-						class="absolute"
-						style={`top: ${marker.top}%; left: ${marker.left}%;`}
-					>
-						{marker.key}
-					</Component>
-				)
-			})
-		}
+		{markers.map((marker) => {
+			const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+			return <Component
+				class="absolute"
+				style={`top: ${marker.top}%; left: ${marker.left}%;`}
+			>
+				{marker.key}
+			</Component>
+		})}
 	</span>
-	{
-		!hideMarkerLegend && markers.length > 0 && (
-			<span class="inline-flex flex-wrap">
-				<slot name="marker-legends">
-					{markers.length > 0 &&
-						markers.map((marker) => {
-							const Component =
-								`marker-${marker.variant ?? "primary"}` as HTMLTag
-							return (
-								<span class="mr-2.5">
-									<Component>{marker.key}</Component>
-									<span>{marker.legend}</span>
-								</span>
-							)
-						})}
-				</slot>
-			</span>
-		)
-	}
+	{!hideMarkerLegend && markers.length > 0 && <span
+		class="inline-flex flex-wrap"
+	>
+		<slot name="marker-legends">
+			{markers.length > 0 &&
+				markers.map((marker) => {
+					const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+					return <span class="mr-2.5">
+						<Component>{marker.key}</Component>
+						<span>{marker.legend}</span>
+					</span>
+				})}
+		</slot>
+	</span>}
 </span>

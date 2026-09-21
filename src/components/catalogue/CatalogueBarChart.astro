@@ -70,126 +70,104 @@ const armsOf = (row: BarRow) =>
 ---
 
 <figure class:list={["catalogue-chart", className]} data-chart>
-	{
-		hasData ? (
-			<div class="chart-plot" class:list={{ diverging: layout.diverging }}>
-				{layout.rows.map((row) => (
-					<>
+	{hasData ? (
+		<div class="chart-plot" class:list={{ diverging: layout.diverging }}>
+			{layout.rows.map((row) => (
+				<>
+					<div
+						class="row-label"
+						class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
+					>
+						{labelOf(row.key)}
+					</div>
+					{row.total === 0 ? (
+						<div class="row-empty">no reviews</div>
+					) : (
 						<div
-							class="row-label"
+							class="row-bar"
 							class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
 						>
-							{labelOf(row.key)}
+							{armsOf(row).map((arm, armIndex) => (
+								<>
+									{armIndex > 0 && (
+										<div class="neutral-gap" aria-hidden="true" />
+									)}
+									<div class:list={["arm", arm.side]}>
+										{arm.segments.map((segment, i) => <div
+											class="segment"
+											class:list={{ split: i > 0 }}
+											style={`width:${segment.widthPercent}%;background:var(${seriesByKey.get(segment.key)?.colorVar})`}
+											data-tooltip={segmentTitle(segment)}
+											title={segmentTitle(segment)}
+										>
+											{isLabelled(segment) && <span class="segment-label">
+												{formatShare(segment.share)}
+											</span>}
+										</div>)}
+									</div>
+								</>
+							))}
 						</div>
-						{row.total === 0 ? (
-							<div class="row-empty">no reviews</div>
-						) : (
-							<div
-								class="row-bar"
-								class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
-							>
-								{armsOf(row).map((arm, armIndex) => (
-									<>
-										{armIndex > 0 && (
-											<div class="neutral-gap" aria-hidden="true" />
-										)}
-										<div class:list={["arm", arm.side]}>
-											{arm.segments.map((segment, i) => (
-												<div
-													class="segment"
-													class:list={{ split: i > 0 }}
-													style={`width:${segment.widthPercent}%;background:var(${seriesByKey.get(segment.key)?.colorVar})`}
-													data-tooltip={segmentTitle(segment)}
-													title={segmentTitle(segment)}
-												>
-													{isLabelled(segment) && (
-														<span class="segment-label">
-															{formatShare(segment.share)}
-														</span>
-													)}
-												</div>
-											))}
-										</div>
-									</>
-								))}
-							</div>
-						)}
-						<div
-							class="row-count"
-							class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
-							title={`${row.total} reviews`}
-						>
-							{row.total > 0 ? row.total : ""}
-						</div>
-					</>
-				))}
-			</div>
-		) : (
-			<p class="chart-nodata">{noDataMessage}</p>
-		)
-	}
+					)}
+					<div
+						class="row-count"
+						class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}
+						title={`${row.total} reviews`}
+					>
+						{row.total > 0 ? row.total : ""}
+					</div>
+				</>
+			))}
+		</div>
+	) : (
+		<p class="chart-nodata">{noDataMessage}</p>
+	)}
 
-	{
-		hasData && (
-			<ul class="chart-legend" aria-hidden="true">
-				{series.map((entry) => (
-					<li>
-						<span class="swatch" style={`background:var(${entry.colorVar})`} />
-						{entry.emoji && <span class="legend-emoji">{entry.emoji}</span>}
-						{entry.label}
-					</li>
-				))}
-			</ul>
-		)
-	}
+	{hasData && <ul class="chart-legend" aria-hidden="true">
+		{series.map((entry) => <li>
+			<span class="swatch" style={`background:var(${entry.colorVar})`} />
+			{entry.emoji && <span class="legend-emoji">{entry.emoji}</span>}
+			{entry.label}
+		</li>)}
+	</ul>}
 
 	<figcaption>{caption}</figcaption>
 
-	{
-		hasData && (
-			<details class="chart-data">
-				<summary>Show the numbers</summary>
-				<div class="chart-data-scroll">
-					<table>
-						<thead>
-							<tr>
-								<th scope="col">{rowHeader}</th>
-								{series.map((entry) => (
-									<th scope="col">
-										{entry.emoji} {entry.label}
-									</th>
-								))}
-								<th scope="col">total</th>
-							</tr>
-						</thead>
-						<tbody>
-							{layout.rows.map((row) => {
-								const counts = new Map(
-									[...row.negative, ...row.positive].map((s) => [s.key, s]),
-								)
-								return (
-									<tr class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}>
-										<th scope="row">{labelOf(row.key)}</th>
-										{series.map((entry) => {
-											const cell = counts.get(entry.key)
-											return (
-												<td>
-													{cell && cell.count > 0
-														? `${cell.count} (${formatShare(cell.share)})`
-														: "—"}
-												</td>
-											)
-										})}
-										<td>{row.total}</td>
-									</tr>
-								)
+	{hasData && <details class="chart-data">
+		<summary>Show the numbers</summary>
+		<div class="chart-data-scroll">
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">{rowHeader}</th>
+						{series.map((entry) => <th scope="col">
+							{entry.emoji} {entry.label}
+						</th>)}
+						<th scope="col">total</th>
+					</tr>
+				</thead>
+				<tbody>
+					{layout.rows.map((row) => {
+						const counts = new Map(
+							[...row.negative, ...row.positive].map((s) => [s.key, s]),
+						)
+						return <tr class:list={{ "is-total": row.key === TOTAL_ROW_KEY }}>
+							<th scope="row">{labelOf(row.key)}</th>
+							{series.map((entry) => {
+								const cell = counts.get(entry.key)
+								return <td>
+									{cell && cell.count > 0
+										? `${cell.count} (${formatShare(cell.share)})`
+										: "—"}
+								</td>
 							})}
-						</tbody>
-					</table>
-				</div>
-			</details>
-		)
-	}
+							<td>{row.total}</td>
+						</tr>
+					})}
+				</tbody>
+			</table>
+		</div>
+	</details>}
 </figure>
 
 <style>

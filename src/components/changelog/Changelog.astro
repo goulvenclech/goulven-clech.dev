@@ -71,27 +71,25 @@ const changelogMonthsSorted = Object.entries(changelogEntriesSorted)
 ---
 
 <div>
-	{
-		changelogMonthsSorted.map(({ year, month, entries }, i) => {
-			const prevYear = i > 0 ? changelogMonthsSorted[i - 1].year : null
-			const monthName = new Date(0, month).toLocaleString("default", {
-				month: "long",
-			})
-			const title = prevYear !== year ? `${monthName} ${year}` : monthName
-			return (
-				<>
-					<h3>{title}</h3>
-					<ul class="my-5">
-						{entries
-							.sort((a, b) => b.date.getTime() - a.date.getTime())
-							.map((entry) => (
-								<ChangelogCard entry={entry} />
-							))}
-					</ul>
-				</>
-			)
+	{changelogMonthsSorted.map(({ year, month, entries }, i) => {
+		const prevYear = i > 0 ? changelogMonthsSorted[i - 1].year : null
+		const monthName = new Date(0, month).toLocaleString("default", {
+			month: "long",
 		})
-	}
+		const title = prevYear !== year ? `${monthName} ${year}` : monthName
+		return (
+			<>
+				<h3>{title}</h3>
+				<ul class="my-5">
+					{entries
+						.sort((a, b) => b.date.getTime() - a.date.getTime())
+						.map((entry) => (
+							<ChangelogCard entry={entry} />
+						))}
+				</ul>
+			</>
+		)
+	})}
 	{/* I should find a cleaner way to do this */}
 	<div>
 		<h3>Before 2020</h3>

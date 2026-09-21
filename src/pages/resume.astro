@@ -44,17 +44,16 @@ educationEntries.sort(
 	<section class="print:mt-0">
 		<h1 class="">Goulven CLEC'H</h1>
 		<p>
-			I am a {getMyAge()} years old <i>software engineer</i> with extensive experience
-			in <i>Elixir</i>,
-			<i>Rust</i>, and <i>TypeScript</i> ecosystems, mainly in startups and open source
-			environments.
+			I am a {getMyAge()} years old <i>software engineer</i> with extensive
+			experience in <i>Elixir</i>, <i>Rust</i>, and <i>TypeScript</i>
+			ecosystems, mainly in startups and open source environments.
 		</p>
 		<p>
 			Interested in <i>software craftsmanship</i> and <i>systems reliability</i
 			>, I aim to deliver maintainable, performant, and useful software. Working
-			remotely for {getRemoteWorkYears()} years, I'm capable of owning projects end-to-end,
-			from product design to infrastructure management, while collaborating effectively
-			with cross-functional teams.
+			remotely for {getRemoteWorkYears()} years, I'm capable of owning projects
+			end-to-end, from product design to infrastructure management, while
+			collaborating effectively with cross-functional teams.
 		</p>
 		<p>
 			Based in Toulouse, France, I'm also passionate about game development,
@@ -62,40 +61,34 @@ educationEntries.sort(
 			drinking speciality coffees.
 		</p>
 		<p class="print:hidden">
-			<ReturnHome /> -
-			<PrintButton /> -
+			<ReturnHome /> - <PrintButton /> -
 			<a href="mailto:goulven.clech@protonmail.com">Contact me</a>
 		</p>
 		<p class="hidden print:block">
-			Contact me at <a href="mailto:goulven.clech@protonmail.com"
+			Contact me at
+			<a href="mailto:goulven.clech@protonmail.com"
 				>goulven.clech@protonmail.com</a
 			>
 		</p>
 	</section>
 	<section>
 		<h2 class="mb-2.5" id="last_entries">Experiences</h2>
-		{
-			experiencesEntries.map((experience) => (
-				<ResumeCard experience={experience} />
-			))
-		}
+		{experiencesEntries.map((experience) => (
+			<ResumeCard experience={experience} />
+		))}
 	</section>
 	<section>
 		<h2 class="mb-2.5" id="education">Education</h2>
-		{educationEntries.map((education) => <ResumeCard experience={education} />)}
+		{educationEntries.map((education) => (
+			<ResumeCard experience={education} />
+		))}
 	</section>
 	<section id="language">
 		<h2>Languages</h2>
 		<ul>
-			<li>
-				<strong>French:</strong> Native.
-			</li>
-			<li>
-				<strong>English:</strong> Professional proficiency (C1).
-			</li>
-			<li>
-				<strong>Finnish:</strong> Basic skills (A1), actively learning.
-			</li>
+			<li><strong>French:</strong> Native.</li>
+			<li><strong>English:</strong> Professional proficiency (C1).</li>
+			<li><strong>Finnish:</strong> Basic skills (A1), actively learning.</li>
 		</ul>
 	</section>
 	<style is:global>

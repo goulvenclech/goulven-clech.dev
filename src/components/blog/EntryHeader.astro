@@ -28,13 +28,9 @@ if (timeMachine) {
 	{formatDate(date)} –
 	<a href="/">Goulven CLEC'H</a>
 </p>
-{
-	!isPublished && (
-		<warning-note class="mt-10">
-			<p>
-				You're currently reading a work-in-progress draft. Its content is
-				probably incomplete, and may be updated before public release.
-			</p>
-		</warning-note>
-	)
-}
+{!isPublished && <warning-note class="mt-10">
+	<p>
+		You're currently reading a work-in-progress draft. Its content is probably
+		incomplete, and may be updated before public release.
+	</p>
+</warning-note>}

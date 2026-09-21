@@ -36,19 +36,15 @@ const group = `tab-panel-${crypto.randomUUID().slice(0, 8)}`
 ---
 
 <tab-panel role="radiogroup" aria-label={groupLabel}>
-	{
-		tabs.map((tab, index) => (
-			<Fragment>
-				<label>
-					<input type="radio" name={group} checked={index === 0} />
-					{tab}
-				</label>
-				<div class="panel">
-					<slot name={`tab-${index}`} />
-				</div>
-			</Fragment>
-		))
-	}
+	{tabs.map((tab, index) => <Fragment>
+		<label>
+			<input type="radio" name={group} checked={index === 0} />
+			{tab}
+		</label>
+		<div class="panel">
+			<slot name={`tab-${index}`} />
+		</div>
+	</Fragment>)}
 </tab-panel>
 
 <style>

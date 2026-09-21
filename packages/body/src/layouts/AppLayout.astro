@@ -62,10 +62,10 @@ const isCurrent = (href: string) =>
 			<header>
 				<!-- Glued on purpose: the wordmark runs into the title, BODYSTATS. -->
 				<h1>
-					<span class="text-primary">Body</span><span
-						id={PAGE_TITLE_ID}
-						class="italic">{title}</span
-					>
+					<span class="text-primary">Body</span>
+					<span id={PAGE_TITLE_ID} class="italic">
+						{title}
+					</span>
 				</h1>
 				<p
 					id={PAGE_SUBTITLE_ID}
@@ -82,17 +82,15 @@ const isCurrent = (href: string) =>
 			style="padding-bottom: env(safe-area-inset-bottom)"
 		>
 			<div class="mx-auto flex max-w-md">
-				{
-					tabs.map((tab) => (
-						<a
-							href={tab.href}
-							aria-current={isCurrent(tab.href) ? "page" : undefined}
-							class="text-muted-light dark:text-muted-dark aria-[current=page]:text-primary flex-1 py-4 text-center text-xs font-extrabold tracking-widest uppercase"
-						>
-							{tab.label}
-						</a>
-					))
-				}
+				{tabs.map((tab) => (
+					<a
+						href={tab.href}
+						aria-current={isCurrent(tab.href) ? "page" : undefined}
+						class="text-muted-light dark:text-muted-dark aria-[current=page]:text-primary flex-1 py-4 text-center text-xs font-extrabold tracking-widest uppercase"
+					>
+						{tab.label}
+					</a>
+				))}
 			</div>
 		</nav>
 	</body>

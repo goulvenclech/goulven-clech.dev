@@ -9,9 +9,8 @@ const pageTitle = "Cataloguer"
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			This is a private form. You are probably looking for the <a
-				href="/catalogue">catalogue</a
-			>.
+			This is a private form. You are probably looking for the
+			<a href="/catalogue">catalogue</a>.
 		</p>
 		<p>
 			<ReturnHome />
@@ -35,7 +34,7 @@ const pageTitle = "Cataloguer"
 				</select>
 				<input id="date" name="date" type="date" required class="col-span-1" />
 				<select id="source" name="source" required>
-					<option value="" disabled selected>Select a source </option>
+					<option value="" disabled selected>Select a source</option>
 					<option value="IGDB">🎮 Video Game (IGDB)</option>
 					<option value="BGG">🎲 Board Game (BGG)</option>
 					<option value="TMDB_MOVIE">🎬 Movie (TMDB)</option>
@@ -68,14 +67,15 @@ const pageTitle = "Cataloguer"
 					name="comment"
 					placeholder="Write your review here..."
 					class="col-span-2 block h-24 w-full whitespace-normal"
-					rows="4"></textarea>
+					rows="4"
+				></textarea>
 				<fieldset class="col-span-2">
 					<legend>I felt...</legend>
 					<div class="flex flex-wrap gap-2.5">
 						<p>waiting...</p>
 					</div>
 				</fieldset>
-				<button type="submit" class="button col-span-2"> Submit Review </button>
+				<button type="submit" class="button col-span-2">Submit Review</button>
 			</form>
 		</section>
 	</section>
@@ -220,5 +220,4 @@ const pageTitle = "Cataloguer"
 				alert(`❌ Cannot save review: ${(e as Error).message}`)
 			}
 		})
-	</script>
-</Layout>
+	</script></Layout>

@@ -215,8 +215,7 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 		<h1>{pageTitle}</h1>
 		<p>
 			As 2025 comes to an end, it's time to look back at the new reviews I added
-			in my
-			<a href="/catalogue">catalogue</a>, and see what stood out the most!
+			in my <a href="/catalogue">catalogue</a>, and see what stood out the most!
 		</p>
 		<p>
 			<ReturnHome />
@@ -226,27 +225,25 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 	<section>
 		<h2>Overview</h2>
 		<p>
-			In 2025, I added <strong>{overallStats.total} reviews</strong>{
-				formatRatingBreakdown(overallStats, true)
-			}. Here are the top emotions I felt this year:
+			In 2025, I added <strong>{overallStats.total} reviews</strong
+			>{formatRatingBreakdown(overallStats, true)}. Here are the top emotions I
+			felt this year:
 		</p>
 
-		{
-			overallEmotionsChart.length > 0 && (
-				<>
-					<EmotionChart
-						emotions={mobileEmotions}
-						maxCount={maxEmotionCount}
-						class="sm:hidden"
-					/>
-					<EmotionChart
-						emotions={desktopEmotions}
-						maxCount={maxEmotionCount}
-						class="hidden sm:block"
-					/>
-				</>
-			)
-		}
+		{overallEmotionsChart.length > 0 && (
+			<>
+				<EmotionChart
+					emotions={mobileEmotions}
+					maxCount={maxEmotionCount}
+					class="sm:hidden"
+				/>
+				<EmotionChart
+					emotions={desktopEmotions}
+					maxCount={maxEmotionCount}
+					class="hidden sm:block"
+				/>
+			</>
+		)}
 
 		<h2>{videoGameStats.total} Video games</h2>
 		<p>
@@ -289,15 +286,21 @@ const maxEmotionCount = Math.max(...overallEmotionsChart.map((e) => e.count), 1)
 		<ReviewThumbnailGrid reviews={albumReviews} />
 
 		<side-note>
-			Images and datas are fetched from <a href="https://igdb.com/"
+			Images and datas are fetched from
+			<a href="https://igdb.com/"
 				><abbr title="The Internet Game Database">IGDB</abbr></a
-			> for video games, <a href="https://boardgamegeek.com"
+			>
+			for video games,
+			<a href="https://boardgamegeek.com"
 				><abbr title="Board Game Geek">BGG</abbr></a
-			> for board games, <a href="https://themoviedb.org/"
+			>
+			for board games,
+			<a href="https://themoviedb.org/"
 				><abbr title="The Movie DataBase">TMDB</abbr></a
-			> for movies and shows, <a href="https://spotify.com/">Spotify</a> for albums,
-			and <a href="https://openlibrary.org/">Open Library</a> for books. Their licenses
-			apply.
+			>
+			for movies and shows, <a href="https://spotify.com/">Spotify</a> for
+			albums, and <a href="https://openlibrary.org/">Open Library</a> for books.
+			Their licenses apply.
 		</side-note>
 	</section>
 </Layout>

@@ -81,7 +81,7 @@ const { Content, headings } = await render(entry)
 		}
 
 		/* If an entry start with a title (so it appear in the TOC)
-    hide it for a better reading flow */
+		    hide it for a better reading flow */
 		#entry h2:first-child {
 			@apply invisible m-0 h-0;
 		}
@@ -92,7 +92,7 @@ const { Content, headings } = await render(entry)
 		}
 
 		/* I use a manicule as a list marker, in the future I'll use "indent hanging"
-     but it's not supported in Chrome yet */
+		     but it's not supported in Chrome yet */
 		#entry > ul {
 			@apply my-5 list-none indent-0 sm:indent-[-27.58px];
 		}

@@ -40,38 +40,36 @@ const {
 } = Astro.props
 ---
 
-{
-	source.format === "svg" ? (
-		<img
-			{...rest}
-			src={source.src}
-			alt={alt}
-			{...(goodQualityURL && {
-				"data-zoomable": true,
-				"data-zoom-src": goodQualityURL.src,
-			})}
-			width={width}
-			height={height}
-			class={className}
-		/>
-	) : (
-		<AstroPicture
-			{...rest}
-			src={source}
-			alt={alt}
-			{...(Array.isArray(widths) && widths.length > 0 ? { widths } : {})}
-			{...(typeof sizes === "string" && sizes.length > 0 ? { sizes } : {})}
-			{...(quality !== undefined ? { quality } : {})}
-			{...(goodQualityURL && {
-				"data-zoomable": true,
-				"data-zoom-src": goodQualityURL.src,
-			})}
-			data-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
-			{...(width ? { width: width, height: height } : { inferSize: true })}
-			formats={formats ?? ["webp"]}
-			class={className}
-			style={`background-size: cover; background-image: url(${placeholderURL}); image-rendering: auto;`}
-			onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.style.fontSize = null; this.style.color = null; this.removeAttribute('onload');"
-		/>
-	)
-}
+{source.format === "svg" ? (
+	<img
+		{...rest}
+		src={source.src}
+		alt={alt}
+		{...(goodQualityURL && {
+			"data-zoomable": true,
+			"data-zoom-src": goodQualityURL.src,
+		})}
+		width={width}
+		height={height}
+		class={className}
+	/>
+) : (
+	<AstroPicture
+		{...rest}
+		src={source}
+		alt={alt}
+		{...(Array.isArray(widths) && widths.length > 0 ? { widths } : {})}
+		{...(typeof sizes === "string" && sizes.length > 0 ? { sizes } : {})}
+		{...(quality !== undefined ? { quality } : {})}
+		{...(goodQualityURL && {
+			"data-zoomable": true,
+			"data-zoom-src": goodQualityURL.src,
+		})}
+		data-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
+		{...(width ? { width: width, height: height } : { inferSize: true })}
+		formats={formats ?? ["webp"]}
+		class={className}
+		style={`background-size: cover; background-image: url(${placeholderURL}); image-rendering: auto;`}
+		onload="this.style.backgroundSize = null; this.style.backgroundImage = null; this.style.imageRendering = null; this.style.fontSize = null; this.style.color = null; this.removeAttribute('onload');"
+	/>
+)}

@@ -76,26 +76,22 @@ const blogEntriesFormatted: ClientBlogEntries = blogEntries.map(
 
 	<select id="year-filter" class="border-b-[0.1rem] border-dotted">
 		<option value="" selected>🗂️ All years</option>
-		{
-			sortedYears.map((year) => (
-				<option value={year.toString()}>📁 {year}</option>
-			))
-		}
+		{sortedYears.map((year) => <option value={year.toString()}>
+			📁 {year}
+		</option>)}
 	</select>
 </form>
 
 <div id="output" class="flex flex-col">
 	{
 		/* Default SSR output */
-		blogEntries.slice(0, 5).map((result) => (
-			<Block to={`/${result.id}`}>
-				<h3>{result.data.title}</h3>
-				<p class="line-clamp-4 text-ellipsis sm:line-clamp-3">
-					<span set:html={result.data.abstract} /> –
-					<span class="whitespace-nowrap"> {formatDate(result.data.date)}</span>
-				</p>
-			</Block>
-		))
+		blogEntries.slice(0, 5).map((result) => <Block to={`/${result.id}`}>
+			<h3>{result.data.title}</h3>
+			<p class="line-clamp-4 text-ellipsis sm:line-clamp-3">
+				<span set:html={result.data.abstract} /> –
+				<span class="whitespace-nowrap"> {formatDate(result.data.date)}</span>
+			</p>
+		</Block>)
 	}
 </div>
 <button
