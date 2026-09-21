@@ -23,7 +23,7 @@ const { isbn, authors } = Astro.props
  * TO DO : handle errors !
  */
 const userData: any = EleventyFetch(
-	`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
+	`https://openlibrary.org/api/books.json?bibkeys=ISBN:${isbn}&jscmd=details&format=json`,
 	{
 		duration: "1d",
 		type: "json",
