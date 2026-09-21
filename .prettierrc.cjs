@@ -9,5 +9,11 @@ module.exports = {
 				parser: "astro",
 			},
 		},
+		{
+			files: "src/**/*.astro",
+			options: {
+				astroCompressHTML: "html",
+			},
+		},
 	],
 }

@@ -14,17 +14,17 @@
 		"test:watch": "vitest"
 	},
 	"dependencies": {
-		"zod": "^4.4.3"
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
-		"@astrojs/check": "^0.9.9",
-		"@astrojs/netlify": "^8.0.0",
-		"@tailwindcss/vite": "^4.3.1",
-		"astro": "^7.0.3",
+		"@astrojs/check": "^0.9.10",
+		"@astrojs/netlify": "^8.2.6",
+		"@tailwindcss/vite": "^4.3.3",
+		"astro": "^7.3.3",
 		"fake-indexeddb": "^6.2.5",
-		"happy-dom": "^20.10.6",
-		"tailwindcss": "^4.3.1",
+		"happy-dom": "^20.14.5",
+		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.3",
-		"vitest": "^4.1.9"
+		"vitest": "^5.0.1"
 	}
 }

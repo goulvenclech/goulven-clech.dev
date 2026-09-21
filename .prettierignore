@@ -1,3 +1,4 @@
 src/content/**/*.mdx
 src/content/README
 packages/*/dist
+.claude/worktrees
