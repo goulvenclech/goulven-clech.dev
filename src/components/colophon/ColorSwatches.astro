@@ -1,0 +1,31 @@
+---
+import type { ThemeToken } from "$src/themeTokens"
+
+interface Props {
+	colors: ThemeToken[][]
+}
+
+const { colors } = Astro.props
+---
+
+<ul class="my-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
+	{colors.map((shades) => <li class="min-w-0">
+		<div
+			class="border-font-light/15 dark:border-font-dark/15 flex h-12 border [print-color-adjust:exact]"
+			aria-hidden="true"
+		>
+			{shades.map(({ value }) => (
+				<span
+					class="grow forced-color-adjust-none"
+					style={`background-color: ${value}`}
+				/>
+			))}
+		</div>
+		{shades.map(({ name, value }) => <Fragment>
+			<strong class="mt-1 block">{name}</strong>
+			<span class="block font-mono text-[12px] break-words sm:text-[14px]">
+				{value}
+			</span>
+		</Fragment>)}
+	</li>)}
+</ul>

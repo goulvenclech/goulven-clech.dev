@@ -24,6 +24,8 @@ At its heart, this project looks like any Astro project, you can start by readin
 
 - [Catalogue API](https://github.com/goulvenclech/goulven-clech.dev/tree/main/src/pages/api/catalogue): Astro API routes deployed as Netlify Functions, with data persisted in a Turso (SQLite) edge database. Also read by a [local MCP server](https://github.com/goulvenclech/goulven-clech.dev/tree/main/packages/catalogue-mcp), letting an assistant browse the catalogue and to-do lists. See [this entry](https://goulven-clech.dev/2025/catalogue-astro-turso) for the full story and technical details.
 
+- [Body](https://body.goulven-clech.dev): my own workout tracker, a [local-first Astro app](https://github.com/goulvenclech/goulven-clech.dev/tree/main/packages/body) whose append-only log lives in IndexedDB and syncs across devices through the main site's API. Today's targets are recomputed from the log, with double progression and automatic deloads.
+
 - [Friends](https://goulven-clech.dev/friends): interactive graph visualisation of my and my friends' websites, powered by [GraphGarden](https://github.com/bruits/graphgarden).
 
 - [Table of contents](https://github.com/goulvenclech/goulven-clech.dev/blob/main/src/components/blog/TableOfContent.astro): using Astro and MDX, generate a table of contents based on the headings. With nested lists.

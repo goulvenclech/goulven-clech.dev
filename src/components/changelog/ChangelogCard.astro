@@ -14,7 +14,7 @@ const { Content } = await (entry.render?.() ?? { Content: null })
 ---
 
 <li class="my-5 flex flex-row gap-2.5">
-	<div class="changelog grow">
+	<div class="changelog min-w-0 grow">
 		{entry.is_deprecated ? (
 			<s>
 				<strong>{entry.name}:</strong>

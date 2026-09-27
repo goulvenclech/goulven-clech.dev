@@ -1,0 +1,35 @@
+---
+import type { TextSizeToken, ThemeToken } from "$src/themeTokens"
+
+interface Props {
+	/** Named after the font to show, not the token. */
+	fontFamilies: ThemeToken[]
+	textSizes: TextSizeToken[]
+}
+
+const { fontFamilies, textSizes } = Astro.props
+
+const pangram = "Sphinx of black quartz, judge my vow."
+---
+
+<table>
+	<tbody>
+		{fontFamilies.map(({ name, value }) => <tr>
+			<th scope="row">{name}</th>
+			<td class="text-sm sm:text-base" style={`font-family: ${value}`}>
+				{pangram}
+			</td>
+		</tr>)}
+	</tbody>
+</table>
+<ul class="my-5 flex flex-wrap items-baseline gap-x-5 gap-y-2.5">
+	{textSizes.map(({ value, lineHeight }) => <li class="text-center">
+		<span
+			class="block"
+			style={`font-size: ${value}; line-height: ${lineHeight ?? "normal"}`}
+		>
+			Aa
+		</span>
+		<span class="block text-xs">{value}</span>
+	</li>)}
+</ul>

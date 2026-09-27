@@ -3,12 +3,27 @@ import Layout from "$layouts/Layout.astro"
 import GithubInline from "$components/typography/GithubInline.astro"
 
 import Changelog from "$components/changelog/Changelog.astro"
+import ColorSwatches from "$components/colophon/ColorSwatches.astro"
+import TypeSpecimens from "$components/colophon/TypeSpecimens.astro"
 import ReturnHome from "$components/ReturnHome.astro"
+import baseCss from "$assets/base.css?raw"
+import { parseThemeTokens } from "$src/themeTokens"
 
 /**
  * Misc page with legal notice, changelog, etc.
  */
 const pageTitle = "About"
+const theme = parseThemeTokens(baseCss)
+// `@theme` only points at Astro's font variables, which don't carry the names.
+const fontNames: Record<string, string> = {
+	serif: "EB Garamond",
+	mono: "Monaspace",
+	goofy: "Abby",
+}
+const fontFamilies = theme.fontFamilies.map(({ name, value }) => ({
+	name: fontNames[name] ?? name,
+	value,
+}))
 ---
 
 <Layout title={pageTitle}>
@@ -86,8 +101,17 @@ const pageTitle = "About"
 			a beautiful open-source monospace superfamily with texture healing. And
 			finally, annotations are set in
 			<a href="https://yourownfont.com/shop/product/abby/">Abby</a> by "Your Own
-			Font Foundry", a cute handwriting typeface (not free).
+			Font Foundry", a cute handwriting typeface (not free). Labels and
+			abbreviations use <strong>small caps</strong>, figures are old-style
+			(1789), and italics have <em>distinct</em> ligatures.
 		</p>
+		<TypeSpecimens fontFamilies={fontFamilies} textSizes={theme.textSizes} />
+		<p>
+			<strong>Colours:</strong> Mostly neutrals, each with a light and a dark
+			version, and a single pink accent, mostly for interactive elements. The
+			success, warning, and info colours mostly serve for markers or graphs.
+		</p>
+		<ColorSwatches colors={theme.colors} />
 		<p>
 			<strong>Technologies:</strong> This website is built with
 			<a href="https://astro.build/">Astro</a>, I wrote a bit about this static

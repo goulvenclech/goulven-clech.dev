@@ -224,7 +224,6 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 		import {
 			filterTodoItems,
 			sortTodoItems,
-			formatTodoLabel,
 			formatTodoStats,
 			type TodoItem,
 			type TodoProgress,
@@ -237,6 +236,7 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 			resolveTodoState,
 		} from "../../components/catalogue/todoFilters"
 		import { toQueryString } from "../../components/catalogue/catalogueFilters"
+		import { todoCard } from "../../components/catalogue/todoCard"
 
 		interface View {
 			id: string
@@ -284,51 +284,6 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 		let listIndex = 0
 		let shown = PAGE_SIZE
 
-		function placeholderFor(item: TodoItem): HTMLSpanElement {
-			const span = document.createElement("span")
-			span.className =
-				"flex h-full w-full items-center justify-center p-2 text-center text-xs"
-			span.textContent = formatTodoLabel(item)
-			return span
-		}
-
-		function cardFor(item: TodoItem): HTMLAnchorElement {
-			const link = document.createElement("a")
-			link.href = item.href
-			link.title = formatTodoLabel(item)
-			link.className =
-				"no-icon bg-alt-light relative aspect-3/4 overflow-hidden"
-			if (!item.done) {
-				link.classList.add("opacity-60", "grayscale")
-				link.target = "_blank"
-				link.rel = "noopener"
-			}
-
-			if (item.poster) {
-				const img = document.createElement("img")
-				img.src = item.poster
-				img.alt = item.name
-				img.loading = "lazy"
-				// Drop the referrer to dodge CDN hotlink blocks.
-				img.referrerPolicy = "no-referrer"
-				img.className = "h-full w-full object-cover"
-				img.addEventListener("error", () =>
-					img.replaceWith(placeholderFor(item)),
-				)
-				link.appendChild(img)
-			} else {
-				link.appendChild(placeholderFor(item))
-			}
-
-			if (item.emoji) {
-				const badge = document.createElement("span")
-				badge.className = "absolute top-1 right-1 text-lg drop-shadow-md"
-				badge.textContent = item.emoji
-				link.appendChild(badge)
-			}
-			return link
-		}
-
 		function renderMeta(view: View): void {
 			descriptionEl.textContent = view.description
 			if (view.url) sourceLink.href = view.url
@@ -351,7 +306,7 @@ const inactiveOptions = listOptions.filter(({ view }) =>
 				}),
 				sortSelect.value as TodoSort,
 			)
-			grid.replaceChildren(...items.slice(0, shown).map(cardFor))
+			grid.replaceChildren(...items.slice(0, shown).map(todoCard))
 			emptyEl.hidden = items.length > 0
 			loadMore.hidden = shown >= items.length
 		}
