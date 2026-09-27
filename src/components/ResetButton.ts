@@ -20,7 +20,7 @@ export class ResetButton extends HTMLElement {
 		this.replaceChildren()
 
 		const template = document.createElement("template")
-		template.innerHTML = `<button type="button" class="border-primary text-primary hover:bg-primary hover:text-body-light dark:hover:text-body-dark cursor-pointer rounded-full border transition-colors px-2 no-underline border-box leading-4.5">reset</button>`
+		template.innerHTML = `<button type="button" class="border-primary text-primary hover:bg-primary hover:text-body-light cursor-pointer rounded-full border transition-colors px-2 no-underline border-box leading-4.5">reset</button>`
 		this.appendChild(template.content)
 
 		this.classList.add("hidden")

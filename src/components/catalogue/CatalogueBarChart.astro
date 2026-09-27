@@ -9,6 +9,7 @@ import {
 	type Segment,
 } from "./chartGeometry"
 import "./chartFigure.css"
+import "./ratingRamp.css"
 
 /**
  * A horizontal stacked-bar chart, shared by the catalogue's rating and media
@@ -173,21 +174,8 @@ const armsOf = (row: BarRow) =>
 <style>
 	@reference "$assets/base.css";
 
-	/*
-	 * Rating ramps are two diverging ordinal scales (unfavourable → red,
-	 * favourable → green), lightest near the neutral axis so intensity grows
-	 * towards the extremes. Media hues are nominal and CVD-checked in stacking
-	 * order. Dark mode re-steps the rating ramps against the dark surface rather
-	 * than flipping the light ones.
-	 */
+	/* Media hues are CVD-checked in stacking order. */
 	.catalogue-chart {
-		--chart-rating-1: #c0342a;
-		--chart-rating-2: #e06b52;
-		--chart-rating-3: #f0a48c;
-		--chart-rating-4: #7fbf93;
-		--chart-rating-5: #3f9e6a;
-		--chart-rating-6: #1f6f43;
-
 		--chart-source-1: #2563eb;
 		--chart-source-2: #e0692e;
 		--chart-source-3: #0d9488;
@@ -201,13 +189,6 @@ const armsOf = (row: BarRow) =>
 	}
 
 	:global(html.dark) .catalogue-chart {
-		--chart-rating-1: #d83f34;
-		--chart-rating-2: #e8674c;
-		--chart-rating-3: #f0a48c;
-		--chart-rating-4: #8fc9a0;
-		--chart-rating-5: #42a870;
-		--chart-rating-6: #217a49;
-
 		--chart-surface: var(--color-body-dark);
 	}
 
@@ -222,7 +203,7 @@ const armsOf = (row: BarRow) =>
 
 	/* The count behind each bar: the shares are normalised, so volume needs saying. */
 	.row-count {
-		@apply text-font-light/55 dark:text-font-dark/45 text-right text-xs whitespace-nowrap;
+		@apply text-font-light/70 dark:text-font-dark/60 text-right text-xs whitespace-nowrap;
 		font-variant-numeric: tabular-nums;
 	}
 
@@ -275,7 +256,7 @@ const armsOf = (row: BarRow) =>
 	}
 
 	.segment {
-		@apply flex min-w-0 items-center justify-center overflow-hidden;
+		@apply keep-colors flex min-w-0 items-center justify-center overflow-hidden;
 	}
 
 	/* A 2px surface line between neighbours, inset so widths still sum to 100%. */
@@ -292,7 +273,7 @@ const armsOf = (row: BarRow) =>
 	}
 
 	.row-empty {
-		@apply text-font-light/45 dark:text-font-dark/40 flex h-5 items-center text-xs italic;
+		@apply text-font-light/70 dark:text-font-dark/60 flex h-5 items-center text-xs italic;
 	}
 
 	.chart-data th[scope="col"] {

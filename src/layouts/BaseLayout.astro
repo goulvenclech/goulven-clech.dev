@@ -90,6 +90,7 @@ const {
 		<script>
 			// MediumZoom is a library to zoom images in better quality.
 			import mediumZoom from "medium-zoom"
+			import { markerTag, type MarkerVariant } from "$src/markers"
 			const zoom = mediumZoom("[data-zoomable]", {
 				margin: window.innerWidth < 640 ? 8 : 24,
 				background: "",
@@ -111,14 +112,15 @@ const {
 				key: string
 				color?: string
 				legend?: string
-				variant?: "primary" | "warning" | "success" | "info"
+				variant?: MarkerVariant
 			}) {
-				const tagName = variant ? `marker-${variant}` : "marker-primary"
-				const dot = document.createElement(tagName) as HTMLElement
+				const dot = document.createElement(markerTag(variant)) as HTMLElement
 				// Overwrite the size and position of marker classes
 				dot.className = "zoom-marker fixed z-9999 text-xs cursor-help h-4 w-4"
 				dot.style.fontFeatureSettings = "'lnum'"
 				dot.textContent = key
+				// A visual copy of the image's markers, already described by its legend.
+				dot.setAttribute("aria-hidden", "true")
 				if (color) dot.style.backgroundColor = color
 				if (legend) dot.title = legend
 
@@ -138,7 +140,7 @@ const {
 					key: string
 					color?: string
 					legend?: string
-					variant?: "primary" | "warning" | "success" | "info"
+					variant?: MarkerVariant
 				}>
 
 				markers.forEach((marker) => {

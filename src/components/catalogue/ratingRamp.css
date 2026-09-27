@@ -1,0 +1,21 @@
+/*
+ * Two diverging ordinal scales (unfavourable → red, favourable → green),
+ * lightest near the neutral axis.
+ */
+:root {
+	--chart-rating-1: #c0342a;
+	--chart-rating-2: #e06b52;
+	--chart-rating-3: #f0a48c;
+	--chart-rating-4: #7fbf93;
+	--chart-rating-5: #3f9e6a;
+	--chart-rating-6: #1f6f43;
+}
+
+:root.dark {
+	--chart-rating-1: #d83f34;
+	--chart-rating-2: #e8674c;
+	--chart-rating-3: #f0a48c;
+	--chart-rating-4: #8fc9a0;
+	--chart-rating-5: #42a870;
+	--chart-rating-6: #217a49;
+}

@@ -1,0 +1,47 @@
+---
+import { textureIds } from "$src/markers"
+
+/**
+ * Render once on any page that uses these patterns. Don't use .invisible or
+ * .hidden here, as they hide the patterns when used in SVGs.
+ */
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	class="absolute h-0 w-0 overflow-hidden"
+	aria-hidden="true"
+>
+	<defs>
+		<pattern
+			id={textureIds.warning}
+			patternUnits="userSpaceOnUse"
+			width="8"
+			height="5"
+			patternTransform="rotate(45)"
+		>
+			<rect width="6" height="5" fill="var(--color-warning)"></rect>
+		</pattern>
+		<pattern
+			id={textureIds.info}
+			patternUnits="userSpaceOnUse"
+			width="5"
+			height="5"
+			patternTransform="rotate(135)"
+		>
+			<rect width="3" height="5" fill="var(--color-info)"></rect>
+		</pattern>
+		<pattern
+			id={textureIds.success}
+			patternUnits="userSpaceOnUse"
+			width="6"
+			height="6"
+		>
+			<path
+				d="M0 0h6v6H0z M1 3a2 2 0 1 0 4 0a2 2 0 1 0-4 0z"
+				fill="var(--color-success)"
+				fill-rule="evenodd"
+			></path>
+		</pattern>
+	</defs>
+</svg>

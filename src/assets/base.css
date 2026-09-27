@@ -19,6 +19,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* For fills that carry meaning. */
+@utility keep-colors {
+	forced-color-adjust: none;
+	print-color-adjust: exact;
+}
+
 @theme {
 	--text-*: initial;
 	--text-xs: 14px;
@@ -44,11 +50,12 @@
 	--color-alt-light: #f4f4f5;
 	--color-alt-dark: #2e303e;
 
-	--color-primary: #e95678;
+	/* Accents stay dark enough to carry white ink, in both themes. */
+	--color-primary: #da486c;
 
-	--color-success: oklch(59.6% 0.145 163.225);
-	--color-warning: oklch(70.5% 0.213 47.604);
-	--color-info: oklch(54.6% 0.245 262.881);
+	--color-success: #00875e;
+	--color-warning: #d05c00;
+	--color-info: #276bff;
 
 	--font-weight-*: initial;
 	--font-weight-normal: 400;
@@ -292,15 +299,11 @@
 		@apply bg-primary text-body-light absolute -top-3 left-4 px-1 text-xs;
 	}
 
-	.dark warning-note::before {
-		@apply text-body-dark;
-	}
-
 	marker-primary,
 	marker-warning,
 	marker-success,
 	marker-info {
-		@apply text-body-light dark:text-body-dark inline-flex h-3.5 w-3.5 items-center justify-center pb-px text-xs leading-none font-medium;
+		@apply text-body-light keep-colors inline-flex h-3.5 w-3.5 items-center justify-center pb-px text-xs leading-none font-medium;
 		font-feature-settings: "lnum";
 	}
 
@@ -348,7 +351,13 @@
 	select,
 	optgroup,
 	option {
-		@apply bg-body-light text-font-light dark:bg-body-dark dark:text-font-dark;
+		@apply bg-body-light dark:bg-body-dark;
+	}
+
+	/* Selects inherit their text colour, so no dark rule outranks the focus colour. */
+	optgroup,
+	option {
+		@apply text-font-light dark:text-font-dark;
 	}
 
 	/*	Fix for select element in dark mode on Windows.

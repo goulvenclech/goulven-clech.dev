@@ -3,6 +3,8 @@ import Layout from "$layouts/Layout.astro"
 import GithubInline from "$components/typography/GithubInline.astro"
 
 import Changelog from "$components/changelog/Changelog.astro"
+import { RATING_SERIES } from "$components/catalogue/chartSeries"
+import "$components/catalogue/ratingRamp.css"
 import ColorSwatches from "$components/colophon/ColorSwatches.astro"
 import TypeSpecimens from "$components/colophon/TypeSpecimens.astro"
 import ReturnHome from "$components/ReturnHome.astro"
@@ -24,6 +26,12 @@ const fontFamilies = theme.fontFamilies.map(({ name, value }) => ({
 	name: fontNames[name] ?? name,
 	value,
 }))
+const gradient = {
+	name: "gradient",
+	colors: RATING_SERIES.map(({ colorVar }) => `var(${colorVar})`),
+}
+// Only its draft entry uses it yet.
+const ramps = import.meta.env.DEV ? [gradient] : []
 ---
 
 <Layout title={pageTitle}>
@@ -109,9 +117,10 @@ const fontFamilies = theme.fontFamilies.map(({ name, value }) => ({
 		<p>
 			<strong>Colours:</strong> Mostly neutrals, each with a light and a dark
 			version, and a single pink accent, mostly for interactive elements. The
-			success, warning, and info colours mostly serve for markers or graphs.
+			success, warning, and info colours mostly serve for markers or graphs, and
+			have an associated shape and texture for accessibility.
 		</p>
-		<ColorSwatches colors={theme.colors} />
+		<ColorSwatches colors={theme.colors} ramps={ramps} />
 		<p>
 			<strong>Technologies:</strong> This website is built with
 			<a href="https://astro.build/">Astro</a>, I wrote a bit about this static

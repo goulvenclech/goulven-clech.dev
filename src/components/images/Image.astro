@@ -1,13 +1,13 @@
 ---
-import type { HTMLTag } from "astro/types"
 import { getImage } from "astro:assets"
+import { markerTag, type MarkerVariant } from "$src/markers"
 import { generatePlaceholder } from "../../imageService"
 import InternalImage from "./InternalImage.astro"
 // Types for markers used in the image
 export interface Marker {
 	key: string
 	legend: string
-	variant?: "primary" | "warning" | "success" | "info"
+	variant?: MarkerVariant
 	top: number
 	left: number
 }
@@ -25,6 +25,8 @@ interface Props {
 	formats?: string[]
 	class?: string
 	markers?: Marker[]
+	/** What each variant stands for, when colour and shape are the only cue. */
+	markerLabels?: Partial<Record<MarkerVariant, string>>
 	defaultWidth?: number
 	hideMarkerLegend?: boolean
 	[key: string]: any
@@ -43,6 +45,7 @@ const {
 	height,
 	formats,
 	markers = [],
+	markerLabels = {},
 	defaultWidth = 600 * 2,
 	hideMarkerLegend = false,
 	...rest
@@ -140,10 +143,12 @@ if (srcDark) {
 		)}
 
 		{markers.map((marker) => {
-			const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+			const Component = markerTag(marker.variant)
+			// Pointers only: the legend or the surrounding prose says what they mark.
 			return <Component
 				class="absolute"
 				style={`top: ${marker.top}%; left: ${marker.left}%;`}
+				aria-hidden="true"
 			>
 				{marker.key}
 			</Component>
@@ -155,9 +160,13 @@ if (srcDark) {
 		<slot name="marker-legends">
 			{markers.length > 0 &&
 				markers.map((marker) => {
-					const Component = `marker-${marker.variant ?? "primary"}` as HTMLTag
+					const variant = marker.variant ?? "primary"
+					const Component = markerTag(variant)
+					const label = markerLabels[variant]
 					return <span class="mr-2.5">
-						<Component>{marker.key}</Component>
+						<Component {...(label && { role: "img", "aria-label": label })}>
+							{marker.key}
+						</Component>
 						<span>{marker.legend}</span>
 					</span>
 				})}

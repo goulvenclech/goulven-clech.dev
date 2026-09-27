@@ -6,10 +6,6 @@ import {
 	SOURCE_ORDER,
 } from "$src/catalogue/reviewUtils"
 
-/**
- * Colours live in the chart component's stylesheet, in two modes; a series
- * only names its custom property, so a restyle never touches this file.
- */
 export interface SeriesDef {
 	key: string
 	label: string
