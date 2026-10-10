@@ -18,13 +18,13 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.10",
-		"@astrojs/netlify": "^8.2.6",
+		"@astrojs/netlify": "^8.2.9",
 		"@tailwindcss/vite": "^4.3.3",
-		"astro": "^7.3.3",
+		"astro": "^7.3.8",
 		"fake-indexeddb": "^6.2.5",
-		"happy-dom": "^20.14.5",
+		"happy-dom": "^20.14.6",
 		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.3",
-		"vitest": "^5.0.1"
+		"vitest": "^5.0.3"
 	}
 }
