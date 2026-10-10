@@ -1,10 +1,22 @@
 @reference "$assets/base.css";
 
-/*
- * Shared shell of every catalogue chart figure — legend, caption, data table,
- * and no-data notice — keyed on `data-chart` so a restyle lands everywhere at
- * once. Chart-specific colours and plot styles stay in each component.
- */
+[data-chart] .chart-plot {
+	@apply grid items-center gap-x-3 gap-y-1.5;
+	grid-template-columns: max-content 1fr max-content;
+}
+
+[data-chart] .row-label {
+	@apply text-right text-xs whitespace-nowrap sm:text-sm;
+}
+
+[data-chart] .row-count {
+	@apply text-font-light/70 dark:text-font-dark/60 text-right text-xs whitespace-nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+[data-chart] .row-bar {
+	@apply flex h-5 items-stretch;
+}
 
 [data-chart] .chart-legend {
 	@apply mt-3 flex list-none flex-wrap justify-center gap-x-3 gap-y-1 text-xs sm:text-sm;

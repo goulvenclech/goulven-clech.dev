@@ -188,6 +188,7 @@ describe("GET handler", () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks()
+		vi.useRealTimers()
 	})
 
 	it("returns valid JSON with required GraphGarden fields", async () => {
@@ -261,6 +262,23 @@ describe("GET handler", () => {
 		)
 		expect(edge).toBeDefined()
 		expect(edge!.type).toBe("internal")
+	})
+
+	it("adds one node per open wrap year, under the wrapped page", async () => {
+		vi.useFakeTimers({ toFake: ["Date"] })
+		vi.setSystemTime(new Date("2026-06-01T00:00:00.000Z"))
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		const urls = data.nodes.map((node) => node.url)
+		expect(urls).toContain("/catalogue/wrapped/2025")
+		expect(urls).not.toContain("/catalogue/wrapped/2026")
+		expect(data.edges).toContainEqual({
+			source: "/catalogue/wrapped/2025",
+			target: "/catalogue/wrapped",
+			type: "internal",
+		})
 	})
 
 	it("includes friends array with expected URLs", async () => {

@@ -192,23 +192,8 @@ const armsOf = (row: BarRow) =>
 		--chart-surface: var(--color-body-dark);
 	}
 
-	.chart-plot {
-		@apply grid items-center gap-x-3 gap-y-1.5;
-		grid-template-columns: max-content 1fr max-content;
-	}
-
-	.row-label {
-		@apply text-right text-xs whitespace-nowrap sm:text-sm;
-	}
-
-	/* The count behind each bar: the shares are normalised, so volume needs saying. */
-	.row-count {
-		@apply text-font-light/70 dark:text-font-dark/60 text-right text-xs whitespace-nowrap;
-		font-variant-numeric: tabular-nums;
-	}
-
 	.row-bar {
-		@apply flex h-5 items-stretch overflow-hidden;
+		@apply overflow-hidden;
 	}
 
 	/*

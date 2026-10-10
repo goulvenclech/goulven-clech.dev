@@ -31,6 +31,15 @@ export const sourceNouns: Record<string, string> = {
 	OPENLIBRARY: "book",
 } satisfies Record<MediaSource, string>
 
+export const sourceSingulars: Record<string, string> = {
+	IGDB: "video game",
+	BGG: "board game",
+	TMDB_MOVIE: "movie",
+	TMDB_TV: "show",
+	SPOTIFY: "album",
+	OPENLIBRARY: "book",
+} satisfies Record<MediaSource, string>
+
 /** Source key → plural label */
 export const sourcePlurals: Record<string, string> = {
 	IGDB: "video games",
@@ -66,6 +75,22 @@ export function ratingText(rating: number, source: string): string {
 	return `${label.emoji} ${label.verb} this ${noun ?? "one"}`
 }
 
+export function parseEmotionIds(emotions: string | null): number[] {
+	try {
+		return (JSON.parse(emotions ?? "[]") as unknown[]).map(Number)
+	} catch {
+		return []
+	}
+}
+
+export interface ReviewThumbnail {
+	source_name: string
+	source_img: string
+	source_link: string
+	rating: number
+	detail: string
+}
+
 /**
  * One-line review detail like "😍 loved this game, felt cozy; « comment »".
  * Unknown emotion ids are dropped (soft-deleted emotions may linger in rows).
@@ -79,13 +104,7 @@ export function reviewDetailText(
 	},
 	emotionsById: Map<number, { name: string }>,
 ): string {
-	let emotionIds: number[] = []
-	try {
-		emotionIds = JSON.parse(row.emotions ?? "[]") as number[]
-	} catch {
-		emotionIds = []
-	}
-	const emotionNames = emotionIds
+	const emotionNames = parseEmotionIds(row.emotions)
 		.map((id) => emotionsById.get(id)?.name)
 		.filter((n): n is string => Boolean(n))
 

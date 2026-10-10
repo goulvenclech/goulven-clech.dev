@@ -1,13 +1,6 @@
 ---
 import "./chartFigure.css"
-
-export interface ReviewThumbnail {
-	source_name: string
-	source_img: string
-	source_link: string
-	rating: number
-	detail: string
-}
+import type { ReviewThumbnail } from "$src/catalogue/reviewUtils"
 
 interface Props {
 	reviews: ReviewThumbnail[]

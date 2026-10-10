@@ -448,6 +448,7 @@ describe("renderCatalogue", () => {
 		items: [sampleRow],
 		hasMore: true,
 		emotions: testEmotions,
+		wrapYears: [2025, 2026],
 	}
 
 	it("collapses the API section to one line with an expand link", () => {
@@ -471,6 +472,17 @@ describe("renderCatalogue", () => {
 			expect(parseReviewQuery(new URL(url), 20).limit).toBe(100)
 			expect(new URL(url).searchParams.get("help")).toBe("0")
 		}
+	})
+
+	it("links each wrap year page by absolute URL", () => {
+		const wrapUrls =
+			renderCatalogue(baseView).match(
+				/https?:\/\/\S+\/catalogue\/wrapped\S*/g,
+			) ?? []
+		expect(wrapUrls).toEqual([
+			"https://example.com/catalogue/wrapped/2025",
+			"https://example.com/catalogue/wrapped/2026",
+		])
 	})
 
 	it("keeps the expanded API section when help is shown", () => {

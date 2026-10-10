@@ -1,0 +1,9 @@
+---
+import { wrappedYears } from "$src/catalogue/wrapped"
+
+const latestYear = wrappedYears().at(-1)
+if (latestYear === undefined) throw new Error("No catalogue wrap is open yet")
+
+// Astro's static redirect page waits 2s on the default 302.
+return Astro.redirect(`/catalogue/wrapped/${latestYear}`, 307)
+---

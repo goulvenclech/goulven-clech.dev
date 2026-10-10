@@ -15,6 +15,7 @@ import {
 	REVIEW_QUERY_PARAMS,
 	type ReviewFilters,
 } from "$src/catalogue/reviewQueries"
+import { wrappedYears } from "$src/catalogue/wrapped"
 
 export const prerender = false
 
@@ -230,11 +231,21 @@ export interface CatalogueView {
 	items: DbReviewRow[]
 	hasMore: boolean
 	emotions: EmotionRow[]
+	wrapYears: number[]
 }
 
 export function renderCatalogue(view: CatalogueView): string {
-	const { site, filters, limit, offset, showHelp, items, hasMore, emotions } =
-		view
+	const {
+		site,
+		filters,
+		limit,
+		offset,
+		showHelp,
+		items,
+		hasMore,
+		emotions,
+		wrapYears,
+	} = view
 
 	const emotionsById = new Map<number, EmotionRow>(
 		emotions.map((e) => [Number(e.id), e]),
@@ -245,7 +256,13 @@ export function renderCatalogue(view: CatalogueView): string {
 		"",
 		"Where I keep track of books, movies, songs, video games, and other media I consume. Keep in mind that this is a personal catalogue, incomplete and biased.",
 		"",
-		`Markdown twin of ${site}/catalogue, optimized for crawlers, LLMs, and no-JS readers. See also ${site}/index.md (blog index), ${site}/catalogue/todo.md (to-do lists), ${site}/2025/catalogue-astro-turso (how this catalogue is built), and ${site}/catalogue/wrapped (yearly recap).`,
+		`Markdown twin of ${site}/catalogue, optimized for crawlers, LLMs, and no-JS readers. See also ${site}/index.md (blog index), ${site}/catalogue/todo.md (to-do lists), and ${site}/2025/catalogue-astro-turso (how this catalogue is built).`,
+		...(wrapYears.length
+			? [
+					"",
+					`Yearly recaps: ${wrapYears.map((year) => `${site}/catalogue/wrapped/${year} (${year})`).join(", ")}.`,
+				]
+			: []),
 	].join("\n")
 
 	const apiDoc = showHelp
@@ -333,6 +350,8 @@ export async function GET(context: APIContext): Promise<Response> {
 			items,
 			hasMore,
 			emotions: emotionsRes.rows as unknown as EmotionRow[],
+			// From 1 January until the next deploy, this lists a year whose page isn't built yet.
+			wrapYears: wrappedYears(),
 		})
 
 		return new Response(document, {

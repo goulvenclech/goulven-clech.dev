@@ -2,15 +2,7 @@
 import { describe, expect, it } from "vitest"
 import { experimental_AstroContainer as AstroContainer } from "astro/container"
 import ReviewThumbnailGrid from "../../src/components/catalogue/ReviewThumbnailGrid.astro"
-
-// Mirrors the component's exported ReviewThumbnail (the *.astro test shim only types the default export).
-interface ReviewThumbnail {
-	source_name: string
-	source_img: string
-	source_link: string
-	rating: number
-	detail: string
-}
+import type { ReviewThumbnail } from "../../src/catalogue/reviewUtils"
 
 const review: ReviewThumbnail = {
 	source_name: "The Witness (2016)",

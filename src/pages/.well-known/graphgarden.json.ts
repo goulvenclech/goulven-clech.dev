@@ -1,6 +1,7 @@
 import type { APIContext } from "astro"
 import { getCollection } from "astro:content"
 import { isEntryPublished } from "$src/blogUtils"
+import { wrappedYears } from "$src/catalogue/wrapped"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
@@ -53,7 +54,6 @@ const PAGE_FILES: ReadonlyArray<{
 	{ url: "/about", filePath: "about.astro" },
 	{ url: "/resume", filePath: "resume.astro" },
 	{ url: "/catalogue", filePath: "catalogue.astro" },
-	{ url: "/catalogue/wrapped", filePath: "catalogue/wrapped.astro" },
 	{ url: "/catalogue/todo", filePath: "catalogue/todo.astro" },
 ] as const
 
@@ -157,6 +157,16 @@ export async function GET(context: APIContext) {
 		nodeMap.set(url, { url, title: entry.data.title })
 	}
 
+	const wrapPages = wrappedYears().map((year) => ({
+		url: `/catalogue/wrapped/${year}`,
+		title: `Wrapped ${year}`,
+		filePath: "catalogue/wrapped/[year].astro",
+	}))
+
+	for (const { url, title } of wrapPages) {
+		nodeMap.set(url, { url, title })
+	}
+
 	// Build edges with deduplication per (source, target) pair
 	const edgeSet = new Set<string>()
 	const edges: GraphGardenEdge[] = []
@@ -214,6 +224,10 @@ export async function GET(context: APIContext) {
 		addEdge(`/?year=${year}`, "/", "internal")
 	}
 
+	for (const { url } of wrapPages) {
+		addEdge(url, "/catalogue/wrapped", "internal")
+	}
+
 	// Blog entries → year nodes + links extracted from MDX content
 	for (const entry of publishedEntries) {
 		const entryUrl = `/${entry.id}`
@@ -226,7 +240,7 @@ export async function GET(context: APIContext) {
 		addExtractedEdges(entryUrl, extractLinks(content, siteOrigin))
 	}
 
-	for (const pageFile of PAGE_FILES) {
+	for (const pageFile of [...PAGE_FILES, ...wrapPages]) {
 		const fullPath = join(process.cwd(), "src", "pages", pageFile.filePath)
 
 		const content = readFileOrWarn(fullPath, `page "${pageFile.url}"`)

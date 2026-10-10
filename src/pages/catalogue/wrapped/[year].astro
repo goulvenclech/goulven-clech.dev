@@ -1,0 +1,112 @@
+---
+import EmotionChart from "$components/catalogue/EmotionChart.astro"
+import ReviewThumbnailGrid from "$components/catalogue/ReviewThumbnailGrid.astro"
+import ReturnHome from "$components/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+import {
+	formatCount,
+	formatRatingBreakdown,
+	formatSectionSummary,
+	loadWrappedYear,
+	wrappedSources,
+	wrappedYears,
+} from "$src/catalogue/wrapped"
+import { getClient } from "$src/db"
+
+export function getStaticPaths() {
+	return wrappedYears().map((year) => ({
+		params: { year: String(year) },
+		props: { year },
+	}))
+}
+
+interface Props {
+	year: number
+}
+
+const { year } = Astro.props
+const years = wrappedYears()
+const pageTitle = `My ${year} catalogue wrapped`
+
+const { stats, topEmotions, sections } = await loadWrappedYear(
+	getClient(),
+	year,
+)
+const breakdown = formatRatingBreakdown(stats)
+const creditsBooks = wrappedSources(year).includes("OPENLIBRARY")
+---
+
+<Layout
+	title={pageTitle}
+	description={`A look back at all the media I experienced in ${year}.`}
+>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			Now that {year} is over, it's time to look back at the new reviews I added
+			in my <a href="/catalogue">catalogue</a>, and see what stood out the most!
+		</p>
+		<p>
+			<ReturnHome />
+			{years.length > 1 &&
+				years.map((other) => (
+					<>
+						-
+						{other === year ? (
+							<span aria-current="page">{other}</span>
+						) : (
+							<a href={`/catalogue/wrapped/${other}`}>{other}</a>
+						)}
+					</>
+				))}
+		</p>
+	</section>
+
+	<section>
+		<h2>Overview</h2>
+		<p>
+			In {year}, I added
+			<strong>{formatCount(stats.total, "review", "reviews")}</strong
+			>{breakdown && `, including ${breakdown}`}.
+		</p>
+
+		{topEmotions.length > 0 && (
+			<EmotionChart
+				emotions={topEmotions}
+				caption={`The emotions I tagged most in ${year}.`}
+			/>
+		)}
+
+		{sections.map((section) => {
+			const summary = formatSectionSummary(section.stats, section.topEmotions)
+			return (
+				<>
+					<h2>{section.heading}</h2>
+					{summary && <p set:html={summary} />}
+					<ReviewThumbnailGrid reviews={section.highlights} />
+				</>
+			)
+		})}
+
+		<side-note>
+			Images and datas are fetched from
+			<a href="https://igdb.com/"
+				><abbr title="The Internet Game Database">IGDB</abbr></a
+			>
+			for video games,
+			<a href="https://boardgamegeek.com"
+				><abbr title="Board Game Geek">BGG</abbr></a
+			>
+			for board games,
+			<a href="https://themoviedb.org/"
+				><abbr title="The Movie DataBase">TMDB</abbr></a
+			>
+			for movies and shows, {!creditsBooks && "and"}
+			<a href="https://spotify.com/">Spotify</a> for
+			albums{creditsBooks && (
+				<>, and <a href="https://openlibrary.org/">Open Library</a> for books</>
+			)}.
+			Their licenses apply.
+		</side-note>
+	</section>
+</Layout>
