@@ -91,15 +91,8 @@ const { Content, headings } = await render(entry)
 			@apply list-inside;
 		}
 
-		/* I use a manicule as a list marker, in the future I'll use "indent hanging"
-		     but it's not supported in Chrome yet */
 		#entry > ul {
-			@apply my-5 list-none indent-0 sm:indent-[-27.58px];
-		}
-
-		#entry > ul > li::before {
-			content: "☞";
-			@apply mr-2;
+			@apply manicule-list;
 		}
 
 		#entry > ol {

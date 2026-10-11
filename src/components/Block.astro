@@ -20,6 +20,13 @@ const cardImageQuality = 80
 
 const { image, imageAlt = "", to, imageWidth, imageHeight } = Astro.props
 
+const imageSize =
+	imageWidth && imageHeight
+		? { width: imageWidth, height: imageHeight }
+		: typeof image === "object"
+			? { width: image.width, height: image.height }
+			: undefined
+
 // Generate placeholders for images like in Image.astro
 let placeholderURL: string | undefined
 
@@ -50,7 +57,12 @@ if (image && typeof image !== "string" && image.format !== "svg") {
 ---
 
 <a href={to} class="card">
-	{image && <div class="card-image">
+	{image && <div
+		class="card-image"
+		style={
+			imageSize && `--card-image-ratio: ${imageSize.width / imageSize.height}`
+		}
+	>
 		<InternalImage
 			source={image}
 			alt={imageAlt}
@@ -59,8 +71,8 @@ if (image && typeof image !== "string" && image.format !== "svg") {
 			sizes={cardImageSizes}
 			quality={cardImageQuality}
 			placeholderURL={placeholderURL}
-			width={imageWidth}
-			height={imageHeight}
+			width={imageSize?.width}
+			height={imageSize?.height}
 		/>
 	</div>}
 	<article>

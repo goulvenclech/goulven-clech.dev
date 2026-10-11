@@ -54,7 +54,30 @@ export default defineConfig({
 			"covers.openlibrary.org",
 			"m.media-amazon.com",
 		],
-		remotePatterns: [{ hostname: "**.us.archive.org" }],
+		remotePatterns: [
+			{ hostname: "**.us.archive.org" },
+			// Per store, so /_image can't transcode any Shopify merchant's files.
+			...[
+				"/s/files/1/0220/1594/**",
+				"/s/files/1/0760/0770/2809/**",
+				"/s/files/1/0916/9970/8282/**",
+				"/s/files/1/0550/9047/9283/**",
+			].map((pathname) => ({
+				protocol: "https",
+				hostname: "cdn.shopify.com",
+				pathname,
+			})),
+			{
+				protocol: "https",
+				hostname: "wiki.dominionstrategy.com",
+				pathname: "/images/a/a4/Sauna~English~2022.jpg",
+			},
+			{
+				protocol: "https",
+				hostname: "scdn.italki.com",
+				pathname: "/ng/static/image/**",
+			},
+		],
 	},
 
 	env: {

@@ -1,0 +1,57 @@
+---
+import Block from "$components/Block.astro"
+import ReturnHome from "$components/ReturnHome.astro"
+import Layout from "$layouts/Layout.astro"
+import { GIFT_IDEAS } from "$src/data/gifts"
+import { formatGiftPrice, groupByPriceTier } from "$src/giftUtils"
+
+const pageTitle = "Gift ideas"
+const tiers = groupByPriceTier(GIFT_IDEAS)
+---
+
+<Layout
+	title={pageTitle}
+	description="Things I'd love but probably wouldn't buy myself, sorted by price."
+>
+	<Fragment slot="head">
+		<meta name="robots" content="noindex,nofollow" />
+	</Fragment>
+	<section>
+		<h1>{pageTitle}</h1>
+		<p>
+			People often tell me I'm hard to shop for, so here are things I'd love but
+			probably wouldn't buy myself. Prices are rough, and nothing here is
+			expected!
+		</p>
+		<ReturnHome />
+	</section>
+	{tiers.map((tier) => <section>
+		<h2 id={tier.id}>{tier.label}</h2>
+		{tier.gifts.map((gift) => <Block
+			to={gift.link}
+			image={
+				gift.image && ("format" in gift.image ? gift.image : gift.image.src)
+			}
+			imageWidth={gift.image?.width}
+			imageHeight={gift.image?.height}
+		>
+			<h3 class="my-0 line-clamp-2 leading-8 text-ellipsis">{gift.name}</h3>
+			<ul class="m-0 flex list-none flex-col p-0">
+				{gift.details?.map((detail) => (
+					<li set:html={detail} />
+				))}
+				{gift.isbn && <li>
+					<abbr title="International Standard Book Number">ISBN</abbr>:{" "}
+					{gift.isbn}
+				</li>}
+				<li class="price">{formatGiftPrice(gift.price)} at {gift.shop}</li>
+			</ul>
+		</Block>)}
+	</section>)}
+</Layout>
+
+<style>
+	.price {
+		font-feature-settings: "lnum";
+	}
+</style>

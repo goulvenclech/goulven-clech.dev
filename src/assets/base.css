@@ -25,6 +25,23 @@
 	print-color-adjust: exact;
 }
 
+/* Out of the text flow so the whitespace formatters leave after <li> can't
+   shift the text. */
+@utility manicule-list {
+	@apply my-5 list-none;
+
+	& > li {
+		@apply relative my-5;
+	}
+
+	& > li::before {
+		content: "☞";
+		/* Silent for screen readers; browsers without alt text keep the line above. */
+		content: "☞" / "";
+		@apply float-left mr-2 sm:absolute sm:right-full;
+	}
+}
+
 @theme {
 	--text-*: initial;
 	--text-xs: 14px;
@@ -181,8 +198,10 @@
 		@apply w-fit flex-none;
 	}
 
+	/* Block's ratio sizes the box before load; without it the width is invalid, so auto. */
 	.card .card-image img {
-		@apply h-auto max-h-56 w-auto max-w-37.5 object-contain text-transparent;
+		width: min(--spacing(37.5), --spacing(56) * var(--card-image-ratio));
+		@apply h-auto max-h-56 max-w-37.5 object-contain text-transparent;
 	}
 
 	.legend {

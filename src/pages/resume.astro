@@ -85,7 +85,7 @@ educationEntries.sort(
 	</section>
 	<section id="language">
 		<h2>Languages</h2>
-		<ul>
+		<ul class="manicule-list">
 			<li><strong>French:</strong> Native.</li>
 			<li><strong>English:</strong> Professional proficiency (C1).</li>
 			<li><strong>Finnish:</strong> Basic skills (A1), actively learning.</li>
@@ -93,19 +93,6 @@ educationEntries.sort(
 	</section>
 	<style is:global>
 		@reference "$assets/base.css";
-
-		#language ul {
-			@apply my-5 list-none indent-0 sm:indent-[-30.58px];
-		}
-
-		#language li {
-			@apply my-5;
-		}
-
-		#language li::before {
-			content: "☞";
-			@apply mr-2;
-		}
 
 		.resume-card p {
 			@apply my-1;
