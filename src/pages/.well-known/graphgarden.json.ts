@@ -39,7 +39,7 @@ const FRIENDS = [
 ] as const
 
 const STATIC_PAGES: readonly GraphGardenNode[] = [
-	{ url: "/", title: "Home" },
+	{ url: "/", title: "Goulven Clec'h" },
 	{ url: "/about", title: "About" },
 	{ url: "/resume", title: "Resume" },
 	{ url: "/catalogue", title: "Catalogue" },
