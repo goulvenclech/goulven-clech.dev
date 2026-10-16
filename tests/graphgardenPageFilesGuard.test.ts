@@ -20,6 +20,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { getCollection } from "astro:content"
 
 interface GraphGardenEdges {
+	readonly friends: readonly string[]
 	readonly edges: ReadonlyArray<{
 		source: string
 		target: string
@@ -78,5 +79,17 @@ describe("graphgarden page files (guard)", () => {
 			target: "/about",
 			type: "internal",
 		})
+	})
+
+	it("links the real friends page to every declared friend", async () => {
+		const data = await generateWithWrapYear2025()
+
+		for (const friend of data.friends) {
+			expect(data.edges).toContainEqual({
+				source: "/friends",
+				target: friend,
+				type: "friend",
+			})
+		}
 	})
 })

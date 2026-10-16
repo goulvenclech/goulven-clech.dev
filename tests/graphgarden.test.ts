@@ -167,6 +167,11 @@ describe("GET handler", () => {
 		vi.clearAllMocks()
 		vi.mocked(getCollection).mockImplementation(
 			(collection: string, filter?: (entry: unknown) => boolean) => {
+				if (collection === "changelog") {
+					return Promise.resolve([
+						{ id: "2026/03-16-friends", body: "", data: { url: "/friends" } },
+					] as never)
+				}
 				if (collection !== "blog") {
 					return Promise.resolve([] as never)
 				}
@@ -219,6 +224,7 @@ describe("GET handler", () => {
 		expect(urls).toContain("/resume")
 		expect(urls).toContain("/catalogue")
 		expect(urls).toContain("/catalogue/todo")
+		expect(urls).toContain("/friends")
 	})
 
 	it("creates year nodes from blog entries", async () => {
@@ -252,6 +258,30 @@ describe("GET handler", () => {
 		expect(edge!.type).toBe("internal")
 	})
 
+	it("connects the friends page to home", async () => {
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		expect(data.edges).toContainEqual({
+			source: "/friends",
+			target: "/",
+			type: "internal",
+		})
+	})
+
+	it("links the about page to a changelog entry's url, even without a body", async () => {
+		const context = createEndpointContext("/.well-known/graphgarden.json")
+		const response = await GET(context)
+		const data = await parseJsonResponse<GraphGardenResponse>(response)
+
+		expect(data.edges).toContainEqual({
+			source: "/about",
+			target: "/friends",
+			type: "internal",
+		})
+	})
+
 	it("connects the to-do page to the catalogue", async () => {
 		const context = createEndpointContext("/.well-known/graphgarden.json")
 		const response = await GET(context)
@@ -281,14 +311,16 @@ describe("GET handler", () => {
 		})
 	})
 
-	it("includes friends array with expected URLs", async () => {
+	it("lists friends as origins with a trailing slash, like base_url", async () => {
 		const context = createEndpointContext("/.well-known/graphgarden.json")
 		const response = await GET(context)
 		const data = await parseJsonResponse<GraphGardenResponse>(response)
 
-		expect(data.friends).toContain("https://aureliendossantos.com")
-		expect(data.friends).toContain("https://erika.florist")
-		expect(data.friends).toContain("https://bruits.org")
+		expect(data.base_url).toMatch(/\/$/)
+		expect(data.friends.length).toBeGreaterThan(0)
+		for (const friend of data.friends) {
+			expect(friend).toMatch(/^https?:\/\/[^/]+\/$/)
+		}
 	})
 
 	it("is prerendered at build time", () => {

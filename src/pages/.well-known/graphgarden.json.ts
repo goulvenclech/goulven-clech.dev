@@ -33,9 +33,10 @@ interface GraphGardenFile {
 }
 
 const FRIENDS = [
-	"https://aureliendossantos.com/",
-	"https://erika.florist/",
 	"https://bruits.org/",
+	"https://erika.florist/",
+	"https://maudit.org/",
+	"https://satteri.bruits.org/",
 ] as const
 
 const STATIC_PAGES: readonly GraphGardenNode[] = [
@@ -45,6 +46,7 @@ const STATIC_PAGES: readonly GraphGardenNode[] = [
 	{ url: "/catalogue", title: "Catalogue" },
 	{ url: "/catalogue/wrapped", title: "Wrapped" },
 	{ url: "/catalogue/todo", title: "To-do" },
+	{ url: "/friends", title: "Friends" },
 ] as const
 
 const PAGE_FILES: ReadonlyArray<{
@@ -55,6 +57,7 @@ const PAGE_FILES: ReadonlyArray<{
 	{ url: "/resume", filePath: "resume.astro" },
 	{ url: "/catalogue", filePath: "catalogue.astro" },
 	{ url: "/catalogue/todo", filePath: "catalogue/todo.astro" },
+	{ url: "/friends", filePath: "friends.astro" },
 ] as const
 
 const MARKDOWN_LINK_REGEX = /\[([^\]]*)\]\(([^)]+)\)/g
@@ -252,10 +255,9 @@ export async function GET(context: APIContext) {
 	const changelogEntries = await getCollection("changelog")
 
 	for (const entry of changelogEntries) {
-		const content = entry.body
-		if (!content) continue
-
-		addExtractedEdges("/about", extractLinks(content, siteOrigin))
+		if (entry.body) {
+			addExtractedEdges("/about", extractLinks(entry.body, siteOrigin))
+		}
 
 		if (entry.data.url && !shouldSkipLink(entry.data.url)) {
 			if (isInternalUrl(entry.data.url, siteOrigin)) {
@@ -292,7 +294,7 @@ export async function GET(context: APIContext) {
 				"I'm a software developer based in Toulouse, France. Welcome to my personal website!",
 			language: "en",
 		},
-		friends: FRIENDS.map((url) => url.replace(/\/$/, "")),
+		friends: FRIENDS,
 		nodes: [...nodeMap.values()],
 		edges,
 	}

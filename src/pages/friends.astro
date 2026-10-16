@@ -10,13 +10,17 @@ const pageTitle = "Friends"
 		<script
 			is:inline
 			type="module"
-			src="https://unpkg.com/graphgarden-web"
+			src="https://unpkg.com/graphgarden-web@0.3.0"
 		></script></Fragment>
 	<section>
 		<h1>{pageTitle}</h1>
 		<p>
-			Explore my and my friends' websites as a graph, powered by
-			<a href="https://github.com/bruits/graphgarden">GraphGarden</a>.
+			Explore my website and those of my web neighbours:
+			<a href="https://erika.florist/">Erika</a>,
+			<a href="https://bruits.org/">Bruits</a>,
+			<a href="https://maudit.org/">Maudit</a> and
+			<a href="https://satteri.bruits.org/">Sätteri</a>, as a graph powered by
+			<a href="https://garden.bruits.org/">GraphGarden</a>.
 		</p>
 		<ReturnHome />
 	</section>
@@ -25,19 +29,38 @@ const pageTitle = "Friends"
 	</section>
 </Layout>
 
+<script>
+	import { onDarkModeChange } from "$src/darkMode"
+
+	onDarkModeChange(() => {
+		// `restyle` exists only once graphgarden-web has upgraded the element
+		document
+			.querySelector<HTMLElement & { restyle?: () => void }>("graph-garden")
+			?.restyle?.()
+	})
+</script>
+
 <style>
 	@reference "$assets/base.css";
 
 	graph-garden {
-		display: block;
+		@apply border-font-light/15 block border-[1.5px];
 		--gg-local-node-color: var(--color-primary);
 		--gg-local-edge-color: var(--color-primary);
-		--gg-friend-node-color: #2563eb;
-		--gg-friend-edge-color: #2563eb;
-		--gg-label-color: var(--color-font);
+		--gg-friend-node-color: var(--color-font-light);
+		--gg-friend-edge-color: var(--color-font-light);
+		--gg-frontier-node-color: #9ca3af;
+		--gg-highlight-node-color: var(--color-info);
+		--gg-highlight-edge-color: var(--color-info);
+		--gg-label-color: var(--color-font-light);
+		--gg-label-halo-color: var(--color-body-light);
 	}
 
-	.dark graph-garden {
+	:global(.dark) graph-garden {
+		@apply border-font-dark/15;
+		--gg-friend-node-color: var(--color-font-dark);
+		--gg-friend-edge-color: var(--color-font-dark);
 		--gg-label-color: var(--color-font-dark);
+		--gg-label-halo-color: var(--color-body-dark);
 	}
 </style>
